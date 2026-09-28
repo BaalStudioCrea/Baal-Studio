@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Baal Studio</title>
+  <title>Baal Studio | Documentación del Patrimonio & Levantamiento 3D</title>
   <link rel="stylesheet" href="style.css">
+  <!-- Precarga de la imagen principal si está en Supabase Storage -->
 </head>
 <body>
 
@@ -12,47 +13,137 @@
   <header class="header">
     <div class="logo">Baal Studio</div>
     <nav class="nav">
-      <a href="#proyectos">Proyectos</a>
-      <a href="#sobre-mi">Sobre mí</a>
-      <a href="#contacto">Contacto</a>
+      <a href="#inicio">Inicio / Home</a>
+      <a href="#proyectos">Proyectos / Projects</a>
+      <a href="#sobre-estudio">Sobre el Estudio / About</a>
+      <a href="#capacidades">Capacidades / Capabilities</a>
+      <a href="#contacto">Contacto / Contact</a>
     </nav>
   </header>
 
   <main>
-    <!-- SECCIÓN SOBRE MÍ / INTRODUCCIÓN -->
-    <section id="sobre-mi" class="section hero-section">
-      <h1 class="hero-title">Arquitectura, Diseño y Experimentación Spatial</h1>
-      <p class="hero-text">
-        Escribe aquí tu pequeña biografía o la presentación del estudio que revisaste en la carpeta content.
-      </p>
-    </section>
-
-    <!-- GALERÍA DE PROYECTOS (Se cargará desde Supabase) -->
-    <section id="proyectos" class="section">
-      <h2 class="section-title">Proyectos Seleccionados</h2>
-      <div id="projects-grid" class="projects-grid">
-        <!-- Los proyectos de tu función de Supabase se pintarán aquí automáticamente -->
-        <p class="loading-text">Cargando proyectos desde Supabase...</p>
+    <!-- HERO / PORTADA CON IMAGEN DE FONDO -->
+    <section id="inicio" class="hero-section">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <h1 class="hero-title">Baal Studio</h1>
+        <p class="hero-tagline">
+          Documentación patrimonial · Planimetría · Mapeado · Levantamiento 3D · Modelado 3D · Reconstrucción virtual · Fotografía con Drone
+        </p>
+        <p class="hero-tagline-en">
+          Heritage documentation · Planimetric Mapping · 3D Survey · Virtual reconstruction · Drone photo
+        </p>
       </div>
     </section>
 
-    <!-- SECCIÓN PREMIOS / PRENSA -->
-    <section class="section">
-      <h2 class="section-title">Reconocimientos & Prensa</h2>
-      <ul class="awards-list">
-        <li><span>2024</span> — Publicación en Plataforma Arquitectura</li>
-        <li><span>2023</span> — Mención de Honor / Premio X</li>
-      </ul>
+    <!-- SOBRE EL ESTUDIO / ABOUT -->
+    <section id="sobre-estudio" class="section">
+      <div class="about-grid">
+        <div class="about-intro">
+          <h2>Especialista en documentación y análisis del patrimonio cultural</h2>
+          <p class="es-text">
+            Especialista en documentación y análisis del patrimonio cultural mediante flujos digitales de alta precisión, integrando planimetrías, mapeados, fotogrametría, modelado tridimensional y reconstrucción virtual para su aplicación en estudio, conservación y difusión.
+          </p>
+          <p class="en-text">
+            Specialist in cultural heritage documentation and analysis through high-precision digital workflows, integrating mapping, photogrammetry, 3D modeling, and virtual reconstruction for research, conservation, and dissemination purposes.
+          </p>
+        </div>
+
+        <div class="about-details">
+          <h3>Sobre el Estudio / About the Practice</h3>
+          <p class="es-text">
+            Enfoque en la documentación digital del patrimonio cultural mediante tecnologías avanzadas aplicadas al análisis, registro y representación de material y yacimientos arqueológicos, arquitectura histórica y bienes patrimoniales en distintos contextos geográficos.
+          </p>
+          <p class="es-text">
+            Cada proyecto se aborda con una metodología adaptada a sus objetivos específicos, empleando distintas técnicas de documentación digital como levantamientos planimétricos, fotogrametría, escaneado láser, análisis de patologías o modelado 3D, con el fin de generar documentación precisa y adecuada para su estudio, conservación o reconstrucción.
+          </p>
+        </div>
+      </div>
+
+      <!-- ESTADÍSTICAS -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-number">8+</span>
+          <span class="stat-label">Años de experiencia<br><em>Years experience</em></span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number">30+</span>
+          <span class="stat-label">Casos documentados<br><em>Cases documented</em></span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number">2</span>
+          <span class="stat-label">Países<br><em>Countries</em></span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number">11</span>
+          <span class="stat-label">Herramientas de software<br><em>Software tools</em></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROYECTOS SELECCIONADOS (SE CARGAN DE SUPABASE) -->
+    <section id="proyectos" class="section">
+      <div class="section-header">
+        <h2>Proyectos Seleccionados / Selected Projects</h2>
+      </div>
+      <div id="projects-grid" class="projects-grid">
+        <p class="loading-text">Cargando proyectos desde Supabase Storage...</p>
+      </div>
+    </section>
+
+    <!-- CAPACIDADES / CAPABILITIES -->
+    <section id="capacidades" class="section capacities-section">
+      <h2 class="section-title">Capacidades / Capabilities</h2>
+      <div class="capacities-grid">
+        <div class="capacity-card">
+          <h3>Documentación del Patrimonio</h3>
+          <p class="es-text">Registro exhaustivo de bienes culturales inmuebles mediante técnicas de medición y captura de datos de alta precisión.</p>
+          <p class="en-text">Comprehensive recording of immovable cultural assets using high-precision measurement and data capture techniques.</p>
+        </div>
+        <div class="capacity-card">
+          <h3>Planimetrías</h3>
+          <p class="es-text">Elaboración de planos técnicos a escala con plantas, alzados y secciones de edificios históricos y conjuntos patrimoniales.</p>
+          <p class="en-text">Technical scaled drawings including floor plans, elevations and sections of historic buildings and heritage ensembles.</p>
+        </div>
+        <div class="capacity-card">
+          <h3>Mapeados</h3>
+          <p class="es-text">Evaluación sistemática del estado de conservación y mapeo del deterioro a escala.</p>
+          <p class="en-text">Systematic condition assessment and deterioration mapping at scale.</p>
+        </div>
+        <div class="capacity-card">
+          <h3>Levantamiento y Modelado 3D</h3>
+          <p class="es-text">Levantamientos fotogramétricos y modelos de malla de alta fidelidad con entregables BIM texturizados y precisión submilimétrica.</p>
+          <p class="en-text">Photogrammetric surveys and high-fidelity mesh models with textured BIM deliverables and sub-millimeter accuracy.</p>
+        </div>
+        <div class="capacity-card">
+          <h3>Reconstrucción Virtual</h3>
+          <p class="es-text">Reconstrucciones digitales basadas en evidencias de patrimonio perdido o dañado usando datos históricos y arqueológicos.</p>
+          <p class="en-text">Evidence-based digital reconstructions of lost or damaged heritage using historical and archaeological data.</p>
+        </div>
+        <div class="capacity-card">
+          <h3>Fotografía con Drone</h3>
+          <p class="es-text">Captura aérea de alta resolución con UAV para documentación, inspección y generación de ortofotografías de conjuntos patrimoniales.</p>
+          <p class="en-text">High-resolution aerial capture with UAV for documentation, inspection and orthophoto generation of heritage sites.</p>
+        </div>
+      </div>
     </section>
   </main>
 
-  <!-- PIE DE PÁGINA / CONTACTO -->
+  <!-- PIE DE PÁGINA / FOOTER -->
   <footer id="contacto" class="footer">
-    <p>© 2026 Baal Studio. Todos los derechos reservados.</p>
-    <div class="social-links">
-      <a href="#" target="_blank">Instagram</a>
-      <a href="#" target="_blank">LinkedIn</a>
-      <a href="mailto:tuemail@ejemplo.com">Contacto</a>
+    <div class="footer-summary">
+      <p>Documentación del Patrimonio · Planimetrías · Mapeados · Levantamiento y Modelado 3D · Reconstrucción Virtual · Fotografía con Drone</p>
+      <p class="en-text">Heritage Documentation · Mapping · 3D Survey · Virtual reconstruction · Drone Photo</p>
+    </div>
+    <div class="footer-links">
+      <a href="#inicio">Inicio / Home</a>
+      <a href="#proyectos">Proyectos / Projects</a>
+      <a href="#sobre-estudio">Sobre mí / About</a>
+      <a href="#contacto">Contacto / Contact</a>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Baal Studio. Todos los derechos reservados · All rights reserved.</p>
+      <p>Granada, Andalucía, España · Operating internationally</p>
     </div>
   </footer>
 
