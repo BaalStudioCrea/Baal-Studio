@@ -3,15 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Baal Studio | Documentación del Patrimonio & Levantamiento 3D</title>
+  <title>Baal Studio | Documentación del Patrimonio, Planimetrías y Levantamiento 3D</title>
+  
+  <!-- Estilos principales -->
   <link rel="stylesheet" href="style.css">
-  <!-- Precarga de la imagen principal si está en Supabase Storage -->
+  
+  <!-- Tipografía Montserrat / Roboto (Opcional si usas Google Fonts) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <!-- ENCABEZADO / NAVEGACIÓN -->
+  <!-- CABECERA / HEADER -->
   <header class="header">
-    <div class="logo">Baal Studio</div>
+    <div class="logo logo-header">
+      <!-- El script inyectará aquí NEWBaal_Logo_White.png o el texto por defecto -->
+      Baal Studio
+    </div>
     <nav class="nav">
       <a href="#inicio">Inicio / Home</a>
       <a href="#proyectos">Proyectos / Projects</a>
@@ -21,143 +30,92 @@
     </nav>
   </header>
 
-  <main>
-    <!-- HERO / PORTADA CON IMAGEN DE FONDO -->
-    <section id="inicio" class="hero-section">
-      <div class="hero-overlay"></div>
-      <div class="hero-content">
-        <h1 class="hero-title">Baal Studio</h1>
-        <p class="hero-tagline">
-          Documentación patrimonial · Planimetría · Mapeado · Levantamiento 3D · Modelado 3D · Reconstrucción virtual · Fotografía con Drone
-        </p>
-        <p class="hero-tagline-en">
-          Heritage documentation · Planimetric Mapping · 3D Survey · Virtual reconstruction · Drone photo
-        </p>
-      </div>
-    </section>
+  <!-- SECCIÓN HERO (FONDO DINÁMICO) -->
+  <section id="inicio" class="hero-section">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1 class="hero-title">BAAL STUDIO</h1>
+      <p class="hero-subtitle-es">Documentación del Patrimonio · Planimetrías · Mapeados · Levantamiento y Modelado 3D · Reconstrucción Virtual · Fotografía con Drone</p>
+      <p class="hero-subtitle-en">Heritage Documentation · Mapping · 3D Survey · Virtual reconstruction · Drone Photo</p>
+      <a href="#proyectos" class="hero-btn">Ver Proyectos / View Projects</a>
+    </div>
+  </section>
 
-    <!-- SOBRE EL ESTUDIO / ABOUT -->
-    <section id="sobre-estudio" class="section">
-      <div class="about-grid">
-        <div class="about-intro">
-          <h2>Especialista en documentación y análisis del patrimonio cultural</h2>
-          <p class="es-text">
-            Especialista en documentación y análisis del patrimonio cultural mediante flujos digitales de alta precisión, integrando planimetrías, mapeados, fotogrametría, modelado tridimensional y reconstrucción virtual para su aplicación en estudio, conservación y difusión.
-          </p>
-          <p class="en-text">
-            Specialist in cultural heritage documentation and analysis through high-precision digital workflows, integrating mapping, photogrammetry, 3D modeling, and virtual reconstruction for research, conservation, and dissemination purposes.
-          </p>
-        </div>
-
-        <div class="about-details">
-          <h3>Sobre el Estudio / About the Practice</h3>
-          <p class="es-text">
-            Enfoque en la documentación digital del patrimonio cultural mediante tecnologías avanzadas aplicadas al análisis, registro y representación de material y yacimientos arqueológicos, arquitectura histórica y bienes patrimoniales en distintos contextos geográficos.
-          </p>
-          <p class="es-text">
-            Cada proyecto se aborda con una metodología adaptada a sus objetivos específicos, empleando distintas técnicas de documentación digital como levantamientos planimétricos, fotogrametría, escaneado láser, análisis de patologías o modelado 3D, con el fin de generar documentación precisa y adecuada para su estudio, conservación o reconstrucción.
-          </p>
-        </div>
-      </div>
-
-      <!-- ESTADÍSTICAS -->
-      <div class="stats-grid">
-        <div class="stat-card">
-          <span class="stat-number">8+</span>
-          <span class="stat-label">Años de experiencia<br><em>Years experience</em></span>
-        </div>
-        <div class="stat-card">
-          <span class="stat-number">30+</span>
-          <span class="stat-label">Casos documentados<br><em>Cases documented</em></span>
-        </div>
-        <div class="stat-card">
-          <span class="stat-number">2</span>
-          <span class="stat-label">Países<br><em>Countries</em></span>
-        </div>
-        <div class="stat-card">
-          <span class="stat-number">11</span>
-          <span class="stat-label">Herramientas de software<br><em>Software tools</em></span>
-        </div>
-      </div>
-    </section>
-
-    <!-- PROYECTOS SELECCIONADOS (SE CARGAN DE SUPABASE) -->
-    <section id="proyectos" class="section">
-      <div class="section-header">
-        <h2>Proyectos Seleccionados / Selected Projects</h2>
-      </div>
+  <!-- SECCIÓN DE PROYECTOS -->
+  <section id="proyectos" class="projects-section">
+    <div class="container">
+      <h2 class="section-title">PROYECTOS / PROJECTS</h2>
       <div id="projects-grid" class="projects-grid">
-        <p class="loading-text">Cargando proyectos desde Supabase Storage...</p>
+        <!-- Los proyectos cargados desde Supabase se renderizarán aquí -->
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- CAPACIDADES / CAPABILITIES -->
-    <section id="capacidades" class="section capacities-section">
-      <h2 class="section-title">Capacidades / Capabilities</h2>
-      <div class="capacities-grid">
-        <div class="capacity-card">
-          <h3>Documentación del Patrimonio</h3>
-          <p class="es-text">Registro exhaustivo de bienes culturales inmuebles mediante técnicas de medición y captura de datos de alta precisión.</p>
-          <p class="en-text">Comprehensive recording of immovable cultural assets using high-precision measurement and data capture techniques.</p>
+  <!-- SECCIÓN SOBRE EL ESTUDIO -->
+  <section id="sobre-estudio" class="about-section">
+    <div class="container">
+      <h2 class="section-title">SOBRE EL ESTUDIO / ABOUT THE STUDIO</h2>
+      <div class="about-content">
+        <div class="about-text-es">
+          <p>
+            Baal Studio es un estudio técnico especializado en la documentación digital, levantamiento 3D y análisis del patrimonio arquitectónico y arqueológico. Combinamos tecnologías avanzadas de fotogrametría, escaneado láser y drones para preservar y difundir el patrimonio con la máxima precisión.
+          </p>
         </div>
-        <div class="capacity-card">
-          <h3>Planimetrías</h3>
-          <p class="es-text">Elaboración de planos técnicos a escala con plantas, alzados y secciones de edificios históricos y conjuntos patrimoniales.</p>
-          <p class="en-text">Technical scaled drawings including floor plans, elevations and sections of historic buildings and heritage ensembles.</p>
-        </div>
-        <div class="capacity-card">
-          <h3>Mapeados</h3>
-          <p class="es-text">Evaluación sistemática del estado de conservación y mapeo del deterioro a escala.</p>
-          <p class="en-text">Systematic condition assessment and deterioration mapping at scale.</p>
-        </div>
-        <div class="capacity-card">
-          <h3>Levantamiento y Modelado 3D</h3>
-          <p class="es-text">Levantamientos fotogramétricos y modelos de malla de alta fidelidad con entregables BIM texturizados y precisión submilimétrica.</p>
-          <p class="en-text">Photogrammetric surveys and high-fidelity mesh models with textured BIM deliverables and sub-millimeter accuracy.</p>
-        </div>
-        <div class="capacity-card">
-          <h3>Reconstrucción Virtual</h3>
-          <p class="es-text">Reconstrucciones digitales basadas en evidencias de patrimonio perdido o dañado usando datos históricos y arqueológicos.</p>
-          <p class="en-text">Evidence-based digital reconstructions of lost or damaged heritage using historical and archaeological data.</p>
-        </div>
-        <div class="capacity-card">
-          <h3>Fotografía con Drone</h3>
-          <p class="es-text">Captura aérea de alta resolución con UAV para documentación, inspección y generación de ortofotografías de conjuntos patrimoniales.</p>
-          <p class="en-text">High-resolution aerial capture with UAV for documentation, inspection and orthophoto generation of heritage sites.</p>
+        <div class="about-text-en">
+          <p>
+            Baal Studio is a technical consultancy specializing in digital documentation, 3D surveying, and analysis of architectural and archaeological heritage. We combine advanced photogrammetry, laser scanning, and drone technologies to record and preserve heritage with scientific accuracy.
+          </p>
         </div>
       </div>
-    </section>
-  </main>
+    </div>
+  </section>
 
-<!-- PIE DE PÁGINA / FOOTER -->
+  <!-- SECCIÓN CAPACIDADES -->
+  <section id="capacidades" class="capabilities-section">
+    <div class="container">
+      <h2 class="section-title">CAPACIDADES / CAPABILITIES</h2>
+      <ul class="capabilities-list">
+        <li>Documentación gráfica y geométrica del Patrimonio / Heritage Geometric & Graphic Documentation</li>
+        <li>Planimetrías de precisión y ortofotos / Precision Plans & Orthophotos</li>
+        <li>Mapeado de daños y levantamientos / Damage Mapping & Surveys</li>
+        <li>Fotogrametría y Levantamiento 3D / Photogrammetry & 3D Surveying</li>
+        <li>Reconstrucción Virtual Arqueológica / Virtual Archaeological Reconstruction</li>
+        <li>Fotografía y Vídeo Aéreo con Drone / Drone Aerial Photography & Video</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- SECCIÓN DE LOGO SECUNDARIO / MARCA DE AGUA -->
+  <section class="social-brands-section">
+    <div class="brand-secondary-container">
+      <!-- El script inyectará aquí LNS_LOGO_WHITE.png con opacidad -->
+    </div>
+  </section>
+
+  <!-- PIE DE PÁGINA / FOOTER -->
   <footer id="contacto" class="footer">
-    <div class="footer-summary">
-      <p>Documentación del Patrimonio · Planimetrías · Mapeados · Levantamiento y Modelado 3D · Reconstrucción Virtual · Fotografía con Drone</p>
-      <p class="en-text">Heritage Documentation · Mapping · 3D Survey · Virtual reconstruction · Drone Photo</p>
-    </div>
-
-    <div class="footer-middle">
-      <div class="footer-links">
-        <a href="#inicio">Inicio / Home</a>
-        <a href="#proyectos">Proyectos / Projects</a>
-        <a href="#sobre-estudio">Sobre el Estudio / About</a>
-        <a href="#capacidades">Capacidades / Capabilities</a>
+    <div class="footer-container">
+      <div class="footer-info">
+        <p class="footer-summary-es">
+          Documentación del Patrimonio · Planimetrías · Mapeados · Levantamiento y Modelado 3D · Reconstrucción Virtual · Fotografía con Drone
+        </p>
+        <p class="footer-summary-en">
+          Heritage Documentation · Mapping · 3D Survey · Virtual reconstruction · Drone Photo
+        </p>
+        <div class="footer-meta">
+          <p>© Baal Studio. Todos los derechos reservados · All rights reserved.</p>
+          <p>Granada, Andalucía, España · Operating internationally</p>
+        </div>
       </div>
 
-      <!-- REDES SOCIALES Y CONTACTO REALES DESDE SITE.TXT -->
-      <div class="footer-social">
-        <a href="mailto:baalstudiocrea@gmail.com" class="contact-btn">baalstudiocrea@gmail.com</a>
-        <a href="https://www.instagram.com/baalstudiocrea" target="_blank" rel="noopener">Instagram</a>
-        <a href="https://sketchfab.com/baalstudio" target="_blank" rel="noopener">Sketchfab 3D</a>
+      <!-- CONTENEDOR PARA CÓDIGO QR -->
+      <div class="footer-qr-container">
+        <!-- El script inyectará aquí el QRBAAL.png firmado con enlace a Linktree -->
       </div>
-    </div>
-
-    <div class="footer-bottom">
-      <p>© Baal Studio. Todos los derechos reservados · All rights reserved.</p>
-      <p>Granada, Andalucía, España · Operating internationally</p>
     </div>
   </footer>
 
+  <!-- LÓGICA DE JAVASCRIPT -->
   <script src="script.js"></script>
 </body>
 </html>
