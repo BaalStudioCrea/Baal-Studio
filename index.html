@@ -1,1 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Baal Studio</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+  <!-- ENCABEZADO / NAVEGACIÓN -->
+  <header class="header">
+    <div class="logo">Baal Studio</div>
+    <nav class="nav">
+      <a href="#proyectos">Proyectos</a>
+      <a href="#sobre-mi">Sobre mí</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- SECCIÓN SOBRE MÍ / INTRODUCCIÓN -->
+    <section id="sobre-mi" class="section hero-section">
+      <h1 class="hero-title">Arquitectura, Diseño y Experimentación Spatial</h1>
+      <p class="hero-text">
+        Escribe aquí tu pequeña biografía o la presentación del estudio que revisaste en la carpeta content.
+      </p>
+    </section>
+
+    <!-- GALERÍA DE PROYECTOS (Se cargará desde Supabase) -->
+    <section id="proyectos" class="section">
+      <h2 class="section-title">Proyectos Seleccionados</h2>
+      <div id="projects-grid" class="projects-grid">
+        <!-- Los proyectos de tu función de Supabase se pintarán aquí automáticamente -->
+        <p class="loading-text">Cargando proyectos desde Supabase...</p>
+      </div>
+    </section>
+
+    <!-- SECCIÓN PREMIOS / PRENSA -->
+    <section class="section">
+      <h2 class="section-title">Reconocimientos & Prensa</h2>
+      <ul class="awards-list">
+        <li><span>2024</span> — Publicación en Plataforma Arquitectura</li>
+        <li><span>2023</span> — Mención de Honor / Premio X</li>
+      </ul>
+    </section>
+  </main>
+
+  <!-- PIE DE PÁGINA / CONTACTO -->
+  <footer id="contacto" class="footer">
+    <p>© 2026 Baal Studio. Todos los derechos reservados.</p>
+    <div class="social-links">
+      <a href="#" target="_blank">Instagram</a>
+      <a href="#" target="_blank">LinkedIn</a>
+      <a href="mailto:tuemail@ejemplo.com">Contacto</a>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
