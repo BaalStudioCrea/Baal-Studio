@@ -209,32 +209,60 @@ body {
   margin-bottom: 0.8rem;
 }
 
-/* PIE DE PÁGINA */
+/* PIE DE PÁGINA Y CONTACTO */
 .footer {
   background-color: #111111;
   color: #ffffff;
-  padding: 4rem 3rem;
+  padding: 4rem 3rem 2rem 3rem;
   margin-top: 6rem;
 }
 
 .footer-summary {
   font-size: 0.9rem;
   color: #888888;
-  border-bottom: 1px solid #333333;
+  border-bottom: 1px solid #222222;
   padding-bottom: 2rem;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
 }
 
-.footer-links {
+.footer-middle {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 2rem;
+  border-bottom: 1px solid #222222;
+  padding-bottom: 2.5rem;
   margin-bottom: 2rem;
 }
 
-.footer-links a {
-  color: #ffffff;
+.footer-links, .footer-social {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.footer-links a, .footer-social a {
+  color: #cccccc;
   text-decoration: none;
   font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.footer-links a:hover, .footer-social a:hover {
+  color: #ffffff;
+}
+
+.contact-btn {
+  border: 1px solid #444444;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+}
+
+.contact-btn:hover {
+  border-color: #ffffff;
+  background-color: #ffffff;
+  color: #111111 !important;
 }
 
 .footer-bottom {
