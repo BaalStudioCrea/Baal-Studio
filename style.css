@@ -1,1 +1,143 @@
+/* RESET BÁSICO Y TIPOGRAFÍA */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: #fcfcfc;
+  color: #111111;
+  line-height: 1.6;
+  padding: 0 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ENCABEZADO */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2.5rem 0;
+  border-bottom: 1px solid #eeeeee;
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+}
+
+.nav a {
+  margin-left: 1.5rem;
+  text-decoration: none;
+  color: #666666;
+  font-size: 0.95rem;
+  transition: color 0.2s;
+}
+
+.nav a:hover {
+  color: #000000;
+}
+
+/* SECCIONES */
+.section {
+  padding: 4rem 0;
+}
+
+.hero-title {
+  font-size: 2.5rem;
+  font-weight: 400;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  max-width: 800px;
+}
+
+.hero-text {
+  font-size: 1.1rem;
+  color: #555555;
+  max-width: 700px;
+}
+
+.section-title {
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 2rem;
+  color: #888888;
+}
+
+/* REJILLA DE PROYECTOS (GRID) */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2.5rem;
+}
+
+.project-card {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+}
+
+.project-card img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  margin-bottom: 0.8rem;
+  transition: opacity 0.3s ease;
+}
+
+.project-card:hover img {
+  opacity: 0.85;
+}
+
+.project-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.project-meta {
+  font-size: 0.85rem;
+  color: #777777;
+}
+
+/* PREMIOS Y FOOTER */
+.awards-list {
+  list-style: none;
+}
+
+.awards-list li {
+  padding: 0.8rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  color: #444;
+}
+
+.awards-list span {
+  font-weight: 600;
+  margin-right: 1rem;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 3rem 0;
+  border-top: 1px solid #eeeeee;
+  font-size: 0.9rem;
+  color: #777777;
+}
+
+.social-links a {
+  margin-left: 1rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+.social-links a:hover {
+  color: #000;
+}
