@@ -1,56 +1,96 @@
-const SUPABASE_BASE_URL = "https://hlyzyeatnbulyfiiwvsq.supabase.co/functions/v1";
-const ASSETS_FUNCTION_URL = `${SUPABASE_BASE_URL}/get-site-assets`;
+// CONFIGURACIÓN DE SUPABASE
+const SUPABASE_URL = "https://hlyzyeatnbulyfiiwvsq.supabase.co";
+// Reemplaza esta variable con tu clave pública anon Key de Supabase si la tienes a mano
+const SUPABASE_ANON_KEY = "TU_SUPABASE_ANON_KEY"; 
+
+document.addEventListener("DOMContentLoaded", () => {
+  cargarRecursosEstaticos();
+  cargarProyectos();
+});
 
 /**
- * Carga los activos estáticos del sitio (Logo, Fondo Hero, Marca de Agua y QR)
- * desde la Edge Function get-site-assets
+ * 1. Carga los logos, imagen Hero y QR desde tu Storage o servidor
  */
-async function loadSiteAssets() {
-  try {
-    const response = await fetch(ASSETS_FUNCTION_URL);
-    const data = await response.json();
+function cargarRecursosEstaticos() {
+  // Ajusta estas rutas a las URLs públicas o firmadas de tus imágenes base
+  const logoHeaderUrl = `${SUPABASE_URL}/storage/v1/object/public/site/NEWBaal_Logo_White.png`;
+  const logoSecondaryUrl = `${SUPABASE_URL}/storage/v1/object/public/site/LNS_LOGO_WHITE.png`;
+  const qrUrl = `${SUPABASE_URL}/storage/v1/object/public/site/QRBAAL.png`;
+  const heroBgUrl = `${SUPABASE_URL}/storage/v1/object/public/site/fondo.webp`;
 
-    if (!data.success || !data.assets) {
-      console.warn("No se pudieron obtener los activos estáticos:", data);
-      return;
-    }
+  // Inyectar Logo Header
+  const headerLogoContainer = document.querySelector(".logo-header");
+  if (headerLogoContainer) {
+    headerLogoContainer.innerHTML = `<img src="${logoHeaderUrl}" alt="Baal Studio" class="brand-logo-img">`;
+  }
 
-    const { fondo, logoPrincipal, logoLNS, qr } = data.assets;
+  // Inyectar Fondo Hero
+  const heroSection = document.querySelector(".hero-section");
+  if (heroSection) {
+    heroSection.style.backgroundImage = `url('${heroBgUrl}')`;
+  }
 
-    // 1. Inyectar imagen de fondo en la sección Hero
-    const heroSection = document.querySelector('.hero-section');
-    if (heroSection && fondo) {
-      heroSection.style.backgroundImage = `url('${fondo}')`;
-    }
+  // Inyectar Logo Secundario (Marca de agua 12%)
+  const secondaryLogoContainer = document.querySelector(".brand-secondary-container");
+  if (secondaryLogoContainer) {
+    secondaryLogoContainer.innerHTML = `<img src="${logoSecondaryUrl}" alt="Baal Studio Secondary Logo" class="social-logo-img">`;
+  }
 
-    // 2. Inyectar Logo Principal en el Header
-    const logoContainer = document.querySelector('.logo-header');
-    if (logoContainer && logoPrincipal) {
-      logoContainer.innerHTML = `<img src="${logoPrincipal}" alt="Baal Studio Logo" class="brand-logo-img">`;
-    }
-
-    // 3. Inyectar Logo Secundario (Marca de Agua)
-    const brandSecondaryContainer = document.querySelector('.brand-secondary-container');
-    if (brandSecondaryContainer && logoLNS) {
-      brandSecondaryContainer.innerHTML = `<img src="${logoLNS}" alt="LNS Logo" class="social-logo-img">`;
-    }
-
-    // 4. Inyectar Código QR en el Footer con enlace
-    const qrContainer = document.querySelector('.footer-qr-container');
-    if (qrContainer && qr) {
-      qrContainer.innerHTML = `
-        <a href="https://linktr.ee/baalstudio" target="_blank" rel="noopener noreferrer" title="Escanear o hacer clic para abrir Linktree">
-          <img src="${qr}" alt="Código QR Linktree Baal Studio" class="footer-qr-img">
-        </a>
-      `;
-    }
-
-  } catch (error) {
-    console.error("Error al conectar con la Edge Function get-site-assets:", error);
+  // Inyectar QR en el Footer
+  const qrContainer = document.querySelector(".footer-qr-container");
+  if (qrContainer) {
+    qrContainer.innerHTML = `<a href="https://linktr.ee/baalstudio" target="_blank" rel="noopener"><img src="${qrUrl}" alt="QR Linktree Baal Studio" class="footer-qr-img"></a>`;
   }
 }
 
-// Inicialización cuando la página esté completamente cargada
-document.addEventListener("DOMContentLoaded", () => {
-  loadSiteAssets();
-});
+/**
+ * 2. Llama a la Edge Function para renderizar las tarjetas de proyectos
+ */
+async function cargarProyectos() {
+  const projectsGrid = document.getElementById("projects-grid");
+  if (!projectsGrid) return;
+
+  try {
+    // Reemplaza por el nombre exacto de la Edge Function que probaste (list-projects o get-projects)
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/get-projects`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+
+    const data = await response.json();
+
+    if (!data.projects || data.projects.length === 0) {
+      projectsGrid.innerHTML = "<p>No hay proyectos disponibles en este momento.</p>";
+      return;
+    }
+
+    // Limpiar contenedor
+    projectsGrid.innerHTML = "";
+
+    // Inyectar cada tarjeta de proyecto
+    data.projects.forEach((project) => {
+      const card = document.createElement("div");
+      card.className = "project-card";
+
+      const imageUrl = project.signed_image_url || "https://via.placeholder.com/600x400?text=Sin+Imagen";
+
+      card.innerHTML = `
+        <div class="project-thumb-container">
+          <img src="${imageUrl}" alt="${project.title}" class="project-thumb" loading="lazy">
+        </div>
+        <div class="project-info">
+          <h3 class="project-title">${project.title}</h3>
+          <p class="project-meta">Documentación Patrimonial</p>
+        </div>
+      `;
+
+      projectsGrid.appendChild(card);
+    });
+
+  } catch (error) {
+    console.error("Error al cargar los proyectos:", error);
+    projectsGrid.innerHTML = "<p>Ocurrió un error al cargar los proyectos.</p>";
+  }
+}
