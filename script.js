@@ -1,56 +1,51 @@
-// Configuración de tu función de Supabase
-// REEMPLAZA esta URL por el enlace real de tu Edge Function / API de Supabase
-const SUPABASE_FUNCTION_URL = "https://TU-PROYECTO.supabase.co/functions/v1/TU-FUNCION";
+const SUPABASE_BASE_URL = "https://hlyzyeatnbulyfiiwvsq.supabase.co/functions/v1";
+const ASSETS_FUNCTION_URL = `${SUPABASE_BASE_URL}/get-site-assets`;
+const PROJECTS_FUNCTION_URL = `${SUPABASE_BASE_URL}/get-projects`; // Nombre de tu función de proyectos
 
-async function loadProjects() {
-  const container = document.getElementById("projects-grid");
-  if (!container) return;
-
+async function loadSiteAssets() {
   try {
-    const response = await fetch(SUPABASE_FUNCTION_URL);
+    const response = await fetch(ASSETS_FUNCTION_URL);
     const data = await response.json();
 
-    if (!data.success || !data.projects) {
-      container.innerHTML = "<p>No se pudieron cargar los proyectos.</p>";
-      return;
+    if (!data.success || !data.assets) return;
+
+    const { fondo, logoPrincipal, logoLNS, qr } = data.assets;
+
+    // 1. Inyectar imagen de fondo Hero
+    const heroSection = document.querySelector('.hero-section');
+    if (heroSection && fondo) {
+      heroSection.style.backgroundImage = `url('${fondo}')`;
     }
 
-    // Limpiamos el mensaje de carga
-    container.innerHTML = "";
+    // 2. Inyectar Logo principal en la cabecera
+    const logoContainer = document.querySelector('.logo-header');
+    if (logoContainer && logoPrincipal) {
+      logoContainer.innerHTML = `<img src="${logoPrincipal}" alt="Baal Studio Logo" class="brand-logo-img">`;
+    }
 
-    // Ordenamos los proyectos por el campo 'order'
-    const sortedProjects = data.projects.sort((a, b) => (a.order || 0) - (b.order || 0));
+    // 3. Inyectar Logo secundario (al 12% de opacidad) antes del footer
+    const brandSecondaryContainer = document.querySelector('.brand-secondary-container');
+    if (brandSecondaryContainer && logoLNS) {
+      brandSecondaryContainer.innerHTML = `<img src="${logoLNS}" alt="LNS Logo" class="social-logo-img">`;
+    }
 
-    // Generamos cada tarjeta de proyecto con datos reales de Supabase
-    sortedProjects.forEach((project) => {
-      const card = document.createElement("a");
-      card.className = "project-card";
-      // Enlace para ir al detalle del proyecto pasando su nombre por URL
-      card.href = `proyecto.html?name=${encodeURIComponent(project.name)}`;
-
-      // Extracción limpia de metadatos devueltos por tu función
-      const title = project.metadata?.title || project.name;
-      const location = project.metadata?.location || "";
-      const year = project.metadata?.year || "";
-      const coverUrl = project.cover?.url || "";
-
-      // Renderizado con Lazy Loading en las imágenes para máxima velocidad
-      card.innerHTML = `
-        <img src="${coverUrl}" alt="${title}" loading="lazy" decoding="async" />
-        <div class="project-info">
-          <h3 class="project-title">${title}</h3>
-          <p class="project-meta">${[location, year].filter(Boolean).join(" — ")}</p>
-        </div>
+    // 4. Inyectar Código QR en el Footer
+    const qrContainer = document.querySelector('.footer-qr-container');
+    if (qrContainer && qr) {
+      qrContainer.innerHTML = `
+        <a href="https://linktr.ee/baalstudio" target="_blank" rel="noopener" title="Escanear o hacer clic para abrir Linktree">
+          <img src="${qr}" alt="Código QR Linktree Baal Studio" class="footer-qr-img">
+        </a>
       `;
-
-      container.appendChild(card);
-    });
+    }
 
   } catch (error) {
-    console.error("Error al obtener los proyectos:", error);
-    container.innerHTML = "<p>Ocurrió un error al cargar la galería.</p>";
+    console.error("Error cargando los activos del sitio:", error);
   }
 }
 
-// Ejecutar cuando la página esté lista
-document.addEventListener("DOMContentLoaded", loadProjects);
+// Ejecutar cuando el DOM esté listo
+document.addEventListener("DOMContentLoaded", () => {
+  loadSiteAssets();
+  // loadProjects(); // Se invocará cuando tengamos la función de proyectos lista
+});
