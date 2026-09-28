@@ -3,196 +3,95 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Baal Studio</title>
+  <title>Baal Studio - Documentación Patrimonial</title>
   <link rel="stylesheet" href="style.css">
+  
+  <!-- Tipografía Montserrat de Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <!-- CABECERA / HEADER -->
-  <header class="header">
-    <div class="logo logo-header">
-      <!-- El script inyectará NEWBaal_Logo_White.png aquí -->
-      Baal Studio
+  <!-- CABECERA CON LOGO PRINCIPAL -->
+  <header class="main-header">
+    <div class="logo-header">
+      <img src="https://hlyzyeatnbulyfiiwvsq.supabase.co/storage/v1/object/public/site/NEWBaal_Logo_White.png" alt="Baal Studio Logo">
     </div>
-    <nav class="nav">
-      <a href="#inicio">Inicio / Home</a>
-      <a href="#proyectos">Proyectos / Projects</a>
-      <a href="#sobre-estudio">Sobre mí / About</a>
-      <a href="#contacto">Contacto / Contact</a>
-    </nav>
   </header>
 
-  <!-- PORTADA / HERO (CON FONDO.WEBP) -->
-  <section id="inicio" class="hero-section">
+  <!-- SECCIÓN HERO CON FONDO WEBP -->
+  <section class="hero-section" style="background-image: url('https://hlyzyeatnbulyfiiwvsq.supabase.co/storage/v1/object/public/site/fondo.webp');">
     <div class="hero-overlay"></div>
     <div class="hero-content">
-      <h1 class="hero-title">Baal Studio</h1>
-      <p class="hero-tagline">
-        Documentación patrimonial · Planimetría · Mapeado · Levantamiento 3D · Modelado 3D · Reconstrucción virtual · Fotografía con Drone
-      </p>
-      <p class="hero-tagline-en">
-        Heritage documentation · Planimetric Mapping · 3D Survey · Virtual reconstruction · Drone photo
-      </p>
-      
-      <div class="hero-bio">
-        <p class="es-text">
-          Especialista en documentación y análisis del patrimonio cultural mediante flujos digitales de alta precisión, integrando planimetrías, mapeados, fotogrametría, modelado tridimensional y reconstrucción virtual para su aplicación en estudio, conservación y difusión.
-        </p>
-        <p class="en-text">
-          Specialist in cultural heritage documentation and analysis through high-precision digital workflows, integrating mapping, photogrammetry, 3D modeling, and virtual reconstruction for research, conservation, and dissemination purposes.
-        </p>
-      </div>
+      <h1 class="hero-title">DOCUMENTACIÓN PATRIMONIAL</h1>
     </div>
   </section>
 
-  <!-- SOBRE EL ESTUDIO / ABOUT THE PRACTICE -->
-  <section id="sobre-estudio" class="section">
-    <div class="section-header">
-      <h2>Sobre el Estudio</h2>
-      <span class="en-subtitle">About the Practice</span>
-    </div>
-    
-    <div class="about-paragraphs">
-      <div class="about-block">
-        <p class="es-text">
-          Enfoque en la documentación digital del patrimonio cultural mediante tecnologías avanzadas aplicadas al análisis, registro y representación de material y yacimientos arqueológicos, arquitectura histórica y bienes patrimoniales en distintos contextos geográficos.
-        </p>
-        <p class="en-text">
-          Focused on digital documentation of cultural heritage through advanced technologies applied to the analysis, recording, and representation of material and archaeological sites, historic architecture, and heritage assets across different geographical contexts.
-        </p>
-      </div>
-
-      <div class="about-block">
-        <p class="es-text">
-          Cada proyecto se aborda con una metodología adaptada a sus objetivos específicos, empleando distintas técnicas de documentación digital como levantamientos planimétricos, fotogrametría, escaneado láser, análisis de patologías o modelado 3D, con el fin de generar documentación precisa y adecuada para su estudio, conservación o reconstrucción.
-        </p>
-        <p class="en-text">
-          Each project is approached through a methodology tailored to its specific objectives, using different digital documentation techniques such as planimetric surveys, photogrammetry, laser scanning, pathology analysis, or 3D modeling, in order to produce accurate documentation suitable for study, conservation, or reconstruction purposes.
-        </p>
-      </div>
-    </div>
-
-    <!-- METRICAS / ESTADÍSTICAS REALES -->
-    <div class="stats-grid">
-      <div class="stat-card">
-        <span class="stat-number">8+</span>
-        <span class="stat-label">Años de experiencia<br><em>Years experience</em></span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-number">30+</span>
-        <span class="stat-label">Casos documentados<br><em>Cases documented</em></span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-number">2</span>
-        <span class="stat-label">Países<br><em>Countries</em></span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-number">11</span>
-        <span class="stat-label">Herramientas de software<br><em>Software tools</em></span>
-      </div>
-    </div>
-  </section>
-
-  <!-- PROYECTOS SELECCIONADOS / SELECTED PROJECTS -->
-  <section id="proyectos" class="section">
-    <div class="section-header flex-header">
-      <div>
-        <h2>Proyectos Seleccionados</h2>
-        <span class="en-subtitle">Selected Projects</span>
-      </div>
-      <div class="view-all-link">
-        <span>Ver Todos / View All</span>
-      </div>
-    </div>
+  <!-- REJILLA DE PROYECTOS (Cargada mediante Edge Function) -->
+  <main class="portfolio-container">
     <div id="projects-grid" class="projects-grid">
-      <!-- Los proyectos cargados de Supabase se pintarán aquí mediante script.js -->
+      <!-- Las tarjetas de los proyectos se inyectarán aquí automáticamente -->
     </div>
-  </section>
+  </main>
 
-  <!-- CAPACIDADES / CAPABILITIES (LAS 6 DEL TXT) -->
-  <section id="capacidades" class="section capacities-section">
-    <div class="section-header">
-      <h2>Capacidades</h2>
-      <span class="en-subtitle">Capabilities</span>
-    </div>
+  <!-- MARCA DE AGUA / LOGO SECUNDARIO AL 12% -->
+  <div class="brand-secondary-container">
+    <img src="https://hlyzyeatnbulyfiiwvsq.supabase.co/storage/v1/object/public/site/LNS_LOGO_WHITE.png" alt="Baal Studio Secondary Logo" class="brand-secondary-img">
+  </div>
 
-    <div class="capacities-grid">
-      <div class="capacity-card">
-        <h3>Documentación del Patrimonio</h3>
-        <p class="es-text">Registro exhaustivo de bienes culturales inmuebles mediante técnicas de medición y captura de datos de alta precisión.</p>
-        <p class="en-text">Comprehensive recording of immovable cultural assets using high-precision measurement and data capture techniques.</p>
-      </div>
-
-      <div class="capacity-card">
-        <h3>Planimetrías</h3>
-        <p class="es-text">Elaboración de planos técnicos a escala con plantas, alzados y secciones de edificios históricos y conjuntos patrimoniales.</p>
-        <p class="en-text">Technical scaled drawings including floor plans, elevations and sections of historic buildings and heritage ensembles.</p>
-      </div>
-
-      <div class="capacity-card">
-        <h3>Mapeados</h3>
-        <p class="es-text">Evaluación sistemática del estado de conservación y mapeo del deterioro a escala.</p>
-        <p class="en-text">Systematic condition assessment and deterioration mapping at scale.</p>
-      </div>
-
-      <div class="capacity-card">
-        <h3>Levantamiento y Modelado 3D</h3>
-        <p class="es-text">Levantamientos fotogramétricos y modelos de malla de alta fidelidad con entregables BIM texturizados y precisión submilimétrica.</p>
-        <p class="en-text">Photogrammetric surveys and high-fidelity mesh models with textured BIM deliverables and sub-millimeter accuracy.</p>
-      </div>
-
-      <div class="capacity-card">
-        <h3>Reconstrucción Virtual</h3>
-        <p class="es-text">Reconstrucciones digitales basadas en evidencias de patrimonio perdido o dañado usando datos históricos y arqueológicos.</p>
-        <p class="en-text">Evidence-based digital reconstructions of lost or damaged heritage using historical and archaeological data.</p>
-      </div>
-
-      <div class="capacity-card">
-        <h3>Fotografía con Drone</h3>
-        <p class="es-text">Captura aérea de alta resolución con UAV para documentación, inspección y generación de ortofotografías de conjuntos patrimoniales.</p>
-        <p class="en-text">High-resolution aerial capture with UAV for documentation, inspection and orthophoto generation of heritage sites.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- BLOQUE LOGO SECUNDARIO / MARCA DE AGUA (12% TRANSPARENCIA) -->
-  <section class="social-brands-section">
-    <div class="brand-secondary-container">
-      <!-- El script inyectará aquí LNS_LOGO_WHITE.png -->
-    </div>
-  </section>
-
-  <!-- PIE DE PÁGINA / FOOTER LITERALE DESDE HOME.TXT & SITE.TXT -->
-  <footer id="contacto" class="footer">
-    <div class="footer-container">
-      <div class="footer-info">
-        <p class="footer-summary-es">
-          Documentación del Patrimonio · Planimetrías · Mapeados · Levantamiento y Modelado 3D · Reconstrucción Virtual · Fotografía con Drone
-        </p>
-        <p class="footer-summary-en">
-          Heritage Documentation · Mapping · 3D Survey · Virtual reconstruction · Drone Photo
-        </p>
-
-        <div class="footer-links">
-          <a href="#inicio">Inicio / Home</a>
-          <a href="#proyectos">Proyectos / Projects</a>
-          <a href="#sobre-estudio">Sobre mí / About</a>
-          <a href="#contacto">Contacto / Contact</a>
-        </div>
-
-        <div class="footer-meta">
-          <p>© Baal Studio. Todos los derechos reservados · All rights reserved.</p>
-          <p>Granada, Andalucía, España · Operating internationally</p>
-        </div>
-      </div>
-
-      <!-- CÓDIGO QR ENLAZADO A LINKTREE -->
-      <div class="footer-qr-container">
-        <!-- El script inyectará aquí QRBAAL.png firmado -->
-      </div>
+  <!-- PIE DE PÁGINA CON CÓDIGO QR Y LINKTREE -->
+  <footer class="main-footer">
+    <div class="footer-qr-container">
+      <a href="https://linktr.ee/baalstudio" target="_blank" rel="noopener">
+        <img src="https://hlyzyeatnbulyfiiwvsq.supabase.co/storage/v1/object/public/site/QRBAAL.png" alt="QR Linktree Baal Studio" class="footer-qr-img">
+      </a>
     </div>
   </footer>
 
-  <script src="script.js"></script>
+  <!-- LÓGICA DE CARGA DIRECTA -->
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const projectsGrid = document.getElementById("projects-grid");
+
+      try {
+        // Llamada a la Edge Function desplegada en Supabase
+        const response = await fetch("https://hlyzyeatnbulyfiiwvsq.supabase.co/functions/v1/get-projects");
+        const data = await response.json();
+
+        if (!data.projects || data.projects.length === 0) {
+          projectsGrid.innerHTML = "<p class='no-projects'>No hay proyectos disponibles en este momento.</p>";
+          return;
+        }
+
+        projectsGrid.innerHTML = "";
+
+        // Generar la tarjeta de cada proyecto devuelto por la función
+        data.projects.forEach((project) => {
+          const card = document.createElement("div");
+          card.className = "project-card";
+
+          const imageUrl = project.signed_image_url || "https://via.placeholder.com/600x400?text=Sin+Imagen";
+
+          card.innerHTML = `
+            <div class="project-thumb-container">
+              <img src="${imageUrl}" alt="${project.title}" class="project-thumb" loading="lazy">
+            </div>
+            <div class="project-info">
+              <h3 class="project-title">${project.title}</h3>
+              <p class="project-meta">Documentación Patrimonial</p>
+            </div>
+          `;
+
+          projectsGrid.appendChild(card);
+        });
+
+      } catch (error) {
+        console.error("Error al obtener proyectos:", error);
+        projectsGrid.innerHTML = "<p class='no-projects'>Error al cargar los proyectos.</p>";
+      }
+    });
+  </script>
+
 </body>
 </html>
