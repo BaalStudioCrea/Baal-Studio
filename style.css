@@ -1,87 +1,537 @@
-/* ============================================================
-   BAAL STUDIO
-   STYLE V03
-   BASE: V02
-   SOLO AJUSTES SOLICITADOS
-============================================================ */
+:root {
+  --bg: #F5F3EE;
+  --text: #111111;
+  --accent: #B08A57;
+  --gray: #7A7A7A;
+  --light-gray: #D8D4CC;
+  --white: #FFFFFF;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--white);
+  color: var(--text);
+  font-family: "Inter", sans-serif;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+}
 
 
 /* ============================================================
-   HERO — SOLO LOS CAMBIOS SOLICITADOS
+   HEADER
 ============================================================ */
+
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: 64px;
+  background: transparent;
+}
+
+.header-inner {
+  width: 100%;
+  height: 100%;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+}
+
+.header-logo img {
+  height: 32px;
+  width: auto;
+  object-fit: contain;
+}
+
+.desktop-nav {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.nav-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  position: relative;
+  color: rgba(255,255,255,.70);
+}
+
+.nav-link span {
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.nav-link small {
+  font-size: 9px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.30);
+}
+
+.nav-link:hover {
+  color: var(--white);
+}
+
+.nav-link.active {
+  color: var(--white);
+}
+
+.nav-link.active::after {
+  content: "";
+  width: 100%;
+  height: 1px;
+  background: rgba(255,255,255,.55);
+  margin-top: 2px;
+}
+
+.mobile-menu-button {
+  display: none;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.mobile-menu-button span {
+  width: 24px;
+  height: 1px;
+  background: white;
+}
+
+.mobile-menu {
+  display: none;
+}
+
+
+/* ============================================================
+   HERO
+============================================================ */
+
+.hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 680px;
+  overflow: hidden;
+  background: #111;
+}
+
+.hero-background-wrap {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
 
 .hero-background {
-  opacity: 0.40;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   object-position: center center;
+
+  /*
+    CAMBIO SOLICITADO:
+    V02 → 40 %
+  */
+  opacity: .40;
+
+  transform: scale(1.085);
 }
 
-
-/*
-  V02 colocaba el bloque demasiado abajo.
-  Lo subimos sin alterar tamaños ni tipografías.
-*/
+.hero-gradient {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      to top,
+      rgba(0,0,0,.65) 0%,
+      rgba(0,0,0,.15) 45%,
+      transparent 100%
+    );
+}
 
 .hero-content {
+  position: absolute;
+  left: 0;
   bottom: 145px;
+  width: 100%;
+  padding: 0 32px 0 32px;
+  z-index: 2;
+}
+
+.hero-labels {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 20px;
+}
+
+.hero-labels p {
+  margin: 0;
+  color: var(--accent);
+  font-size: 11px;
+  line-height: 1.5;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+
+.hero-labels .hero-label-en {
+  color: rgba(255,255,255,.40);
+  font-size: 9px;
+}
+
+.hero h1 {
+  margin: 0 0 18px;
+  color: white;
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(52px, 7vw, 92px);
+  line-height: .95;
+  font-weight: 300;
+}
+
+.hero-description {
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hero-description p {
+  margin: 0;
+  color: rgba(255,255,255,.80);
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.65;
+}
+
+.hero-description .hero-description-en {
+  color: rgba(255,255,255,.40);
+  font-size: 12px;
 }
 
 
 /* ============================================================
-   SECCIONES — ANCHO COMPLETO
+   SECCIONES
 ============================================================ */
 
-/*
-  La sección ya debe ocupar todo el viewport.
-  El contenido mantiene el sistema de columnas de V02.
-*/
-
-.content-section {
+.section {
   width: 100%;
+  background: var(--white);
+  padding: 96px 64px;
 }
 
 .section-inner {
   width: 100%;
+  display: flex;
+  gap: 0;
 }
 
+.eyebrow {
+  margin: 0;
+  color: #888;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
 
-/*
-  Los títulos permanecen en la primera columna,
-  claramente alineados a la izquierda.
-*/
+.eyebrow-en {
+  margin: 3px 0 0;
+  color: #BBB;
+  font-size: 9px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+}
 
-.section-heading {
-  text-align: left;
-  justify-self: start;
-  align-self: start;
+.gold-line {
+  width: 48px;
+  height: 1px;
+  margin-top: 24px;
+  background: var(--accent);
 }
 
 
 /* ============================================================
-   PROJECT COVER
+   ABOUT
 ============================================================ */
 
-/*
-  La portada debe verse completa.
-*/
+.about-section {
+  padding-top: 120px;
+  padding-bottom: 120px;
+}
 
-.project-card-image {
-  object-fit: contain;
-  object-position: center center;
+.about-inner {
+  display: grid;
+  grid-template-columns: 4fr 8fr;
+}
 
-  opacity: 0.60;
+.section-title {
+  padding-top: 2px;
+}
+
+.about-content {
+  padding-left: 0;
+}
+
+.lead-text {
+  margin: 0 0 3px;
+  max-width: 900px;
+  color: #333;
+  font-size: 18px;
+  line-height: 1.65;
+}
+
+.secondary-text {
+  margin: 0;
+  padding-bottom: 32px;
+  border-bottom: 1px solid #F0F0F0;
+  max-width: 900px;
+  color: #AAA;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.about-text {
+  margin: 32px 0 0;
+  max-width: 900px;
+  color: #444;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+  margin-top: 52px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat strong {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 42px;
+  line-height: 1;
+  font-weight: 300;
+}
+
+.stat span {
+  color: #555;
+  font-size: 11px;
+  letter-spacing: .04em;
+}
+
+.stat small {
+  color: #BBB;
+  font-size: 9px;
 }
 
 
-/*
-  Conservamos la capa oscura que ya funcionaba.
-*/
+/* ============================================================
+   PROJECTS
+============================================================ */
+
+.projects-section {
+  padding-top: 0;
+  padding-bottom: 120px;
+}
+
+.projects-header {
+  width: 100%;
+  margin-bottom: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.projects-title {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.projects-title .gold-line {
+  width: 64px;
+  margin-top: 0;
+}
+
+.view-all {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+  color: #888;
+}
+
+.view-all span {
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.view-all small {
+  color: #BBB;
+  font-size: 9px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.view-all:hover {
+  color: #111;
+}
+
+.projects-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 4px;
+}
+
+.project-card {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  background: #111;
+}
+
+.project-card.featured {
+  grid-column: 1 / -1;
+  height: 560px;
+}
+
+.project-card.secondary-large {
+  grid-column: span 7;
+  height: 420px;
+}
+
+.project-card.secondary-small {
+  grid-column: span 5;
+  height: 420px;
+}
+
+.project-card-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+
+  /*
+    Portada completa del primer proyecto.
+  */
+  object-fit: contain;
+  object-position: center;
+
+  opacity: .60;
+
+  transition: transform .5s ease;
+}
+
+.project-card.secondary-large .project-card-image,
+.project-card.secondary-small .project-card-image {
+  object-fit: cover;
+}
+
+.project-card:hover .project-card-image {
+  transform: scale(1.015);
+}
 
 .project-card-overlay {
+  position: absolute;
+  inset: 0;
   z-index: 1;
+  background:
+    linear-gradient(
+      to top,
+      rgba(0,0,0,.55),
+      transparent 65%
+    );
 }
 
 .project-card-content {
+  position: absolute;
+  left: 0;
+  bottom: 0;
   z-index: 2;
+  padding: 32px;
+  color: white;
+}
+
+.project-card-type {
+  margin-bottom: 5px;
+  color: var(--accent);
+  font-size: 9px;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+
+.project-card-title {
+  margin: 0 0 8px;
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(38px, 4vw, 56px);
+  line-height: 1;
+  font-weight: 300;
+}
+
+.project-card-title-small {
+  font-size: 42px;
+}
+
+.project-card-meta {
+  color: rgba(255,255,255,.60);
+  font-size: 11px;
+}
+
+.project-card-description {
+  max-width: 650px;
+  margin: 8px 0 0;
+  color: rgba(255,255,255,.48);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.projects-loading {
+  grid-column: 1 / -1;
+  padding: 60px 0;
+  color: #AAA;
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
 }
 
 
@@ -89,31 +539,76 @@
    CAPABILITIES
 ============================================================ */
 
-/*
-  Los números de V02 quedan completamente eliminados.
-*/
-
-.capability-number {
-  display: none !important;
+.capabilities-section {
+  background: var(--bg);
+  padding-top: 96px;
+  padding-bottom: 96px;
 }
 
+.capabilities-header {
+  width: 100%;
+  margin-bottom: 48px;
+}
 
-/*
-  Iconos algo más presentes, pero manteniendo el lenguaje
-  editorial y sobrio de la V02.
-*/
+.capabilities-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid #E8E5DF;
+  border-left: 1px solid #E8E5DF;
+}
+
+.capability {
+  min-height: 300px;
+  padding: 32px;
+  border-right: 1px solid #E8E5DF;
+  border-bottom: 1px solid #E8E5DF;
+}
 
 .capability-icon {
-  width: 46px;
-  height: 46px;
-
-  margin-bottom: 20px;
-
+  width: 42px;
+  height: 42px;
+  margin-bottom: 22px;
   color: var(--accent);
 }
 
 .capability-icon svg {
-  stroke-width: 1.15;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.2;
+}
+
+.capability h3 {
+  margin: 0 0 3px;
+  color: #111;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 23px;
+  font-weight: 400;
+}
+
+.capability-en {
+  display: block;
+  margin-bottom: 18px;
+  color: #BBB;
+  font-size: 9px;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+
+.capability-description {
+  margin: 0 0 4px;
+  color: #555;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.capability-description-en {
+  margin: 0;
+  color: #AAA;
+  font-size: 11px;
+  line-height: 1.6;
 }
 
 
@@ -121,26 +616,138 @@
    FOOTER
 ============================================================ */
 
-/*
-  Los logos inferiores crecen ligeramente.
-*/
+.site-footer {
+  width: 100%;
+  background: var(--bg);
+  border-top: 1px solid #E8E8E8;
+}
+
+.footer-inner {
+  width: 100%;
+  padding: 48px 64px 28px;
+}
+
+.footer-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 48px;
+}
+
+.footer-services {
+  max-width: 850px;
+}
+
+.footer-services p {
+  margin: 0;
+  color: #888;
+  font-size: 11px;
+  line-height: 1.6;
+  letter-spacing: .03em;
+}
+
+.footer-services-en {
+  margin-top: 3px !important;
+  color: #BBB !important;
+  font-size: 9px !important;
+}
+
+.footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+  justify-content: flex-end;
+}
+
+.footer-nav a {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.footer-nav span {
+  color: #888;
+  font-size: 11px;
+  letter-spacing: .04em;
+}
+
+.footer-nav small {
+  color: #CCC;
+  font-size: 8px;
+  letter-spacing: .06em;
+}
+
+.footer-nav a:hover span {
+  color: #111;
+}
+
+.footer-bottom-area {
+  margin-top: 42px;
+  padding-top: 28px;
+  border-top: 1px solid #E8E8E8;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 70px;
+}
+
+.footer-logos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 55px;
+}
 
 .footer-logo {
-  width: 175px;
+  width: 170px;
+  max-height: 65px;
+  object-fit: contain;
+  opacity: .55;
 }
 
-.footer-logo-lns {
-  width: 195px;
+.footer-social {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.footer-qr {
+  width: 105px;
+  height: 105px;
+  object-fit: contain;
+  opacity: .70;
+}
+
+.footer-social-link {
+  color: #888;
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.footer-social-link:hover {
+  color: #111;
+}
+
+.footer-copyright {
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid #E8E8E8;
+  color: #BBB;
+  font-size: 9px;
+  letter-spacing: .04em;
 }
 
 
-/*
-  Los logos NO son enlaces.
-  Solo QR y RRSS continúan enlazados.
-*/
+/* ============================================================
+   PROTECCIÓN
+============================================================ */
 
-.footer-identity a {
-  pointer-events: none;
+.protected-image {
+  -webkit-user-drag: none;
+  user-select: none;
 }
 
 
@@ -148,30 +755,189 @@
    RESPONSIVE
 ============================================================ */
 
-@media (max-width: 1000px) {
+@media (min-width: 768px) {
 
-  .footer-logo {
-    width: 155px;
+  .header-inner {
+    padding-left: 64px;
+    padding-right: 64px;
   }
 
-  .footer-logo-lns {
-    width: 175px;
+  .hero-content {
+    padding-left: 64px;
   }
 
 }
 
 
-@media (max-width: 720px) {
+@media (max-width: 900px) {
+
+  .section {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
+  .about-inner {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  .stats {
+    gap: 20px;
+  }
+
+  .capabilities-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .footer-inner {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
+  .footer-main {
+    align-items: flex-start;
+  }
+
+  .footer-nav {
+    gap: 18px;
+  }
+
+}
+
+
+@media (max-width: 700px) {
+
+  .header-inner {
+    padding: 0 24px;
+  }
+
+  .desktop-nav {
+    display: none;
+  }
+
+  .mobile-menu-button {
+    display: flex;
+  }
+
+  .mobile-menu {
+    position: fixed;
+    top: 64px;
+    left: 0;
+    right: 0;
+    z-index: 99;
+    display: none;
+    flex-direction: column;
+    background: rgba(17,17,17,.97);
+    padding: 24px;
+  }
+
+  .mobile-menu.open {
+    display: flex;
+  }
+
+  .mobile-menu a {
+    padding: 16px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    border-bottom: 1px solid rgba(255,255,255,.10);
+  }
+
+  .mobile-menu span {
+    color: white;
+    font-size: 12px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+
+  .mobile-menu small {
+    color: rgba(255,255,255,.40);
+    font-size: 9px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+
+  .hero {
+    min-height: 620px;
+  }
 
   .hero-content {
     bottom: 100px;
+    padding: 0 24px;
+  }
+
+  .hero-labels p {
+    font-size: 9px;
+  }
+
+  .hero h1 {
+    font-size: 58px;
+  }
+
+  .hero-description p {
+    font-size: 12px;
+  }
+
+  .section {
+    padding: 80px 24px;
+  }
+
+  .projects-header {
+    align-items: flex-start;
+    gap: 25px;
+  }
+
+  .projects-title {
+    gap: 15px;
+  }
+
+  .projects-title .gold-line {
+    display: none;
+  }
+
+  .project-card.featured,
+  .project-card.secondary-large,
+  .project-card.secondary-small {
+    grid-column: 1 / -1;
+    height: 360px;
+  }
+
+  .project-card-title,
+  .project-card-title-small {
+    font-size: 38px;
+  }
+
+  .capabilities-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .capability {
+    min-height: auto;
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .footer-inner {
+    padding: 40px 24px 24px;
+  }
+
+  .footer-main {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .footer-nav {
+    justify-content: flex-start;
+  }
+
+  .footer-bottom-area {
+    flex-direction: column;
+    gap: 35px;
   }
 
   .footer-logo {
-    width: 125px;
-  }
-
-  .footer-logo-lns {
     width: 145px;
   }
 
