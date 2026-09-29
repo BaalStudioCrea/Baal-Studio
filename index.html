@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
+
   <meta charset="UTF-8">
 
   <meta
@@ -17,35 +19,41 @@
 
   <link rel="stylesheet" href="./style.css">
 
-  <!-- Precarga únicamente del recurso visual principal -->
-  <link
-    rel="preload"
-    as="image"
-    href="https://hlyzyeatnbulyfiiwvsq.supabase.co/storage/v1/object/public/proyectospriv/Logos/Fondo.webp"
-    fetchpriority="high"
-  >
 </head>
+
 
 <body>
 
   <!-- =========================
-       CABECERA / NAVEGACIÓN
+       CABECERA
        ========================= -->
 
   <header class="main-header">
 
     <div class="logo-header">
-      <a href="./index.html" aria-label="Baal Studio — Inicio">
+
+      <a
+        href="./index.html"
+        aria-label="Baal Studio — Inicio"
+      >
+
         <img
-          src="https://hlyzyeatnbulyfiiwvsq.supabase.co/storage/v1/object/public/proyectospriv/Logos/NEWBaal_Logo_White.png"
+          id="site-logo"
+          src=""
           alt="Baal Studio"
           width="180"
           height="auto"
         >
+
       </a>
+
     </div>
 
-    <nav class="nav" aria-label="Navegación principal">
+
+    <nav
+      class="nav"
+      aria-label="Navegación principal"
+    >
 
       <a
         href="./index.html"
@@ -80,6 +88,7 @@
 
     <section
       class="hero-section"
+      id="hero"
       aria-labelledby="hero-title"
     >
 
@@ -87,6 +96,7 @@
         class="hero-overlay"
         aria-hidden="true"
       ></div>
+
 
       <div class="hero-content">
 
@@ -97,15 +107,18 @@
           Baal Studio
         </h1>
 
+
         <p class="hero-tagline">
           Documentación Patrimonial
         </p>
+
 
         <div class="hero-bio">
 
           <p class="es-text">
             Especialista en documentación y análisis del patrimonio cultural mediante flujos digitales de alta precisión, integrando planimetrías, mapeados, fotogrametría, modelado tridimensional y reconstrucción virtual.
           </p>
+
 
           <p class="en-text">
             Specialist in cultural heritage documentation and analysis through high-precision digital workflows, integrating mapping, photogrammetry, 3D modeling, and virtual reconstruction.
@@ -140,5 +153,13 @@
 
   </footer>
 
+
+  <!-- =========================
+       JAVASCRIPT
+       ========================= -->
+
+  <script src="./script.js"></script>
+
 </body>
+
 </html>
