@@ -414,3 +414,8 @@ body {
   text-align: center;
   padding: 40px;
 }
+.nav a.active {
+  color: var(--text-main);
+  border-bottom: 2px solid var(--text-main);
+  padding-bottom: 4px;
+}
