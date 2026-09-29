@@ -1,421 +1,949 @@
-/* ==========================================
-   RESET & VARIABLES GLOBALES (System Fonts)
-   ========================================== */
+/* =========================================================
+   BAAL STUDIO
+   GLOBAL STYLESHEET
+   ========================================================= */
+
+
+/* =========================================================
+   1. VARIABLES
+   ========================================================= */
+
 :root {
-  --bg-primary: #0c0d0e;
-  --bg-secondary: #141518;
-  --bg-card: #1a1c20;
-  --bg-card-hover: #22252b;
-  
-  --border-color: #24262b;
-  --border-color-hover: #3a3d46;
-  
-  --text-main: #f8f9fa;
-  --text-muted: #9ea3b0;
-  --text-dim: #6c7280;
-  
-  --accent: #ffffff;
 
-  /* Pila de tipografías nativas del sistema */
-  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  
-  --max-width: 1200px;
-  --radius-lg: 16px;
-  --radius-md: 10px;
-  --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  --color-bg: #F5F3EE;
+  --color-text: #111111;
+  --color-accent: #B08A57;
+  --color-gray: #7A7A7A;
+  --color-line: #D8D4CC;
+  --color-white: #FFFFFF;
+
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --font-body: "Inter", Arial, sans-serif;
+
+  --header-height: 92px;
+
+  --content-width: 1280px;
+
+  --padding-desktop: 80px;
+  --padding-tablet: 48px;
+  --padding-mobile: 24px;
+
+  --section-spacing: 140px;
+
+  --transition-fast: 0.2s ease;
+  --transition-medium: 0.35s ease;
+
 }
 
-*, *::before, *::after {
+
+/* =========================================================
+   2. RESET
+   ========================================================= */
+
+*,
+*::before,
+*::after {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
+
 
 html {
+  margin: 0;
+  padding: 0;
+
   scroll-behavior: smooth;
-  background-color: var(--bg-primary);
-  color: var(--text-main);
-  font-family: var(--font-family);
+
+  background: var(--color-bg);
 }
+
 
 body {
-  background-color: var(--bg-primary);
-  color: var(--text-main);
+  margin: 0;
+  padding: 0;
+
+  min-height: 100vh;
+
+  background: var(--color-bg);
+  color: var(--color-text);
+
+  font-family: var(--font-body);
+
+  font-size: 16px;
   line-height: 1.6;
-  overflow-x: hidden;
+
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* ==========================================
-   CABECERA & NAVEGACIÓN
-   ========================================== */
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+
+img {
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+
+button {
+  border: 0;
+  background: none;
+}
+
+
+/* =========================================================
+   3. TIPOGRAFÍA
+   ========================================================= */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+
+  font-family: var(--font-display);
+  font-weight: 400;
+
+  line-height: 1.05;
+}
+
+
+p {
+  margin: 0;
+}
+
+
+/* =========================================================
+   4. ESTRUCTURA GENERAL
+   ========================================================= */
+
+main {
+  display: block;
+}
+
+
+section {
+  position: relative;
+}
+
+
+.footer-container,
+.hero-content,
 .main-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 70px;
-  background: rgba(12, 13, 14, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border-color);
+  width: min(
+    calc(100% - (var(--padding-desktop) * 2)),
+    var(--content-width)
+  );
+
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+/* =========================================================
+   5. HEADER
+   ========================================================= */
+
+.main-header {
+
+  min-height: var(--header-height);
+
   display: flex;
+
   align-items: center;
   justify-content: space-between;
-  padding: 0 5%;
-  z-index: 1000;
+
+  position: relative;
+  z-index: 100;
+
+  padding-top: 22px;
+  padding-bottom: 22px;
+
 }
+
+
+/* =========================================================
+   6. LOGO SUPERIOR
+   ========================================================= */
+
+.logo-header {
+
+  display: flex;
+  align-items: center;
+
+  flex-shrink: 0;
+}
+
+
+.logo-header a {
+
+  display: block;
+
+  line-height: 0;
+
+  transition:
+    opacity var(--transition-fast),
+    transform var(--transition-fast);
+
+}
+
 
 .logo-header img {
-  height: 32px;
-  width: auto;
-  display: block;
+
+  width: 180px;
+  height: auto;
+
+  opacity: 0.5;
+
+  transition:
+    opacity var(--transition-fast),
+    transform var(--transition-fast);
+
 }
+
+
+.logo-header a:hover img {
+
+  opacity: 0.7;
+
+}
+
+
+/* =========================================================
+   7. NAVEGACIÓN
+   ========================================================= */
 
 .nav {
+
   display: flex;
-  gap: 2rem;
+
+  align-items: center;
+
+  gap: 38px;
+
 }
+
 
 .nav a {
-  color: var(--text-muted);
-  text-decoration: none;
-  font-size: 0.875rem;
+
+  position: relative;
+
+  display: inline-block;
+
+  padding: 6px 0;
+
+  color: var(--color-text);
+
+  font-family: var(--font-body);
+  font-size: 13px;
   font-weight: 500;
-  transition: var(--transition);
+
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+
+  transition:
+    color var(--transition-fast),
+    opacity var(--transition-fast);
+
 }
+
+
+.nav a::after {
+
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  bottom: 0;
+
+  width: 0;
+  height: 1px;
+
+  background: var(--color-accent);
+
+  transition: width var(--transition-medium);
+
+}
+
 
 .nav a:hover {
-  color: var(--text-main);
+
+  color: var(--color-accent);
+
 }
 
-/* ==========================================
-   SECCIÓN HERO
-   ========================================== */
+
+.nav a:hover::after,
+.nav a.active::after {
+
+  width: 100%;
+
+}
+
+
+.nav a.active {
+
+  color: var(--color-text);
+
+}
+
+
+/* =========================================================
+   8. HERO
+   ========================================================= */
+
 .hero-section {
+
   position: relative;
-  min-height: 90vh;
+
+  min-height: calc(100vh - var(--header-height));
+
   display: flex;
+
   align-items: center;
   justify-content: center;
-  padding: 140px 20px 80px;
-  background-size: cover;
-  background-position: center;
-  border-bottom: 1px solid var(--border-color);
+
+  overflow: hidden;
+
+  background-color: #222;
+
+  background-repeat: no-repeat;
+  background-position: center center;
+
+  /*
+    Zoom suave para ocultar el marco blanco lateral
+    conservando el difuminado del render.
+  */
+  background-size: 110% auto;
+
 }
+
 
 .hero-overlay {
+
   position: absolute;
+
   inset: 0;
-  background: radial-gradient(circle at center, rgba(12, 13, 14, 0.6) 0%, rgba(12, 13, 14, 0.95) 100%);
+
+  z-index: 1;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.08) 0%,
+      rgba(0, 0, 0, 0.12) 55%,
+      rgba(0, 0, 0, 0.24) 100%
+    );
+
+  pointer-events: none;
+
 }
+
+
+/* =========================================================
+   9. CONTENIDO DEL HERO
+   ========================================================= */
 
 .hero-content {
+
   position: relative;
+
   z-index: 2;
-  max-width: var(--max-width);
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
   text-align: center;
-  margin: 0 auto;
+
+  padding-top: 80px;
+  padding-bottom: 80px;
+
+  color: var(--color-white);
+
 }
+
 
 .hero-title {
-  font-size: clamp(2.5rem, 5vw, 4.5rem);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  margin-bottom: 1.5rem;
-  color: var(--text-main);
+
+  font-size: clamp(
+    4rem,
+    8vw,
+    8rem
+  );
+
+  letter-spacing: -0.025em;
+
+  text-shadow:
+    0 2px 18px rgba(0, 0, 0, 0.16);
+
 }
+
 
 .hero-tagline {
-  font-size: 1.1rem;
-  color: var(--text-main);
+
+  margin-top: 18px;
+
+  font-family: var(--font-body);
+
+  font-size: clamp(
+    0.8rem,
+    1.2vw,
+    1rem
+  );
+
   font-weight: 500;
-  margin-bottom: 0.25rem;
+
+  letter-spacing: 0.25em;
+
+  text-transform: uppercase;
+
+  opacity: 0.95;
+
 }
 
-.hero-tagline-en {
-  font-size: 0.95rem;
-  color: var(--text-muted);
-  font-weight: 300;
-  margin-bottom: 2rem;
-}
 
 .hero-bio {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 24px;
-  background: rgba(20, 21, 24, 0.6);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-lg);
-  backdrop-filter: blur(8px);
+
+  width: min(720px, 100%);
+
+  margin-top: 42px;
+
+  font-size: 16px;
+
+  line-height: 1.8;
+
+  color: rgba(255, 255, 255, 0.94);
+
 }
 
-.hero-bio .es-text {
-  color: var(--text-main);
-  font-size: 0.95rem;
-  margin-bottom: 0.75rem;
+
+.hero-bio p + p {
+
+  margin-top: 20px;
+
 }
 
-.hero-bio .en-text {
-  color: var(--text-muted);
-  font-size: 0.875rem;
-  font-weight: 300;
-}
 
-/* ==========================================
-   ESTRUCTURA DE SECCIONES
-   ========================================== */
-.section {
-  padding: 100px 5%;
-  max-width: var(--max-width);
-  margin: 0 auto;
-  border-bottom: 1px solid var(--border-color);
-}
+/*
+  Actualmente mantenemos ambos idiomas visibles
+  porque el contenido existente los contiene.
+*/
 
-.section-header {
-  margin-bottom: 50px;
-}
+.es-text,
+.en-text {
 
-.section-header h2 {
-  font-size: 2rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-}
-
-.en-subtitle {
   display: block;
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  font-weight: 300;
-  margin-top: 4px;
+
 }
 
-/* ==========================================
-   SOBRE MÍ Y ESTADÍSTICAS
-   ========================================== */
-.about-paragraphs {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-bottom: 60px;
-}
 
-.about-block {
-  padding: 24px;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-lg);
-}
-
-.about-block .es-text {
-  color: var(--text-main);
-  margin-bottom: 12px;
-  font-size: 0.95rem;
-}
-
-.about-block .en-text {
-  color: var(--text-muted);
-  font-size: 0.875rem;
-  font-weight: 300;
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
-}
-
-.stat-card {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  padding: 24px;
-  text-align: center;
-  transition: var(--transition);
-}
-
-.stat-card:hover {
-  border-color: var(--border-color-hover);
-  background: var(--bg-card);
-}
-
-.stat-number {
-  display: block;
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--text-main);
-  line-height: 1;
-  margin-bottom: 8px;
-}
-
-.stat-label {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  display: block;
-}
-
-/* ==========================================
-   REJILLA DE PROYECTOS
-   ========================================== */
-.projects-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 2rem;
-}
-
-.project-card {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  transition: var(--transition);
-}
-
-.project-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--border-color-hover);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.5);
-}
-
-.project-thumb-container {
-  width: 100%;
-  height: 220px;
-  background: var(--bg-card);
-  overflow: hidden;
-}
-
-.project-thumb {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.4s ease;
-}
-
-.project-card:hover .project-thumb {
-  transform: scale(1.05);
-}
-
-.project-info {
-  padding: 20px;
-}
-
-.project-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 6px;
-  color: var(--text-main);
-}
-
-.project-meta {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-}
-
-/* ==========================================
-   CAPACIDADES
-   ========================================== */
-.capacities-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
-}
-
-.capacity-card {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  padding: 28px;
-  transition: var(--transition);
-}
-
-.capacity-card:hover {
-  border-color: var(--border-color-hover);
-  background: var(--bg-card);
-}
-
-.capacity-card h3 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 12px;
-}
-
-.capacity-card .es-text {
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  margin-bottom: 8px;
-}
-
-.capacity-card .en-text {
-  font-size: 0.825rem;
-  color: var(--text-dim);
-  font-weight: 300;
-}
-
-/* ==========================================
-   MARCA SECUNDARIA & FOOTER
-   ========================================== */
-.brand-secondary-container {
-  display: flex;
-  justify-content: center;
-  padding: 60px 0;
-  opacity: 0.12;
-}
-
-.brand-secondary-img {
-  max-width: 180px;
-  height: auto;
-}
+/* =========================================================
+   10. FOOTER
+   ========================================================= */
 
 .main-footer {
-  background: var(--bg-secondary);
-  border-top: 1px solid var(--border-color);
-  padding: 60px 5%;
+
+  position: relative;
+
+  background: var(--color-bg);
+
+  padding-top: 70px;
+  padding-bottom: 38px;
+
 }
+
 
 .footer-container {
-  max-width: var(--max-width);
-  margin: 0 auto;
+
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+
+  flex-direction: column;
+
   align-items: center;
-  gap: 2rem;
+
+  text-align: center;
+
 }
 
-.footer-summary-es {
-  font-size: 0.9rem;
-  color: var(--text-main);
-  margin-bottom: 4px;
+
+/* =========================================================
+   11. LOGOS INFERIORES
+   ========================================================= */
+
+.footer-logos {
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 45px;
+
+  margin-bottom: 28px;
+
 }
 
-.footer-summary-en {
-  font-size: 0.825rem;
-  color: var(--text-muted);
-  margin-bottom: 20px;
+
+.footer-logos img {
+
+  display: block;
+
+  width: auto;
+  max-width: 170px;
+  max-height: 55px;
+
+  opacity: 0.15;
+
+  user-select: none;
+
+  -webkit-user-drag: none;
+
+  pointer-events: none;
+
 }
 
-.footer-meta {
-  font-size: 0.8rem;
-  color: var(--text-dim);
+
+/* =========================================================
+   12. QR
+   ========================================================= */
+
+.footer-qr {
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 32px;
+
 }
 
-.footer-qr-img {
+
+.footer-qr img {
+
   width: 90px;
   height: 90px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-color);
-  background: #fff;
-  padding: 4px;
+
+  object-fit: contain;
+
+  opacity: 0.65;
+
+  user-select: none;
+
+  -webkit-user-drag: none;
+
+  pointer-events: none;
+
 }
 
-.no-projects {
-  color: var(--text-muted);
-  grid-column: 1 / -1;
+
+/* =========================================================
+   13. COPYRIGHT
+   ========================================================= */
+
+.footer-meta {
+
+  width: 100%;
+
+  display: flex;
+
+  justify-content: center;
+
   text-align: center;
-  padding: 40px;
+
 }
-.nav a.active {
-  color: var(--text-main);
-  border-bottom: 2px solid var(--text-main);
-  padding-bottom: 4px;
+
+
+.footer-meta p {
+
+  max-width: 100%;
+
+  color: var(--color-gray);
+
+  font-size: 11px;
+
+  line-height: 1.5;
+
+  letter-spacing: 0.04em;
+
+}
+
+
+/* =========================================================
+   14. PROTECCIÓN VISUAL
+   ========================================================= */
+
+/*
+  Capa transparente que podremos utilizar posteriormente
+  sobre imágenes protegidas.
+
+  NO se aplica globalmente todavía porque elementos como
+  Sketchfab, vídeo, PDF y controles interactivos necesitan
+  recibir eventos del usuario.
+*/
+
+.protected-media {
+
+  position: relative;
+
+  overflow: hidden;
+
+}
+
+
+.protected-media::after {
+
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 5;
+
+  background: transparent;
+
+}
+
+
+/*
+  Las imágenes protegidas no deben poder arrastrarse.
+*/
+
+.protected-media img {
+
+  pointer-events: none;
+
+  user-select: none;
+
+  -webkit-user-drag: none;
+
+}
+
+
+/* =========================================================
+   15. ELEMENTOS INTERACTIVOS
+   ========================================================= */
+
+a,
+button {
+
+  -webkit-tap-highlight-color: transparent;
+
+}
+
+
+a:focus-visible,
+button:focus-visible {
+
+  outline: 1px solid var(--color-accent);
+
+  outline-offset: 5px;
+
+}
+
+
+/* =========================================================
+   16. RESPONSIVE — TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  .footer-container,
+  .hero-content,
+  .main-header {
+
+    width: min(
+      calc(100% - (var(--padding-tablet) * 2)),
+      var(--content-width)
+    );
+
+  }
+
+
+  .main-header {
+
+    min-height: 82px;
+
+  }
+
+
+  .logo-header img {
+
+    width: 155px;
+
+  }
+
+
+  .nav {
+
+    gap: 25px;
+
+  }
+
+
+  .nav a {
+
+    font-size: 12px;
+
+  }
+
+
+  .hero-section {
+
+    min-height: calc(100vh - 82px);
+
+    background-size: 112% auto;
+
+  }
+
+
+  .hero-content {
+
+    padding-top: 70px;
+    padding-bottom: 70px;
+
+  }
+
+
+  .hero-title {
+
+    font-size: clamp(
+      3.5rem,
+      10vw,
+      6rem
+    );
+
+  }
+
+
+  .hero-bio {
+
+    max-width: 650px;
+
+  }
+
+}
+
+
+/* =========================================================
+   17. RESPONSIVE — MÓVIL
+   ========================================================= */
+
+@media (max-width: 640px) {
+
+  .footer-container,
+  .hero-content,
+  .main-header {
+
+    width: calc(
+      100% - (var(--padding-mobile) * 2)
+    );
+
+  }
+
+
+  .main-header {
+
+    min-height: auto;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 20px;
+
+    padding-top: 24px;
+    padding-bottom: 24px;
+
+  }
+
+
+  .logo-header img {
+
+    width: 145px;
+
+  }
+
+
+  .nav {
+
+    width: 100%;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 12px 22px;
+
+  }
+
+
+  .nav a {
+
+    font-size: 10px;
+
+    letter-spacing: 0.07em;
+
+  }
+
+
+  .hero-section {
+
+    min-height: calc(100svh - 140px);
+
+    background-size: 120% auto;
+
+    background-position: center center;
+
+  }
+
+
+  .hero-content {
+
+    padding-top: 60px;
+    padding-bottom: 60px;
+
+  }
+
+
+  .hero-title {
+
+    font-size: clamp(
+      3.2rem,
+      17vw,
+      5rem
+    );
+
+  }
+
+
+  .hero-tagline {
+
+    margin-top: 15px;
+
+    font-size: 10px;
+
+    letter-spacing: 0.18em;
+
+  }
+
+
+  .hero-bio {
+
+    margin-top: 30px;
+
+    font-size: 14px;
+
+    line-height: 1.7;
+
+  }
+
+
+  .hero-bio p + p {
+
+    margin-top: 18px;
+
+  }
+
+
+  .main-footer {
+
+    padding-top: 55px;
+    padding-bottom: 28px;
+
+  }
+
+
+  .footer-logos {
+
+    gap: 28px;
+
+    margin-bottom: 24px;
+
+  }
+
+
+  .footer-logos img {
+
+    max-width: 125px;
+    max-height: 45px;
+
+  }
+
+
+  .footer-qr {
+
+    margin-bottom: 26px;
+
+  }
+
+
+  .footer-qr img {
+
+    width: 75px;
+    height: 75px;
+
+  }
+
+
+  .footer-meta p {
+
+    font-size: 10px;
+
+  }
+
+}
+
+
+/* =========================================================
+   18. REDUCCIÓN DE MOVIMIENTO
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  html {
+
+    scroll-behavior: auto;
+
+  }
+
+
+  *,
+  *::before,
+  *::after {
+
+    transition: none !important;
+
+  }
+
 }
