@@ -2,51 +2,142 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Inicio - Baal Studio</title>
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Baal Studio — Documentación, conservación y análisis digital del patrimonio cultural."
+  >
+
+  <title>Baal Studio — Documentación Patrimonial</title>
+
   <link rel="stylesheet" href="./style.css">
+
+  <!-- Precarga únicamente del recurso visual principal -->
+  <link
+    rel="preload"
+    as="image"
+    href="https://hlyzyeatnbulyfiiwvsq.supabase.co/storage/v1/object/public/proyectospriv/Logos/Fondo.webp"
+    fetchpriority="high"
+  >
 </head>
+
 <body>
 
-  <!-- NAVEGACIÓN ENTRE PESTAÑAS -->
+  <!-- =========================
+       CABECERA / NAVEGACIÓN
+       ========================= -->
+
   <header class="main-header">
+
     <div class="logo-header">
-      <a href="./index.html">
-        <img src="https://hlyzyeatnbulyfiiwvsq.supabase.co/storage/v1/object/public/proyectospriv/Logos/NEWBaal_Logo_White.png" alt="Baal Studio Logo">
+      <a href="./index.html" aria-label="Baal Studio — Inicio">
+        <img
+          src="https://hlyzyeatnbulyfiiwvsq.supabase.co/storage/v1/object/public/proyectospriv/Logos/NEWBaal_Logo_White.png"
+          alt="Baal Studio"
+          width="180"
+          height="auto"
+        >
       </a>
     </div>
-    <nav class="nav">
-      <a href="./index.html" class="active">Inicio</a>
-      <a href="./proyectos.html">Proyectos</a>
-      <a href="./sobre-mi.html">Sobre mí</a>
-      <a href="./contacto.html">Contacto</a>
+
+    <nav class="nav" aria-label="Navegación principal">
+
+      <a
+        href="./index.html"
+        class="active"
+        aria-current="page"
+      >
+        Inicio
+      </a>
+
+      <a href="./proyectos.html">
+        Proyectos
+      </a>
+
+      <a href="./about.html">
+        Sobre mí
+      </a>
+
+      <a href="./contact.html">
+        Contacto
+      </a>
+
     </nav>
+
   </header>
 
-  <!-- PÁGINA PRINCIPAL / HERO -->
-  <main class="hero-section" style="background-image: url('https://hlyzyeatnbulyfiiwvsq.supabase.co/storage/v1/object/public/proyectospriv/Logos/Fondo.webp');">
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-      <h1 class="hero-title">Baal Studio</h1>
-      <p class="hero-tagline">Documentación Patrimonial</p>
-      
-      <div class="hero-bio">
-        <p class="es-text">
-          Especialista en documentación y análisis del patrimonio cultural mediante flujos digitales de alta precisión, integrando planimetrías, mapeados, fotogrametría, modelado tridimensional y reconstrucción virtual.
+
+  <!-- =========================
+       CONTENIDO PRINCIPAL
+       ========================= -->
+
+  <main>
+
+    <section
+      class="hero-section"
+      aria-labelledby="hero-title"
+    >
+
+      <div
+        class="hero-overlay"
+        aria-hidden="true"
+      ></div>
+
+      <div class="hero-content">
+
+        <h1
+          id="hero-title"
+          class="hero-title"
+        >
+          Baal Studio
+        </h1>
+
+        <p class="hero-tagline">
+          Documentación Patrimonial
         </p>
-        <p class="en-text">
-          Specialist in cultural heritage documentation and analysis through high-precision digital workflows, integrating mapping, photogrammetry, 3D modeling, and virtual reconstruction.
-        </p>
+
+        <div class="hero-bio">
+
+          <p class="es-text">
+            Especialista en documentación y análisis del patrimonio cultural mediante flujos digitales de alta precisión, integrando planimetrías, mapeados, fotogrametría, modelado tridimensional y reconstrucción virtual.
+          </p>
+
+          <p class="en-text">
+            Specialist in cultural heritage documentation and analysis through high-precision digital workflows, integrating mapping, photogrammetry, 3D modeling, and virtual reconstruction.
+          </p>
+
+        </div>
+
       </div>
-    </div>
+
+    </section>
+
   </main>
 
+
+  <!-- =========================
+       PIE DE PÁGINA
+       ========================= -->
+
   <footer class="main-footer">
+
     <div class="footer-container">
+
       <div class="footer-meta">
-        <p>© Baal Studio. Todos los derechos reservados · All rights reserved.</p>
+
+        <p>
+          © Baal Studio. Todos los derechos reservados · All rights reserved.
+        </p>
+
       </div>
+
     </div>
+
   </footer>
 
 </body>
