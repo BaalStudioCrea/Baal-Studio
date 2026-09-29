@@ -1,6 +1,6 @@
 /* ============================================================
    BAAL STUDIO
-   MAIN JAVASCRIPT
+   SCRIPT.JS — V02
    ============================================================ */
 
 
@@ -93,10 +93,14 @@ function initHeader() {
 function initMobileMenu() {
 
   const button =
-    document.getElementById("mobile-menu-button");
+    document.getElementById(
+      "mobile-menu-button"
+    );
 
   const menu =
-    document.getElementById("mobile-menu");
+    document.getElementById(
+      "mobile-menu"
+    );
 
 
   if (!button || !menu) {
@@ -130,33 +134,38 @@ function initMobileMenu() {
   });
 
 
-  menu.querySelectorAll("a").forEach(link => {
+  menu.querySelectorAll("a").forEach(
+    link => {
 
-    link.addEventListener("click", () => {
+      link.addEventListener(
+        "click",
+        () => {
 
-      button.classList.remove("open");
+          button.classList.remove("open");
 
-      menu.classList.remove("open");
+          menu.classList.remove("open");
 
-      button.setAttribute(
-        "aria-expanded",
-        "false"
+          button.setAttribute(
+            "aria-expanded",
+            "false"
+          );
+
+          menu.setAttribute(
+            "aria-hidden",
+            "true"
+          );
+
+        }
       );
 
-      menu.setAttribute(
-        "aria-hidden",
-        "true"
-      );
-
-    });
-
-  });
+    }
+  );
 
 }
 
 
 /* ------------------------------------------------------------
-   ASSETS DEL SITIO
+   ASSETS
    ------------------------------------------------------------ */
 
 async function loadSiteAssets() {
@@ -164,12 +173,15 @@ async function loadSiteAssets() {
   try {
 
     const response =
-      await fetch(FUNCTIONS.siteAssets, {
-        method: "GET",
-        headers: {
-          "Accept": "application/json"
+      await fetch(
+        FUNCTIONS.siteAssets,
+        {
+          method: "GET",
+          headers: {
+            "Accept": "application/json"
+          }
         }
-      });
+      );
 
 
     if (!response.ok) {
@@ -185,10 +197,13 @@ async function loadSiteAssets() {
       await response.json();
 
 
-    if (!result.success || !result.assets) {
+    if (
+      !result.success ||
+      !result.assets
+    ) {
 
       throw new Error(
-        "La función get-site-assets no devolvió assets válidos."
+        "get-site-assets no devolvió assets válidos."
       );
 
     }
@@ -198,108 +213,35 @@ async function loadSiteAssets() {
       result.assets;
 
 
-    /*
-       Fondo principal
-    */
-
-    const hero =
-      document.getElementById("hero-background");
+    setImageSource(
+      "hero-background",
+      assets.fondo
+    );
 
 
-    if (hero && assets.fondo) {
-
-      hero.src = assets.fondo;
-
-    }
-
-
-    /*
-       Logo principal
-    */
-
-    const headerLogo =
-      document.getElementById("site-logo");
-
-
-    if (headerLogo && assets.logoPrincipal) {
-
-      headerLogo.src =
-        assets.logoPrincipal;
-
-    }
-
-
-    /*
-       Logo del footer
-    */
-
-    const footerLogo =
-      document.getElementById("footer-logo");
-
-
-    if (footerLogo && assets.logoPrincipal) {
-
-      footerLogo.src =
-        assets.logoPrincipal;
-
-    }
-
-
-    /*
-       Segundo logo
-    */
-
-    const lnsLogo =
-      document.getElementById("footer-logo-lns");
-
-
-    if (lnsLogo && assets.logoLNS) {
-
-      lnsLogo.src =
-        assets.logoLNS;
-
-    }
-
-
-    /*
-       Segundo logo Baal
-    */
-
-    const baalFooterLogo =
-      document.getElementById("footer-logo-baal");
-
-
-    if (
-      baalFooterLogo &&
+    setImageSource(
+      "site-logo",
       assets.logoPrincipal
-    ) {
-
-      baalFooterLogo.src =
-        assets.logoPrincipal;
-
-    }
+    );
 
 
-    /*
-       QR
-    */
-
-    const qr =
-      document.getElementById("footer-qr");
+    setImageSource(
+      "footer-logo-baal",
+      assets.logoPrincipal
+    );
 
 
-    if (qr && assets.qr) {
-
-      qr.src =
-        assets.qr;
-
-    }
+    setImageSource(
+      "footer-logo-lns",
+      assets.logoLNS
+    );
 
 
-    /*
-       Activamos la protección una vez
-       cargadas las imágenes.
-    */
+    setImageSource(
+      "footer-qr",
+      assets.qr
+    );
+
 
     applyProtectionToImages();
 
@@ -307,9 +249,35 @@ async function loadSiteAssets() {
   } catch (error) {
 
     console.error(
-      "Error cargando los assets del sitio:",
+      "Error cargando assets:",
       error
     );
+
+  }
+
+}
+
+
+/* ------------------------------------------------------------
+   ASIGNAR IMAGEN
+   ------------------------------------------------------------ */
+
+function setImageSource(
+  elementId,
+  source
+) {
+
+  const element =
+    document.getElementById(elementId);
+
+
+  if (
+    element &&
+    source
+  ) {
+
+    element.src =
+      source;
 
   }
 
@@ -336,12 +304,15 @@ async function loadSelectedProjects() {
   try {
 
     const response =
-      await fetch(FUNCTIONS.projects, {
-        method: "GET",
-        headers: {
-          "Accept": "application/json"
+      await fetch(
+        FUNCTIONS.projects,
+        {
+          method: "GET",
+          headers: {
+            "Accept": "application/json"
+          }
         }
-      });
+      );
 
 
     if (!response.ok) {
@@ -358,7 +329,9 @@ async function loadSelectedProjects() {
 
 
     const projects =
-      normalizeProjectsResponse(result);
+      normalizeProjectsResponse(
+        result
+      );
 
 
     if (!projects.length) {
@@ -372,21 +345,12 @@ async function loadSelectedProjects() {
     }
 
 
-    /*
-       Ordenamos por el campo order cuando existe.
-    */
-
     projects.sort(
       (a, b) =>
         Number(a.order || 999) -
         Number(b.order || 999)
     );
 
-
-    /*
-       Tomamos los tres primeros para
-       la portada.
-    */
 
     const selected =
       projects.slice(0, 3);
@@ -437,20 +401,17 @@ async function loadSelectedProjects() {
 
 
 /* ------------------------------------------------------------
-   NORMALIZACIÓN DE RESPUESTA
+   NORMALIZAR RESPUESTA
    ------------------------------------------------------------ */
 
-function normalizeProjectsResponse(result) {
+function normalizeProjectsResponse(
+  result
+) {
 
   if (!result) {
     return [];
   }
 
-
-  /*
-     Admitimos varias estructuras para que la
-     interfaz no dependa de una única envoltura JSON.
-  */
 
   let projects = [];
 
@@ -459,15 +420,21 @@ function normalizeProjectsResponse(result) {
 
     projects = result;
 
-  } else if (Array.isArray(result.projects)) {
+  } else if (
+    Array.isArray(result.projects)
+  ) {
 
     projects = result.projects;
 
-  } else if (Array.isArray(result.data)) {
+  } else if (
+    Array.isArray(result.data)
+  ) {
 
     projects = result.data;
 
-  } else if (Array.isArray(result.results)) {
+  } else if (
+    Array.isArray(result.results)
+  ) {
 
     projects = result.results;
 
@@ -485,20 +452,45 @@ function normalizeProjectsResponse(result) {
    NORMALIZAR PROYECTO
    ------------------------------------------------------------ */
 
-function normalizeProject(project) {
+function normalizeProject(
+  project
+) {
 
-  if (!project || typeof project !== "object") {
+  if (
+    !project ||
+    typeof project !== "object"
+  ) {
+
     return null;
+
   }
 
 
-  const name =
+  const rawName =
     project.name ||
     project.title ||
     project.nombre ||
     project.titulo ||
     project.projectName ||
     "";
+
+
+  /*
+     Eliminamos solamente el sufijo de orden
+     de la carpeta:
+
+     "Epigrafias arabes de Granada (01)"
+     →
+     "Epigrafias arabes de Granada"
+  */
+
+  const displayName =
+    String(rawName)
+      .replace(
+        /\s*\(\d+\)\s*$/,
+        ""
+      )
+      .trim();
 
 
   const order =
@@ -539,11 +531,18 @@ function normalizeProject(project) {
 
     ...project,
 
-    name,
+    name: rawName,
+
+    displayName,
+
     order,
+
     cover,
+
     location,
+
     year,
+
     category
 
   };
@@ -555,9 +554,11 @@ function normalizeProject(project) {
    EXTRAER COVER
    ------------------------------------------------------------ */
 
-function extractCover(project) {
+function extractCover(
+  project
+) {
 
-  const candidates = [
+  const directCandidates = [
 
     project.cover,
 
@@ -577,39 +578,105 @@ function extractCover(project) {
 
     project.thumbnailUrl,
 
-    project.thumbnail_url
+    project.thumbnail_url,
+
+    project.portada,
+
+    project.portadaUrl,
+
+    project.portada_url
 
   ];
 
 
-  for (const candidate of candidates) {
+  for (
+    const candidate
+    of directCandidates
+  ) {
 
-    if (!candidate) {
-      continue;
+    const url =
+      extractUrlFromValue(
+        candidate
+      );
+
+
+    if (url) {
+
+      return url;
+
     }
 
-
-    if (typeof candidate === "string") {
-
-      return candidate;
-
-    }
+  }
 
 
-    if (
-      typeof candidate === "object"
+  /*
+     Si el cover está dentro de otra
+     propiedad del objeto, buscamos
+     recursivamente una URL de imagen.
+  */
+
+  return findImageUrl(
+    project
+  );
+
+}
+
+
+/* ------------------------------------------------------------
+   EXTRAER URL DE UN VALOR
+   ------------------------------------------------------------ */
+
+function extractUrlFromValue(
+  value
+) {
+
+  if (!value) {
+    return "";
+  }
+
+
+  if (
+    typeof value === "string"
+  ) {
+
+    return isImageUrl(value)
+      ? value
+      : "";
+
+  }
+
+
+  if (
+    typeof value === "object"
+  ) {
+
+    const candidates = [
+
+      value.url,
+
+      value.signedUrl,
+
+      value.signed_url,
+
+      value.publicUrl,
+
+      value.public_url
+
+    ];
+
+
+    for (
+      const candidate
+      of candidates
     ) {
 
-      if (candidate.url) {
-        return candidate.url;
-      }
+      if (
+        typeof candidate === "string" &&
+        candidate.length > 0
+      ) {
 
-      if (candidate.signedUrl) {
-        return candidate.signedUrl;
-      }
+        return candidate;
 
-      if (candidate.signed_url) {
-        return candidate.signed_url;
       }
 
     }
@@ -618,6 +685,179 @@ function extractCover(project) {
 
 
   return "";
+
+}
+
+
+/* ------------------------------------------------------------
+   BUSCAR IMAGEN RECURSIVAMENTE
+   ------------------------------------------------------------ */
+
+function findImageUrl(
+  value,
+  depth = 0
+) {
+
+  /*
+     Evitamos recorrer objetos indefinidamente.
+  */
+
+  if (
+    !value ||
+    depth > 5
+  ) {
+
+    return "";
+
+  }
+
+
+  if (
+    typeof value === "string"
+  ) {
+
+    return isImageUrl(value)
+      ? value
+      : "";
+
+  }
+
+
+  if (
+    typeof value !== "object"
+  ) {
+
+    return "";
+
+  }
+
+
+  /*
+     Primero comprobamos claves con
+     mayor probabilidad de contener covers.
+  */
+
+  const priorityKeys = [
+
+    "cover",
+    "coverUrl",
+    "cover_url",
+    "image",
+    "imageUrl",
+    "image_url",
+    "thumbnail",
+    "thumbnailUrl",
+    "thumbnail_url",
+    "portada",
+    "url",
+    "signedUrl",
+    "signed_url"
+
+  ];
+
+
+  for (
+    const key
+    of priorityKeys
+  ) {
+
+    if (
+      Object.prototype.hasOwnProperty.call(
+        value,
+        key
+      )
+    ) {
+
+      const result =
+        findImageUrl(
+          value[key],
+          depth + 1
+        );
+
+
+      if (result) {
+
+        return result;
+
+      }
+
+    }
+
+  }
+
+
+  /*
+     Después recorremos el resto.
+  */
+
+  for (
+    const key
+    of Object.keys(value)
+  ) {
+
+    if (
+      priorityKeys.includes(key)
+    ) {
+
+      continue;
+
+    }
+
+
+    const result =
+      findImageUrl(
+        value[key],
+        depth + 1
+      );
+
+
+    if (result) {
+
+      return result;
+
+    }
+
+  }
+
+
+  return "";
+
+}
+
+
+/* ------------------------------------------------------------
+   COMPROBAR URL DE IMAGEN
+   ------------------------------------------------------------ */
+
+function isImageUrl(
+  value
+) {
+
+  if (
+    typeof value !== "string"
+  ) {
+
+    return false;
+
+  }
+
+
+  const clean =
+    value
+      .split("?")[0]
+      .toLowerCase();
+
+
+  return (
+
+    clean.includes(".jpg") ||
+    clean.includes(".jpeg") ||
+    clean.includes(".png") ||
+    clean.includes(".webp") ||
+    clean.includes(".avif") ||
+    clean.includes(".gif")
+
+  );
 
 }
 
@@ -670,16 +910,13 @@ function createProjectCard(
   }
 
 
-  /*
-     Enlazamos con proyectos.html.
-
-     El nombre se pasa como parámetro para que
-     posteriormente proyectos.html pueda abrir
-     directamente el proyecto correspondiente.
-  */
-
   const projectName =
     project.name || "";
+
+
+  const displayName =
+    project.displayName ||
+    projectName;
 
 
   card.href =
@@ -688,7 +925,7 @@ function createProjectCard(
 
   card.setAttribute(
     "aria-label",
-    `Ver proyecto ${projectName}`
+    `Ver proyecto ${displayName}`
   );
 
 
@@ -713,7 +950,7 @@ function createProjectCard(
 
 
   image.alt =
-    projectName;
+    displayName;
 
 
   image.loading =
@@ -740,10 +977,6 @@ function createProjectCard(
 
   media.appendChild(image);
 
-
-  /*
-     OVERLAY
-  */
 
   const overlay =
     document.createElement("div");
@@ -796,7 +1029,7 @@ function createProjectCard(
 
 
   title.textContent =
-    projectName;
+    displayName;
 
 
   content.appendChild(title);
@@ -844,7 +1077,9 @@ function createProjectCard(
   }
 
 
-  if (meta.children.length) {
+  if (
+    meta.children.length
+  ) {
 
     content.appendChild(meta);
 
@@ -873,61 +1108,38 @@ function showProjectsMessage(
   container.innerHTML = "";
 
 
-  const messageElement =
+  const element =
     document.createElement("div");
 
 
-  messageElement.className =
+  element.className =
     "project-loading";
 
 
-  messageElement.innerHTML =
-    `<p>${escapeHtml(message)}</p>`;
+  const text =
+    document.createElement("p");
+
+
+  text.textContent =
+    message;
+
+
+  element.appendChild(text);
 
 
   container.appendChild(
-    messageElement
+    element
   );
 
 }
 
 
 /* ------------------------------------------------------------
-   ESCAPAR HTML
-   ------------------------------------------------------------ */
-
-function escapeHtml(value) {
-
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-
-}
-
-
-/* ------------------------------------------------------------
-   PROTECCIÓN GENERAL
+   PROTECCIÓN
    ------------------------------------------------------------ */
 
 function initProtection() {
 
-
-  /*
-     Evitar menú contextual sobre el sitio.
-
-     Se mantienen operativos:
-     - formularios
-     - inputs
-     - textareas
-     - selects
-     - contenido editable
-     - vídeo
-     - audio
-     - iframes
-  */
 
   document.addEventListener(
     "contextmenu",
@@ -954,10 +1166,6 @@ function initProtection() {
   );
 
 
-  /*
-     Evitar arrastre de imágenes.
-  */
-
   document.addEventListener(
     "dragstart",
     event => {
@@ -978,11 +1186,6 @@ function initProtection() {
     }
   );
 
-
-  /*
-     Atajos habituales de guardado,
-     código fuente y herramientas.
-  */
 
   document.addEventListener(
     "keydown",
@@ -1029,7 +1232,9 @@ function initProtection() {
       }
 
 
-      if (event.key === "F12") {
+      if (
+        event.key === "F12"
+      ) {
 
         event.preventDefault();
 
@@ -1045,7 +1250,7 @@ function initProtection() {
 
 
 /* ------------------------------------------------------------
-   APLICAR PROTECCIÓN A IMÁGENES
+   PROTECCIÓN DE IMÁGENES
    ------------------------------------------------------------ */
 
 function applyProtectionToImages() {
@@ -1054,39 +1259,38 @@ function applyProtectionToImages() {
     .querySelectorAll(
       "img.protected-image"
     )
-    .forEach(image => {
+    .forEach(
+      image => {
 
-      image.setAttribute(
-        "draggable",
-        "false"
-      );
-
-
-      image.style.userSelect =
-        "none";
+        image.setAttribute(
+          "draggable",
+          "false"
+        );
 
 
-      image.style.webkitUserDrag =
-        "none";
-
-    });
+        image.style.userSelect =
+          "none";
 
 
-  /*
-     Aseguramos que los contenedores de
-     proyecto tengan la clase correspondiente.
-  */
+        image.style.webkitUserDrag =
+          "none";
+
+      }
+    );
+
 
   document
     .querySelectorAll(
       ".project-card-media"
     )
-    .forEach(media => {
+    .forEach(
+      media => {
 
-      media.classList.add(
-        "protected-media"
-      );
+        media.classList.add(
+          "protected-media"
+        );
 
-    });
+      }
+    );
 
 }
