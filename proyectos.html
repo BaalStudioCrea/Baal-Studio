@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proyectos - Baal Studio</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+  <header class="main-header">
+    <div class="logo-header">
+      <a href="./index.html">
+        <img src="https://hlyzyeatnbulyfiiwvsq.supabase.co/storage/v1/object/public/proyectospriv/Logos/NEWBaal_Logo_White.png" alt="Baal Studio Logo">
+      </a>
+    </div>
+    <nav class="nav">
+      <a href="./index.html">Inicio</a>
+      <a href="./proyectos.html" class="active">Proyectos</a>
+      <a href="./sobre-mi.html">Sobre mí</a>
+      <a href="./contacto.html">Contacto</a>
+    </nav>
+  </header>
+
+  <section class="section">
+    <div class="section-header">
+      <h2>Proyectos</h2>
+      <span class="en-subtitle">Projects</span>
+    </div>
+    
+    <main class="portfolio-container">
+      <div id="projects-grid" class="projects-grid">
+        <!-- Tarjetas dinámicas de Supabase Edge Function -->
+      </div>
+    </main>
+  </section>
+
+  <footer class="main-footer">
+    <div class="footer-container">
+      <div class="footer-meta">
+        <p>© Baal Studio. Todos los derechos reservados · All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const projectsGrid = document.getElementById("projects-grid");
+
+      try {
+        const response = await fetch("https://hlyzyeatnbulyfiiwvsq.supabase.co/functions/v1/list-projects");
+        const data = await response.json();
+
+        if (!data.projects || data.projects.length === 0) {
+          projectsGrid.innerHTML = "<p class='no-projects'>No hay proyectos disponibles en este momento.</p>";
+          return;
+        }
+
+        projectsGrid.innerHTML = "";
+
+        data.projects.forEach((project) => {
+          const card = document.createElement("div");
+          card.className = "project-card";
+
+          const imageUrl = project.signed_image_url || "https://via.placeholder.com/600x400?text=Sin+Imagen";
+
+          card.innerHTML = `
+            <div class="project-thumb-container">
+              <img src="${imageUrl}" alt="${project.title}" class="project-thumb" loading="lazy">
+            </div>
+            <div class="project-info">
+              <h3 class="project-title">${project.title}</h3>
+              <p class="project-meta">Documentación Patrimonial</p>
+            </div>
+          `;
+
+          projectsGrid.appendChild(card);
+        });
+
+      } catch (error) {
+        console.error("Error al obtener proyectos:", error);
+        projectsGrid.innerHTML = "<p class='no-projects'>Error al cargar los proyectos.</p>";
+      }
+    });
+  </script>
+
+</body>
+</html>
