@@ -1252,7 +1252,7 @@ select {
 }
 
 
-.capability-item > p:last-child {
+.capability-item > p {
 
   max-width: 330px;
 
@@ -1263,6 +1263,17 @@ select {
   font-size: 10px;
 
   line-height: 1.7;
+}
+
+.capability-en-desc {
+
+  margin-top: 5px !important;
+
+  color: var(--gray) !important;
+
+  font-size: 8.5px !important;
+
+  line-height: 1.6 !important;
 }
 
 
