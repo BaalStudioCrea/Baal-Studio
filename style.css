@@ -1,11 +1,11 @@
 /* ============================================================
    BAAL STUDIO
-   STYLE.CSS — V04
+   STYLE.CSS — V02
    ============================================================ */
 
 
 /* ------------------------------------------------------------
-   FUENTES LOCALES
+   FUENTES LOCALES — GITHUB
    ------------------------------------------------------------ */
 
 @font-face {
@@ -16,7 +16,6 @@
   font-display: swap;
 }
 
-
 @font-face {
   font-family: "Cormorant Garamond";
   src: url("./fonts/CormorantGaramond-Light.woff2") format("woff2");
@@ -24,7 +23,6 @@
   font-weight: 300;
   font-display: swap;
 }
-
 
 @font-face {
   font-family: "Cormorant Garamond";
@@ -34,7 +32,6 @@
   font-display: swap;
 }
 
-
 @font-face {
   font-family: "Cormorant Garamond";
   src: url("./fonts/CormorantGaramond-Medium.woff2") format("woff2");
@@ -42,7 +39,6 @@
   font-weight: 500;
   font-display: swap;
 }
-
 
 @font-face {
   font-family: "Cormorant Garamond";
@@ -52,7 +48,6 @@
   font-display: swap;
 }
 
-
 @font-face {
   font-family: "Cormorant Garamond";
   src: url("./fonts/CormorantGaramond-Bold.woff2") format("woff2");
@@ -60,7 +55,6 @@
   font-weight: 700;
   font-display: swap;
 }
-
 
 /* ------------------------------------------------------------
    VARIABLES
@@ -496,9 +490,24 @@ select {
 
   object-fit: cover;
 
+  /*
+     Antes estaba object-position:center top.
+     Ahora centramos la fotografía para evitar
+     que aparezca el marco blanco.
+  */
+
   object-position: center center;
 
+  /*
+     Ampliación moderada para cubrir los bordes.
+  */
+
   transform: scale(1.085);
+
+  /*
+     El fondo debe estar presente pero no dominar
+     el contenido.
+  */
 
   opacity: 0.40;
 
@@ -654,13 +663,13 @@ select {
 
   font-family: var(--font-display);
 
-  font-size: clamp(42px, 4vw, 62px);
+  font-size: clamp(38px, 3.2vw, 52px);
 
   font-weight: 400;
 
-  line-height: 0.95;
+  line-height: 0.98;
 
-  letter-spacing: -0.025em;
+  letter-spacing: -0.015em;
 
   color: var(--black);
 }
@@ -668,7 +677,7 @@ select {
 
 .section-kicker-en {
 
-  margin: 9px 0 0;
+  margin: 8px 0 0;
 
   color: var(--gray);
 
@@ -688,11 +697,11 @@ select {
 
 .section-rule {
 
-  width: 48px;
+  width: 42px;
 
   height: 1px;
 
-  margin-top: 20px;
+  margin-top: 18px;
 
   background: var(--accent);
 }
@@ -804,13 +813,15 @@ select {
 
 .stat-item strong {
 
-  font-family: var(--font-display);
+  font-family: var(--font-body);
 
-  font-size: 48px;
+  font-size: 44px;
 
-  font-weight: 400;
+  font-weight: 300;
 
   line-height: 1;
+
+  letter-spacing: -0.04em;
 }
 
 
@@ -978,12 +989,6 @@ select {
   inset: 0;
 
   overflow: hidden;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
 }
 
 
@@ -1001,16 +1006,14 @@ select {
 }
 
 
-.project-card-large .project-card-media {
+.project-card:hover
+.project-card-media img {
 
-  background: #dedbd4;
+  transform: scale(1.02);
 }
 
 
 .project-card-large .project-card-media img {
-
-  width: 100%;
-  height: 100%;
 
   object-fit: contain;
 
@@ -1039,8 +1042,7 @@ select {
     linear-gradient(
       to top,
       rgba(0,0,0,0.68),
-      rgba(0,0,0,0.035) 58%,
-      rgba(0,0,0,0) 78%
+      rgba(0,0,0,0.04) 70%
     );
 }
 
@@ -1237,35 +1239,43 @@ select {
 
 .capability-icon {
 
-  width: 42px;
-  height: 42px;
+  width: 46px;
+  height: 46px;
 
   margin-bottom: 22px;
 
   color: var(--accent);
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: flex-start;
 }
 
 
 .capability-icon svg {
 
-  width: 42px;
-  height: 42px;
+  width: 100%;
+  height: 100%;
 
   fill: none;
 
   stroke: currentColor;
 
-  stroke-width: 1.15;
+  stroke-width: 1.25;
 
   stroke-linecap: round;
 
   stroke-linejoin: round;
+}
+
+
+.capability-number {
+
+  display: none;
+
+  margin-bottom: 20px;
+
+  color: var(--gray);
+
+  font-size: 8px;
+
+  letter-spacing: 0.10em;
 }
 
 
@@ -1277,7 +1287,7 @@ select {
 
   font-size: 27px;
 
-  font-weight: 500;
+  font-weight: 400;
 
   line-height: 1.05;
 }
@@ -1551,6 +1561,19 @@ select {
 
 
 /* ------------------------------------------------------------
+   AJUSTES FINALES DE TÍTULOS
+   ------------------------------------------------------------ */
+
+.section-heading .section-kicker,
+.about-home-heading .section-kicker,
+.capabilities-heading .section-kicker {
+
+  font-size: clamp(38px, 3.2vw, 52px);
+
+}
+
+
+/* ------------------------------------------------------------
    TABLET
    ------------------------------------------------------------ */
 
@@ -1604,6 +1627,13 @@ select {
    ------------------------------------------------------------ */
 
 @media (max-width: 700px) {
+
+  .section-kicker {
+
+    font-size: clamp(34px, 9vw, 44px);
+
+  }
+
 
   :root {
 
@@ -1709,22 +1739,6 @@ select {
   }
 
 
-  .section-kicker {
-
-    font-size: 46px;
-
-  }
-
-
-  .section-kicker-en {
-
-    margin-top: 7px;
-
-    font-size: 7px;
-
-  }
-
-
   .about-home-layout,
   .section-heading-row,
   .capabilities-heading {
@@ -1814,23 +1828,6 @@ select {
     min-height: 245px;
 
     padding: 27px;
-
-  }
-
-
-  .capability-icon {
-
-    width: 38px;
-    height: 38px;
-
-    margin-bottom: 19px;
-  }
-
-
-  .capability-icon svg {
-
-    width: 38px;
-    height: 38px;
 
   }
 
