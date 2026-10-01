@@ -926,8 +926,8 @@ select {
 
 .project-card-media img {
 
-  width: 85%;
-  height: 85%;
+  width: 100%;
+  height: 100%;
 
   object-fit: cover;
   opacity: 0.50;
