@@ -1,6 +1,6 @@
 /* ============================================================
    BAAL STUDIO
-   SCRIPT.JS — V08
+   SCRIPT.JS — V09
    ============================================================ */
 
 
@@ -17,7 +17,6 @@ const FUNCTIONS = {
   siteAssets:
     `${SUPABASE_FUNCTION_BASE}/get-site-assets`,
 
-  // CORREGIDO: Ahora apunta a list-projects
   projects:
     `${SUPABASE_FUNCTION_BASE}/list-projects`
 
@@ -497,11 +496,15 @@ function normalizeProject(
 
 
   /*
-     Buscamos la propiedad de título en la raíz o en metadata.
+     TÍTULO
+
+     Priorizamos el título que devuelve directamente
+     list-projects y después metadata.
   */
 
   const metadataTitle =
     project?.title ||
+    project?.titulo ||
     metadata?.title ||
     metadata?.titulo ||
     metadata?.nombre ||
@@ -510,10 +513,6 @@ function normalizeProject(
     project?.metadata_title ||
     "";
 
-
-  /*
-     Fallback en caso de que no exista título en el txt.
-  */
 
   const fallbackName =
     String(rawName)
@@ -534,13 +533,27 @@ function normalizeProject(
     999;
 
 
+  /*
+     COVER
+
+     list-projects devuelve actualmente:
+
+     cover: {
+       file: "...",
+       path: "...",
+       url: "..."
+     }
+
+     extractCover() prioriza específicamente
+     esta estructura.
+  */
+
   const cover =
     extractCover(project);
 
 
   /*
-     CORREGIDO: Leemos location, year y category tanto de la raíz 
-     como dentro del objeto metadata.
+     UBICACIÓN
   */
 
   const location =
@@ -551,6 +564,10 @@ function normalizeProject(
     "";
 
 
+  /*
+     AÑO
+  */
+
   const year =
     metadata?.year ||
     metadata?.ano ||
@@ -560,6 +577,10 @@ function normalizeProject(
     "";
 
 
+  /*
+     CATEGORÍA
+  */
+
   const rawCategory =
     metadata?.category ||
     metadata?.categoria ||
@@ -567,10 +588,11 @@ function normalizeProject(
     project.categoria ||
     "";
 
-  // Si la categoría viene como Array (list-projects la devuelve así), tomamos las primeras
-  const category = Array.isArray(rawCategory) 
-    ? rawCategory.slice(0, 2).join(", ") 
-    : String(rawCategory);
+
+  const category =
+    Array.isArray(rawCategory)
+      ? rawCategory.slice(0, 2).join(", ")
+      : String(rawCategory);
 
 
   return {
@@ -606,9 +628,56 @@ function extractCover(
   project
 ) {
 
-  const directCandidates = [
+  if (
+    !project ||
+    typeof project !== "object"
+  ) {
 
-    project.cover,
+    return "";
+
+  }
+
+
+  /*
+     PRIORIDAD 1
+     Estructura exacta actual de list-projects:
+
+     cover.url
+  */
+
+  if (
+    project.cover &&
+    typeof project.cover === "object"
+  ) {
+
+    const coverUrl =
+      project.cover.url ||
+      project.cover.signedUrl ||
+      project.cover.signed_url ||
+      project.cover.publicUrl ||
+      project.cover.public_url ||
+      "";
+
+
+    if (
+      typeof coverUrl === "string" &&
+      coverUrl.length > 0
+    ) {
+
+      return coverUrl;
+
+    }
+
+  }
+
+
+  /*
+     PRIORIDAD 2
+     Propiedades directas que list-projects
+     también puede devolver.
+  */
+
+  const directCandidates = [
 
     project.coverUrl,
 
@@ -616,23 +685,23 @@ function extractCover(
 
     project.coverURL,
 
-    project.image,
-
     project.imageUrl,
 
     project.image_url,
 
-    project.thumbnail,
+    project.image,
 
     project.thumbnailUrl,
 
     project.thumbnail_url,
 
-    project.portada,
+    project.thumbnail,
 
     project.portadaUrl,
 
-    project.portada_url
+    project.portada_url,
+
+    project.portada
 
   ];
 
@@ -656,6 +725,13 @@ function extractCover(
 
   }
 
+
+  /*
+     ÚLTIMO RECURSO
+
+     Buscamos cualquier URL de imagen
+     dentro del objeto.
+  */
 
   return findImageUrl(
     project
@@ -996,12 +1072,73 @@ function createProjectCard(
     false;
 
 
-  if (project.cover) {
+  /*
+     ASIGNACIÓN DEL COVER
+
+     La URL ya viene firmada desde Supabase.
+     No construimos ninguna URL manualmente.
+  */
+
+  if (
+    typeof project.cover === "string" &&
+    project.cover.length > 0
+  ) {
 
     image.src =
       project.cover;
 
+    image.dataset.source =
+      "supabase-cover";
+
+
+    console.log(
+      `[Baal Studio] Cover asignado: ${displayName}`,
+      project.cover
+    );
+
+  } else {
+
+    console.warn(
+      `[Baal Studio] El proyecto "${displayName}" no tiene una URL de cover válida.`,
+      project
+    );
+
   }
+
+
+  /*
+     DETECCIÓN DE CARGA
+
+     Esto nos permitirá saber si el problema está
+     en la URL o en el CSS/renderizado.
+  */
+
+  image.addEventListener(
+    "load",
+    () => {
+
+      console.log(
+        `[Baal Studio] Cover cargado correctamente: ${displayName}`
+      );
+
+    }
+  );
+
+
+  image.addEventListener(
+    "error",
+    event => {
+
+      console.error(
+        `[Baal Studio] ERROR cargando cover: ${displayName}`,
+        {
+          url: image.src,
+          event
+        }
+      );
+
+    }
+  );
 
 
   media.appendChild(image);
