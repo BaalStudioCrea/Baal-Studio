@@ -2,7 +2,6 @@
 <html lang="es">
 
 <head>
-
   <meta charset="UTF-8">
 
   <meta
@@ -10,75 +9,84 @@
     content="width=device-width, initial-scale=1.0"
   >
 
-  <title>Baal Studio</title>
-
   <meta
     name="description"
-    content="Baal Studio — Documentación del patrimonio, planimetrías, mapeados, levantamiento y modelado 3D, reconstrucción virtual y fotografía con drone."
+    content="Baal Studio — Documentación, conservación y análisis digital del patrimonio cultural."
   >
 
-  <link
-    rel="stylesheet"
-    href="./style.css"
-  >
+  <meta name="theme-color" content="#111111">
 
+  <title>Baal Studio — Documentación Patrimonial</title>
+
+  <link rel="stylesheet" href="./style.css">
 </head>
 
 
 <body>
 
-
   <!-- =====================================================
        HEADER
        ===================================================== -->
 
-  <header
-    class="main-header"
-    id="main-header"
-  >
+  <header class="main-header" id="main-header">
 
-    <div class="header-container">
+    <div class="header-inner">
 
       <a
         href="./index.html"
-        class="header-logo"
-        aria-label="Baal Studio"
+        class="header-logo-link"
+        aria-label="Baal Studio — Inicio"
       >
 
         <img
-          id="header-logo"
-          class="protected-image"
+          id="site-logo"
+          class="header-logo protected-image"
           src=""
           alt="Baal Studio"
+          width="180"
+          height="40"
           draggable="false"
         >
 
       </a>
 
 
-      <nav class="desktop-nav">
+      <nav
+        class="desktop-nav"
+        aria-label="Navegación principal"
+      >
 
         <a
           href="./index.html"
-          class="active"
+          class="nav-link active"
+          aria-current="page"
         >
           <span>Inicio</span>
-          <small>Home</small>
+          <span class="nav-link-en">Home</span>
         </a>
 
-        <a href="./proyectos.html">
+        <a
+          href="./proyectos.html"
+          class="nav-link"
+        >
           <span>Proyectos</span>
-          <small>Projects</small>
+          <span class="nav-link-en">Projects</span>
         </a>
 
-        <a href="./about.html">
+        <a
+          href="./about.html"
+          class="nav-link"
+        >
           <span>Sobre mí</span>
-          <small>About</small>
+          <span class="nav-link-en">About</span>
         </a>
 
-        <a href="./contact.html">
+        <a
+          href="./contact.html"
+          class="nav-link"
+        >
           <span>Contacto</span>
-          <small>Contact</small>
+          <span class="nav-link-en">Contact</span>
         </a>
 
       </nav>
@@ -90,11 +98,11 @@
         type="button"
         aria-label="Abrir menú"
         aria-expanded="false"
+        aria-controls="mobile-menu"
       >
-
         <span></span>
         <span></span>
-
+        <span></span>
       </button>
 
     </div>
@@ -106,7 +114,7 @@
       aria-hidden="true"
     >
 
-      <nav>
+      <nav aria-label="Navegación móvil">
 
         <a href="./index.html">
           <span>Inicio</span>
@@ -136,51 +144,53 @@
 
 
 
-  <!-- =====================================================
-       HERO
-       ===================================================== -->
-
   <main>
 
+    <!-- =====================================================
+         HERO
+         ===================================================== -->
 
     <section
       class="hero-section"
-      id="inicio"
+      id="hero"
+      aria-labelledby="hero-title"
     >
 
-      <div class="hero-background">
+      <div class="hero-media">
 
         <img
           id="hero-background"
-          class="protected-image"
+          class="hero-background protected-image"
           src=""
-          alt=""
-          aria-hidden="true"
+          alt="Documentación patrimonial"
           draggable="false"
+          fetchpriority="high"
         >
+
+        <div
+          class="hero-gradient"
+          aria-hidden="true"
+        ></div>
 
       </div>
 
 
-      <div class="hero-overlay"></div>
-
-
       <div class="hero-content">
 
-        <div class="hero-specialty">
+        <div class="hero-specialties">
 
-          <p>
-            DOCUMENTACIÓN DEL PATRIMONIO · FOTOGRAMETRÍA · MODELADO 3D
+          <p class="hero-specialties-es">
+            DOCUMENTACIÓN PATRIMONIAL · PLANIMETRÍA · MAPEADO · LEVANTAMIENTO 3D · MODELADO 3D · RECONSTRUCCIÓN VIRTUAL · FOTOGRAFÍA CON DRONE
           </p>
 
-          <p>
-            HERITAGE DOCUMENTATION · PHOTOGRAMMETRY · 3D MODELING
+          <p class="hero-specialties-en">
+            HERITAGE DOCUMENTATION · PLANIMETRIC MAPPING · 3D SURVEY · VIRTUAL RECONSTRUCTION · DRONE PHOTOGRAPHY
           </p>
 
         </div>
 
 
-        <h1>
+        <h1 id="hero-title">
           Baal Studio
         </h1>
 
@@ -188,25 +198,14 @@
         <div class="hero-description">
 
           <p>
-            Documentación, análisis y representación digital del patrimonio cultural mediante herramientas gráficas y tridimensionales.
+            Especialista en documentación y análisis del patrimonio cultural mediante flujos digitales de alta precisión, integrando planimetrías, mapeados, fotogrametría, modelado tridimensional y reconstrucción virtual para su aplicación en estudio, conservación y difusión.
           </p>
 
           <p>
-            Documentation, analysis and digital representation of cultural heritage through graphic and three-dimensional tools.
+            Specialist in cultural heritage documentation and analysis through high-precision digital workflows, integrating planimetry, mapping, photogrammetry, 3D modeling, and virtual reconstruction for research, conservation, and dissemination.
           </p>
 
         </div>
-
-      </div>
-
-
-      <div class="hero-scroll">
-
-        <span>
-          Scroll
-        </span>
-
-        <span class="hero-scroll-line"></span>
 
       </div>
 
@@ -270,62 +269,27 @@
           <div class="stats-grid">
 
             <div class="stat-item">
-
               <strong>8+</strong>
-
-              <span>
-                Años de experiencia
-              </span>
-
-              <small>
-                Years experience
-              </small>
-
+              <span>Años de experiencia</span>
+              <small>Years experience</small>
             </div>
 
-
             <div class="stat-item">
-
               <strong>30+</strong>
-
-              <span>
-                Casos documentados
-              </span>
-
-              <small>
-                Cases documented
-              </small>
-
+              <span>Casos documentados</span>
+              <small>Cases documented</small>
             </div>
 
-
             <div class="stat-item">
-
               <strong>2</strong>
-
-              <span>
-                Países
-              </span>
-
-              <small>
-                Countries
-              </small>
-
+              <span>Países</span>
+              <small>Countries</small>
             </div>
 
-
             <div class="stat-item">
-
               <strong>11</strong>
-
-              <span>
-                Herramientas de software
-              </span>
-
-              <small>
-                Software tools
-              </small>
-
+              <span>Herramientas de software</span>
+              <small>Software tools</small>
             </div>
 
           </div>
@@ -361,8 +325,6 @@
               Selected Projects
             </p>
 
-            <div class="section-rule"></div>
-
           </div>
 
 
@@ -370,19 +332,9 @@
             href="./proyectos.html"
             class="view-all-link"
           >
-
-            <span>
-              Ver Todos
-            </span>
-
-            <span>
-              View All
-            </span>
-
-            <span class="view-arrow">
-              →
-            </span>
-
+            <span>Ver Todos</span>
+            <span>View All</span>
+            <span class="view-arrow">→</span>
           </a>
 
         </div>
@@ -394,13 +346,8 @@
         >
 
           <div class="project-loading">
-
             <span></span>
-
-            <p>
-              Cargando proyectos…
-            </p>
-
+            <p>Cargando proyectos…</p>
           </div>
 
         </div>
@@ -443,22 +390,12 @@
           <article class="capability-item">
 
             <div class="capability-icon">
-
-              <svg
-                viewBox="0 0 48 48"
-                aria-hidden="true"
-              >
-
-                <path d="M12 6h18l6 6v30H12z"></path>
-
-                <path d="M30 6v8h8"></path>
-
-                <path d="M18 21h12M18 27h12M18 33h8"></path>
-
+              <svg viewBox="0 0 48 48" aria-hidden="true">
+                <rect x="11" y="7" width="26" height="34" rx="1"></rect>
+                <path d="M17 15h14M17 21h14M17 27h9M17 33h11"></path>
+                <path d="M15 7v6h6"></path>
               </svg>
-
             </div>
-
 
             <h3>
               Documentación del Patrimonio
@@ -475,28 +412,16 @@
           </article>
 
 
-
           <article class="capability-item">
 
             <div class="capability-icon">
-
-              <svg
-                viewBox="0 0 48 48"
-                aria-hidden="true"
-              >
-
-                <path d="M8 38h32"></path>
-
-                <path d="M12 34V12h24v22"></path>
-
-                <path d="M8 12h32"></path>
-
-                <path d="M18 18v16M24 18v16M30 18v16"></path>
-
+              <svg viewBox="0 0 48 48" aria-hidden="true">
+                <path d="M9 37V11h30v26"></path>
+                <path d="M15 31V17M24 31V17M33 31V17"></path>
+                <path d="M6 37h36"></path>
+                <path d="M13 11V7h22v4"></path>
               </svg>
-
             </div>
-
 
             <h3>
               Planimetrías
@@ -513,32 +438,16 @@
           </article>
 
 
-
           <article class="capability-item">
 
             <div class="capability-icon">
-
-              <svg
-                viewBox="0 0 48 48"
-                aria-hidden="true"
-              >
-
-                <path d="M8 9h32v30H8z"></path>
-
-                <path d="M8 18h32M17 9v30M29 9v30"></path>
-
-                <path d="M12 33l7-6 6 4 11-11"></path>
-
-                <circle
-                  cx="36"
-                  cy="17"
-                  r="2"
-                ></circle>
-
+              <svg viewBox="0 0 48 48" aria-hidden="true">
+                <path d="M8 11h32v26H8z"></path>
+                <path d="M8 19h32M16 11v26M29 11v26"></path>
+                <path d="M12 31l8-7 6 4 10-10"></path>
+                <circle cx="36" cy="18" r="2"></circle>
               </svg>
-
             </div>
-
 
             <h3>
               Mapeados
@@ -555,38 +464,15 @@
           </article>
 
 
-
           <article class="capability-item">
 
             <div class="capability-icon">
-
-              <svg
-                viewBox="0 0 48 48"
-                aria-hidden="true"
-              >
-
-                <path d="M24 6l16 9v18l-16 9-16-9V15z"></path>
-
-                <path d="M8 15l16 9 16-9"></path>
-
-                <path d="M24 24v18"></path>
-
-                <circle
-                  cx="18"
-                  cy="20"
-                  r="2"
-                ></circle>
-
-                <circle
-                  cx="30"
-                  cy="27"
-                  r="2"
-                ></circle>
-
+              <svg viewBox="0 0 48 48" aria-hidden="true">
+                <path d="M24 7l15 9v17l-15 9-15-9V16l15-9z"></path>
+                <path d="M9 16l15 9 15-9M24 25v17"></path>
+                <path d="M17 12l15 9"></path>
               </svg>
-
             </div>
-
 
             <h3>
               Levantamiento y Modelado 3D
@@ -603,30 +489,15 @@
           </article>
 
 
-
           <article class="capability-item">
 
             <div class="capability-icon">
-
-              <svg
-                viewBox="0 0 48 48"
-                aria-hidden="true"
-              >
-
-                <path d="M8 38V15l16-8 16 8v23"></path>
-
-                <path d="M8 38h32"></path>
-
-                <path d="M15 31h5M28 31h5"></path>
-
-                <path d="M15 24h5M28 24h5"></path>
-
-                <path d="M24 7v31"></path>
-
+              <svg viewBox="0 0 48 48" aria-hidden="true">
+                <path d="M8 36V14l16-7 16 7v22"></path>
+                <path d="M8 36h32M14 30h5M29 30h5M14 23h5M29 23h5"></path>
+                <path d="M24 7v29"></path>
               </svg>
-
             </div>
-
 
             <h3>
               Reconstrucción Virtual
@@ -643,42 +514,15 @@
           </article>
 
 
-
           <article class="capability-item">
 
             <div class="capability-icon">
-
-              <svg
-                viewBox="0 0 48 48"
-                aria-hidden="true"
-              >
-
-                <path d="M24 15v18"></path>
-
-                <path d="M15 24h18"></path>
-
-                <path d="M17 17l14 14"></path>
-
-                <path d="M31 17L17 31"></path>
-
-                <circle
-                  cx="24"
-                  cy="24"
-                  r="5"
-                ></circle>
-
-                <path d="M10 14l-4 4 4 4"></path>
-
-                <path d="M38 26l4-4-4-4"></path>
-
-                <path d="M14 10l4-4 4 4"></path>
-
-                <path d="M26 38l-4 4-4-4"></path>
-
+              <svg viewBox="0 0 48 48" aria-hidden="true">
+                <path d="M8 24h32M13 18l-5 6 5 6M35 18l5 6-5 6"></path>
+                <path d="M24 12v24M18 18l6-6 6 6M18 30l6 6 6-6"></path>
+                <circle cx="24" cy="24" r="4"></circle>
               </svg>
-
             </div>
-
 
             <h3>
               Fotografía con Drone
@@ -713,7 +557,9 @@
 
     <div class="footer-container">
 
+
       <div class="footer-top">
+
 
         <div class="footer-services">
 
@@ -748,7 +594,9 @@
 
         </div>
 
+
       </div>
+
 
 
       <div class="footer-identity">
@@ -763,6 +611,7 @@
             draggable="false"
           >
 
+
           <img
             id="footer-logo-lns"
             class="footer-secondary-logo protected-image"
@@ -775,33 +624,42 @@
 
 
         <a
-          id="footer-qr-link"
-          href="#"
+          href="https://linktr.ee/baalstudio"
           target="_blank"
           rel="noopener noreferrer"
+          aria-label="Baal Studio — Redes sociales"
         >
 
           <img
             id="footer-qr"
             class="footer-qr protected-image"
             src=""
-            alt="Baal Studio QR"
+            alt="Redes sociales de Baal Studio"
+            width="100"
+            height="100"
             draggable="false"
           >
 
         </a>
 
+
+        <a
+          href="https://linktr.ee/baalstudio"
+          class="footer-social-link"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          RRSS
+        </a>
+
       </div>
+
 
 
       <div class="footer-bottom">
 
         <p>
-          © Baal Studio
-        </p>
-
-        <p>
-          Granada · España
+          © Baal Studio. Todos los derechos reservados · All rights reserved.
         </p>
 
       </div>
