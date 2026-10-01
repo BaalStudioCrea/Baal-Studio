@@ -1,6 +1,6 @@
 /* ============================================================
    BAAL STUDIO
-   SCRIPT.JS — V04
+   SCRIPT.JS — V04 FINAL HOME
    ============================================================ */
 
 
@@ -11,35 +11,33 @@
 const SUPABASE_FUNCTION_BASE =
   "https://hlyzyeatnbulyfiiwvsq.supabase.co/functions/v1";
 
+const GET_PROJECTS_URL =
+  `${SUPABASE_FUNCTION_BASE}/get-projects`;
 
-const FUNCTIONS = {
-
-  siteAssets:
-    `${SUPABASE_FUNCTION_BASE}/get-site-assets`,
-
-  projects:
-    `${SUPABASE_FUNCTION_BASE}/get-projects`
-
-};
+const GET_SITE_ASSETS_URL =
+  `${SUPABASE_FUNCTION_BASE}/get-site-assets`;
 
 
 /* ------------------------------------------------------------
    INICIO
    ------------------------------------------------------------ */
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener(
+  "DOMContentLoaded",
+  async () => {
 
-  initHeader();
+    initHeader();
 
-  initMobileMenu();
+    initMobileMenu();
 
-  initProtection();
+    initProtection();
 
-  loadSiteAssets();
+    await loadSiteAssets();
 
-  loadSelectedProjects();
+    await loadSelectedProjects();
 
-});
+  }
+);
 
 
 /* ------------------------------------------------------------
@@ -49,7 +47,9 @@ document.addEventListener("DOMContentLoaded", () => {
 function initHeader() {
 
   const header =
-    document.getElementById("main-header");
+    document.getElementById(
+      "main-header"
+    );
 
 
   if (!header) {
@@ -57,19 +57,26 @@ function initHeader() {
   }
 
 
-  function updateHeader() {
+  const updateHeader =
+    () => {
 
-    if (window.scrollY > 30) {
+      if (
+        window.scrollY > 20
+      ) {
 
-      header.classList.add("scrolled");
+        header.classList.add(
+          "scrolled"
+        );
 
-    } else {
+      } else {
 
-      header.classList.remove("scrolled");
+        header.classList.remove(
+          "scrolled"
+        );
 
-    }
+      }
 
-  }
+    };
 
 
   updateHeader();
@@ -103,69 +110,85 @@ function initMobileMenu() {
     );
 
 
-  if (!button || !menu) {
+  if (
+    !button ||
+    !menu
+  ) {
+
     return;
+
   }
 
 
-  button.addEventListener("click", () => {
+  button.addEventListener(
+    "click",
+    () => {
 
-    const isOpen =
-      button.classList.toggle("open");
-
-
-    menu.classList.toggle(
-      "open",
-      isOpen
-    );
+      const isOpen =
+        button.classList.toggle(
+          "open"
+        );
 
 
-    button.setAttribute(
-      "aria-expanded",
-      String(isOpen)
-    );
+      menu.classList.toggle(
+        "open",
+        isOpen
+      );
 
 
-    menu.setAttribute(
-      "aria-hidden",
-      String(!isOpen)
-    );
-
-  });
+      button.setAttribute(
+        "aria-expanded",
+        String(isOpen)
+      );
 
 
-  menu.querySelectorAll("a").forEach(
-    link => {
-
-      link.addEventListener(
-        "click",
-        () => {
-
-          button.classList.remove("open");
-
-          menu.classList.remove("open");
-
-          button.setAttribute(
-            "aria-expanded",
-            "false"
-          );
-
-          menu.setAttribute(
-            "aria-hidden",
-            "true"
-          );
-
-        }
+      menu.setAttribute(
+        "aria-hidden",
+        String(!isOpen)
       );
 
     }
   );
 
+
+  menu
+    .querySelectorAll("a")
+    .forEach(
+      link => {
+
+        link.addEventListener(
+          "click",
+          () => {
+
+            button.classList.remove(
+              "open"
+            );
+
+            menu.classList.remove(
+              "open"
+            );
+
+            button.setAttribute(
+              "aria-expanded",
+              "false"
+            );
+
+            menu.setAttribute(
+              "aria-hidden",
+              "true"
+            );
+
+          }
+        );
+
+      }
+    );
+
 }
 
 
 /* ------------------------------------------------------------
-   ASSETS
+   ASSETS DEL SITIO
    ------------------------------------------------------------ */
 
 async function loadSiteAssets() {
@@ -174,12 +197,10 @@ async function loadSiteAssets() {
 
     const response =
       await fetch(
-        FUNCTIONS.siteAssets,
+        GET_SITE_ASSETS_URL,
         {
           method: "GET",
-          headers: {
-            "Accept": "application/json"
-          }
+          cache: "no-store"
         }
       );
 
@@ -198,19 +219,20 @@ async function loadSiteAssets() {
 
 
     if (
-      !result.success ||
-      !result.assets
+      !result ||
+      result.success !== true
     ) {
 
       throw new Error(
-        "get-site-assets no devolvió assets válidos."
+        result?.error ||
+        "No se pudieron obtener los assets del sitio."
       );
 
     }
 
 
     const assets =
-      result.assets;
+      result.assets || {};
 
 
     setImageSource(
@@ -220,7 +242,7 @@ async function loadSiteAssets() {
 
 
     setImageSource(
-      "header-logo",
+      "site-logo",
       assets.logoPrincipal
     );
 
@@ -237,41 +259,16 @@ async function loadSiteAssets() {
     );
 
 
-    const qrLink =
-      document.getElementById(
-        "footer-qr-link"
-      );
-
-
-    const qr =
-      document.getElementById(
-        "footer-qr"
-      );
-
-
-    if (qr && assets.qr) {
-
-      qr.src =
-        assets.qr;
-
-    }
-
-
-    if (qrLink && assets.qr) {
-
-      qrLink.href =
-        "https://linktr.ee/baalstudio";
-
-    }
-
-
-    applyProtectionToImages();
+    setImageSource(
+      "footer-qr",
+      assets.qr
+    );
 
 
   } catch (error) {
 
     console.error(
-      "Error cargando assets:",
+      "Error cargando los assets del sitio:",
       error
     );
 
@@ -281,7 +278,7 @@ async function loadSiteAssets() {
 
 
 /* ------------------------------------------------------------
-   ASIGNAR IMAGEN
+   ASIGNAR SRC
    ------------------------------------------------------------ */
 
 function setImageSource(
@@ -289,25 +286,30 @@ function setImageSource(
   source
 ) {
 
-  const element =
-    document.getElementById(elementId);
-
-
-  if (
-    element &&
-    source
-  ) {
-
-    element.src =
-      source;
-
+  if (!source) {
+    return;
   }
+
+
+  const element =
+    document.getElementById(
+      elementId
+    );
+
+
+  if (!element) {
+    return;
+  }
+
+
+  element.src =
+    source;
 
 }
 
 
 /* ------------------------------------------------------------
-   PROYECTOS
+   PROYECTOS SELECCIONADOS
    ------------------------------------------------------------ */
 
 async function loadSelectedProjects() {
@@ -327,12 +329,10 @@ async function loadSelectedProjects() {
 
     const response =
       await fetch(
-        FUNCTIONS.projects,
+        GET_PROJECTS_URL,
         {
           method: "GET",
-          headers: {
-            "Accept": "application/json"
-          }
+          cache: "no-store"
         }
       );
 
@@ -356,7 +356,9 @@ async function loadSelectedProjects() {
       );
 
 
-    if (!projects.length) {
+    if (
+      !projects.length
+    ) {
 
       showProjectsMessage(
         container,
@@ -364,41 +366,41 @@ async function loadSelectedProjects() {
       );
 
       return;
+
     }
 
 
-    projects.sort(
-      (a, b) =>
-        Number(a.order || 999) -
-        Number(b.order || 999)
-    );
+    container.innerHTML =
+      "";
 
 
-    const selected =
-      projects.slice(0, 3);
+    /*
+       La portada muestra únicamente
+       los primeros proyectos devueltos
+       por la función, respetando su orden.
+    */
+
+    projects
+      .slice(0, 3)
+      .forEach(
+        (
+          project,
+          index
+        ) => {
+
+          const card =
+            createProjectCard(
+              project,
+              index
+            );
 
 
-    container.innerHTML = "";
-
-
-    selected.forEach(
-      (project, index) => {
-
-        const card =
-          createProjectCard(
-            project,
-            index
+          container.appendChild(
+            card
           );
 
-
-        if (card) {
-
-          container.appendChild(card);
-
         }
-
-      }
-    );
+      );
 
 
     applyProtectionToImages();
@@ -407,14 +409,14 @@ async function loadSelectedProjects() {
   } catch (error) {
 
     console.error(
-      "Error cargando proyectos:",
+      "Error cargando los proyectos:",
       error
     );
 
 
     showProjectsMessage(
       container,
-      "No se han podido cargar los proyectos."
+      "No se pudieron cargar los proyectos."
     );
 
   }
@@ -438,7 +440,9 @@ function normalizeProjectsResponse(
   let projects = [];
 
 
-  if (Array.isArray(result)) {
+  if (
+    Array.isArray(result)
+  ) {
 
     projects = result;
 
@@ -498,50 +502,71 @@ function normalizeProject(
 
 
   /*
-     El título visible debe proceder preferentemente
-     del contenido estructurado del proyecto.txt.
+     El nombre de carpeta solamente se utiliza
+     como identificador interno.
 
-     Se aceptan las variantes que ya utiliza
-     nuestra función de proyectos.
+     Ejemplo:
+     "Epigrafias arabes de Granada (01)"
+
+     El título visible, si existe en metadata,
+     procede del proyecto.txt.
   */
 
-  const metadataTitle =
-    project?.metadata?.titulo ||
-    project?.metadata?.title ||
-    project?.metadata?.nombre ||
-    project?.metadata?.name ||
-    project?.txt?.titulo ||
-    project?.txt?.title ||
-    project?.content?.titulo ||
-    project?.content?.title ||
-    "";
+
+  let metadata =
+    project?.metadata || {};
 
 
   /*
-     Si no existe título en los metadatos,
-     utilizamos el nombre de carpeta como respaldo,
-     pero eliminamos siempre el sufijo de orden.
-
-     Ejemplo:
-
-     Epigrafias arabes de Granada (01)
-
-     se muestra como:
-
-     Epigrafias arabes de Granada
+     Algunas respuestas pueden devolver metadata
+     serializada como texto JSON.
   */
 
+  if (
+    typeof metadata === "string"
+  ) {
+
+    try {
+
+      metadata =
+        JSON.parse(
+          metadata
+        );
+
+    } catch (error) {
+
+      metadata = {};
+
+    }
+
+  }
+
+
+  /*
+     IMPORTANTE:
+     respetamos exactamente el título del TXT.
+
+     No eliminamos puntos finales,
+     paréntesis ni ningún otro carácter.
+  */
+
+  const metadataTitle =
+    metadata?.titulo ||
+    metadata?.title ||
+    metadata?.nombre ||
+    metadata?.name ||
+    project?.titulo ||
+    project?.title ||
+    project?.nombre ||
+    project?.displayName ||
+    "";
+
+
   const displayName =
-    String(metadataTitle || rawName)
-      .replace(
-        /\s*\(\s*\d+\s*\)\s*$/,
-        ""
-      )
-      .replace(
-        /\s*[.!?]+\s*$/,
-        ""
-      )
-      .trim();
+    String(
+      metadataTitle ||
+      rawName
+    ).trim();
 
 
   const order =
@@ -552,7 +577,9 @@ function normalizeProject(
 
 
   const cover =
-    extractCover(project);
+    extractCover(
+      project
+    );
 
 
   const location =
@@ -560,6 +587,8 @@ function normalizeProject(
     project.localizacion ||
     project.ubicacion ||
     project.place ||
+    metadata?.localizacion ||
+    metadata?.location ||
     "";
 
 
@@ -567,6 +596,8 @@ function normalizeProject(
     project.year ||
     project.año ||
     project.ano ||
+    metadata?.año ||
+    metadata?.year ||
     "";
 
 
@@ -575,12 +606,16 @@ function normalizeProject(
     project.categoria ||
     project.type ||
     project.tipo ||
+    metadata?.categoria ||
+    metadata?.category ||
     "";
 
 
   return {
 
     ...project,
+
+    metadata,
 
     name: rawName,
 
@@ -609,51 +644,126 @@ function extractCover(
   project
 ) {
 
-  if (!project) {
+  const directCandidates = [
+
+    project.cover,
+
+    project.coverUrl,
+
+    project.cover_url,
+
+    project.coverURL,
+
+    project.image,
+
+    project.imageUrl,
+
+    project.image_url,
+
+    project.thumbnail,
+
+    project.thumbnailUrl,
+
+    project.thumbnail_url,
+
+    project.portada,
+
+    project.portadaUrl,
+
+    project.portada_url
+
+  ];
+
+
+  for (
+    const candidate
+    of directCandidates
+  ) {
+
+    const url =
+      extractUrlFromValue(
+        candidate
+      );
+
+
+    if (url) {
+
+      return url;
+
+    }
+
+  }
+
+
+  /*
+     Si el cover está dentro de otra
+     propiedad del objeto, buscamos
+     recursivamente una URL de imagen.
+  */
+
+  return findImageUrl(
+    project
+  );
+
+}
+
+
+/* ------------------------------------------------------------
+   EXTRAER URL DE UN VALOR
+   ------------------------------------------------------------ */
+
+function extractUrlFromValue(
+  value
+) {
+
+  if (!value) {
     return "";
   }
 
 
   if (
-    typeof project.cover === "string" &&
-    project.cover
+    typeof value === "string"
   ) {
 
-    return project.cover;
+    return isImageUrl(value)
+      ? value
+      : "";
 
   }
 
 
   if (
-    typeof project.coverUrl === "string" &&
-    project.coverUrl
+    typeof value === "object"
   ) {
 
-    return project.coverUrl;
+    const candidates = [
 
-  }
+      value.url,
+
+      value.signedUrl,
+
+      value.signed_url,
+
+      value.publicUrl,
+
+      value.public_url
+
+    ];
 
 
-  if (
-    typeof project.cover_url === "string" &&
-    project.cover_url
-  ) {
-
-    return project.cover_url;
-
-  }
-
-
-  if (
-    project.resources &&
-    typeof project.resources === "object"
-  ) {
-
-    if (
-      typeof project.resources.cover === "string"
+    for (
+      const candidate
+      of candidates
     ) {
 
-      return project.resources.cover;
+      if (
+        typeof candidate === "string" &&
+        candidate.length > 0
+      ) {
+
+        return candidate;
+
+      }
 
     }
 
@@ -666,6 +776,179 @@ function extractCover(
 
 
 /* ------------------------------------------------------------
+   BUSCAR IMAGEN RECURSIVAMENTE
+   ------------------------------------------------------------ */
+
+function findImageUrl(
+  value,
+  depth = 0
+) {
+
+  /*
+     Evitamos recorrer objetos indefinidamente.
+  */
+
+  if (
+    !value ||
+    depth > 5
+  ) {
+
+    return "";
+
+  }
+
+
+  if (
+    typeof value === "string"
+  ) {
+
+    return isImageUrl(value)
+      ? value
+      : "";
+
+  }
+
+
+  if (
+    typeof value !== "object"
+  ) {
+
+    return "";
+
+  }
+
+
+  /*
+     Primero comprobamos claves con
+     mayor probabilidad de contener covers.
+  */
+
+  const priorityKeys = [
+
+    "cover",
+    "coverUrl",
+    "cover_url",
+    "image",
+    "imageUrl",
+    "image_url",
+    "thumbnail",
+    "thumbnailUrl",
+    "thumbnail_url",
+    "portada",
+    "url",
+    "signedUrl",
+    "signed_url"
+
+  ];
+
+
+  for (
+    const key
+    of priorityKeys
+  ) {
+
+    if (
+      Object.prototype.hasOwnProperty.call(
+        value,
+        key
+      )
+    ) {
+
+      const result =
+        findImageUrl(
+          value[key],
+          depth + 1
+        );
+
+
+      if (result) {
+
+        return result;
+
+      }
+
+    }
+
+  }
+
+
+  /*
+     Después recorremos el resto.
+  */
+
+  for (
+    const key
+    of Object.keys(value)
+  ) {
+
+    if (
+      priorityKeys.includes(key)
+    ) {
+
+      continue;
+
+    }
+
+
+    const result =
+      findImageUrl(
+        value[key],
+        depth + 1
+      );
+
+
+    if (result) {
+
+      return result;
+
+    }
+
+  }
+
+
+  return "";
+
+}
+
+
+/* ------------------------------------------------------------
+   COMPROBAR URL DE IMAGEN
+   ------------------------------------------------------------ */
+
+function isImageUrl(
+  value
+) {
+
+  if (
+    typeof value !== "string"
+  ) {
+
+    return false;
+
+  }
+
+
+  const clean =
+    value
+      .split("?")[0]
+      .toLowerCase();
+
+
+  return (
+
+    clean.includes(".jpg") ||
+    clean.includes(".jpeg") ||
+    clean.includes(".png") ||
+    clean.includes(".webp") ||
+    clean.includes(".avif") ||
+    clean.includes(".gif")
+
+  );
+
+}
+
+
+/* ------------------------------------------------------------
    CREAR TARJETA
    ------------------------------------------------------------ */
 
@@ -673,11 +956,6 @@ function createProjectCard(
   project,
   index
 ) {
-
-  if (!project) {
-    return null;
-  }
-
 
   const card =
     document.createElement("a");
@@ -724,20 +1002,8 @@ function createProjectCard(
 
   const displayName =
     project.displayName ||
-    projectName
-      .replace(
-        /\s*\(\s*\d+\s*\)\s*$/,
-        ""
-      )
-      .trim();
+    projectName;
 
-
-  /*
-     El nombre de carpeta sigue siendo la identidad
-     interna para localizar el proyecto.
-
-     El título visible es displayName.
-  */
 
   card.href =
     `./proyectos.html?proyecto=${encodeURIComponent(projectName)}`;
@@ -795,7 +1061,9 @@ function createProjectCard(
   }
 
 
-  media.appendChild(image);
+  media.appendChild(
+    image
+  );
 
 
   const overlay =
@@ -806,7 +1074,9 @@ function createProjectCard(
     "project-card-overlay";
 
 
-  media.appendChild(overlay);
+  media.appendChild(
+    overlay
+  );
 
 
   /*
@@ -835,7 +1105,9 @@ function createProjectCard(
       project.location;
 
 
-    content.appendChild(location);
+    content.appendChild(
+      location
+    );
 
   }
 
@@ -852,7 +1124,9 @@ function createProjectCard(
     displayName;
 
 
-  content.appendChild(title);
+  content.appendChild(
+    title
+  );
 
 
   /*
@@ -877,7 +1151,9 @@ function createProjectCard(
       project.year;
 
 
-    meta.appendChild(year);
+    meta.appendChild(
+      year
+    );
 
   }
 
@@ -892,21 +1168,31 @@ function createProjectCard(
       project.category;
 
 
-    meta.appendChild(category);
+    meta.appendChild(
+      category
+    );
 
   }
 
 
-  if (meta.children.length) {
+  if (
+    meta.children.length
+  ) {
 
-    content.appendChild(meta);
+    content.appendChild(
+      meta
+    );
 
   }
 
 
-  card.appendChild(media);
+  card.appendChild(
+    media
+  );
 
-  card.appendChild(content);
+  card.appendChild(
+    content
+  );
 
 
   return card;
@@ -915,7 +1201,7 @@ function createProjectCard(
 
 
 /* ------------------------------------------------------------
-   MENSAJES DE PROYECTOS
+   MENSAJE DE PROYECTOS
    ------------------------------------------------------------ */
 
 function showProjectsMessage(
@@ -923,7 +1209,8 @@ function showProjectsMessage(
   message
 ) {
 
-  container.innerHTML = "";
+  container.innerHTML =
+    "";
 
 
   const element =
@@ -934,10 +1221,17 @@ function showProjectsMessage(
     "project-loading";
 
 
-  element.innerHTML =
-    `
-      <p>${message}</p>
-    `;
+  const text =
+    document.createElement("p");
+
+
+  text.textContent =
+    message;
+
+
+  element.appendChild(
+    text
+  );
 
 
   container.appendChild(
@@ -953,19 +1247,27 @@ function showProjectsMessage(
 
 function initProtection() {
 
+
   document.addEventListener(
     "contextmenu",
     event => {
 
+      const target =
+        event.target;
+
+
       if (
-        event.target.closest(
-          ".protected-image, .protected-media"
+        target.closest(
+          "input, textarea, select, [contenteditable='true'], video, audio, iframe"
         )
       ) {
 
-        event.preventDefault();
+        return;
 
       }
+
+
+      event.preventDefault();
 
     }
   );
@@ -975,9 +1277,14 @@ function initProtection() {
     "dragstart",
     event => {
 
+      const target =
+        event.target;
+
+
       if (
-        event.target.closest(
-          ".protected-image"
+        target instanceof HTMLImageElement ||
+        target.closest?.(
+          ".protected-media"
         )
       ) {
 
@@ -993,50 +1300,104 @@ function initProtection() {
     "keydown",
     event => {
 
-      const target =
-        event.target;
+      const key =
+        event.key.toLowerCase();
+
+
+      const modifier =
+        event.ctrlKey ||
+        event.metaKey;
 
 
       if (
-        target &&
-        target.closest &&
-        target.closest(
-          ".protected-image, .protected-media"
+        modifier &&
+        (
+          key === "s" ||
+          key === "u"
         )
       ) {
 
-        if (
-          event.key === "s" &&
-          (event.ctrlKey || event.metaKey)
-        ) {
+        event.preventDefault();
 
-          event.preventDefault();
+        return;
 
-        }
+      }
+
+
+      if (
+        modifier &&
+        event.shiftKey &&
+        (
+          key === "i" ||
+          key === "j" ||
+          key === "c"
+        )
+      ) {
+
+        event.preventDefault();
+
+        return;
+
+      }
+
+
+      if (
+        event.key === "F12"
+      ) {
+
+        event.preventDefault();
 
       }
 
     }
   );
 
+
+  applyProtectionToImages();
+
 }
 
+
+/* ------------------------------------------------------------
+   PROTECCIÓN DE IMÁGENES
+   ------------------------------------------------------------ */
 
 function applyProtectionToImages() {
 
   document
     .querySelectorAll(
-      "img"
+      "img.protected-image"
     )
     .forEach(
       image => {
 
-        image.classList.add(
-          "protected-image"
+        image.setAttribute(
+          "draggable",
+          "false"
         );
 
-        image.draggable =
-          false;
+
+        image.style.userSelect =
+          "none";
+
+
+        image.style.webkitUserDrag =
+          "none";
+
+      }
+    );
+
+
+  document
+    .querySelectorAll(
+      ".project-card-media"
+    )
+    .forEach(
+      media => {
+
+        media.classList.add(
+          "protected-media"
+        );
 
       }
     );
