@@ -1,6 +1,6 @@
 /* ============================================================
    BAAL STUDIO
-   SCRIPT.JS — V03
+   SCRIPT.JS — V04
    ============================================================ */
 
 
@@ -220,7 +220,7 @@ async function loadSiteAssets() {
 
 
     setImageSource(
-      "site-logo",
+      "header-logo",
       assets.logoPrincipal
     );
 
@@ -237,10 +237,32 @@ async function loadSiteAssets() {
     );
 
 
-    setImageSource(
-      "footer-qr",
-      assets.qr
-    );
+    const qrLink =
+      document.getElementById(
+        "footer-qr-link"
+      );
+
+
+    const qr =
+      document.getElementById(
+        "footer-qr"
+      );
+
+
+    if (qr && assets.qr) {
+
+      qr.src =
+        assets.qr;
+
+    }
+
+
+    if (qrLink && assets.qr) {
+
+      qrLink.href =
+        "https://linktr.ee/baalstudio";
+
+    }
 
 
     applyProtectionToImages();
@@ -475,17 +497,50 @@ function normalizeProject(
     "";
 
 
+  /*
+     El título visible debe proceder preferentemente
+     del contenido estructurado del proyecto.txt.
+
+     Se aceptan las variantes que ya utiliza
+     nuestra función de proyectos.
+  */
+
   const metadataTitle =
     project?.metadata?.titulo ||
     project?.metadata?.title ||
     project?.metadata?.nombre ||
     project?.metadata?.name ||
+    project?.txt?.titulo ||
+    project?.txt?.title ||
+    project?.content?.titulo ||
+    project?.content?.title ||
     "";
 
 
+  /*
+     Si no existe título en los metadatos,
+     utilizamos el nombre de carpeta como respaldo,
+     pero eliminamos siempre el sufijo de orden.
+
+     Ejemplo:
+
+     Epigrafias arabes de Granada (01)
+
+     se muestra como:
+
+     Epigrafias arabes de Granada
+  */
+
   const displayName =
     String(metadataTitle || rawName)
-      .replace(/\s*[.!?]+\s*$/, "")
+      .replace(
+        /\s*\(\s*\d+\s*\)\s*$/,
+        ""
+      )
+      .replace(
+        /\s*[.!?]+\s*$/,
+        ""
+      )
       .trim();
 
 
@@ -554,126 +609,51 @@ function extractCover(
   project
 ) {
 
-  const directCandidates = [
-
-    project.cover,
-
-    project.coverUrl,
-
-    project.cover_url,
-
-    project.coverURL,
-
-    project.image,
-
-    project.imageUrl,
-
-    project.image_url,
-
-    project.thumbnail,
-
-    project.thumbnailUrl,
-
-    project.thumbnail_url,
-
-    project.portada,
-
-    project.portadaUrl,
-
-    project.portada_url
-
-  ];
-
-
-  for (
-    const candidate
-    of directCandidates
-  ) {
-
-    const url =
-      extractUrlFromValue(
-        candidate
-      );
-
-
-    if (url) {
-
-      return url;
-
-    }
-
-  }
-
-
-  /*
-     Si el cover está dentro de otra
-     propiedad del objeto, buscamos
-     recursivamente una URL de imagen.
-  */
-
-  return findImageUrl(
-    project
-  );
-
-}
-
-
-/* ------------------------------------------------------------
-   EXTRAER URL DE UN VALOR
-   ------------------------------------------------------------ */
-
-function extractUrlFromValue(
-  value
-) {
-
-  if (!value) {
+  if (!project) {
     return "";
   }
 
 
   if (
-    typeof value === "string"
+    typeof project.cover === "string" &&
+    project.cover
   ) {
 
-    return isImageUrl(value)
-      ? value
-      : "";
+    return project.cover;
 
   }
 
 
   if (
-    typeof value === "object"
+    typeof project.coverUrl === "string" &&
+    project.coverUrl
   ) {
 
-    const candidates = [
+    return project.coverUrl;
 
-      value.url,
-
-      value.signedUrl,
-
-      value.signed_url,
-
-      value.publicUrl,
-
-      value.public_url
-
-    ];
+  }
 
 
-    for (
-      const candidate
-      of candidates
+  if (
+    typeof project.cover_url === "string" &&
+    project.cover_url
+  ) {
+
+    return project.cover_url;
+
+  }
+
+
+  if (
+    project.resources &&
+    typeof project.resources === "object"
+  ) {
+
+    if (
+      typeof project.resources.cover === "string"
     ) {
 
-      if (
-        typeof candidate === "string" &&
-        candidate.length > 0
-      ) {
-
-        return candidate;
-
-      }
+      return project.resources.cover;
 
     }
 
@@ -681,179 +661,6 @@ function extractUrlFromValue(
 
 
   return "";
-
-}
-
-
-/* ------------------------------------------------------------
-   BUSCAR IMAGEN RECURSIVAMENTE
-   ------------------------------------------------------------ */
-
-function findImageUrl(
-  value,
-  depth = 0
-) {
-
-  /*
-     Evitamos recorrer objetos indefinidamente.
-  */
-
-  if (
-    !value ||
-    depth > 5
-  ) {
-
-    return "";
-
-  }
-
-
-  if (
-    typeof value === "string"
-  ) {
-
-    return isImageUrl(value)
-      ? value
-      : "";
-
-  }
-
-
-  if (
-    typeof value !== "object"
-  ) {
-
-    return "";
-
-  }
-
-
-  /*
-     Primero comprobamos claves con
-     mayor probabilidad de contener covers.
-  */
-
-  const priorityKeys = [
-
-    "cover",
-    "coverUrl",
-    "cover_url",
-    "image",
-    "imageUrl",
-    "image_url",
-    "thumbnail",
-    "thumbnailUrl",
-    "thumbnail_url",
-    "portada",
-    "url",
-    "signedUrl",
-    "signed_url"
-
-  ];
-
-
-  for (
-    const key
-    of priorityKeys
-  ) {
-
-    if (
-      Object.prototype.hasOwnProperty.call(
-        value,
-        key
-      )
-    ) {
-
-      const result =
-        findImageUrl(
-          value[key],
-          depth + 1
-        );
-
-
-      if (result) {
-
-        return result;
-
-      }
-
-    }
-
-  }
-
-
-  /*
-     Después recorremos el resto.
-  */
-
-  for (
-    const key
-    of Object.keys(value)
-  ) {
-
-    if (
-      priorityKeys.includes(key)
-    ) {
-
-      continue;
-
-    }
-
-
-    const result =
-      findImageUrl(
-        value[key],
-        depth + 1
-      );
-
-
-    if (result) {
-
-      return result;
-
-    }
-
-  }
-
-
-  return "";
-
-}
-
-
-/* ------------------------------------------------------------
-   COMPROBAR URL DE IMAGEN
-   ------------------------------------------------------------ */
-
-function isImageUrl(
-  value
-) {
-
-  if (
-    typeof value !== "string"
-  ) {
-
-    return false;
-
-  }
-
-
-  const clean =
-    value
-      .split("?")[0]
-      .toLowerCase();
-
-
-  return (
-
-    clean.includes(".jpg") ||
-    clean.includes(".jpeg") ||
-    clean.includes(".png") ||
-    clean.includes(".webp") ||
-    clean.includes(".avif") ||
-    clean.includes(".gif")
-
-  );
 
 }
 
@@ -866,6 +673,11 @@ function createProjectCard(
   project,
   index
 ) {
+
+  if (!project) {
+    return null;
+  }
+
 
   const card =
     document.createElement("a");
@@ -912,8 +724,20 @@ function createProjectCard(
 
   const displayName =
     project.displayName ||
-    projectName;
+    projectName
+      .replace(
+        /\s*\(\s*\d+\s*\)\s*$/,
+        ""
+      )
+      .trim();
 
+
+  /*
+     El nombre de carpeta sigue siendo la identidad
+     interna para localizar el proyecto.
+
+     El título visible es displayName.
+  */
 
   card.href =
     `./proyectos.html?proyecto=${encodeURIComponent(projectName)}`;
@@ -1073,9 +897,7 @@ function createProjectCard(
   }
 
 
-  if (
-    meta.children.length
-  ) {
+  if (meta.children.length) {
 
     content.appendChild(meta);
 
@@ -1093,7 +915,7 @@ function createProjectCard(
 
 
 /* ------------------------------------------------------------
-   MENSAJE DE PROYECTOS
+   MENSAJES DE PROYECTOS
    ------------------------------------------------------------ */
 
 function showProjectsMessage(
@@ -1112,15 +934,10 @@ function showProjectsMessage(
     "project-loading";
 
 
-  const text =
-    document.createElement("p");
-
-
-  text.textContent =
-    message;
-
-
-  element.appendChild(text);
+  element.innerHTML =
+    `
+      <p>${message}</p>
+    `;
 
 
   container.appendChild(
@@ -1136,27 +953,19 @@ function showProjectsMessage(
 
 function initProtection() {
 
-
   document.addEventListener(
     "contextmenu",
     event => {
 
-      const target =
-        event.target;
-
-
       if (
-        target.closest(
-          "input, textarea, select, [contenteditable='true'], video, audio, iframe"
+        event.target.closest(
+          ".protected-image, .protected-media"
         )
       ) {
 
-        return;
+        event.preventDefault();
 
       }
-
-
-      event.preventDefault();
 
     }
   );
@@ -1166,13 +975,10 @@ function initProtection() {
     "dragstart",
     event => {
 
-      const target =
-        event.target;
-
-
       if (
-        target instanceof HTMLImageElement ||
-        target.closest?.(".protected-media")
+        event.target.closest(
+          ".protected-image"
+        )
       ) {
 
         event.preventDefault();
@@ -1187,105 +993,50 @@ function initProtection() {
     "keydown",
     event => {
 
-      const key =
-        event.key.toLowerCase();
-
-
-      const modifier =
-        event.ctrlKey ||
-        event.metaKey;
+      const target =
+        event.target;
 
 
       if (
-        modifier &&
-        (
-          key === "s" ||
-          key === "u"
+        target &&
+        target.closest &&
+        target.closest(
+          ".protected-image, .protected-media"
         )
       ) {
 
-        event.preventDefault();
+        if (
+          event.key === "s" &&
+          (event.ctrlKey || event.metaKey)
+        ) {
 
-        return;
+          event.preventDefault();
 
-      }
-
-
-      if (
-        modifier &&
-        event.shiftKey &&
-        (
-          key === "i" ||
-          key === "j" ||
-          key === "c"
-        )
-      ) {
-
-        event.preventDefault();
-
-        return;
-
-      }
-
-
-      if (
-        event.key === "F12"
-      ) {
-
-        event.preventDefault();
+        }
 
       }
 
     }
   );
 
-
-  applyProtectionToImages();
-
-
 }
 
-
-/* ------------------------------------------------------------
-   PROTECCIÓN DE IMÁGENES
-   ------------------------------------------------------------ */
 
 function applyProtectionToImages() {
 
   document
     .querySelectorAll(
-      "img.protected-image"
+      "img"
     )
     .forEach(
       image => {
 
-        image.setAttribute(
-          "draggable",
-          "false"
+        image.classList.add(
+          "protected-image"
         );
 
-
-        image.style.userSelect =
-          "none";
-
-
-        image.style.webkitUserDrag =
-          "none";
-
-      }
-    );
-
-
-  document
-    .querySelectorAll(
-      ".project-card-media"
-    )
-    .forEach(
-      media => {
-
-        media.classList.add(
-          "protected-media"
-        );
+        image.draggable =
+          false;
 
       }
     );
