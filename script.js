@@ -1,6 +1,6 @@
 /* ============================================================
    BAAL STUDIO
-   SCRIPT.JS — V03
+   SCRIPT.JS — V08
    ============================================================ */
 
 
@@ -17,8 +17,9 @@ const FUNCTIONS = {
   siteAssets:
     `${SUPABASE_FUNCTION_BASE}/get-site-assets`,
 
+  // CORREGIDO: Ahora apunta a list-projects
   projects:
-    `${SUPABASE_FUNCTION_BASE}/get-projects`
+    `${SUPABASE_FUNCTION_BASE}/list-projects`
 
 };
 
@@ -318,7 +319,7 @@ async function loadSelectedProjects() {
     if (!response.ok) {
 
       throw new Error(
-        `get-projects respondió ${response.status}`
+        `list-projects respondió ${response.status}`
       );
 
     }
@@ -475,25 +476,10 @@ function normalizeProject(
     "";
 
 
-  /*
-     La carpeta mantiene su nombre original porque
-     es la identidad interna del proyecto y se utiliza
-     para construir la URL.
-
-     El título visible, en cambio, debe proceder
-     prioritariamente de la metadata del proyecto.txt.
-  */
-
   let metadata =
     project?.metadata ||
     null;
 
-
-  /*
-     Algunas respuestas pueden devolver metadata
-     como una cadena JSON. La convertimos a objeto
-     cuando sea necesario.
-  */
 
   if (typeof metadata === "string") {
 
@@ -511,12 +497,13 @@ function normalizeProject(
 
 
   /*
-     Prioridad absoluta al título definido en metadata.
+     Buscamos la propiedad de título en la raíz o en metadata.
   */
 
   const metadataTitle =
-    metadata?.titulo ||
+    project?.title ||
     metadata?.title ||
+    metadata?.titulo ||
     metadata?.nombre ||
     metadata?.name ||
     project?.metadataTitle ||
@@ -525,13 +512,7 @@ function normalizeProject(
 
 
   /*
-     Si no existe título en metadata, usamos el nombre
-     de carpeta pero eliminamos únicamente el sufijo
-     numérico final:
-
-     Epigrafias arabes de Granada (01)
-     →
-     Epigrafias arabes de Granada
+     Fallback en caso de que no exista título en el txt.
   */
 
   const fallbackName =
@@ -539,11 +520,6 @@ function normalizeProject(
       .replace(/\s*\(\d+\)\s*$/i, "")
       .trim();
 
-
-  /*
-     El punto final del título del txt no se muestra
-     como parte del nombre visual.
-  */
 
   const displayName =
     String(metadataTitle || fallbackName)
@@ -562,27 +538,39 @@ function normalizeProject(
     extractCover(project);
 
 
+  /*
+     CORREGIDO: Leemos location, year y category tanto de la raíz 
+     como dentro del objeto metadata.
+  */
+
   const location =
+    metadata?.location ||
+    metadata?.localizacion ||
     project.location ||
     project.localizacion ||
-    project.ubicacion ||
-    project.place ||
     "";
 
 
   const year =
+    metadata?.year ||
+    metadata?.ano ||
+    metadata?.año ||
     project.year ||
     project.año ||
-    project.ano ||
     "";
 
 
-  const category =
+  const rawCategory =
+    metadata?.category ||
+    metadata?.categoria ||
     project.category ||
     project.categoria ||
-    project.type ||
-    project.tipo ||
     "";
+
+  // Si la categoría viene como Array (list-projects la devuelve así), tomamos las primeras
+  const category = Array.isArray(rawCategory) 
+    ? rawCategory.slice(0, 2).join(", ") 
+    : String(rawCategory);
 
 
   return {
@@ -669,12 +657,6 @@ function extractCover(
   }
 
 
-  /*
-     Si el cover está dentro de otra
-     propiedad del objeto, buscamos
-     recursivamente una URL de imagen.
-  */
-
   return findImageUrl(
     project
   );
@@ -758,10 +740,6 @@ function findImageUrl(
   depth = 0
 ) {
 
-  /*
-     Evitamos recorrer objetos indefinidamente.
-  */
-
   if (
     !value ||
     depth > 5
@@ -791,11 +769,6 @@ function findImageUrl(
 
   }
 
-
-  /*
-     Primero comprobamos claves con
-     mayor probabilidad de contener covers.
-  */
 
   const priorityKeys = [
 
@@ -845,10 +818,6 @@ function findImageUrl(
 
   }
 
-
-  /*
-     Después recorremos el resto.
-  */
 
   for (
     const key
@@ -969,13 +938,6 @@ function createProjectCard(
 
   }
 
-
-  /*
-     project.name se mantiene exclusivamente
-     para la URL interna.
-
-     project.displayName es el título visible.
-  */
 
   const projectName =
     project.name || "";
