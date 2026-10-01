@@ -1,10 +1,11 @@
 /* ============================================================
    BAAL STUDIO
-   STYLE.CSS — V04 FINAL HOME
+   STYLE.CSS — V03
    ============================================================ */
 
+
 /* ------------------------------------------------------------
-   FUENTES LOCALES — GITHUB
+   FUENTES LOCALES
    ------------------------------------------------------------ */
 
 @font-face {
@@ -639,6 +640,60 @@ select {
 
 
 /* ------------------------------------------------------------
+   TÍTULOS DE SECCIÓN
+   ------------------------------------------------------------ */
+
+.section-kicker {
+
+  margin: 0;
+
+  color: var(--black);
+
+  font-family: var(--font-display);
+
+  font-size: clamp(38px, 3.25vw, 50px);
+
+  font-weight: 400;
+
+  line-height: 0.98;
+
+  letter-spacing: -0.018em;
+}
+
+
+.section-kicker-en {
+
+  margin: 8px 0 0;
+
+  color: var(--gray);
+
+  font-family: var(--font-body);
+
+  font-size: 8px;
+
+  font-weight: 500;
+
+  line-height: 1.4;
+
+  letter-spacing: 0.12em;
+
+  text-transform: uppercase;
+}
+
+
+.section-rule {
+
+  width: 34px;
+
+  height: 1px;
+
+  margin-top: 18px;
+
+  background: var(--accent);
+}
+
+
+/* ------------------------------------------------------------
    SOBRE EL ESTUDIO
    ------------------------------------------------------------ */
 
@@ -746,13 +801,13 @@ select {
 
   font-family: var(--font-body);
 
-  font-size: 38px;
+  font-size: 44px;
 
   font-weight: 300;
 
-  line-height: 1;
+  line-height: 0.95;
 
-  letter-spacing: -0.025em;
+  letter-spacing: -0.045em;
 }
 
 
@@ -781,62 +836,6 @@ select {
   letter-spacing: 0.06em;
 
   text-transform: uppercase;
-}
-
-
-/* ------------------------------------------------------------
-   TÍTULOS DE SECCIÓN — ESTILO UNIFICADO
-   ------------------------------------------------------------ */
-
-.section-kicker {
-
-  margin: 0;
-
-  color: var(--black);
-
-  font-family: var(--font-display);
-
-  font-size: clamp(36px, 3vw, 46px);
-
-  font-weight: 500;
-
-  line-height: 0.98;
-
-  letter-spacing: 0.005em;
-
-  text-wrap: balance;
-}
-
-
-.section-kicker-en {
-
-  margin: 8px 0 0;
-
-  color: var(--gray);
-
-  font-family: var(--font-body);
-
-  font-size: 9px;
-
-  font-weight: 500;
-
-  line-height: 1.2;
-
-  letter-spacing: 0.14em;
-
-  text-transform: uppercase;
-}
-
-
-.section-rule {
-
-  width: 42px;
-
-  height: 1px;
-
-  margin-top: 18px;
-
-  background: var(--accent);
 }
 
 
@@ -1215,8 +1214,8 @@ select {
 
 .capability-icon {
 
-  width: 42px;
-  height: 42px;
+  width: 38px;
+  height: 38px;
 
   margin-bottom: 22px;
 
@@ -1257,15 +1256,19 @@ select {
 
 .capability-en-title {
 
-  margin: 7px 0 18px;
+  display: block;
+
+  margin: 7px 0 20px;
 
   color: var(--gray);
 
   font-family: var(--font-body);
 
-  font-size: 9px;
+  font-size: 8px;
 
   font-weight: 500;
+
+  line-height: 1.4;
 
   letter-spacing: 0.12em;
 
@@ -1545,7 +1548,6 @@ select {
 
     grid-template-columns:
       1fr 2fr;
-
   }
 
 
@@ -1553,7 +1555,6 @@ select {
   .section-heading {
 
     padding-right: 45px;
-
   }
 
 
@@ -1561,7 +1562,6 @@ select {
 
     grid-template-columns:
       repeat(2, 1fr);
-
   }
 
 }
@@ -1578,14 +1578,12 @@ select {
     --page-padding: 24px;
 
     --section-space: 95px;
-
   }
 
 
   .header-inner {
 
     padding: 0 24px;
-
   }
 
 
@@ -1604,14 +1602,12 @@ select {
     height: 26px;
 
     max-width: 135px;
-
   }
 
 
   .hero-section {
 
     min-height: 650px;
-
   }
 
 
@@ -1622,7 +1618,6 @@ select {
     transform: scale(1.12);
 
     opacity: 0.60;
-
   }
 
 
@@ -1632,7 +1627,6 @@ select {
       0
       24px
       90px;
-
   }
 
 
@@ -1644,7 +1638,6 @@ select {
     font-size: 6.2px;
 
     letter-spacing: 0.06em;
-
   }
 
 
@@ -1652,28 +1645,24 @@ select {
 
     font-size:
       clamp(58px, 18vw, 82px);
-
   }
 
 
   .hero-description {
 
     margin-top: 18px;
-
   }
 
 
   .hero-description p {
 
     font-size: 10px;
-
   }
 
 
   .hero-description p + p {
 
     font-size: 7.5px;
-
   }
 
 
@@ -1686,7 +1675,6 @@ select {
     flex-direction: column;
 
     gap: 35px;
-
   }
 
 
@@ -1694,14 +1682,34 @@ select {
   .section-heading {
 
     padding-right: 0;
+  }
 
+
+  .section-kicker {
+
+    font-size: 36px;
+
+    line-height: 1;
+  }
+
+
+  .section-kicker-en {
+
+    margin-top: 7px;
+
+    font-size: 7px;
+  }
+
+
+  .section-rule {
+
+    margin-top: 16px;
   }
 
 
   .bilingual-copy p {
 
     font-size: 23px;
-
   }
 
 
@@ -1713,7 +1721,6 @@ select {
     gap: 35px 20px;
 
     margin-top: 45px;
-
   }
 
 
@@ -1724,7 +1731,6 @@ select {
     flex-direction: column;
 
     gap: 16px;
-
   }
 
 
@@ -1734,7 +1740,6 @@ select {
     width: 100%;
 
     height: 420px;
-
   }
 
 
@@ -1743,21 +1748,18 @@ select {
     left: 24px;
     right: 24px;
     bottom: 24px;
-
   }
 
 
   .project-card-title {
 
     font-size: 32px;
-
   }
 
 
   .capabilities-grid {
 
     grid-template-columns: 1fr;
-
   }
 
 
@@ -1766,7 +1768,6 @@ select {
     min-height: 245px;
 
     padding: 27px;
-
   }
 
 
@@ -1777,7 +1778,6 @@ select {
     flex-direction: column;
 
     gap: 40px;
-
   }
 
 
@@ -1786,14 +1786,12 @@ select {
     align-items: flex-start;
 
     text-align: left;
-
   }
 
 
   .footer-logos {
 
     gap: 30px;
-
   }
 
 
@@ -1802,7 +1800,6 @@ select {
     max-width: 125px;
 
     max-height: 35px;
-
   }
 
 
@@ -1810,7 +1807,6 @@ select {
 
     width: 90px;
     height: 90px;
-
   }
 
 }
@@ -1836,7 +1832,6 @@ select {
     animation-iteration-count: 1 !important;
 
     transition-duration: 0.01ms !important;
-
   }
 
 }
