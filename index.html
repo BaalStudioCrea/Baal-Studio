@@ -1,519 +1,145 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Baal Studio</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Baal Studio — Documentación, conservación y análisis digital del patrimonio cultural."
+  >
+
+  <meta name="theme-color" content="#111111">
+
+  <title>Baal Studio — Documentación Patrimonial</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap"
+    rel="stylesheet"
+  >
 
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="./style.css">
 </head>
+
 
 <body>
 
-<header class="site-header">
-
-  <div class="header-inner">
-
-    <a href="index.html" class="header-logo">
-      <img id="header-logo" alt="Baal Studio" draggable="false">
-    </a>
-
-    <nav class="desktop-nav">
-
-      <a href="index.html" class="nav-link active">
-        <span>Inicio</span>
-        <small>Home</small>
-      </a>
-
-      <a href="proyectos.html" class="nav-link">
-        <span>Proyectos</span>
-        <small>Projects</small>
-      </a>
-
-      <a href="about.html" class="nav-link">
-        <span>Sobre mí</span>
-        <small>About</small>
-      </a>
-
-      <a href="contact.html" class="nav-link">
-        <span>Contacto</span>
-        <small>Contact</small>
-      </a>
-
-    </nav>
-
-    <button id="mobile-menu-button" class="mobile-menu-button" aria-label="Abrir menú">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
-
-  </div>
-
-</header>
-
-
-<div id="mobile-menu" class="mobile-menu">
-
-  <a href="index.html">
-    <span>Inicio</span>
-    <small>Home</small>
-  </a>
-
-  <a href="proyectos.html">
-    <span>Proyectos</span>
-    <small>Projects</small>
-  </a>
-
-  <a href="about.html">
-    <span>Sobre mí</span>
-    <small>About</small>
-  </a>
-
-  <a href="contact.html">
-    <span>Contacto</span>
-    <small>Contact</small>
-  </a>
-
-</div>
-
-
-<main>
-
   <!-- =====================================================
-       HERO
+       HEADER
        ===================================================== -->
 
-  <section class="hero">
+  <header class="main-header" id="main-header">
 
-    <div class="hero-background-wrap">
+    <div class="header-inner">
 
-      <img
-        id="hero-background"
-        class="hero-background protected-image"
-        alt="Documentación patrimonial"
-        draggable="false"
+      <a
+        href="./index.html"
+        class="header-logo-link"
+        aria-label="Baal Studio — Inicio"
       >
 
-      <div class="hero-gradient"></div>
+        <img
+          id="site-logo"
+          class="header-logo protected-image"
+          src=""
+          alt="Baal Studio"
+          width="180"
+          height="40"
+          draggable="false"
+        >
 
-    </div>
-
-
-    <div class="hero-content">
-
-      <div class="hero-labels">
-
-        <p>
-          Documentación patrimonial · Planimetría · Mapeado ·
-          Levantamiento 3D · Modelado 3D · Reconstrucción virtual ·
-          Fotografía con Drone
-        </p>
-
-        <p class="hero-label-en">
-          Heritage documentation · Planimetric mapping · 3D survey ·
-          Virtual reconstruction · Drone photo
-        </p>
-
-      </div>
-
-
-      <h1>Baal Studio</h1>
-
-
-      <div class="hero-description">
-
-        <p>
-          Especialista en documentación y análisis del patrimonio cultural
-          mediante flujos digitales de alta precisión, integrando
-          planimetrías, mapeados, fotogrametría, modelado tridimensional y
-          reconstrucción virtual para su aplicación en estudio,
-          conservación y difusión.
-        </p>
-
-        <p class="hero-description-en">
-          Specialist in cultural heritage documentation and analysis through
-          high-precision digital workflows, integrating mapping,
-          photogrammetry, 3D modeling, and virtual reconstruction for
-          research, conservation, and dissemination purposes.
-        </p>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- =====================================================
-       ABOUT
-       ===================================================== -->
-
-  <section class="section about-section">
-
-    <div class="section-inner about-inner">
-
-      <div class="section-title">
-
-        <p class="eyebrow">Sobre el Estudio</p>
-
-        <p class="eyebrow-en">About the Practice</p>
-
-        <div class="gold-line"></div>
-
-      </div>
-
-
-      <div class="about-content">
-
-        <p class="lead-text">
-          Enfoque en la documentación digital del patrimonio cultural
-          mediante tecnologías avanzadas aplicadas al análisis, registro y
-          representación de material y yacimientos arqueológicos,
-          arquitectura histórica y bienes patrimoniales en distintos
-          contextos geográficos.
-        </p>
-
-        <p class="secondary-text">
-          Focused on digital documentation of cultural heritage through
-          advanced technologies applied to the analysis, recording, and
-          representation of material and archaeological sites, historic
-          architecture, and heritage assets across different geographical
-          contexts.
-        </p>
-
-
-        <p class="about-text">
-          Cada proyecto se aborda con una metodología adaptada a sus
-          objetivos específicos, empleando distintas técnicas de
-          documentación digital para obtener resultados precisos,
-          reproducibles y útiles para el estudio, conservación y difusión
-          del patrimonio.
-        </p>
-
-
-        <div class="stats">
-
-          <div class="stat">
-            <strong>8+</strong>
-            <span>Proyectos</span>
-            <small>Projects</small>
-          </div>
-
-          <div class="stat">
-            <strong>30+</strong>
-            <span>Sitios documentados</span>
-            <small>Sites documented</small>
-          </div>
-
-          <div class="stat">
-            <strong>2</strong>
-            <span>Países</span>
-            <small>Countries</small>
-          </div>
-
-          <div class="stat">
-            <strong>11</strong>
-            <span>Herramientas de software</span>
-            <small>Software tools</small>
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- =====================================================
-       PROJECTS
-       ===================================================== -->
-
-  <section class="section projects-section">
-
-    <div class="projects-header">
-
-      <div class="projects-title">
-
-        <div>
-          <p class="eyebrow">Proyectos Seleccionados</p>
-          <p class="eyebrow-en">Selected Projects</p>
-        </div>
-
-        <div class="gold-line"></div>
-
-      </div>
-
-
-      <a href="proyectos.html" class="view-all">
-        <span>Ver Todos →</span>
-        <small>View All</small>
       </a>
 
-    </div>
+
+      <nav
+        class="desktop-nav"
+        aria-label="Navegación principal"
+      >
+
+        <a
+          href="./index.html"
+          class="nav-link active"
+          aria-current="page"
+        >
+          <span>Inicio</span>
+          <span class="nav-link-en">Home</span>
+        </a>
+
+        <a
+          href="./proyectos.html"
+          class="nav-link"
+        >
+          <span>Proyectos</span>
+          <span class="nav-link-en">Projects</span>
+        </a>
+
+        <a
+          href="./about.html"
+          class="nav-link"
+        >
+          <span>Sobre mí</span>
+          <span class="nav-link-en">About</span>
+        </a>
+
+        <a
+          href="./contact.html"
+          class="nav-link"
+        >
+          <span>Contacto</span>
+          <span class="nav-link-en">Contact</span>
+        </a>
+
+      </nav>
 
 
-    <div id="projects-grid" class="projects-grid">
-
-      <div class="projects-loading">
-        Cargando proyectos...
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- =====================================================
-       CAPABILITIES
-       ===================================================== -->
-
-  <section class="section capabilities-section">
-
-    <div class="capabilities-header">
-
-      <div class="section-title">
-
-        <p class="eyebrow">Capacidades</p>
-        <p class="eyebrow-en">Capabilities</p>
-
-        <div class="gold-line"></div>
-
-      </div>
-
-    </div>
-
-
-    <div class="capabilities-grid">
-
-
-      <article class="capability">
-
-        <div class="capability-icon">
-          <svg viewBox="0 0 48 48" aria-hidden="true">
-            <rect x="9" y="6" width="30" height="36"></rect>
-            <line x1="15" y1="15" x2="33" y2="15"></line>
-            <line x1="15" y1="22" x2="33" y2="22"></line>
-            <line x1="15" y1="29" x2="30" y2="29"></line>
-            <line x1="15" y1="36" x2="26" y2="36"></line>
-          </svg>
-        </div>
-
-        <h3>Documentación Patrimonial</h3>
-        <p class="capability-en">Heritage Documentation</p>
-
-        <p class="capability-description">
-          Registro, análisis y representación gráfica de bienes,
-          conjuntos y yacimientos patrimoniales.
-        </p>
-
-        <p class="capability-description-en">
-          Recording, analysis and graphic representation of heritage
-          assets, sites and archaeological remains.
-        </p>
-
-      </article>
-
-
-      <article class="capability">
-
-        <div class="capability-icon">
-          <svg viewBox="0 0 48 48" aria-hidden="true">
-            <rect x="7" y="8" width="34" height="32"></rect>
-            <line x1="7" y1="20" x2="41" y2="20"></line>
-            <line x1="24" y1="8" x2="24" y2="40"></line>
-            <circle cx="24" cy="20" r="4"></circle>
-          </svg>
-        </div>
-
-        <h3>Planimetrías</h3>
-        <p class="capability-en">Technical Drawing</p>
-
-        <p class="capability-description">
-          Plantas, alzados, secciones, croquis y representación técnica
-          aplicada al patrimonio.
-        </p>
-
-        <p class="capability-description-en">
-          Plans, elevations, sections, sketches and technical
-          representation applied to heritage.
-        </p>
-
-      </article>
-
-
-      <article class="capability">
-
-        <div class="capability-icon">
-          <svg viewBox="0 0 48 48" aria-hidden="true">
-            <path d="M6 10l12-4 12 4 12-4v32l-12 4-12-4-12 4z"></path>
-            <line x1="18" y1="6" x2="18" y2="38"></line>
-            <line x1="30" y1="10" x2="30" y2="42"></line>
-            <circle cx="25" cy="22" r="4"></circle>
-          </svg>
-        </div>
-
-        <h3>Mapeados</h3>
-        <p class="capability-en">Mapping</p>
-
-        <p class="capability-description">
-          Mapas de daños, materiales, patologías, intervenciones y
-          distribución espacial.
-        </p>
-
-        <p class="capability-description-en">
-          Damage, material, pathology, intervention and spatial
-          distribution mapping.
-        </p>
-
-      </article>
-
-
-      <article class="capability">
-
-        <div class="capability-icon">
-          <svg viewBox="0 0 48 48" aria-hidden="true">
-            <path d="M24 6l16 9v18l-16 9-16-9V15z"></path>
-            <path d="M24 6v18l16 9"></path>
-            <path d="M24 24L8 15"></path>
-            <line x1="24" y1="24" x2="24" y2="42"></line>
-          </svg>
-        </div>
-
-        <h3>Levantamiento y Modelado 3D</h3>
-        <p class="capability-en">3D Survey &amp; Modelling</p>
-
-        <p class="capability-description">
-          Fotogrametría, captura tridimensional, procesamiento,
-          optimización y generación de modelos 3D.
-        </p>
-
-        <p class="capability-description-en">
-          Photogrammetry, three-dimensional capture, processing,
-          optimization and 3D model generation.
-        </p>
-
-      </article>
-
-
-      <article class="capability">
-
-        <div class="capability-icon">
-          <svg viewBox="0 0 48 48" aria-hidden="true">
-            <path d="M8 38V18l16-10 16 10v20"></path>
-            <path d="M16 38V24h16v14"></path>
-            <path d="M8 18l16 10 16-10"></path>
-          </svg>
-        </div>
-
-        <h3>Reconstrucción Virtual</h3>
-        <p class="capability-en">Virtual Reconstruction</p>
-
-        <p class="capability-description">
-          Reconstrucciones tridimensionales fundamentadas en fuentes
-          arqueológicas, históricas y gráficas.
-        </p>
-
-        <p class="capability-description-en">
-          Three-dimensional reconstructions based on archaeological,
-          historical and graphic evidence.
-        </p>
-
-      </article>
-
-
-      <article class="capability">
-
-        <div class="capability-icon">
-          <svg viewBox="0 0 48 48" aria-hidden="true">
-            <path d="M24 18v12"></path>
-            <path d="M18 24h12"></path>
-            <circle cx="24" cy="24" r="6"></circle>
-            <path d="M18 20l-7-6"></path>
-            <path d="M30 20l7-6"></path>
-            <path d="M18 28l-7 6"></path>
-            <path d="M30 28l7 6"></path>
-            <circle cx="9" cy="12" r="3"></circle>
-            <circle cx="39" cy="12" r="3"></circle>
-            <circle cx="9" cy="36" r="3"></circle>
-            <circle cx="39" cy="36" r="3"></circle>
-          </svg>
-        </div>
-
-        <h3>Fotografía con Drone</h3>
-        <p class="capability-en">Drone Photography</p>
-
-        <p class="capability-description">
-          Captura aérea de alta resolución para documentación,
-          inspección y generación de ortofotografías.
-        </p>
-
-        <p class="capability-description-en">
-          High-resolution aerial capture for documentation, inspection
-          and orthophoto generation.
-        </p>
-
-      </article>
+      <button
+        class="mobile-menu-button"
+        id="mobile-menu-button"
+        type="button"
+        aria-label="Abrir menú"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
 
     </div>
 
-  </section>
 
-</main>
+    <div
+      class="mobile-menu"
+      id="mobile-menu"
+      aria-hidden="true"
+    >
 
+      <nav aria-label="Navegación móvil">
 
-<!-- =====================================================
-     FOOTER
-     ===================================================== -->
-
-<footer class="site-footer">
-
-  <div class="footer-inner">
-
-    <div class="footer-main">
-
-      <div class="footer-services">
-
-        <p>
-          Documentación del Patrimonio · Planimetrías · Mapeados ·
-          Levantamiento y Modelado 3D · Reconstrucción Virtual ·
-          Fotografía con Drone
-        </p>
-
-        <p class="footer-services-en">
-          Heritage Documentation · Mapping · 3D Survey ·
-          Virtual reconstruction · Drone Photo
-        </p>
-
-      </div>
-
-
-      <nav class="footer-nav">
-
-        <a href="index.html">
+        <a href="./index.html">
           <span>Inicio</span>
           <small>Home</small>
         </a>
 
-        <a href="proyectos.html">
+        <a href="./proyectos.html">
           <span>Proyectos</span>
           <small>Projects</small>
         </a>
 
-        <a href="about.html">
+        <a href="./about.html">
           <span>Sobre mí</span>
           <small>About</small>
         </a>
 
-        <a href="contact.html">
+        <a href="./contact.html">
           <span>Contacto</span>
           <small>Contact</small>
         </a>
@@ -522,68 +148,534 @@
 
     </div>
 
+  </header>
 
-    <div class="footer-bottom-area">
 
-      <div class="footer-logos">
+
+  <main>
+
+    <!-- =====================================================
+         HERO
+         ===================================================== -->
+
+    <section
+      class="hero-section"
+      id="hero"
+      aria-labelledby="hero-title"
+    >
+
+      <div class="hero-media">
 
         <img
-          id="footer-logo-main"
-          class="footer-logo protected-image"
-          alt="Baal Studio"
+          id="hero-background"
+          class="hero-background protected-image"
+          src=""
+          alt="Documentación patrimonial"
           draggable="false"
+          fetchpriority="high"
         >
 
-        <img
-          id="footer-logo-lns"
-          class="footer-logo protected-image"
-          alt=""
-          draggable="false"
-        >
+        <div
+          class="hero-gradient"
+          aria-hidden="true"
+        ></div>
 
       </div>
 
 
-      <div class="footer-social">
+      <div class="hero-content">
 
-        <a
-          id="footer-qr-link"
-          href="https://linktr.ee/baalstudio"
-          target="_blank"
-          rel="noopener noreferrer"
+        <div class="hero-specialties">
+
+          <p class="hero-specialties-es">
+            DOCUMENTACIÓN PATRIMONIAL · PLANIMETRÍA · MAPEADO · LEVANTAMIENTO 3D · MODELADO 3D · RECONSTRUCCIÓN VIRTUAL · FOTOGRAFÍA CON DRONE
+          </p>
+
+          <p class="hero-specialties-en">
+            HERITAGE DOCUMENTATION · PLANIMETRIC MAPPING · 3D SURVEY · VIRTUAL RECONSTRUCTION · DRONE PHOTOGRAPHY
+          </p>
+
+        </div>
+
+
+        <h1 id="hero-title">
+          Baal Studio
+        </h1>
+
+
+        <div class="hero-description">
+
+          <p>
+            Especialista en documentación y análisis del patrimonio cultural mediante flujos digitales de alta precisión, integrando planimetrías, mapeados, fotogrametría, modelado tridimensional y reconstrucción virtual para su aplicación en estudio, conservación y difusión.
+          </p>
+
+          <p>
+            Specialist in cultural heritage documentation and analysis through high-precision digital workflows, integrating planimetry, mapping, photogrammetry, 3D modeling, and virtual reconstruction for research, conservation, and dissemination.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         SOBRE EL ESTUDIO
+         ===================================================== -->
+
+    <section
+      class="about-home-section"
+      id="sobre-estudio"
+    >
+
+      <div class="section-container about-home-layout">
+
+        <div class="about-home-heading">
+
+          <p class="section-kicker">
+            Sobre el Estudio
+          </p>
+
+          <p class="section-kicker-en">
+            About the Practice
+          </p>
+
+          <div class="section-rule"></div>
+
+        </div>
+
+
+        <div class="about-home-content">
+
+          <div class="bilingual-copy">
+
+            <p>
+              El estudio se centra en la documentación digital del patrimonio cultural mediante procedimientos precisos y verificables, aplicados a distintos contextos geográficos y tipologías de bienes.
+            </p>
+
+            <p class="english-copy">
+              The practice focuses on digital documentation of cultural heritage through precise and verifiable procedures, applied to different geographical contexts and heritage typologies.
+            </p>
+
+
+            <div class="copy-separator"></div>
+
+
+            <p>
+              Cada proyecto se aborda desde las necesidades específicas del bien documentado, seleccionando las herramientas y técnicas más adecuadas para generar información útil para su estudio, conservación o reconstrucción.
+            </p>
+
+            <p class="english-copy">
+              Each project is approached according to the specific needs of the documented heritage, selecting the most appropriate tools and techniques to generate useful information for study, conservation, or reconstruction purposes.
+            </p>
+
+          </div>
+
+
+          <div class="stats-grid">
+
+            <div class="stat-item">
+              <strong>8+</strong>
+              <span>Años de experiencia</span>
+              <small>Years experience</small>
+            </div>
+
+            <div class="stat-item">
+              <strong>30+</strong>
+              <span>Casos documentados</span>
+              <small>Cases documented</small>
+            </div>
+
+            <div class="stat-item">
+              <strong>2</strong>
+              <span>Países</span>
+              <small>Countries</small>
+            </div>
+
+            <div class="stat-item">
+              <strong>11</strong>
+              <span>Herramientas de software</span>
+              <small>Software tools</small>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         PROYECTOS SELECCIONADOS
+         ===================================================== -->
+
+    <section
+      class="projects-section"
+      id="proyectos-seleccionados"
+    >
+
+      <div class="section-container">
+
+        <div class="section-heading-row">
+
+          <div class="section-heading">
+
+            <p class="section-kicker">
+              Proyectos Seleccionados
+            </p>
+
+            <p class="section-kicker-en">
+              Selected Projects
+            </p>
+
+          </div>
+
+
+          <a
+            href="./proyectos.html"
+            class="view-all-link"
+          >
+            <span>Ver Todos</span>
+            <span>View All</span>
+            <span class="view-arrow">→</span>
+          </a>
+
+        </div>
+
+
+        <div
+          id="selected-projects-grid"
+          class="selected-projects-grid"
         >
+
+          <div class="project-loading">
+            <span></span>
+            <p>Cargando proyectos…</p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         CAPACIDADES
+         ===================================================== -->
+
+    <section
+      class="capabilities-section"
+      id="capacidades"
+    >
+
+      <div class="section-container">
+
+        <div class="capabilities-heading">
+
+          <p class="section-kicker">
+            Capacidades
+          </p>
+
+          <p class="section-kicker-en">
+            Capabilities
+          </p>
+
+          <div class="section-rule"></div>
+
+        </div>
+
+
+        <div class="capabilities-grid">
+
+
+          <article class="capability-item">
+
+            <div class="capability-icon">
+              <svg viewBox="0 0 32 32" aria-hidden="true">
+                <path d="M6 24V8h20v16H6z"></path>
+                <path d="M10 12h12M10 16h12M10 20h7"></path>
+              </svg>
+            </div>
+
+            <h3>
+              Documentación del Patrimonio
+            </h3>
+
+            <p class="capability-en-title">
+              Heritage Documentation
+            </p>
+
+            <p>
+              Registro sistemático y preciso de bienes patrimoniales mediante procedimientos digitales orientados a su estudio, conservación y difusión.
+            </p>
+
+          </article>
+
+
+          <article class="capability-item">
+
+            <div class="capability-icon">
+              <svg viewBox="0 0 32 32" aria-hidden="true">
+                <path d="M6 26V7h20v19"></path>
+                <path d="M10 22V11M16 22V11M22 22V11"></path>
+                <path d="M4 26h24"></path>
+              </svg>
+            </div>
+
+            <h3>
+              Planimetrías
+            </h3>
+
+            <p class="capability-en-title">
+              Planimetry
+            </p>
+
+            <p>
+              Elaboración de plantas, alzados, secciones y documentación gráfica a partir de levantamientos y fuentes disponibles.
+            </p>
+
+          </article>
+
+
+          <article class="capability-item">
+
+            <div class="capability-icon">
+              <svg viewBox="0 0 32 32" aria-hidden="true">
+                <path d="M5 7h22v18H5z"></path>
+                <path d="M9 11h14M9 15h10M9 19h12"></path>
+                <circle cx="24" cy="22" r="2"></circle>
+              </svg>
+            </div>
+
+            <h3>
+              Mapeados
+            </h3>
+
+            <p class="capability-en-title">
+              Mapping
+            </p>
+
+            <p>
+              Representación gráfica de patologías, materiales, intervenciones y otras variables relevantes para el análisis patrimonial.
+            </p>
+
+          </article>
+
+
+          <article class="capability-item">
+
+            <div class="capability-icon">
+              <svg viewBox="0 0 32 32" aria-hidden="true">
+                <path d="M6 23L16 6l10 17H6z"></path>
+                <path d="M6 23h20M16 6v17"></path>
+                <path d="M11 18h10"></path>
+              </svg>
+            </div>
+
+            <h3>
+              Levantamiento y Modelado 3D
+            </h3>
+
+            <p class="capability-en-title">
+              3D Survey &amp; Modeling
+            </p>
+
+            <p>
+              Captura y procesamiento tridimensional mediante fotogrametría y escaneado para generar modelos digitales de precisión.
+            </p>
+
+          </article>
+
+
+          <article class="capability-item">
+
+            <div class="capability-icon">
+              <svg viewBox="0 0 32 32" aria-hidden="true">
+                <path d="M7 25V9l9-3 9 3v16"></path>
+                <path d="M7 25h18M11 21h3M18 21h3M11 16h3M18 16h3"></path>
+              </svg>
+            </div>
+
+            <h3>
+              Reconstrucción Virtual
+            </h3>
+
+            <p class="capability-en-title">
+              Virtual Reconstruction
+            </p>
+
+            <p>
+              Reconstrucciones tridimensionales fundamentadas en fuentes documentales, arqueológicas y gráficas, diferenciando los distintos niveles de evidencia.
+            </p>
+
+          </article>
+
+
+          <article class="capability-item">
+
+            <div class="capability-icon">
+              <svg viewBox="0 0 32 32" aria-hidden="true">
+                <path d="M5 16h22M8 12l-3 4 3 4M24 12l3 4-3 4"></path>
+                <path d="M16 8v16"></path>
+                <circle cx="16" cy="8" r="2"></circle>
+              </svg>
+            </div>
+
+            <h3>
+              Fotografía con Drone
+            </h3>
+
+            <p class="capability-en-title">
+              Drone Photography
+            </p>
+
+            <p>
+              Captura aérea para documentación territorial, arqueológica y arquitectónica, complementando los levantamientos terrestres.
+            </p>
+
+          </article>
+
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+
+  <!-- =====================================================
+       FOOTER
+       ===================================================== -->
+
+  <footer class="main-footer">
+
+    <div class="footer-container">
+
+
+      <div class="footer-top">
+
+
+        <div class="footer-services">
+
+          <p>
+            Documentación del Patrimonio · Planimetrías · Mapeados · Levantamiento y Modelado 3D · Reconstrucción Virtual · Fotografía con Drone
+          </p>
+
+          <p class="footer-services-en">
+            Heritage Documentation · Mapping · 3D Survey · Virtual reconstruction · Drone Photo
+          </p>
+
+        </div>
+
+
+        <div class="footer-nav-column">
+
+          <a href="./index.html">
+            Inicio · Home
+          </a>
+
+          <a href="./proyectos.html">
+            Proyectos · Projects
+          </a>
+
+          <a href="./about.html">
+            Sobre mí · About
+          </a>
+
+          <a href="./contact.html">
+            Contacto · Contact
+          </a>
+
+        </div>
+
+
+      </div>
+
+
+
+      <div class="footer-identity">
+
+        <div class="footer-logos">
+
           <img
-            id="footer-qr"
-            class="footer-qr protected-image"
+            id="footer-logo-baal"
+            class="footer-secondary-logo protected-image"
+            src=""
             alt="Baal Studio"
             draggable="false"
           >
-        </a>
+
+
+          <img
+            id="footer-logo-lns"
+            class="footer-secondary-logo protected-image"
+            src=""
+            alt="LNS"
+            draggable="false"
+          >
+
+        </div>
+
 
         <a
           href="https://linktr.ee/baalstudio"
           target="_blank"
           rel="noopener noreferrer"
+          aria-label="Baal Studio — Redes sociales"
+        >
+
+          <img
+            id="footer-qr"
+            class="footer-qr protected-image"
+            src=""
+            alt="Redes sociales de Baal Studio"
+            width="100"
+            height="100"
+            draggable="false"
+          >
+
+        </a>
+
+
+        <a
+          href="https://linktr.ee/baalstudio"
           class="footer-social-link"
+          target="_blank"
+          rel="noopener noreferrer"
         >
           RRSS
         </a>
 
       </div>
 
+
+
+      <div class="footer-bottom">
+
+        <p>
+          © Baal Studio. Todos los derechos reservados · All rights reserved.
+        </p>
+
+      </div>
+
     </div>
 
-
-    <div class="footer-copyright">
-      © Baal Studio · Todos los derechos reservados · All rights reserved
-    </div>
-
-  </div>
-
-</footer>
+  </footer>
 
 
-<script src="script.js"></script>
+
+  <script src="./script.js"></script>
 
 </body>
+
 </html>
