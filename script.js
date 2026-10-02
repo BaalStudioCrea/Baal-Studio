@@ -1,6 +1,6 @@
 /* ============================================================
    BAAL STUDIO
-   SCRIPT.JS — V11
+   SCRIPT.JS — V12
    ============================================================ */
 
 
@@ -165,7 +165,7 @@ function initMobileMenu() {
 
 
 /* ------------------------------------------------------------
-   ASSETS
+   ASSETS DEL SITIO
    ------------------------------------------------------------ */
 
 async function loadSiteAssets() {
@@ -249,7 +249,7 @@ async function loadSiteAssets() {
   } catch (error) {
 
     console.error(
-      "Error cargando assets:",
+      "[Baal Studio] Error cargando assets:",
       error
     );
 
@@ -273,7 +273,8 @@ function setImageSource(
 
   if (
     element &&
-    source
+    typeof source === "string" &&
+    source.trim() !== ""
   ) {
 
     element.src =
@@ -285,7 +286,7 @@ function setImageSource(
 
 
 /* ------------------------------------------------------------
-   PROYECTOS
+   PROYECTOS SELECCIONADOS
    ------------------------------------------------------------ */
 
 async function loadSelectedProjects() {
@@ -297,7 +298,13 @@ async function loadSelectedProjects() {
 
 
   if (!container) {
+
+    console.warn(
+      "[Baal Studio] No existe #selected-projects-grid."
+    );
+
     return;
+
   }
 
 
@@ -328,10 +335,22 @@ async function loadSelectedProjects() {
       await response.json();
 
 
+    console.log(
+      "[Baal Studio] Respuesta get-projects:",
+      result
+    );
+
+
     const projects =
       normalizeProjectsResponse(
         result
       );
+
+
+    console.log(
+      "[Baal Studio] Proyectos normalizados:",
+      projects
+    );
 
 
     if (!projects.length) {
@@ -342,6 +361,7 @@ async function loadSelectedProjects() {
       );
 
       return;
+
     }
 
 
@@ -353,8 +373,11 @@ async function loadSelectedProjects() {
 
 
     /*
-       En la home mostramos solamente
-       los tres primeros proyectos.
+       HOME
+
+       Mostramos solamente los tres primeros
+       proyectos según el orden definido
+       en Supabase.
     */
 
     const selected =
@@ -390,7 +413,7 @@ async function loadSelectedProjects() {
   } catch (error) {
 
     console.error(
-      "Error cargando proyectos:",
+      "[Baal Studio] Error cargando proyectos:",
       error
     );
 
@@ -406,7 +429,7 @@ async function loadSelectedProjects() {
 
 
 /* ------------------------------------------------------------
-   NORMALIZAR RESPUESTA
+   NORMALIZAR RESPUESTA DE GET-PROJECTS
    ------------------------------------------------------------ */
 
 function normalizeProjectsResponse(
@@ -472,13 +495,12 @@ function normalizeProject(
 
 
   /*
+     ----------------------------------------------------------
      METADATA
+     ----------------------------------------------------------
 
-     get-projects puede devolver algunos
-     campos directamente y otros dentro
-     de "metadata".
-
-     Utilizamos ambos niveles.
+     Algunos valores pueden estar directamente
+     en el objeto y otros dentro de metadata.
   */
 
   const metadata =
@@ -489,42 +511,49 @@ function normalizeProject(
 
 
   /*
-     IDENTIDAD INTERNA DEL PROYECTO
+     ----------------------------------------------------------
+     IDENTIDAD INTERNA
+     ----------------------------------------------------------
 
-     "name" mantiene el nombre de carpeta:
+     Este es el nombre real de la carpeta.
+
+     Ejemplo:
 
      Epigrafias arabes de Granada (01)
 
-     Este valor NO se mostrará al usuario.
-     Solo se utiliza para identificar el
-     proyecto al abrir proyectos.html.
+     Se utiliza para construir el enlace,
+     pero nunca como título visible.
   */
 
   const rawName =
-    project.name ||
-    project.projectName ||
-    project.folder ||
-    project.slug ||
-    "";
+    firstValue(
+      project.name,
+      project.projectName,
+      project.project_name,
+      project.folder,
+      project.slug
+    );
 
 
   /*
+     ----------------------------------------------------------
      TÍTULO VISIBLE
+     ----------------------------------------------------------
 
-     Priorizamos los campos editoriales
-     devueltos por get-projects.
-
-     De esta forma nunca mostramos
-     accidentalmente "(01)".
+     Priorizamos los campos editoriales.
   */
 
   const title =
-    project.titulo ||
-    project.title ||
-    metadata.titulo ||
-    metadata.title ||
-    project.nombre ||
-    metadata.nombre ||
+    firstValue(
+      project.titulo,
+      project.title,
+      project.nombre,
+      project.name_display,
+
+      metadata.titulo,
+      metadata.title,
+      metadata.nombre
+    ) ||
     rawName;
 
 
@@ -542,7 +571,9 @@ function normalizeProject(
 
 
   /*
+     ----------------------------------------------------------
      ORDEN
+     ----------------------------------------------------------
   */
 
   const order =
@@ -555,18 +586,25 @@ function normalizeProject(
 
 
   /*
+     ----------------------------------------------------------
      COVER
+     ----------------------------------------------------------
 
-     La respuesta actual de get-projects
-     devuelve:
+     IMPORTANTE:
+
+     get-projects devuelve actualmente:
 
      cover: {
-       file: "...",
-       path: "...",
-       url: "..."
+       file,
+       path,
+       url
      }
 
-     Extraemos directamente esa URL.
+     Extraemos exclusivamente la URL.
+
+     La URL no se modifica.
+     No se hace fetch manual.
+     No se transforma a Blob.
   */
 
   const cover =
@@ -574,22 +612,32 @@ function normalizeProject(
 
 
   /*
+     ----------------------------------------------------------
      INFORMACIÓN DEL PROYECTO
+     ----------------------------------------------------------
 
-     Se busca primero en el nivel principal
-     y después en metadata.
+     Se conservan varias denominaciones
+     posibles para que la función no dependa
+     de un único nombre de campo.
   */
 
   const location =
     firstValue(
       project.location,
       project.localizacion,
+      project.localización,
       project.ubicacion,
+      project.ubicación,
       project.place,
+      project.procedencia,
+
       metadata.location,
       metadata.localizacion,
+      metadata.localización,
       metadata.ubicacion,
-      metadata.place
+      metadata.ubicación,
+      metadata.place,
+      metadata.procedencia
     );
 
 
@@ -598,6 +646,7 @@ function normalizeProject(
       project.year,
       project.año,
       project.ano,
+
       metadata.year,
       metadata.año,
       metadata.ano
@@ -610,12 +659,35 @@ function normalizeProject(
       project.categoria,
       project.type,
       project.tipo,
+
       metadata.category,
       metadata.categoria,
       metadata.type,
       metadata.tipo
     );
 
+
+  const description =
+    firstValue(
+      project.description,
+      project.descripcion,
+      project.descripción,
+      project.resumen,
+      project.summary,
+
+      metadata.description,
+      metadata.descripcion,
+      metadata.descripción,
+      metadata.resumen,
+      metadata.summary
+    );
+
+
+  /*
+     ----------------------------------------------------------
+     RESULTADO NORMALIZADO
+     ----------------------------------------------------------
+  */
 
   return {
 
@@ -641,6 +713,9 @@ function normalizeProject(
 
     category:
       category,
+
+    description:
+      description,
 
     metadata:
       metadata
@@ -690,13 +765,13 @@ function extractCover(
 ) {
 
   /*
-     PRIORIDAD ABSOLUTA:
+     ----------------------------------------------------------
+     PRIORIDAD 1
+     ----------------------------------------------------------
+
+     Estructura actual de get-projects:
 
      cover.url
-
-     Es exactamente la estructura
-     que devuelve actualmente
-     get-projects.
   */
 
   if (
@@ -705,18 +780,16 @@ function extractCover(
   ) {
 
     const coverUrl =
-      project.cover.url ||
-      project.cover.signedUrl ||
-      project.cover.signed_url ||
-      project.cover.publicUrl ||
-      project.cover.public_url ||
-      "";
+      firstValue(
+        project.cover.url,
+        project.cover.signedUrl,
+        project.cover.signed_url,
+        project.cover.publicUrl,
+        project.cover.public_url
+      );
 
 
-    if (
-      typeof coverUrl === "string" &&
-      coverUrl.length > 0
-    ) {
+    if (coverUrl) {
 
       return coverUrl;
 
@@ -726,8 +799,12 @@ function extractCover(
 
 
   /*
-     Compatibilidad con posibles respuestas
-     alternativas de Supabase.
+     ----------------------------------------------------------
+     PRIORIDAD 2
+     ----------------------------------------------------------
+
+     Campos directos que get-projects
+     puede proporcionar.
   */
 
   const directCandidates = [
@@ -795,51 +872,48 @@ function extractUrlFromValue(
   }
 
 
+  /*
+     Valor directamente textual.
+  */
+
   if (
     typeof value === "string"
   ) {
 
-    return value.startsWith("http")
-      ? value
-      : "";
+    const trimmed =
+      value.trim();
+
+
+    if (
+      trimmed.startsWith("http://") ||
+      trimmed.startsWith("https://")
+    ) {
+
+      return trimmed;
+
+    }
+
+
+    return "";
 
   }
 
+
+  /*
+     Valor objeto.
+  */
 
   if (
     typeof value === "object"
   ) {
 
-    const candidates = [
-
+    return firstValue(
       value.url,
-
       value.signedUrl,
-
       value.signed_url,
-
       value.publicUrl,
-
       value.public_url
-
-    ];
-
-
-    for (
-      const candidate
-      of candidates
-    ) {
-
-      if (
-        typeof candidate === "string" &&
-        candidate.length > 0
-      ) {
-
-        return candidate;
-
-      }
-
-    }
+    );
 
   }
 
@@ -868,11 +942,9 @@ function createProjectCard(
 
 
   /*
-     ESTRUCTURA VISUAL
-
-     1. Proyecto 1 = tarjeta grande
-     2. Proyecto 2 = izquierda
-     3. Proyecto 3 = derecha
+     ----------------------------------------------------------
+     DISTRIBUCIÓN VISUAL
+     ----------------------------------------------------------
   */
 
   if (index === 0) {
@@ -906,13 +978,9 @@ function createProjectCard(
 
 
   /*
+     ----------------------------------------------------------
      IDENTIDAD
-
-     project.name conserva el nombre
-     técnico de la carpeta.
-
-     project.displayName es el título
-     que ve el usuario.
+     ----------------------------------------------------------
   */
 
   const projectName =
@@ -921,21 +989,16 @@ function createProjectCard(
 
   const displayName =
     project.displayName ||
-    project.title ||
-    project.titulo ||
     "Proyecto";
 
 
   /*
+     ----------------------------------------------------------
      ENLACE
+     ----------------------------------------------------------
 
-     El parámetro utiliza el nombre
+     Se utiliza exclusivamente el nombre
      interno de la carpeta.
-
-     No utilizamos displayName porque
-     puede contener tildes, puntuación
-     o diferencias respecto al nombre
-     real de la carpeta.
   */
 
   if (projectName) {
@@ -969,6 +1032,12 @@ function createProjectCard(
     "project-card-media protected-media";
 
 
+  /*
+     ----------------------------------------------------------
+     IMAGEN
+     ----------------------------------------------------------
+  */
+
   const image =
     document.createElement("img");
 
@@ -996,20 +1065,21 @@ function createProjectCard(
 
 
   /*
-     COVER
+     La URL se asigna directamente.
 
-     Asignamos directamente la URL
-     firmada recibida desde Supabase.
-
-     No hacemos fetch manual.
-     No convertimos a Blob.
-     No modificamos la respuesta.
+     NO hacemos fetch.
+     NO hacemos Blob.
+     NO usamos canvas.
+     NO modificamos la URL.
   */
 
   if (project.cover) {
 
     image.src =
       project.cover;
+
+    image.dataset.source =
+      "supabase-cover";
 
   } else {
 
@@ -1031,6 +1101,9 @@ function createProjectCard(
       console.log(
         `[Baal Studio] Cover cargado: ${displayName}`,
         {
+          url:
+            image.src,
+
           width:
             image.naturalWidth,
 
@@ -1054,9 +1127,23 @@ function createProjectCard(
         `[Baal Studio] Error cargando cover: ${displayName}`,
         {
           url:
-            project.cover
+            image.src,
+
+          naturalWidth:
+            image.naturalWidth,
+
+          naturalHeight:
+            image.naturalHeight
         }
       );
+
+
+      /*
+         MUY IMPORTANTE:
+
+         Un error del cover NO elimina
+         ni oculta la información del proyecto.
+      */
 
       image.classList.add(
         "image-load-failed"
@@ -1075,11 +1162,9 @@ function createProjectCard(
 
 
   /*
+     ----------------------------------------------------------
      OVERLAY
-
-     Se mantiene independiente de la
-     información para que la imagen,
-     degradado y texto funcionen juntos.
+     ----------------------------------------------------------
   */
 
   const overlay =
@@ -1108,7 +1193,9 @@ function createProjectCard(
 
 
   /*
+     ----------------------------------------------------------
      LOCALIZACIÓN
+     ----------------------------------------------------------
   */
 
   if (project.location) {
@@ -1133,7 +1220,9 @@ function createProjectCard(
 
 
   /*
+     ----------------------------------------------------------
      TÍTULO
+     ----------------------------------------------------------
   */
 
   const title =
@@ -1154,7 +1243,9 @@ function createProjectCard(
 
 
   /*
+     ----------------------------------------------------------
      METADATA
+     ----------------------------------------------------------
 
      Año + categoría.
   */
@@ -1213,16 +1304,52 @@ function createProjectCard(
 
 
   /*
-     ORDEN FINAL DEL DOM
+     ----------------------------------------------------------
+     DESCRIPCIÓN
+     ----------------------------------------------------------
 
-     media
-       ├── img
-       └── overlay
+     Solo se añade si get-projects
+     realmente devuelve una descripción.
 
-     content
-       ├── location
-       ├── title
-       └── metadata
+     No inventamos texto.
+  */
+
+  if (project.description) {
+
+    const description =
+      document.createElement("p");
+
+
+    description.className =
+      "project-card-description";
+
+
+    description.textContent =
+      project.description;
+
+
+    content.appendChild(
+      description
+    );
+
+  }
+
+
+  /*
+     ----------------------------------------------------------
+     ORDEN FINAL
+     ----------------------------------------------------------
+
+     card
+       ├── media
+       │    ├── img
+       │    └── overlay
+       │
+       └── content
+            ├── location
+            ├── title
+            ├── metadata
+            └── description
   */
 
   card.appendChild(
@@ -1232,6 +1359,36 @@ function createProjectCard(
 
   card.appendChild(
     content
+  );
+
+
+  /*
+     ----------------------------------------------------------
+     INFORMACIÓN DE DEPURACIÓN
+     ----------------------------------------------------------
+  */
+
+  console.log(
+    `[Baal Studio] Tarjeta creada: ${displayName}`,
+    {
+      name:
+        project.name,
+
+      title:
+        project.displayName,
+
+      cover:
+        project.cover,
+
+      location:
+        project.location,
+
+      year:
+        project.year,
+
+      category:
+        project.category
+    }
   );
 
 
