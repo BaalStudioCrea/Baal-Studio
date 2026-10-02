@@ -1,6 +1,6 @@
 /* ============================================================
    BAAL STUDIO
-   SCRIPT.JS — V09
+   SCRIPT.JS — V10
    ============================================================ */
 
 
@@ -466,70 +466,191 @@ function normalizeProject(
   }
 
 
+  /*
+     ----------------------------------------------------------
+     METADATA
+
+     Los datos descriptivos pueden venir dentro de
+     project.metadata.
+
+     Mantenemos además compatibilidad con posibles
+     variantes de nombre.
+     ----------------------------------------------------------
+  */
+
+  const metadata =
+    (
+      project.metadata &&
+      typeof project.metadata === "object"
+    )
+      ? project.metadata
+      : (
+          project.meta &&
+          typeof project.meta === "object"
+        )
+          ? project.meta
+          : {};
+
+
+  /*
+     ----------------------------------------------------------
+     NOMBRE TÉCNICO DEL PROYECTO
+
+     Este es el nombre de la carpeta y se mantiene
+     intacto para construir el enlace.
+     ----------------------------------------------------------
+  */
+
   const rawName =
     project.name ||
-    project.title ||
-    project.nombre ||
-    project.titulo ||
     project.projectName ||
+    project.project_name ||
     "";
 
 
   /*
-     Eliminamos solamente el sufijo de orden
-     de la carpeta:
+     ----------------------------------------------------------
+     TÍTULO VISIBLE
+
+     Primero utilizamos los títulos descriptivos.
+
+     Esto evita mostrar:
 
      "Epigrafias arabes de Granada (01)"
-     →
-     "Epigrafias arabes de Granada"
+
+     y permite mostrar:
+
+     "Epigrafías árabes de Granada."
+     ----------------------------------------------------------
   */
 
+  const metadataTitle =
+    metadata.titulo ||
+    metadata.title ||
+    metadata.nombre ||
+    metadata.name ||
+    "";
+
+
+  const projectTitle =
+    project.titulo ||
+    project.title ||
+    project.nombre ||
+    project.displayName ||
+    "";
+
+
+  const titleSource =
+    metadataTitle ||
+    projectTitle ||
+    rawName;
+
+
   const displayName =
-    String(rawName)
+    String(titleSource)
       .replace(
-        /\s*\(\d+\)\s*$/,
+        /\s*[.!?]+\s*$/,
         ""
       )
       .trim();
 
 
+  /*
+     ----------------------------------------------------------
+     ORDEN
+     ----------------------------------------------------------
+  */
+
   const order =
     project.order ??
     project.orden ??
+    metadata.order ??
+    metadata.orden ??
     project.position ??
     999;
 
+
+  /*
+     ----------------------------------------------------------
+     COVER
+     ----------------------------------------------------------
+  */
 
   const cover =
     extractCover(project);
 
 
+  /*
+     ----------------------------------------------------------
+     LOCALIZACIÓN
+     ----------------------------------------------------------
+  */
+
   const location =
     project.location ||
     project.localizacion ||
+    project.localización ||
     project.ubicacion ||
+    project.ubicación ||
     project.place ||
+    project.lugar ||
+    metadata.location ||
+    metadata.localizacion ||
+    metadata.localización ||
+    metadata.ubicacion ||
+    metadata.ubicación ||
+    metadata.place ||
+    metadata.lugar ||
     "";
 
+
+  /*
+     ----------------------------------------------------------
+     AÑO
+     ----------------------------------------------------------
+  */
 
   const year =
     project.year ||
     project.año ||
     project.ano ||
+    project.date ||
+    project.fecha ||
+    metadata.year ||
+    metadata.año ||
+    metadata.ano ||
+    metadata.date ||
+    metadata.fecha ||
     "";
 
+
+  /*
+     ----------------------------------------------------------
+     CATEGORÍA / TIPO
+     ----------------------------------------------------------
+  */
 
   const category =
     project.category ||
     project.categoria ||
+    project.categoría ||
     project.type ||
     project.tipo ||
+    metadata.category ||
+    metadata.categoria ||
+    metadata.categoría ||
+    metadata.type ||
+    metadata.tipo ||
     "";
 
 
   return {
 
     ...project,
+
+    /*
+       Conservamos todos los datos originales.
+    */
 
     name: rawName,
 
@@ -543,7 +664,9 @@ function normalizeProject(
 
     year,
 
-    category
+    category,
+
+    metadata
 
   };
 
@@ -698,10 +821,6 @@ function findImageUrl(
   depth = 0
 ) {
 
-  /*
-     Evitamos recorrer objetos indefinidamente.
-  */
-
   if (
     !value ||
     depth > 5
@@ -731,11 +850,6 @@ function findImageUrl(
 
   }
 
-
-  /*
-     Primero comprobamos claves con
-     mayor probabilidad de contener covers.
-  */
 
   const priorityKeys = [
 
@@ -785,10 +899,6 @@ function findImageUrl(
 
   }
 
-
-  /*
-     Después recorremos el resto.
-  */
 
   for (
     const key
@@ -910,6 +1020,13 @@ function createProjectCard(
   }
 
 
+  /*
+     IMPORTANTE:
+
+     name = nombre técnico de carpeta.
+     displayName = título visible.
+  */
+
   const projectName =
     project.name || "";
 
@@ -930,7 +1047,9 @@ function createProjectCard(
 
 
   /*
+     ----------------------------------------------------------
      MEDIA
+     ----------------------------------------------------------
   */
 
   const media =
@@ -969,10 +1088,6 @@ function createProjectCard(
 
   /*
      CARGA DEL COVER
-
-     Se hace mediante una función específica
-     para poder detectar si el navegador
-     realmente consigue decodificar el archivo.
   */
 
   if (project.cover) {
@@ -1007,7 +1122,9 @@ function createProjectCard(
 
 
   /*
+     ----------------------------------------------------------
      CONTENIDO
+     ----------------------------------------------------------
   */
 
   const content =
@@ -1053,7 +1170,9 @@ function createProjectCard(
 
 
   /*
+     ----------------------------------------------------------
      METADATA
+     ----------------------------------------------------------
   */
 
   const meta =
@@ -1418,7 +1537,6 @@ function showProjectsMessage(
    ------------------------------------------------------------ */
 
 function initProtection() {
-
 
   document.addEventListener(
     "contextmenu",
