@@ -18,7 +18,7 @@ const FUNCTIONS = {
     `${SUPABASE_FUNCTION_BASE}/get-site-assets`,
 
   projects:
-    `${SUPABASE_FUNCTION_BASE}/list-projects`
+    `${SUPABASE_FUNCTION_BASE}/get-projects`
 
 };
 
@@ -318,7 +318,7 @@ async function loadSelectedProjects() {
     if (!response.ok) {
 
       throw new Error(
-        `list-projects respondió ${response.status}`
+        `get-projects respondió ${response.status}`
       );
 
     }
@@ -475,54 +475,21 @@ function normalizeProject(
     "";
 
 
-  let metadata =
-    project?.metadata ||
-    null;
-
-
-  if (typeof metadata === "string") {
-
-    try {
-
-      metadata = JSON.parse(metadata);
-
-    } catch (error) {
-
-      metadata = null;
-
-    }
-
-  }
-
-
   /*
-     TÍTULO
+     Eliminamos solamente el sufijo de orden
+     de la carpeta:
 
-     Priorizamos el título que devuelve directamente
-     list-projects y después metadata.
+     "Epigrafias arabes de Granada (01)"
+     →
+     "Epigrafias arabes de Granada"
   */
 
-  const metadataTitle =
-    project?.title ||
-    project?.titulo ||
-    metadata?.title ||
-    metadata?.titulo ||
-    metadata?.nombre ||
-    metadata?.name ||
-    project?.metadataTitle ||
-    project?.metadata_title ||
-    "";
-
-
-  const fallbackName =
-    String(rawName)
-      .replace(/\s*\(\d+\)\s*$/i, "")
-      .trim();
-
-
   const displayName =
-    String(metadataTitle || fallbackName)
-      .replace(/\s*[.!?]+\s*$/, "")
+    String(rawName)
+      .replace(
+        /\s*\(\d+\)\s*$/,
+        ""
+      )
       .trim();
 
 
@@ -533,73 +500,36 @@ function normalizeProject(
     999;
 
 
-  /*
-     COVER
-
-     list-projects devuelve actualmente:
-
-     cover: {
-       file: "...",
-       path: "...",
-       url: "..."
-     }
-
-     extractCover() prioriza específicamente
-     esta estructura.
-  */
-
   const cover =
     extractCover(project);
 
 
-  /*
-     UBICACIÓN
-  */
-
   const location =
-    metadata?.location ||
-    metadata?.localizacion ||
     project.location ||
     project.localizacion ||
+    project.ubicacion ||
+    project.place ||
     "";
 
-
-  /*
-     AÑO
-  */
 
   const year =
-    metadata?.year ||
-    metadata?.ano ||
-    metadata?.año ||
     project.year ||
     project.año ||
-    "";
-
-
-  /*
-     CATEGORÍA
-  */
-
-  const rawCategory =
-    metadata?.category ||
-    metadata?.categoria ||
-    project.category ||
-    project.categoria ||
+    project.ano ||
     "";
 
 
   const category =
-    Array.isArray(rawCategory)
-      ? rawCategory.slice(0, 2).join(", ")
-      : String(rawCategory);
+    project.category ||
+    project.categoria ||
+    project.type ||
+    project.tipo ||
+    "";
 
 
   return {
 
     ...project,
-
-    metadata,
 
     name: rawName,
 
@@ -628,56 +558,9 @@ function extractCover(
   project
 ) {
 
-  if (
-    !project ||
-    typeof project !== "object"
-  ) {
-
-    return "";
-
-  }
-
-
-  /*
-     PRIORIDAD 1
-     Estructura exacta actual de list-projects:
-
-     cover.url
-  */
-
-  if (
-    project.cover &&
-    typeof project.cover === "object"
-  ) {
-
-    const coverUrl =
-      project.cover.url ||
-      project.cover.signedUrl ||
-      project.cover.signed_url ||
-      project.cover.publicUrl ||
-      project.cover.public_url ||
-      "";
-
-
-    if (
-      typeof coverUrl === "string" &&
-      coverUrl.length > 0
-    ) {
-
-      return coverUrl;
-
-    }
-
-  }
-
-
-  /*
-     PRIORIDAD 2
-     Propiedades directas que list-projects
-     también puede devolver.
-  */
-
   const directCandidates = [
+
+    project.cover,
 
     project.coverUrl,
 
@@ -685,23 +568,23 @@ function extractCover(
 
     project.coverURL,
 
+    project.image,
+
     project.imageUrl,
 
     project.image_url,
 
-    project.image,
+    project.thumbnail,
 
     project.thumbnailUrl,
 
     project.thumbnail_url,
 
-    project.thumbnail,
+    project.portada,
 
     project.portadaUrl,
 
-    project.portada_url,
-
-    project.portada
+    project.portada_url
 
   ];
 
@@ -727,10 +610,9 @@ function extractCover(
 
 
   /*
-     ÚLTIMO RECURSO
-
-     Buscamos cualquier URL de imagen
-     dentro del objeto.
+     Si el cover está dentro de otra
+     propiedad del objeto, buscamos
+     recursivamente una URL de imagen.
   */
 
   return findImageUrl(
@@ -816,6 +698,10 @@ function findImageUrl(
   depth = 0
 ) {
 
+  /*
+     Evitamos recorrer objetos indefinidamente.
+  */
+
   if (
     !value ||
     depth > 5
@@ -845,6 +731,11 @@ function findImageUrl(
 
   }
 
+
+  /*
+     Primero comprobamos claves con
+     mayor probabilidad de contener covers.
+  */
 
   const priorityKeys = [
 
@@ -894,6 +785,10 @@ function findImageUrl(
 
   }
 
+
+  /*
+     Después recorremos el resto.
+  */
 
   for (
     const key
@@ -1073,72 +968,28 @@ function createProjectCard(
 
 
   /*
-     ASIGNACIÓN DEL COVER
+     CARGA DEL COVER
 
-     La URL ya viene firmada desde Supabase.
-     No construimos ninguna URL manualmente.
+     Se hace mediante una función específica
+     para poder detectar si el navegador
+     realmente consigue decodificar el archivo.
   */
 
-  if (
-    typeof project.cover === "string" &&
-    project.cover.length > 0
-  ) {
+  if (project.cover) {
 
-    image.src =
-      project.cover;
-
-    image.dataset.source =
-      "supabase-cover";
-
-
-    console.log(
-      `[Baal Studio] Cover asignado: ${displayName}`,
-      project.cover
+    loadProjectCover(
+      image,
+      project.cover,
+      displayName
     );
 
   } else {
 
-    console.warn(
-      `[Baal Studio] El proyecto "${displayName}" no tiene una URL de cover válida.`,
-      project
+    image.classList.add(
+      "image-load-failed"
     );
 
   }
-
-
-  /*
-     DETECCIÓN DE CARGA
-
-     Esto nos permitirá saber si el problema está
-     en la URL o en el CSS/renderizado.
-  */
-
-  image.addEventListener(
-    "load",
-    () => {
-
-      console.log(
-        `[Baal Studio] Cover cargado correctamente: ${displayName}`
-      );
-
-    }
-  );
-
-
-  image.addEventListener(
-    "error",
-    event => {
-
-      console.error(
-        `[Baal Studio] ERROR cargando cover: ${displayName}`,
-        {
-          url: image.src,
-          event
-        }
-      );
-
-    }
-  );
 
 
   media.appendChild(image);
@@ -1258,6 +1109,268 @@ function createProjectCard(
 
 
   return card;
+
+}
+
+
+/* ------------------------------------------------------------
+   CARGA ROBUSTA DEL COVER
+   ------------------------------------------------------------ */
+
+function loadProjectCover(
+  image,
+  url,
+  displayName
+) {
+
+  if (
+    !image ||
+    !url
+  ) {
+
+    return;
+
+  }
+
+
+  image.dataset.source =
+    "supabase-cover";
+
+
+  image.dataset.coverUrl =
+    url;
+
+
+  let reported =
+    false;
+
+
+  const reportFailure =
+    (reason) => {
+
+      if (reported) {
+        return;
+      }
+
+
+      reported =
+        true;
+
+
+      console.error(
+        `[Baal Studio] ERROR cargando cover: ${displayName}`,
+        {
+          reason,
+          url,
+          naturalWidth:
+            image.naturalWidth,
+          naturalHeight:
+            image.naturalHeight,
+          complete:
+            image.complete
+        }
+      );
+
+
+      image.classList.add(
+        "image-load-failed"
+      );
+
+
+      image.removeAttribute(
+        "src"
+      );
+
+
+      image.setAttribute(
+        "data-image-error",
+        "No se ha podido decodificar la imagen recibida."
+      );
+
+    };
+
+
+  image.addEventListener(
+    "load",
+    () => {
+
+      if (
+        image.naturalWidth > 0 &&
+        image.naturalHeight > 0
+      ) {
+
+        image.classList.remove(
+          "image-load-failed"
+        );
+
+
+        console.log(
+          `[Baal Studio] Cover cargado correctamente: ${displayName}`,
+          {
+            width:
+              image.naturalWidth,
+            height:
+              image.naturalHeight
+          }
+        );
+
+
+        return;
+
+      }
+
+
+      reportFailure(
+        "El navegador recibió la respuesta pero naturalWidth/naturalHeight son 0."
+      );
+
+    },
+    {
+      once: true
+    }
+  );
+
+
+  image.addEventListener(
+    "error",
+    () => {
+
+      reportFailure(
+        "El navegador no ha podido decodificar la respuesta como imagen."
+      );
+
+    },
+    {
+      once: true
+    }
+  );
+
+
+  image.src =
+    url;
+
+}
+
+
+/* ------------------------------------------------------------
+   DIAGNÓSTICO DEL COVER
+   ------------------------------------------------------------ */
+
+async function diagnoseProjectCover(
+  url,
+  displayName = "cover"
+) {
+
+  if (!url) {
+
+    console.error(
+      "[Baal Studio] No existe URL para diagnosticar el cover."
+    );
+
+    return;
+
+  }
+
+
+  try {
+
+    const response =
+      await fetch(
+        url,
+        {
+          method: "GET",
+          cache: "no-store"
+        }
+      );
+
+
+    const contentType =
+      response.headers.get(
+        "content-type"
+      );
+
+
+    const contentLength =
+      response.headers.get(
+        "content-length"
+      );
+
+
+    const buffer =
+      await response.arrayBuffer();
+
+
+    const bytes =
+      new Uint8Array(
+        buffer.slice(0, 16)
+      );
+
+
+    const ascii =
+      Array.from(bytes)
+        .map(
+          byte =>
+            byte >= 32 && byte <= 126
+              ? String.fromCharCode(byte)
+              : "."
+        )
+        .join("");
+
+
+    console.group(
+      `[Baal Studio] Diagnóstico cover — ${displayName}`
+    );
+
+
+    console.log(
+      "HTTP:",
+      response.status,
+      response.ok
+    );
+
+
+    console.log(
+      "Content-Type:",
+      contentType
+    );
+
+
+    console.log(
+      "Content-Length:",
+      contentLength
+    );
+
+
+    console.log(
+      "Tamaño recibido:",
+      buffer.byteLength,
+      "bytes"
+    );
+
+
+    console.log(
+      "Primeros bytes:",
+      Array.from(bytes)
+    );
+
+
+    console.log(
+      "Cabecera ASCII:",
+      ascii
+    );
+
+
+    console.groupEnd();
+
+
+  } catch (error) {
+
+    console.error(
+      `[Baal Studio] No se pudo diagnosticar el cover: ${displayName}`,
+      error
+    );
+
+  }
 
 }
 
