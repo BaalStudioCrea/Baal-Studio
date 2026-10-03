@@ -1,65 +1,7 @@
 /* ============================================================
    BAAL STUDIO
-   STYLE.CSS — HOME FINAL BASE
+   STYLE.CSS
    ============================================================ */
-
-
-/* ------------------------------------------------------------
-   FUENTES LOCALES — GITHUB
-   ------------------------------------------------------------ */
-
-@font-face {
-  font-family: "Inter";
-  src: url("./fonts/InterVariable.woff2") format("woff2");
-  font-style: normal;
-  font-weight: 100 900;
-  font-display: swap;
-}
-
-
-@font-face {
-  font-family: "Cormorant Garamond";
-  src: url("./fonts/CormorantGaramond-Light.woff2") format("woff2");
-  font-style: normal;
-  font-weight: 300;
-  font-display: swap;
-}
-
-
-@font-face {
-  font-family: "Cormorant Garamond";
-  src: url("./fonts/CormorantGaramond-Regular.woff2") format("woff2");
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-}
-
-
-@font-face {
-  font-family: "Cormorant Garamond";
-  src: url("./fonts/CormorantGaramond-Medium.woff2") format("woff2");
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-}
-
-
-@font-face {
-  font-family: "Cormorant Garamond";
-  src: url("./fonts/CormorantGaramond-SemiBold.woff2") format("woff2");
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-}
-
-
-@font-face {
-  font-family: "Cormorant Garamond";
-  src: url("./fonts/CormorantGaramond-Bold.woff2") format("woff2");
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-}
 
 
 /* ------------------------------------------------------------
@@ -82,18 +24,113 @@
   --section-space: 140px;
 
   --font-display: "Cormorant Garamond", serif;
-
-  /*
-     Tipografía alternativa para el nombre Baal Studio.
-     No requiere ningún archivo externo.
-  */
-  --font-hero:
-    "Bodoni MT",
-    "Baskerville",
-    Georgia,
-    serif;
-
   --font-body: "Inter", sans-serif;
+
+}
+
+
+/* ------------------------------------------------------------
+   FUENTES LOCALES
+   ------------------------------------------------------------ */
+
+@font-face {
+
+  font-family: "Inter";
+
+  src:
+    url("./fonts/InterVariable.woff2")
+    format("woff2");
+
+  font-style: normal;
+
+  font-weight: 100 900;
+
+  font-display: swap;
+
+}
+
+
+@font-face {
+
+  font-family: "Cormorant Garamond";
+
+  src:
+    url("./fonts/CormorantGaramond-Light.woff2")
+    format("woff2");
+
+  font-style: normal;
+
+  font-weight: 300;
+
+  font-display: swap;
+
+}
+
+
+@font-face {
+
+  font-family: "Cormorant Garamond";
+
+  src:
+    url("./fonts/CormorantGaramond-Regular.woff2")
+    format("woff2");
+
+  font-style: normal;
+
+  font-weight: 400;
+
+  font-display: swap;
+
+}
+
+
+@font-face {
+
+  font-family: "Cormorant Garamond";
+
+  src:
+    url("./fonts/CormorantGaramond-Medium.woff2")
+    format("woff2");
+
+  font-style: normal;
+
+  font-weight: 500;
+
+  font-display: swap;
+
+}
+
+
+@font-face {
+
+  font-family: "Cormorant Garamond";
+
+  src:
+    url("./fonts/CormorantGaramond-SemiBold.woff2")
+    format("woff2");
+
+  font-style: normal;
+
+  font-weight: 600;
+
+  font-display: swap;
+
+}
+
+
+@font-face {
+
+  font-family: "Cormorant Garamond";
+
+  src:
+    url("./fonts/CormorantGaramond-Bold.woff2")
+    format("woff2");
+
+  font-style: normal;
+
+  font-weight: 700;
+
+  font-display: swap;
 
 }
 
@@ -105,12 +142,16 @@
 *,
 *::before,
 *::after {
+
   box-sizing: border-box;
+
 }
 
 
 html {
+
   scroll-behavior: smooth;
+
 }
 
 
@@ -120,6 +161,7 @@ body {
   padding: 0;
 
   background: var(--bg);
+
   color: var(--black);
 
   font-family: var(--font-body);
@@ -129,18 +171,25 @@ body {
   line-height: 1.7;
 
   overflow-x: hidden;
+
 }
 
 
 img {
+
   max-width: 100%;
+
   display: block;
+
 }
 
 
 a {
+
   color: inherit;
+
   text-decoration: none;
+
 }
 
 
@@ -148,7 +197,9 @@ button,
 input,
 textarea,
 select {
+
   font: inherit;
+
 }
 
 
@@ -161,9 +212,11 @@ select {
   -webkit-user-drag: none;
 
   user-select: none;
+
   -webkit-user-select: none;
 
   -webkit-touch-callout: none;
+
 }
 
 
@@ -180,7 +233,9 @@ select {
   margin: 0;
 
   padding-left: var(--page-padding);
+
   padding-right: var(--page-padding);
+
 }
 
 
@@ -207,6 +262,7 @@ select {
   transition:
     background-color 0.35s ease,
     backdrop-filter 0.35s ease;
+
 }
 
 
@@ -215,13 +271,16 @@ select {
   background: rgba(17,17,17,0.84);
 
   backdrop-filter: blur(12px);
+
   -webkit-backdrop-filter: blur(12px);
+
 }
 
 
 .header-inner {
 
   width: 100%;
+
   height: 100%;
 
   padding: 0 32px;
@@ -229,7 +288,9 @@ select {
   display: flex;
 
   align-items: center;
+
   justify-content: space-between;
+
 }
 
 
@@ -240,6 +301,7 @@ select {
   align-items: center;
 
   height: 100%;
+
 }
 
 
@@ -256,11 +318,14 @@ select {
   opacity: 0.50;
 
   transition: opacity 0.25s ease;
+
 }
 
 
 .header-logo-link:hover .header-logo {
+
   opacity: 0.70;
+
 }
 
 
@@ -277,6 +342,7 @@ select {
   gap: 40px;
 
   height: 100%;
+
 }
 
 
@@ -301,6 +367,7 @@ select {
   letter-spacing: 0.08em;
 
   text-transform: uppercase;
+
 }
 
 
@@ -313,6 +380,7 @@ select {
   font-size: 8px;
 
   letter-spacing: 0.10em;
+
 }
 
 
@@ -326,17 +394,21 @@ select {
   bottom: 0;
 
   width: 0;
+
   height: 1px;
 
   background: var(--accent);
 
   transition: width 0.25s ease;
+
 }
 
 
 .nav-link:hover::after,
 .nav-link.active::after {
+
   width: 100%;
+
 }
 
 
@@ -349,6 +421,7 @@ select {
   display: none;
 
   width: 38px;
+
   height: 38px;
 
   padding: 8px;
@@ -358,6 +431,7 @@ select {
   background: transparent;
 
   cursor: pointer;
+
 }
 
 
@@ -366,6 +440,7 @@ select {
   display: block;
 
   width: 100%;
+
   height: 1px;
 
   margin: 5px 0;
@@ -375,21 +450,32 @@ select {
   transition:
     transform 0.25s ease,
     opacity 0.25s ease;
+
 }
 
 
 .mobile-menu-button.open span:nth-child(1) {
-  transform: translateY(6px) rotate(45deg);
+
+  transform:
+    translateY(6px)
+    rotate(45deg);
+
 }
 
 
 .mobile-menu-button.open span:nth-child(2) {
+
   opacity: 0;
+
 }
 
 
 .mobile-menu-button.open span:nth-child(3) {
-  transform: translateY(-6px) rotate(-45deg);
+
+  transform:
+    translateY(-6px)
+    rotate(-45deg);
+
 }
 
 
@@ -398,6 +484,7 @@ select {
   position: fixed;
 
   top: 64px;
+
   left: 0;
   right: 0;
 
@@ -410,14 +497,18 @@ select {
   background: rgba(17,17,17,0.96);
 
   backdrop-filter: blur(15px);
+
   -webkit-backdrop-filter: blur(15px);
 
   transition: max-height 0.35s ease;
+
 }
 
 
 .mobile-menu.open {
+
   max-height: 400px;
+
 }
 
 
@@ -428,6 +519,7 @@ select {
   flex-direction: column;
 
   padding: 15px 24px 24px;
+
 }
 
 
@@ -449,6 +541,7 @@ select {
   letter-spacing: 0.08em;
 
   text-transform: uppercase;
+
 }
 
 
@@ -461,6 +554,7 @@ select {
   font-size: 9px;
 
   letter-spacing: 0.10em;
+
 }
 
 
@@ -483,6 +577,7 @@ select {
   background: #111111;
 
   color: var(--white);
+
 }
 
 
@@ -493,6 +588,7 @@ select {
   inset: 0;
 
   overflow: hidden;
+
 }
 
 
@@ -503,6 +599,7 @@ select {
   inset: 0;
 
   width: 100%;
+
   height: 100%;
 
   object-fit: cover;
@@ -514,6 +611,7 @@ select {
   opacity: 0.40;
 
   will-change: transform;
+
 }
 
 
@@ -533,6 +631,7 @@ select {
       rgba(0,0,0,0.04) 76%,
       rgba(0,0,0,0) 100%
     );
+
 }
 
 
@@ -545,6 +644,7 @@ select {
   position: absolute;
 
   left: 0;
+
   bottom: 0;
 
   width: 100%;
@@ -554,7 +654,8 @@ select {
   padding:
     0
     var(--page-padding)
-    155px;
+    115px;
+
 }
 
 
@@ -565,6 +666,7 @@ select {
   margin-bottom: 13px;
 
   overflow: hidden;
+
 }
 
 
@@ -578,6 +680,7 @@ select {
   text-overflow: clip;
 
   text-transform: uppercase;
+
 }
 
 
@@ -592,6 +695,7 @@ select {
   line-height: 1.4;
 
   letter-spacing: 0.09em;
+
 }
 
 
@@ -606,22 +710,38 @@ select {
   line-height: 1.4;
 
   letter-spacing: 0.10em;
+
 }
 
+
+/*
+   CAMBIO 1:
+   Baal Studio más pequeño y elegante.
+   No usamos una fuente externa: primero intentamos
+   Bodoni/Didot disponibles en el sistema y después
+   pasamos a una serif clásica.
+*/
 
 .hero-content h1 {
 
   margin: 0;
 
-  font-family: var(--font-hero);
+  font-family:
+    "Bodoni MT",
+    "Didot",
+    "Bodoni 72",
+    "Times New Roman",
+    serif;
 
-  font-size: clamp(58px, 7vw, 104px);
+  font-size:
+    clamp(58px, 6.2vw, 88px);
 
   font-weight: 400;
 
-  line-height: 0.88;
+  line-height: 0.90;
 
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
+
 }
 
 
@@ -630,6 +750,7 @@ select {
   max-width: 740px;
 
   margin-top: 21px;
+
 }
 
 
@@ -642,6 +763,7 @@ select {
   font-size: 12px;
 
   line-height: 1.62;
+
 }
 
 
@@ -652,6 +774,7 @@ select {
   color: rgba(255,255,255,0.38);
 
   font-size: 9px;
+
 }
 
 
@@ -666,6 +789,7 @@ select {
   padding:
     var(--section-space)
     0;
+
 }
 
 
@@ -677,24 +801,28 @@ select {
     4fr 8fr;
 
   column-gap: 0;
+
 }
 
 
 .about-home-heading {
 
   padding-right: 70px;
+
 }
 
 
 .about-home-content {
 
   padding-left: 0;
+
 }
 
 
 .bilingual-copy {
 
   max-width: 760px;
+
 }
 
 
@@ -709,6 +837,7 @@ select {
   font-weight: 400;
 
   line-height: 1.34;
+
 }
 
 
@@ -723,6 +852,7 @@ select {
   font-size: 10px;
 
   line-height: 1.7;
+
 }
 
 
@@ -735,6 +865,7 @@ select {
   margin: 35px 0;
 
   background: var(--light-gray);
+
 }
 
 
@@ -748,6 +879,7 @@ select {
   gap: 30px;
 
   margin-top: 50px;
+
 }
 
 
@@ -756,6 +888,7 @@ select {
   display: flex;
 
   flex-direction: column;
+
 }
 
 
@@ -768,6 +901,7 @@ select {
   font-weight: 400;
 
   line-height: 1;
+
 }
 
 
@@ -777,9 +911,12 @@ select {
 
   font-size: 9px;
 
-  letter-spacing: 0.08em;
+  line-height: 1.4;
+
+  letter-spacing: 0.06em;
 
   text-transform: uppercase;
+
 }
 
 
@@ -791,9 +928,10 @@ select {
 
   font-size: 7px;
 
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
 
   text-transform: uppercase;
+
 }
 
 
@@ -808,6 +946,7 @@ select {
   padding:
     var(--section-space)
     0;
+
 }
 
 
@@ -818,15 +957,17 @@ select {
   grid-template-columns:
     4fr 8fr;
 
-  align-items: end;
+  align-items: start;
 
-  margin-bottom: 65px;
+  margin-bottom: 52px;
+
 }
 
 
 .section-heading {
 
   padding-right: 70px;
+
 }
 
 
@@ -834,35 +975,32 @@ select {
 
   justify-self: end;
 
-  display: flex;
+  display: inline-flex;
 
   align-items: center;
 
-  gap: 12px;
+  gap: 9px;
 
-  color: var(--gray);
+  padding-bottom: 5px;
+
+  border-bottom:
+    1px solid var(--light-gray);
 
   font-size: 9px;
 
-  letter-spacing: 0.12em;
+  letter-spacing: 0.09em;
 
   text-transform: uppercase;
 
-  transition: color 0.25s ease;
-}
-
-
-.view-all-link:hover {
-
-  color: var(--accent);
 }
 
 
 .view-all-link span:nth-child(2) {
 
-  color: #aaa59c;
+  color: var(--gray);
 
-  font-size: 7px;
+  font-size: 8px;
+
 }
 
 
@@ -873,11 +1011,12 @@ select {
   font-size: 16px;
 
   line-height: 1;
+
 }
 
 
 /* ------------------------------------------------------------
-   GRID PROYECTOS
+   TARJETAS DE PROYECTOS
    ------------------------------------------------------------ */
 
 .selected-projects-grid {
@@ -885,13 +1024,10 @@ select {
   display: grid;
 
   grid-template-columns:
-    7fr 5fr;
+    repeat(12, 1fr);
 
-  grid-template-rows:
-    560px
-    330px;
+  gap: 24px;
 
-  gap: 16px;
 }
 
 
@@ -899,25 +1035,44 @@ select {
 
   position: relative;
 
+  display: block;
+
   overflow: hidden;
 
-  background: #1a1a1a;
+  background: #dedbd4;
 
-  color: var(--white);
+  color: white;
 
-  cursor: pointer;
 }
 
 
 .project-card-large {
 
-  grid-row: 1 / 3;
+  grid-column: 1 / -1;
+
+  height: 560px;
+
 }
 
 
 .project-card-medium {
 
-  height: 100%;
+  height: 420px;
+
+}
+
+
+.project-card-left {
+
+  grid-column: 1 / span 7;
+
+}
+
+
+.project-card-right {
+
+  grid-column: 8 / -1;
+
 }
 
 
@@ -928,47 +1083,42 @@ select {
   inset: 0;
 
   overflow: hidden;
+
 }
 
 
 /*
-   El cajetín mantiene exactamente su tamaño.
-   La imagen ocupa el 85 % y queda centrada.
+   CAMBIO 2:
+   El cajetín no cambia.
+   Solo reducimos visualmente la fotografía al 85 %.
 */
 
 .project-card-media img {
 
-  position: absolute;
+  width: 100%;
 
-  width: 85%;
-  height: 85%;
+  height: 100%;
 
-  left: 7.5%;
-  top: 7.5%;
+  object-fit: cover;
 
-  object-fit: contain;
-
-  object-position: center center;
-
-  opacity: 0.60;
+  transform: scale(0.85);
 
   transition:
     transform 0.8s cubic-bezier(.2,.65,.2,1);
+
 }
 
 
-.project-card-large .project-card-media img {
-
-  object-fit: contain;
-
-  background: #dedbd4;
-}
-
+/*
+   El hover no vuelve a hacer crecer la fotografía.
+   Queremos conservar el 85 %.
+*/
 
 .project-card:hover
 .project-card-media img {
 
-  transform: none;
+  transform: scale(0.85);
+
 }
 
 
@@ -984,6 +1134,7 @@ select {
       rgba(0,0,0,0.68),
       rgba(0,0,0,0.04) 70%
     );
+
 }
 
 
@@ -992,10 +1143,13 @@ select {
   position: absolute;
 
   left: 34px;
+
   right: 34px;
+
   bottom: 30px;
 
   z-index: 3;
+
 }
 
 
@@ -1010,6 +1164,7 @@ select {
   letter-spacing: 0.12em;
 
   text-transform: uppercase;
+
 }
 
 
@@ -1026,6 +1181,7 @@ select {
   font-weight: 400;
 
   line-height: 1;
+
 }
 
 
@@ -1038,6 +1194,7 @@ select {
   gap: 10px 18px;
 
   margin-top: 12px;
+
 }
 
 
@@ -1050,6 +1207,7 @@ select {
   letter-spacing: 0.08em;
 
   text-transform: uppercase;
+
 }
 
 
@@ -1068,12 +1226,14 @@ select {
   justify-content: center;
 
   color: var(--gray);
+
 }
 
 
 .project-loading span {
 
   width: 24px;
+
   height: 24px;
 
   border:
@@ -1085,6 +1245,7 @@ select {
 
   animation:
     loadingSpin 0.9s linear infinite;
+
 }
 
 
@@ -1097,13 +1258,16 @@ select {
   letter-spacing: 0.10em;
 
   text-transform: uppercase;
+
 }
 
 
 @keyframes loadingSpin {
 
   to {
+
     transform: rotate(360deg);
+
   }
 
 }
@@ -1113,41 +1277,49 @@ select {
    TÍTULOS DE SECCIÓN
    ------------------------------------------------------------ */
 
+/*
+   Se recupera la escala contenida de la versión anterior.
+   No los hacemos gigantes.
+*/
+
 .section-kicker {
 
   margin: 0;
 
   font-family: var(--font-display);
 
-  font-size: clamp(42px, 4.2vw, 62px);
+  font-size:
+    clamp(38px, 4vw, 56px);
 
   font-weight: 500;
 
-  line-height: 0.98;
+  line-height: 0.95;
 
   letter-spacing: -0.025em;
 
   color: var(--black);
+
 }
 
 
 .section-kicker-en {
 
-  margin: 9px 0 0;
+  margin: 8px 0 0;
 
-  color: var(--gray);
+  color: var(--accent);
 
   font-family: var(--font-body);
 
-  font-size: 9px;
+  font-size: 8px;
 
   font-weight: 500;
 
   line-height: 1.3;
 
-  letter-spacing: 0.14em;
+  letter-spacing: 0.13em;
 
   text-transform: uppercase;
+
 }
 
 
@@ -1157,9 +1329,10 @@ select {
 
   height: 2px;
 
-  margin-top: 22px;
+  margin-top: 20px;
 
   background: var(--accent);
+
 }
 
 
@@ -1174,6 +1347,7 @@ select {
   padding:
     var(--section-space)
     0;
+
 }
 
 
@@ -1185,20 +1359,26 @@ select {
     4fr 8fr;
 
   margin-bottom: 65px;
+
 }
 
 
-.capabilities-heading > .section-kicker,
-.capabilities-heading > .section-kicker-en,
-.capabilities-heading > .section-rule {
+.capabilities-heading >
+.section-kicker,
+.capabilities-heading >
+.section-kicker-en,
+.capabilities-heading >
+.section-rule {
 
   grid-column: 1;
+
 }
 
 
 .capabilities-heading .section-rule {
 
   margin-top: 20px;
+
 }
 
 
@@ -1214,6 +1394,7 @@ select {
 
   border-left:
     1px solid var(--light-gray);
+
 }
 
 
@@ -1228,33 +1409,54 @@ select {
 
   border-bottom:
     1px solid var(--light-gray);
+
 }
 
 
 .capability-icon {
 
-  width: 42px;
-  height: 42px;
+  width: 30px;
 
-  margin-bottom: 22px;
+  height: 30px;
+
+  margin-bottom: 20px;
 
   color: var(--accent);
+
 }
 
 
 .capability-icon svg {
 
   width: 100%;
+
   height: 100%;
 
   fill: none;
 
   stroke: currentColor;
 
-  stroke-width: 1.25;
+  stroke-width: 1;
 
-  stroke-linecap: round;
-  stroke-linejoin: round;
+  stroke-linecap: square;
+
+  stroke-linejoin: miter;
+
+}
+
+
+.capability-number {
+
+  display: block;
+
+  margin-bottom: 20px;
+
+  color: var(--gray);
+
+  font-size: 8px;
+
+  letter-spacing: 0.10em;
+
 }
 
 
@@ -1264,35 +1466,27 @@ select {
 
   font-family: var(--font-display);
 
-  font-size: 29px;
+  font-size: 27px;
 
-  font-weight: 600;
+  font-weight: 400;
 
-  line-height: 1.02;
+  line-height: 1.05;
 
-  letter-spacing: -0.02em;
 }
 
 
 .capability-en-title {
 
-  display: block;
-
-  margin: 8px 0 20px;
+  margin: 6px 0 20px;
 
   color: var(--gray);
 
-  font-family: var(--font-body);
+  font-size: 8px;
 
-  font-size: 9px;
-
-  font-weight: 500;
-
-  line-height: 1.3;
-
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
 
   text-transform: uppercase;
+
 }
 
 
@@ -1307,6 +1501,7 @@ select {
   font-size: 10px;
 
   line-height: 1.7;
+
 }
 
 
@@ -1314,18 +1509,27 @@ select {
    FOOTER
    ------------------------------------------------------------ */
 
+/*
+   CAMBIO 3:
+   Añadimos el dorado como línea superior muy fina.
+   El resto continúa siendo negro para no convertirlo
+   en un bloque excesivamente decorativo.
+*/
+
 .main-footer {
 
   background: var(--black);
 
   color: var(--white);
 
-  border-top: 3px solid var(--accent);
+  border-top:
+    2px solid var(--accent);
 
   padding:
     80px
     0
     30px;
+
 }
 
 
@@ -1333,13 +1537,14 @@ select {
 
   width: 100%;
 
-  max-width: none;
+  max-width: var(--content-width);
 
-  margin: 0;
+  margin: 0 auto;
 
   padding:
     0
     var(--page-padding);
+
 }
 
 
@@ -1355,13 +1560,15 @@ select {
   padding-bottom: 60px;
 
   border-bottom:
-    1px solid rgba(255,255,255,0.12);
+    1px solid rgba(176,138,87,0.30);
+
 }
 
 
 .footer-services {
 
   max-width: 650px;
+
 }
 
 
@@ -1369,7 +1576,7 @@ select {
 
   margin: 0;
 
-  color: rgba(255,255,255,0.82);
+  color: rgba(255,255,255,0.68);
 
   font-size: 11px;
 
@@ -1378,6 +1585,7 @@ select {
   text-transform: uppercase;
 
   letter-spacing: 0.04em;
+
 }
 
 
@@ -1385,9 +1593,12 @@ select {
 
   margin-top: 7px !important;
 
-  color: rgba(176,138,87,0.86) !important;
+  color:
+    rgba(176,138,87,0.78)
+    !important;
 
   font-size: 9px !important;
+
 }
 
 
@@ -1402,22 +1613,25 @@ select {
   text-align: right;
 
   gap: 8px;
+
 }
 
 
 .footer-nav-column a {
 
-  color: rgba(255,255,255,0.78);
+  color: rgba(255,255,255,0.65);
 
   font-size: 10px;
 
   transition: color 0.2s ease;
+
 }
 
 
 .footer-nav-column a:hover {
 
   color: var(--accent);
+
 }
 
 
@@ -1439,6 +1653,7 @@ select {
     48px
     0
     42px;
+
 }
 
 
@@ -1453,34 +1668,44 @@ select {
   gap: 55px;
 
   width: 100%;
+
 }
 
+
+/*
+   CAMBIO 4:
+   Logos inferiores algo mayores.
+*/
 
 .footer-secondary-logo {
 
   width: auto;
 
-  max-width: 230px;
+  max-width: 205px;
 
-  max-height: 58px;
+  max-height: 52px;
 
   object-fit: contain;
 
-  opacity: 0.42;
+  opacity: 0.28;
 
   transition: opacity 0.25s ease;
+
 }
 
 
-.footer-logos a:hover .footer-secondary-logo {
+.footer-logos a:hover
+.footer-secondary-logo {
 
-  opacity: 0.28;
+  opacity: 0.50;
+
 }
 
 
 .footer-qr {
 
   width: 100px;
+
   height: 100px;
 
   margin-top: 28px;
@@ -1490,12 +1715,15 @@ select {
   opacity: 0.62;
 
   transition: opacity 0.25s ease;
+
 }
 
 
-.footer-identity > a:hover .footer-qr {
+.footer-identity > a:hover
+.footer-qr {
 
   opacity: 0.82;
+
 }
 
 
@@ -1503,7 +1731,8 @@ select {
 
   margin-top: 13px;
 
-  color: rgba(255,255,255,0.58);
+  color:
+    rgba(176,138,87,0.82);
 
   font-size: 9px;
 
@@ -1512,12 +1741,14 @@ select {
   text-transform: uppercase;
 
   transition: color 0.2s ease;
+
 }
 
 
 .footer-social-link:hover {
 
-  color: var(--accent);
+  color: var(--white);
+
 }
 
 
@@ -1530,6 +1761,7 @@ select {
   padding-top: 25px;
 
   text-align: center;
+
 }
 
 
@@ -1542,6 +1774,7 @@ select {
   font-size: 8px;
 
   letter-spacing: 0.06em;
+
 }
 
 
@@ -1594,6 +1827,15 @@ select {
 
     grid-template-columns:
       repeat(2, 1fr);
+
+  }
+
+
+  .footer-secondary-logo {
+
+    max-width: 185px;
+
+    max-height: 48px;
 
   }
 
@@ -1737,7 +1979,8 @@ select {
 
   .section-kicker {
 
-    font-size: clamp(42px, 14vw, 58px);
+    font-size:
+      clamp(36px, 12vw, 52px);
 
   }
 
@@ -1785,7 +2028,9 @@ select {
   .project-card-content {
 
     left: 24px;
+
     right: 24px;
+
     bottom: 24px;
 
   }
@@ -1843,9 +2088,9 @@ select {
 
   .footer-secondary-logo {
 
-    max-width: 170px;
+    max-width: 155px;
 
-    max-height: 48px;
+    max-height: 45px;
 
   }
 
@@ -1853,6 +2098,7 @@ select {
   .footer-qr {
 
     width: 90px;
+
     height: 90px;
 
   }
@@ -1877,11 +2123,14 @@ select {
   *::before,
   *::after {
 
-    animation-duration: 0.01ms !important;
+    animation-duration:
+      0.01ms !important;
 
-    animation-iteration-count: 1 !important;
+    animation-iteration-count:
+      1 !important;
 
-    transition-duration: 0.01ms !important;
+    transition-duration:
+      0.01ms !important;
 
   }
 
