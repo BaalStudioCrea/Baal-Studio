@@ -1,677 +1,1866 @@
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-  <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <meta
-    name="description"
-    content="Baal Studio — Documentación, conservación y análisis digital del patrimonio cultural."
-  >
-
-  <meta name="theme-color" content="#111111">
-
-  <title>Baal Studio — Documentación Patrimonial</title>
-
-  <link rel="stylesheet" href="./style.css">
-</head>
-
-
-<body>
-
-  <!-- =====================================================
-       HEADER
-       ===================================================== -->
-
-  <header class="main-header" id="main-header">
-
-    <div class="header-inner">
-
-      <a
-        href="./index.html"
-        class="header-logo-link"
-        aria-label="Baal Studio — Inicio"
-      >
-
-        <img
-          id="site-logo"
-          class="header-logo protected-image"
-          src=""
-          alt="Baal Studio"
-          width="180"
-          height="40"
-          draggable="false"
-        >
+/* ============================================================
+   BAAL STUDIO
+   STYLE.CSS — V04
+   ============================================================ */
+
+
+/* ------------------------------------------------------------
+   FUENTES LOCALES — GITHUB
+   ------------------------------------------------------------ */
+
+@font-face {
+  font-family: "Inter";
+  src: url("./fonts/InterVariable.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
 
-      </a>
+@font-face {
+  font-family: "Cormorant Garamond";
+  src: url("./fonts/CormorantGaramond-Light.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+}
 
+@font-face {
+  font-family: "Cormorant Garamond";
+  src: url("./fonts/CormorantGaramond-Regular.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
 
-      <nav
-        class="desktop-nav"
-        aria-label="Navegación principal"
-      >
-
-        <a
-          href="./index.html"
-          class="nav-link active"
-          aria-current="page"
-        >
-          <span>Inicio</span>
-          <span class="nav-link-en">Home</span>
-        </a>
-
-        <a
-          href="./proyectos.html"
-          class="nav-link"
-        >
-          <span>Proyectos</span>
-          <span class="nav-link-en">Projects</span>
-        </a>
-
-        <a
-          href="./about.html"
-          class="nav-link"
-        >
-          <span>Sobre mí</span>
-          <span class="nav-link-en">About</span>
-        </a>
+@font-face {
+  font-family: "Cormorant Garamond";
+  src: url("./fonts/CormorantGaramond-Medium.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
 
-        <a
-          href="./contact.html"
-          class="nav-link"
-        >
-          <span>Contacto</span>
-          <span class="nav-link-en">Contact</span>
-        </a>
+@font-face {
+  font-family: "Cormorant Garamond";
+  src: url("./fonts/CormorantGaramond-SemiBold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+}
 
-      </nav>
+@font-face {
+  font-family: "Cormorant Garamond";
+  src: url("./fonts/CormorantGaramond-Bold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
 
 
-      <button
-        class="mobile-menu-button"
-        id="mobile-menu-button"
-        type="button"
-        aria-label="Abrir menú"
-        aria-expanded="false"
-        aria-controls="mobile-menu"
-      >
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
+/* ------------------------------------------------------------
+   VARIABLES
+   ------------------------------------------------------------ */
 
-    </div>
+:root {
 
+  --bg: #f5f3ee;
+  --white: #ffffff;
+  --black: #111111;
+  --gray: #7a7a7a;
+  --light-gray: #d8d4cc;
+  --accent: #b08a57;
 
-    <div
-      class="mobile-menu"
-      id="mobile-menu"
-      aria-hidden="true"
-    >
+  --content-width: 1280px;
 
-      <nav aria-label="Navegación móvil">
+  --page-padding: 80px;
 
-        <a href="./index.html">
-          <span>Inicio</span>
-          <small>Home</small>
-        </a>
+  --section-space: 140px;
 
-        <a href="./proyectos.html">
-          <span>Proyectos</span>
-          <small>Projects</small>
-        </a>
+  --font-display: "Cormorant Garamond", serif;
+  --font-body: "Inter", sans-serif;
 
-        <a href="./about.html">
-          <span>Sobre mí</span>
-          <small>About</small>
-        </a>
+}
 
-        <a href="./contact.html">
-          <span>Contacto</span>
-          <small>Contact</small>
-        </a>
 
-      </nav>
+/* ------------------------------------------------------------
+   RESET
+   ------------------------------------------------------------ */
 
-    </div>
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
-  </header>
 
+html {
+  scroll-behavior: smooth;
+}
 
 
-  <main>
+body {
 
-    <!-- =====================================================
-         HERO
-         ===================================================== -->
+  margin: 0;
+  padding: 0;
 
-    <section
-      class="hero-section"
-      id="hero"
-      aria-labelledby="hero-title"
-    >
+  background: var(--bg);
+  color: var(--black);
 
-      <div class="hero-media">
+  font-family: var(--font-body);
 
-        <img
-          id="hero-background"
-          class="hero-background protected-image"
-          src=""
-          alt="Documentación patrimonial"
-          draggable="false"
-          fetchpriority="high"
-        >
+  font-size: 15px;
 
-        <div
-          class="hero-gradient"
-          aria-hidden="true"
-        ></div>
+  line-height: 1.7;
 
-      </div>
+  overflow-x: hidden;
+}
 
 
-      <div class="hero-content">
+img {
+  max-width: 100%;
+  display: block;
+}
 
-        <div class="hero-specialties">
 
-          <p class="hero-specialties-es">
-            DOCUMENTACIÓN PATRIMONIAL · PLANIMETRÍA · MAPEADO · LEVANTAMIENTO 3D · MODELADO 3D · RECONSTRUCCIÓN VIRTUAL · FOTOGRAFÍA CON DRONE
-          </p>
+a {
+  color: inherit;
+  text-decoration: none;
+}
 
-          <p class="hero-specialties-en">
-            HERITAGE DOCUMENTATION · PLANIMETRIC MAPPING · 3D SURVEY · VIRTUAL RECONSTRUCTION · DRONE PHOTOGRAPHY
-          </p>
 
-        </div>
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
 
 
-        <h1 id="hero-title">
-          Baal Studio
-        </h1>
+/* ------------------------------------------------------------
+   PROTECCIÓN
+   ------------------------------------------------------------ */
 
+.protected-image {
 
-        <div class="hero-description">
+  -webkit-user-drag: none;
 
-          <p>
-            Especialista en documentación y análisis del patrimonio cultural mediante flujos digitales de alta precisión, integrando planimetrías, mapeados, fotogrametría, modelado tridimensional y reconstrucción virtual para su aplicación en estudio, conservación y difusión.
-          </p>
+  user-select: none;
+  -webkit-user-select: none;
 
-          <p>
-            Specialist in cultural heritage documentation and analysis through high-precision digital workflows, integrating planimetry, mapping, photogrammetry, 3D modeling, and virtual reconstruction for research, conservation, and dissemination.
-          </p>
+  -webkit-touch-callout: none;
+}
 
-        </div>
 
-      </div>
+/* ------------------------------------------------------------
+   CONTENEDOR
+   ------------------------------------------------------------ */
 
-    </section>
+.section-container {
 
+  width: 100%;
 
+  max-width: none;
 
-    <!-- =====================================================
-         SOBRE EL ESTUDIO
-         ===================================================== -->
+  margin: 0;
 
-    <section
-      class="about-home-section"
-      id="sobre-estudio"
-    >
+  padding-left: var(--page-padding);
+  padding-right: var(--page-padding);
+}
 
-      <div class="section-container about-home-layout">
 
-        <div class="about-home-heading">
+/* ------------------------------------------------------------
+   HEADER
+   ------------------------------------------------------------ */
 
-          <p class="section-kicker">
-            Sobre el Estudio
-          </p>
+.main-header {
 
-          <p class="section-kicker-en">
-            About the Practice
-          </p>
+  position: fixed;
 
-          <div class="section-rule"></div>
+  top: 0;
+  left: 0;
+  right: 0;
 
-        </div>
+  z-index: 1000;
 
+  height: 64px;
 
-        <div class="about-home-content">
+  background: transparent;
 
-          <div class="bilingual-copy">
+  color: var(--white);
 
-            <p>
-              El estudio se centra en la documentación digital del patrimonio cultural mediante procedimientos precisos y verificables, aplicados a distintos contextos geográficos y tipologías de bienes.
-            </p>
+  transition:
+    background-color 0.35s ease,
+    backdrop-filter 0.35s ease;
+}
 
-            <p class="english-copy">
-              The practice focuses on digital documentation of cultural heritage through precise and verifiable procedures, applied to different geographical contexts and heritage typologies.
-            </p>
 
+.main-header.scrolled {
 
-            <div class="copy-separator"></div>
+  background: rgba(17,17,17,0.84);
 
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
 
-            <p>
-              Cada proyecto se aborda desde las necesidades específicas del bien documentado, seleccionando las herramientas y técnicas más adecuadas para generar información útil para su estudio, conservación o reconstrucción.
-            </p>
 
-            <p class="english-copy">
-              Each project is approached according to the specific needs of the documented heritage, selecting the most appropriate tools and techniques to generate useful information for study, conservation, or reconstruction purposes.
-            </p>
+.header-inner {
 
-          </div>
+  width: 100%;
+  height: 100%;
 
+  padding: 0 32px;
 
-          <div class="stats-grid">
+  display: flex;
 
-            <div class="stat-item">
-              <strong>8+</strong>
-              <span>Años de experiencia</span>
-              <small>Years experience</small>
-            </div>
+  align-items: center;
+  justify-content: space-between;
+}
 
-            <div class="stat-item">
-              <strong>30+</strong>
-              <span>Casos documentados</span>
-              <small>Cases documented</small>
-            </div>
 
-            <div class="stat-item">
-              <strong>2</strong>
-              <span>Países</span>
-              <small>Countries</small>
-            </div>
+.header-logo-link {
 
-            <div class="stat-item">
-              <strong>11</strong>
-              <span>Herramientas de software</span>
-              <small>Software tools</small>
-            </div>
+  display: flex;
 
-          </div>
+  align-items: center;
 
-        </div>
+  height: 100%;
+}
 
-      </div>
 
-    </section>
+.header-logo {
 
+  width: auto;
 
+  height: 40px;
 
-    <!-- =====================================================
-         PROYECTOS SELECCIONADOS
-         ===================================================== -->
+  max-width: 155px;
 
-    <section
-      class="projects-section"
-      id="proyectos-seleccionados"
-    >
+  object-fit: contain;
 
-      <div class="section-container">
+  opacity: 0.50;
 
-        <div class="section-heading-row">
+  transition: opacity 0.25s ease;
+}
 
-          <div class="section-heading">
 
-            <p class="section-kicker">
-              Proyectos Seleccionados
-            </p>
+.header-logo-link:hover .header-logo {
+  opacity: 0.70;
+}
 
-            <p class="section-kicker-en">
-              Selected Projects
-            </p>
 
-            <div class="section-rule"></div>
+/* ------------------------------------------------------------
+   NAV
+   ------------------------------------------------------------ */
 
-          </div>
+.desktop-nav {
 
+  display: flex;
 
-          <a
-            href="./proyectos.html"
-            class="view-all-link"
-          >
-            <span>Ver Todos</span>
-            <span>View All</span>
-            <span class="view-arrow">→</span>
-          </a>
+  align-items: center;
 
-        </div>
+  gap: 40px;
 
+  height: 100%;
+}
 
-        <div
-          id="selected-projects-grid"
-          class="selected-projects-grid"
-        >
 
-          <div class="project-loading">
-            <span></span>
-            <p>Cargando proyectos…</p>
-          </div>
+.nav-link {
 
-        </div>
+  position: relative;
 
-      </div>
+  display: flex;
 
-    </section>
+  flex-direction: column;
 
+  justify-content: center;
 
+  min-width: 58px;
 
-    <!-- =====================================================
-         CAPACIDADES
-         ===================================================== -->
+  height: 100%;
 
-    <section
-      class="capabilities-section"
-      id="capacidades"
-    >
+  color: rgba(255,255,255,0.92);
 
-      <div class="section-container">
+  font-size: 10px;
 
-        <div class="capabilities-heading">
+  letter-spacing: 0.08em;
 
-          <p class="section-kicker">
-            Capacidades
-          </p>
+  text-transform: uppercase;
+}
 
-          <p class="section-kicker-en">
-            Capabilities
-          </p>
 
-          <div class="section-rule"></div>
+.nav-link-en {
 
-        </div>
+  margin-top: -2px;
 
+  color: rgba(255,255,255,0.40);
 
-        <div class="capabilities-grid">
+  font-size: 8px;
 
+  letter-spacing: 0.10em;
+}
 
-          <article class="capability-item">
 
-            <div class="capability-icon">
-              <svg viewBox="0 0 48 48" aria-hidden="true"><rect x="12" y="7" width="24" height="34" rx="1"></rect><path d="M17 14h14M17 20h14M17 26h10M17 32h14"></path><path d="M29 7v7h7"></path></svg>
-            </div>
+.nav-link::after {
 
-            <h3>
-              Documentación del Patrimonio
-            </h3>
+  content: "";
 
-            <p class="capability-en-title">
-              Heritage Documentation
-            </p>
+  position: absolute;
 
-            <p>
-              Registro sistemático y preciso de bienes patrimoniales mediante procedimientos digitales orientados a su estudio, conservación y difusión.
-            </p>
+  left: 0;
+  bottom: 0;
 
-            <p class="capability-en-desc">
-              Systematic and precise recording of heritage assets using digital procedures aimed at research, conservation, and dissemination.
-            </p>
+  width: 0;
+  height: 1px;
 
-          </article>
+  background: var(--accent);
 
+  transition: width 0.25s ease;
+}
 
-          <article class="capability-item">
 
-            <div class="capability-icon">
-              <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 36h32"></path><path d="M12 36V12h24v24"></path><path d="M16 17h16M16 23h16M16 29h16"></path><path d="M8 9h32"></path></svg>
-            </div>
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 100%;
+}
 
-            <h3>
-              Planimetrías
-            </h3>
 
-            <p class="capability-en-title">
-              Planimetry
-            </p>
+/* ------------------------------------------------------------
+   MENÚ MÓVIL
+   ------------------------------------------------------------ */
 
-            <p>
-              Elaboración de plantas, alzados, secciones y documentación gráfica a partir de levantamientos y fuentes disponibles.
-            </p>
+.mobile-menu-button {
 
-            <p class="capability-en-desc">
-              Production of floor plans, elevations, sections, and graphic documentation based on surveys and available sources.
-            </p>
+  display: none;
 
-          </article>
+  width: 38px;
+  height: 38px;
 
+  padding: 8px;
 
-          <article class="capability-item">
+  border: 0;
 
-            <div class="capability-icon">
-              <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 9h32v30H8z"></path><path d="M8 17h32M18 9v30"></path><path d="M23 31l7-8 7 5"></path><circle cx="33" cy="16" r="2"></circle></svg>
-            </div>
+  background: transparent;
 
-            <h3>
-              Mapeados
-            </h3>
+  cursor: pointer;
+}
 
-            <p class="capability-en-title">
-              Mapping
-            </p>
 
-            <p>
-              Representación gráfica de patologías, materiales, intervenciones y otras variables relevantes para el análisis patrimonial.
-            </p>
+.mobile-menu-button span {
 
-            <p class="capability-en-desc">
-              Graphical mapping of pathologies, materials, interventions, and key variables for heritage analysis.
-            </p>
+  display: block;
 
-          </article>
+  width: 100%;
+  height: 1px;
 
+  margin: 5px 0;
 
-          <article class="capability-item">
+  background: var(--white);
 
-            <div class="capability-icon">
-              <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 6 39 15v18L24 42 9 33V15z"></path><path d="M9 15l15 9 15-9M24 24v18"></path><path d="M16 11l15 9"></path></svg>
-            </div>
+  transition:
+    transform 0.25s ease,
+    opacity 0.25s ease;
+}
 
-            <h3>
-              Levantamiento y Modelado 3D
-            </h3>
 
-            <p class="capability-en-title">
-              3D Survey &amp; Modeling
-            </p>
+.mobile-menu-button.open span:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
 
-            <p>
-              Captura y procesamiento tridimensional mediante fotogrametría y escaneado para generar modelos digitales de precisión.
-            </p>
 
-            <p class="capability-en-desc">
-              Three-dimensional capture and processing through photogrammetry and scanning to produce high-precision digital models.
-            </p>
+.mobile-menu-button.open span:nth-child(2) {
+  opacity: 0;
+}
 
-          </article>
 
+.mobile-menu-button.open span:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
+}
 
-          <article class="capability-item">
 
-            <div class="capability-icon">
-              <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M9 39V18l15-9 15 9v21"></path><path d="M9 39h30"></path><path d="M15 32h6v7M27 25h6v14M15 25h6v3"></path></svg>
-            </div>
+.mobile-menu {
 
-            <h3>
-              Reconstrucción Virtual
-            </h3>
+  position: fixed;
 
-            <p class="capability-en-title">
-              Virtual Reconstruction
-            </p>
+  top: 64px;
+  left: 0;
+  right: 0;
 
-            <p>
-              Reconstrucciones tridimensionales fundamentadas en fuentes documentales, arqueológicas y gráficas, diferenciando los distintos niveles de evidencia.
-            </p>
+  z-index: 999;
 
-            <p class="capability-en-desc">
-              3D reconstructions grounded in documentary, archaeological, and graphical sources, distinguishing varying levels of evidence.
-            </p>
+  max-height: 0;
 
-          </article>
+  overflow: hidden;
 
+  background: rgba(17,17,17,0.96);
 
-          <article class="capability-item">
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
 
-            <div class="capability-icon">
-              <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 20h12l4 4 4-4h12"></path><path d="M8 28h12l4-4 4 4h12"></path><circle cx="24" cy="24" r="4"></circle><path d="M14 14l-4-4M34 14l4-4M14 34l-4 4M34 34l4 4"></path></svg>
-            </div>
+  transition: max-height 0.35s ease;
+}
 
-            <h3>
-              Fotografía con Drone
-            </h3>
 
-            <p class="capability-en-title">
-              Drone Photography
-            </p>
+.mobile-menu.open {
+  max-height: 400px;
+}
 
-            <p>
-              Captura aérea para documentación territorial, arqueológica y arquitectónica, complementando los levantamientos terrestres.
-            </p>
 
-            <p class="capability-en-desc">
-              Aerial capture for site, archaeological, and architectural documentation, complementing terrestrial surveys.
-            </p>
+.mobile-menu nav {
 
-          </article>
+  display: flex;
 
+  flex-direction: column;
 
-        </div>
+  padding: 15px 24px 24px;
+}
 
-      </div>
 
-    </section>
+.mobile-menu a {
 
-  </main>
+  display: flex;
 
+  flex-direction: column;
 
+  padding: 14px 0;
 
-  <!-- =====================================================
-       FOOTER
-       ===================================================== -->
+  border-bottom:
+    1px solid rgba(255,255,255,0.12);
 
-  <footer class="main-footer">
+  color: white;
 
-    <div class="footer-container">
+  font-size: 12px;
 
+  letter-spacing: 0.08em;
 
-      <div class="footer-top">
+  text-transform: uppercase;
+}
 
 
-        <div class="footer-services">
+.mobile-menu small {
 
-          <p>
-            Documentación del Patrimonio · Planimetrías · Mapeados · Levantamiento y Modelado 3D · Reconstrucción Virtual · Fotografía con Drone
-          </p>
+  margin-top: 2px;
 
-          <p class="footer-services-en">
-            Heritage Documentation · Mapping · 3D Survey · Virtual reconstruction · Drone Photo
-          </p>
+  color: rgba(255,255,255,0.38);
 
-        </div>
+  font-size: 9px;
 
+  letter-spacing: 0.10em;
+}
 
-        <div class="footer-nav-column">
 
-          <a href="./index.html">
-            Inicio · Home
-          </a>
+/* ------------------------------------------------------------
+   HERO
+   ------------------------------------------------------------ */
 
-          <a href="./proyectos.html">
-            Proyectos · Projects
-          </a>
+.hero-section {
 
-          <a href="./about.html">
-            Sobre mí · About
-          </a>
+  position: relative;
 
-          <a href="./contact.html">
-            Contacto · Contact
-          </a>
+  width: 100%;
 
-        </div>
+  height: 100svh;
 
+  min-height: 680px;
 
-      </div>
+  overflow: hidden;
 
+  background: #111111;
 
+  color: var(--white);
+}
 
-      <div class="footer-identity">
 
-        <div class="footer-logos">
+.hero-media {
 
-          <img
-            id="footer-logo-baal"
-            class="footer-secondary-logo protected-image"
-            src=""
-            alt="Baal Studio"
-            draggable="false"
-          >
+  position: absolute;
 
+  inset: 0;
 
-          <img
-            id="footer-logo-lns"
-            class="footer-secondary-logo protected-image"
-            src=""
-            alt="LNS"
-            draggable="false"
-          >
+  overflow: hidden;
+}
 
-        </div>
 
+.hero-background {
 
-        <a
-          href="https://linktr.ee/baalstudio"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Baal Studio — Redes sociales"
-        >
+  position: absolute;
 
-          <img
-            id="footer-qr"
-            class="footer-qr protected-image"
-            src=""
-            alt="Redes sociales de Baal Studio"
-            width="100"
-            height="100"
-            draggable="false"
-          >
+  inset: 0;
 
-        </a>
+  width: 100%;
+  height: 100%;
 
+  object-fit: cover;
 
-        <a
-          href="https://linktr.ee/baalstudio"
-          class="footer-social-link"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          RRSS
-        </a>
+  object-position: center center;
 
-      </div>
+  transform: scale(1.085);
 
+  opacity: 0.40;
 
+  will-change: transform;
+}
 
-      <div class="footer-bottom">
 
-        <p>
-          © Juan Jesús Lupiáñez Moreno · Baal Studio · Todos los derechos reservados · All rights reserved.
-        </p>
+.hero-gradient {
 
-      </div>
+  position: absolute;
 
-    </div>
+  inset: 0;
 
-  </footer>
+  pointer-events: none;
 
+  background:
+    linear-gradient(
+      to top,
+      rgba(0,0,0,0.62) 0%,
+      rgba(0,0,0,0.25) 42%,
+      rgba(0,0,0,0.04) 76%,
+      rgba(0,0,0,0) 100%
+    );
+}
 
 
-  <script src="./script.js"></script>
+/* ------------------------------------------------------------
+   CONTENIDO HERO
+   ------------------------------------------------------------ */
 
-</body>
+.hero-content {
 
-</html>
+  position: absolute;
+
+  left: 0;
+  bottom: 0;
+
+  width: 100%;
+
+  z-index: 2;
+
+  padding:
+    0
+    var(--page-padding)
+    155px;
+}
+
+
+.hero-specialties {
+
+  width: 100%;
+
+  margin-bottom: 13px;
+
+  overflow: hidden;
+}
+
+
+.hero-specialties-es,
+.hero-specialties-en {
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: clip;
+
+  text-transform: uppercase;
+}
+
+
+.hero-specialties-es {
+
+  margin: 0;
+
+  color: #c8b89a;
+
+  font-size: 9px;
+
+  line-height: 1.4;
+
+  letter-spacing: 0.09em;
+}
+
+
+.hero-specialties-en {
+
+  margin: 3px 0 0;
+
+  color: rgba(255,255,255,0.38);
+
+  font-size: 7px;
+
+  line-height: 1.4;
+
+  letter-spacing: 0.10em;
+}
+
+
+.hero-content h1 {
+
+  margin: 0;
+
+  font-family: var(--font-display);
+
+  font-size: clamp(68px, 9vw, 138px);
+
+  font-weight: 400;
+
+  line-height: 0.82;
+
+  letter-spacing: -0.025em;
+}
+
+
+.hero-description {
+
+  max-width: 740px;
+
+  margin-top: 21px;
+}
+
+
+.hero-description p {
+
+  margin: 0;
+
+  color: rgba(255,255,255,0.90);
+
+  font-size: 12px;
+
+  line-height: 1.62;
+}
+
+
+.hero-description p + p {
+
+  margin-top: 5px;
+
+  color: rgba(255,255,255,0.38);
+
+  font-size: 9px;
+}
+
+
+/* ------------------------------------------------------------
+   SOBRE EL ESTUDIO
+   ------------------------------------------------------------ */
+
+.about-home-section {
+
+  background: var(--white);
+
+  padding:
+    var(--section-space)
+    0;
+}
+
+
+.about-home-layout {
+
+  display: grid;
+
+  grid-template-columns:
+    4fr 8fr;
+
+  column-gap: 0;
+}
+
+
+.about-home-heading {
+
+  padding-right: 70px;
+}
+
+
+.about-home-content {
+
+  padding-left: 0;
+}
+
+
+.bilingual-copy {
+
+  max-width: 760px;
+}
+
+
+.bilingual-copy p {
+
+  margin: 0;
+
+  font-family: var(--font-display);
+
+  font-size: 27px;
+
+  font-weight: 400;
+
+  line-height: 1.34;
+}
+
+
+.bilingual-copy .english-copy {
+
+  margin-top: 9px;
+
+  color: var(--gray);
+
+  font-family: var(--font-body);
+
+  font-size: 10px;
+
+  line-height: 1.7;
+}
+
+
+.copy-separator {
+
+  width: 100%;
+
+  height: 1px;
+
+  margin: 35px 0;
+
+  background: var(--light-gray);
+}
+
+
+.stats-grid {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 30px;
+
+  margin-top: 50px;
+}
+
+
+.stat-item {
+
+  display: flex;
+
+  flex-direction: column;
+}
+
+
+.stat-item strong {
+
+  font-family: var(--font-body);
+
+  font-size: 40px;
+
+  font-weight: 300;
+
+  line-height: 1;
+
+  letter-spacing: -0.02em;
+}
+
+
+.stat-item span {
+
+  margin-top: 9px;
+
+  font-size: 9px;
+
+  line-height: 1.4;
+
+  letter-spacing: 0.06em;
+
+  text-transform: uppercase;
+}
+
+
+.stat-item small {
+
+  margin-top: 3px;
+
+  color: var(--gray);
+
+  font-size: 7px;
+
+  letter-spacing: 0.06em;
+
+  text-transform: uppercase;
+}
+
+
+/* ------------------------------------------------------------
+   PROYECTOS
+   ------------------------------------------------------------ */
+
+.projects-section {
+
+  background: var(--bg);
+
+  padding:
+    var(--section-space)
+    0;
+}
+
+
+.section-heading-row {
+
+  display: grid;
+
+  grid-template-columns:
+    4fr 8fr;
+
+  align-items: start;
+
+  margin-bottom: 52px;
+}
+
+
+.section-heading {
+
+  padding-right: 70px;
+}
+
+
+.view-all-link {
+
+  justify-self: end;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  padding-bottom: 5px;
+
+  border-bottom:
+    1px solid var(--light-gray);
+
+  font-size: 9px;
+
+  letter-spacing: 0.09em;
+
+  text-transform: uppercase;
+}
+
+
+.view-all-link span:nth-child(2) {
+
+  color: var(--gray);
+
+  font-size: 8px;
+}
+
+
+.view-arrow {
+
+  color: var(--accent);
+
+  font-size: 16px;
+
+  line-height: 1;
+}
+
+
+/* ------------------------------------------------------------
+   TARJETAS DE PROYECTOS
+   ------------------------------------------------------------ */
+
+.selected-projects-grid {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(12, 1fr);
+
+  gap: 24px;
+}
+
+
+.project-card {
+
+  position: relative;
+
+  display: block;
+
+  overflow: hidden;
+
+  background: #dedbd4;
+
+  color: white;
+}
+
+
+.project-card-large {
+
+  grid-column: 1 / -1;
+
+  height: 560px;
+}
+
+
+.project-card-medium {
+
+  height: 420px;
+}
+
+
+.project-card-left {
+
+  grid-column: 1 / span 7;
+}
+
+
+.project-card-right {
+
+  grid-column: 8 / -1;
+}
+
+
+.project-card-media {
+
+  position: absolute;
+
+  inset: 0;
+
+  overflow: hidden;
+}
+
+
+.project-card-media img {
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+  opacity: 0.50;
+
+  transition:
+    transform 0.8s cubic-bezier(.2,.65,.2,1);
+}
+
+
+.project-card-large .project-card-media img {
+  object-fit: contain;
+  background: #dedbd4;
+}
+
+.project-card:hover
+.project-card-media img {
+
+  transform: scale(1.00);
+}
+
+
+.project-card-overlay {
+
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    linear-gradient(
+      to top,
+      rgba(0,0,0,0.68),
+      rgba(0,0,0,0.04) 70%
+    );
+}
+
+
+.project-card-content {
+
+  position: absolute;
+
+  left: 34px;
+  right: 34px;
+  bottom: 30px;
+
+  z-index: 3;
+}
+
+
+.project-card-location {
+
+  margin: 0 0 8px;
+
+  color: #c8b89a;
+
+  font-size: 9px;
+
+  letter-spacing: 0.12em;
+
+  text-transform: uppercase;
+}
+
+
+.project-card-title {
+
+  margin: 0;
+
+  max-width: 800px;
+
+  font-family: var(--font-display);
+
+  font-size: 40px;
+
+  font-weight: 400;
+
+  line-height: 1;
+}
+
+
+.project-card-meta {
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 10px 18px;
+
+  margin-top: 12px;
+}
+
+
+.project-card-meta span {
+
+  color: rgba(255,255,255,0.62);
+
+  font-size: 8px;
+
+  letter-spacing: 0.08em;
+
+  text-transform: uppercase;
+}
+
+
+.project-loading {
+
+  grid-column: 1 / -1;
+
+  min-height: 220px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  color: var(--gray);
+}
+
+
+.project-loading span {
+
+  width: 24px;
+  height: 24px;
+
+  border:
+    1px solid var(--light-gray);
+
+  border-top-color: var(--accent);
+
+  border-radius: 50%;
+
+  animation:
+    loadingSpin 0.9s linear infinite;
+}
+
+
+.project-loading p {
+
+  margin-top: 15px;
+
+  font-size: 9px;
+
+  letter-spacing: 0.10em;
+
+  text-transform: uppercase;
+}
+
+
+@keyframes loadingSpin {
+
+  to {
+    transform: rotate(360deg);
+  }
+
+}
+
+
+/* ------------------------------------------------------------
+   TÍTULOS DE SECCIÓN
+   ------------------------------------------------------------ */
+
+.section-kicker {
+
+  margin: 0;
+
+  font-family: var(--font-display);
+
+  font-size: clamp(32px, 3.2vw, 44px);
+
+  font-weight: 400;
+
+  line-height: 1;
+
+  letter-spacing: -0.015em;
+}
+
+
+.section-kicker-en {
+
+  margin: 9px 0 0;
+
+  color: var(--gray);
+
+  font-family: var(--font-body);
+
+  font-size: 9px;
+
+  font-weight: 500;
+
+  line-height: 1.3;
+
+  letter-spacing: 0.14em;
+
+  text-transform: uppercase;
+}
+
+
+.section-rule {
+
+  width: 52px;
+
+  height: 2px;
+
+  margin-top: 22px;
+
+  background: var(--accent);
+}
+
+
+/* ------------------------------------------------------------
+   CAPACIDADES
+   ------------------------------------------------------------ */
+
+.capabilities-section {
+
+  background: #eae7df;
+
+  padding:
+    var(--section-space)
+    0;
+}
+
+
+.capabilities-heading {
+
+  display: grid;
+
+  grid-template-columns:
+    4fr 8fr;
+
+  margin-bottom: 65px;
+}
+
+
+.capabilities-heading > .section-kicker,
+.capabilities-heading > .section-kicker-en,
+.capabilities-heading > .section-rule {
+
+  grid-column: 1;
+}
+
+
+.capabilities-heading .section-rule {
+
+  margin-top: 20px;
+}
+
+
+.capabilities-grid {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  border-top:
+    1px solid var(--light-gray);
+
+  border-left:
+    1px solid var(--light-gray);
+}
+
+
+.capability-item {
+
+  min-height: 285px;
+
+  padding: 32px;
+
+  border-right:
+    1px solid var(--light-gray);
+
+  border-bottom:
+    1px solid var(--light-gray);
+}
+
+
+.capability-icon {
+
+  width: 42px;
+
+  height: 42px;
+
+  margin-bottom: 22px;
+
+  color: var(--accent);
+}
+
+
+.capability-icon svg {
+
+  width: 100%;
+
+  height: 100%;
+
+  fill: none;
+
+  stroke: currentColor;
+
+  stroke-width: 1.25;
+
+  stroke-linecap: round;
+
+  stroke-linejoin: round;
+}
+
+
+.capability-item h3 {
+
+  margin: 0;
+
+  font-family: var(--font-display);
+
+  font-size: 27px;
+
+  font-weight: 400;
+
+  line-height: 1.05;
+}
+
+
+.capability-en-title {
+
+  display: block;
+
+  margin: 8px 0 20px;
+
+  color: var(--gray);
+
+  font-family: var(--font-body);
+
+  font-size: 9px;
+
+  font-weight: 500;
+
+  line-height: 1.3;
+
+  letter-spacing: 0.12em;
+
+  text-transform: uppercase;
+}
+
+
+.capability-item > p {
+
+  max-width: 330px;
+
+  margin: 0;
+
+  color: #56534e;
+
+  font-size: 10px;
+
+  line-height: 1.7;
+}
+
+
+.capability-en-desc {
+
+  margin-top: 5px !important;
+
+  color: var(--gray) !important;
+
+  font-size: 8.5px !important;
+
+  line-height: 1.6 !important;
+}
+
+
+/* ------------------------------------------------------------
+   FOOTER
+   ------------------------------------------------------------ */
+
+.main-footer {
+
+  background: var(--black);
+
+  color: var(--white);
+
+  padding:
+    80px
+    0
+    30px;
+}
+
+
+.footer-container {
+
+  width: 100%;
+
+  max-width: none;
+
+  margin: 0;
+
+  padding:
+    0
+    var(--page-padding);
+}
+
+
+.footer-top {
+
+  display: grid;
+
+  grid-template-columns:
+    8fr 4fr;
+
+  gap: 50px;
+
+  padding-bottom: 60px;
+
+  border-bottom:
+    1px solid rgba(255,255,255,0.12);
+}
+
+
+.footer-services {
+
+  max-width: 100%;
+}
+
+
+.footer-services p {
+
+  margin: 0;
+
+  color: rgba(255,255,255,0.68);
+
+  font-size: 9.5px;
+
+  line-height: 1.4;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.02em;
+
+  white-space: nowrap;
+}
+
+
+.footer-services-en {
+
+  margin-top: 7px !important;
+
+  color: rgba(255,255,255,0.32) !important;
+
+  font-size: 8.5px !important;
+
+  white-space: nowrap;
+}
+
+
+.footer-nav-column {
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-end;
+
+  text-align: right;
+
+  gap: 8px;
+}
+
+
+.footer-nav-column a {
+
+  color: rgba(255,255,255,0.65);
+
+  font-size: 10px;
+
+  transition: color 0.2s ease;
+}
+
+
+.footer-nav-column a:hover {
+
+  color: var(--accent);
+}
+
+
+/* ------------------------------------------------------------
+   IDENTIDAD FOOTER
+   ------------------------------------------------------------ */
+
+.footer-identity {
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding:
+    48px
+    0
+    42px;
+}
+
+
+.footer-logos {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 55px;
+}
+
+
+.footer-secondary-logo {
+
+  width: auto;
+
+  max-width: 170px;
+
+  max-height: 42px;
+
+  object-fit: contain;
+
+  opacity: 0.15;
+
+  transition: opacity 0.25s ease;
+}
+
+
+.footer-logos a:hover .footer-secondary-logo {
+
+  opacity: 0.28;
+}
+
+
+.footer-qr {
+
+  width: 100px;
+
+  height: 100px;
+
+  margin-top: 28px;
+
+  object-fit: contain;
+
+  opacity: 0.62;
+
+  transition: opacity 0.25s ease;
+}
+
+
+.footer-identity > a:hover .footer-qr {
+
+  opacity: 0.82;
+}
+
+
+.footer-social-link {
+
+  margin-top: 13px;
+
+  color: rgba(255,255,255,0.58);
+
+  font-size: 9px;
+
+  letter-spacing: 0.10em;
+
+  text-transform: uppercase;
+
+  transition: color 0.2s ease;
+}
+
+
+.footer-social-link:hover {
+
+  color: var(--accent);
+}
+
+
+/* ------------------------------------------------------------
+   COPYRIGHT
+   ------------------------------------------------------------ */
+
+.footer-bottom {
+
+  padding-top: 25px;
+
+  text-align: center;
+}
+
+
+.footer-bottom p {
+
+  margin: 0;
+
+  color: rgba(255,255,255,0.28);
+
+  font-size: 8px;
+
+  letter-spacing: 0.06em;
+}
+
+
+/* ------------------------------------------------------------
+   TABLET
+   ------------------------------------------------------------ */
+
+@media (max-width: 1000px) {
+
+  :root {
+    --page-padding: 48px;
+  }
+
+
+  .desktop-nav {
+    gap: 25px;
+  }
+
+
+  .hero-content {
+    padding-bottom: 100px;
+  }
+
+
+  .about-home-layout,
+  .section-heading-row,
+  .capabilities-heading {
+
+    grid-template-columns:
+      1fr 2fr;
+
+  }
+
+
+  .about-home-heading,
+  .section-heading {
+
+    padding-right: 45px;
+
+  }
+
+
+  .capabilities-grid {
+
+    grid-template-columns:
+      repeat(2, 1fr);
+
+  }
+
+
+  .footer-services p {
+
+    white-space: normal;
+
+  }
+
+}
+
+
+/* ------------------------------------------------------------
+   MÓVIL
+   ------------------------------------------------------------ */
+
+@media (max-width: 700px) {
+
+  :root {
+
+    --page-padding: 24px;
+
+    --section-space: 95px;
+
+  }
+
+
+  .header-inner {
+
+    padding: 0 24px;
+
+  }
+
+
+  .desktop-nav {
+    display: none;
+  }
+
+
+  .mobile-menu-button {
+    display: block;
+  }
+
+
+  .header-logo {
+
+    height: 26px;
+
+    max-width: 135px;
+
+  }
+
+
+  .hero-section {
+
+    min-height: 650px;
+
+  }
+
+
+  .hero-background {
+
+    object-position: center center;
+
+    transform: scale(1.12);
+
+    opacity: 0.60;
+
+  }
+
+
+  .hero-content {
+
+    padding:
+      0
+      24px
+      90px;
+
+  }
+
+
+  .hero-specialties-es,
+  .hero-specialties-en {
+
+    white-space: nowrap;
+
+    font-size: 6.2px;
+
+    letter-spacing: 0.06em;
+
+  }
+
+
+  .hero-content h1 {
+
+    font-size:
+      clamp(58px, 18vw, 82px);
+
+  }
+
+
+  .hero-description {
+
+    margin-top: 18px;
+
+  }
+
+
+  .hero-description p {
+
+    font-size: 10px;
+
+  }
+
+
+  .hero-description p + p {
+
+    font-size: 7.5px;
+
+  }
+
+
+  .about-home-layout,
+  .section-heading-row,
+  .capabilities-heading {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 35px;
+
+  }
+
+
+  .about-home-heading,
+  .section-heading {
+
+    padding-right: 0;
+
+  }
+
+
+  .bilingual-copy p {
+
+    font-size: 23px;
+
+  }
+
+
+  .stats-grid {
+
+    grid-template-columns:
+      repeat(2, 1fr);
+
+    gap: 35px 20px;
+
+    margin-top: 45px;
+
+  }
+
+
+  .selected-projects-grid {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 16px;
+
+  }
+
+
+  .project-card-large,
+  .project-card-medium {
+
+    width: 100%;
+
+    height: 420px;
+
+  }
+
+
+  .project-card-content {
+
+    left: 24px;
+    right: 24px;
+    bottom: 24px;
+
+  }
+
+
+  .project-card-title {
+
+    font-size: 32px;
+
+  }
+
+
+  .capabilities-grid {
+
+    grid-template-columns: 1fr;
+
+  }
+
+
+  .capability-item {
+
+    min-height: 245px;
+
+    padding: 27px;
+
+  }
+
+
+  .footer-top {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 40px;
+
+  }
+
+
+  .footer-nav-column {
+
+    align-items: flex-start;
+
+    text-align: left;
+
+  }
+
+
+  .footer-logos {
+
+    gap: 30px;
+
+  }
+
+
+  .footer-secondary-logo {
+
+    max-width: 125px;
+
+    max-height: 35px;
+
+  }
+
+
+  .footer-qr {
+
+    width: 90px;
+
+    height: 90px;
+
+  }
+
+}
+
+
+/* ------------------------------------------------------------
+   REDUCCIÓN DE MOVIMIENTO
+   ------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+
+  html {
+    scroll-behavior: auto;
+  }
+
+
+  *,
+  *::before,
+  *::after {
+
+    animation-duration: 0.01ms !important;
+
+    animation-iteration-count: 1 !important;
+
+    transition-duration: 0.01ms !important;
+
+  }
+
+}
