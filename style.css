@@ -599,13 +599,13 @@ select {
 
   font-family: var(--font-display);
 
-  font-size: clamp(68px, 9vw, 138px);
+  font-size: clamp(52px, 7.5vw, 100px);
 
-  font-weight: 400;
+  font-weight: 300;
 
-  line-height: 0.82;
+  line-height: 0.85;
 
-  letter-spacing: -0.025em;
+  letter-spacing: -0.015em;
 }
 
 
@@ -921,13 +921,17 @@ select {
   inset: 0;
 
   overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 
 .project-card-media img {
 
-  width: 100%;
-  height: 100%;
+  width: 85%;
+  height: 85%;
 
   object-fit: cover;
   opacity: 0.50;
@@ -939,13 +943,12 @@ select {
 
 .project-card-large .project-card-media img {
   object-fit: contain;
-  background: #dedbd4;
 }
 
 .project-card:hover
 .project-card-media img {
 
-  transform: scale(1.00);
+  transform: scale(1.05);
 }
 
 
@@ -1096,13 +1099,13 @@ select {
 
   font-family: var(--font-display);
 
-  font-size: clamp(32px, 3.2vw, 44px);
+  font-size: clamp(38px, 4vw, 54px);
 
-  font-weight: 400;
+  font-weight: 300;
 
   line-height: 1;
 
-  letter-spacing: -0.015em;
+  letter-spacing: -0.01em;
 }
 
 
@@ -1355,7 +1358,7 @@ select {
 
   margin: 0;
 
-  color: rgba(255,255,255,0.68);
+  color: #c8b89a;
 
   font-size: 9.5px;
 
@@ -1448,9 +1451,9 @@ select {
 
   width: auto;
 
-  max-width: 170px;
+  max-width: 220px;
 
-  max-height: 42px;
+  max-height: 55px;
 
   object-fit: contain;
 
@@ -1674,7 +1677,7 @@ select {
   .hero-content h1 {
 
     font-size:
-      clamp(58px, 18vw, 82px);
+      clamp(42px, 14vw, 68px);
 
   }
 
@@ -1822,9 +1825,9 @@ select {
 
   .footer-secondary-logo {
 
-    max-width: 125px;
+    max-width: 160px;
 
-    max-height: 35px;
+    max-height: 45px;
 
   }
 
