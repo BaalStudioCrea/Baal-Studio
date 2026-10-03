@@ -1,849 +1,98 @@
-const SUPABASE_URL = "https://fayxkqzqvthwqjtrvphk.supabase.co";
+/* ============================================================
+   BAAL STUDIO
+   SCRIPT.JS — V08
+   ============================================================ */
+
+
+/* ------------------------------------------------------------
+   CONFIGURACIÓN
+   ------------------------------------------------------------ */
+
+const SUPABASE_FUNCTION_BASE =
+  "https://hlyzyeatnbulyfiiwvsq.supabase.co/functions/v1";
+
 
 const FUNCTIONS = {
-  projects: `${SUPABASE_URL}/functions/v1/list-projects`,
-  assets: `${SUPABASE_URL}/functions/v1/get-site-assets`
+
+  siteAssets:
+    `${SUPABASE_FUNCTION_BASE}/get-site-assets`,
+
+  // CORREGIDO: Ahora apunta a list-projects
+  projects:
+    `${SUPABASE_FUNCTION_BASE}/list-projects`
+
 };
 
-function log(...args) {
-  console.log("[Baal Studio]", ...args);
-}
 
-function warn(...args) {
-  console.warn("[Baal Studio]", ...args);
-}
+/* ------------------------------------------------------------
+   INICIO
+   ------------------------------------------------------------ */
 
-function error(...args) {
-  console.error("[Baal Studio]", ...args);
-}
+document.addEventListener("DOMContentLoaded", () => {
 
-function isObject(value) {
-  return (
-    value !== null &&
-    typeof value === "object" &&
-    !Array.isArray(value)
-  );
-}
+  initHeader();
 
-function isString(value) {
-  return (
-    typeof value === "string" &&
-    value.trim().length > 0
-  );
-}
+  initMobileMenu();
 
-function normalizeText(value) {
-  if (!isString(value)) {
-    return "";
-  }
+  initProtection();
 
-  return value.trim();
-}
+  loadSiteAssets();
 
-function isProbablyImageUrl(value) {
-  if (!isString(value)) {
-    return false;
-  }
+  loadSelectedProjects();
 
-  const clean = value
-    .split("?")[0]
-    .split("#")[0]
-    .toLowerCase();
+});
 
-  return (
-    clean.endsWith(".jpg") ||
-    clean.endsWith(".jpeg") ||
-    clean.endsWith(".png") ||
-    clean.endsWith(".webp") ||
-    clean.endsWith(".gif") ||
-    clean.endsWith(".avif")
-  );
-}
 
-function isProbablyUrl(value) {
-  if (!isString(value)) {
-    return false;
-  }
+/* ------------------------------------------------------------
+   HEADER
+   ------------------------------------------------------------ */
 
-  return (
-    value.startsWith("http://") ||
-    value.startsWith("https://") ||
-    value.startsWith("blob:")
-  );
-}
+function initHeader() {
 
-async function loadSiteAssets() {
-  try {
-    log("Solicitando assets:", FUNCTIONS.assets);
-
-    const response = await fetch(FUNCTIONS.assets);
-
-    if (!response.ok) {
-      throw new Error(
-        `HTTP ${response.status} al cargar assets`
-      );
-    }
-
-    const data = await response.json();
-
-    log("Assets recibidos:", data);
-
-    if (!data || data.success !== true) {
-      throw new Error(
-        data?.error ||
-        "Respuesta no válida de get-site-assets"
-      );
-    }
-
-    applySiteAssets(data.assets || {});
-  } catch (err) {
-    error("Error cargando assets:", err);
-  }
-}
-
-function applySiteAssets(assets) {
-  if (!assets || typeof assets !== "object") {
-    return;
-  }
-
-  const siteLogo =
-    document.getElementById("site-logo");
-
-  const heroBackground =
-    document.getElementById("hero-background");
-
-  const footerLogoBaal =
-    document.getElementById("footer-logo-baal");
-
-  const footerLogoLns =
-    document.getElementById("footer-logo-lns");
-
-  const footerQr =
-    document.getElementById("footer-qr");
-
-  if (siteLogo && assets.logoPrincipal) {
-    siteLogo.src = assets.logoPrincipal;
-  }
-
-  if (heroBackground && assets.fondo) {
-    heroBackground.src = assets.fondo;
-  }
-
-  if (footerLogoBaal && assets.logoPrincipal) {
-    footerLogoBaal.src = assets.logoPrincipal;
-  }
-
-  if (footerLogoLns && assets.logoLNS) {
-    footerLogoLns.src = assets.logoLNS;
-  }
-
-  if (footerQr && assets.qr) {
-    footerQr.src = assets.qr;
-  }
-
-  log("Assets aplicados.");
-}
-
-function normalizeProject(project, index = 0) {
-  if (!isObject(project)) {
-    return null;
-  }
-
-  const rawName =
-    normalizeText(
-      project.name ||
-      project.folder ||
-      project.nombre ||
-      project.id ||
-      `Proyecto ${index + 1}`
-    );
-
-  const metadataTitle =
-    project?.metadata?.titulo ||
-    project?.metadata?.title ||
-    project?.metadata?.nombre ||
-    project?.metadata?.name ||
-    project?.titulo ||
-    project?.title ||
-    "";
-
-  const displayName =
-    String(metadataTitle || rawName)
-      .replace(/\s*[.!?]+\s*$/, "")
-      .trim();
-
-  const order = Number(
-    project.order ??
-    project.orden ??
-    project.position ??
-    project.posicion ??
-    index + 1
-  );
-
-  const cover =
-    extractCover(project);
-
-  const location =
-    normalizeText(
-      project.location ||
-      project.ubicacion ||
-      project.lugar ||
-      project.procedencia ||
-      project?.metadata?.ubicacion ||
-      project?.metadata?.location ||
-      ""
-    );
-
-  const year =
-    normalizeText(
-      project.year ||
-      project.ano ||
-      project.año ||
-      project.fecha ||
-      project?.metadata?.year ||
-      project?.metadata?.ano ||
-      project?.metadata?.año ||
-      ""
-    );
-
-  const category =
-    normalizeText(
-      project.category ||
-      project.categoria ||
-      project.tipo ||
-      project?.metadata?.category ||
-      project?.metadata?.categoria ||
-      ""
-    );
-
-  return {
-    ...project,
-    name: rawName,
-    displayName,
-    order,
-    cover,
-    location,
-    year,
-    category
-  };
-}
-
-function extractCover(project) {
-  if (!isObject(project)) {
-    return "";
-  }
-
-  if (
-    isObject(project.cover) &&
-    isString(project.cover.url)
-  ) {
-    return project.cover.url;
-  }
-
-  if (
-    isObject(project.cover) &&
-    isString(project.cover.signedUrl)
-  ) {
-    return project.cover.signedUrl;
-  }
-
-  if (isString(project.cover)) {
-    return project.cover;
-  }
-
-  const directCandidates = [
-    project.coverUrl,
-    project.cover_url,
-    project.imageUrl,
-    project.image_url,
-    project.image,
-    project.thumbnailUrl,
-    project.thumbnail_url,
-    project.thumbnail,
-    project.portada,
-    project.portadaUrl,
-    project.portada_url
-  ];
-
-  for (const candidate of directCandidates) {
-    const url =
-      extractUrlFromValue(candidate);
-
-    if (url) {
-      return url;
-    }
-  }
-
-  return findImageUrl(project);
-}
-
-function findImageUrl(value, depth = 0) {
-  if (depth > 6) {
-    return "";
-  }
-
-  if (isString(value)) {
-    if (
-      isProbablyUrl(value) &&
-      isProbablyImageUrl(value)
-    ) {
-      return value;
-    }
-
-    return "";
-  }
-
-  if (!isObject(value)) {
-    return "";
-  }
-
-  const priorityKeys = [
-    "cover",
-    "coverUrl",
-    "cover_url",
-    "image",
-    "imageUrl",
-    "image_url",
-    "thumbnail",
-    "thumbnailUrl",
-    "thumbnail_url",
-    "portada",
-    "portadaUrl",
-    "portada_url",
-    "url",
-    "signedUrl"
-  ];
-
-  for (const key of priorityKeys) {
-    if (!(key in value)) {
-      continue;
-    }
-
-    const found =
-      extractUrlFromValue(value[key]);
-
-    if (found) {
-      return found;
-    }
-  }
-
-  for (const key of Object.keys(value)) {
-    const found =
-      findImageUrl(
-        value[key],
-        depth + 1
-      );
-
-    if (found) {
-      return found;
-    }
-  }
-
-  return "";
-}
-
-function extractUrlFromValue(value) {
-  if (isString(value)) {
-    if (isProbablyUrl(value)) {
-      return value;
-    }
-
-    return "";
-  }
-
-  if (!isObject(value)) {
-    return "";
-  }
-
-  const candidates = [
-    value.url,
-    value.signedUrl,
-    value.signed_url,
-    value.publicUrl,
-    value.public_url,
-    value.href,
-    value.downloadUrl,
-    value.download_url
-  ];
-
-  for (const candidate of candidates) {
-    if (
-      isString(candidate) &&
-      isProbablyUrl(candidate)
-    ) {
-      return candidate;
-    }
-  }
-
-  return "";
-}
-
-async function loadSelectedProjects() {
-  const container =
-    document.getElementById(
-      "selected-projects-grid"
-    );
-
-  if (!container) {
-    return;
-  }
-
-  try {
-    log(
-      "Solicitando proyectos:",
-      FUNCTIONS.projects
-    );
-
-    const response =
-      await fetch(
-        FUNCTIONS.projects
-      );
-
-    if (!response.ok) {
-      throw new Error(
-        `HTTP ${response.status} al cargar proyectos`
-      );
-    }
-
-    const data =
-      await response.json();
-
-    log(
-      "Proyectos recibidos:",
-      data
-    );
-
-    if (
-      !data ||
-      data.success !== true
-    ) {
-      throw new Error(
-        data?.error ||
-        "Respuesta no válida de list-projects"
-      );
-    }
-
-    const projects =
-      Array.isArray(data.projects)
-        ? data.projects
-        : [];
-
-    const normalized =
-      projects
-        .map(
-          (project, index) =>
-            normalizeProject(
-              project,
-              index
-            )
-        )
-        .filter(Boolean)
-        .sort(
-          (a, b) =>
-            Number(a.order || 0) -
-            Number(b.order || 0)
-        );
-
-    renderSelectedProjects(
-      container,
-      normalized
-    );
-
-  } catch (err) {
-    error(
-      "Error cargando proyectos:",
-      err
-    );
-
-    container.innerHTML = `
-      <div class="project-loading">
-        <p>
-          No se pudieron cargar los proyectos.
-        </p>
-      </div>
-    `;
-  }
-}
-
-function renderSelectedProjects(
-  container,
-  projects
-) {
-  container.innerHTML = "";
-
-  if (!projects.length) {
-    container.innerHTML = `
-      <div class="project-loading">
-        <p>
-          No hay proyectos disponibles.
-        </p>
-      </div>
-    `;
-
-    return;
-  }
-
-  const selected =
-    projects.slice(0, 3);
-
-  selected.forEach(
-    (project, index) => {
-      const card =
-        createProjectCard(
-          project,
-          index
-        );
-
-      if (card) {
-        container.appendChild(card);
-      }
-    }
-  );
-}
-
-function createProjectCard(
-  project,
-  index
-) {
-  const card =
-    document.createElement(
-      "article"
-    );
-
-  card.className =
-    index === 0
-      ? "project-card project-card-large"
-      : "project-card project-card-medium";
-
-  const media =
-    document.createElement(
-      "div"
-    );
-
-  media.className =
-    "project-card-media protected-media";
-
-  const image =
-    document.createElement(
-      "img"
-    );
-
-  image.className =
-    "protected-image";
-
-  image.alt =
-    project.displayName ||
-    project.name ||
-    "Proyecto Baal Studio";
-
-  image.draggable =
-    false;
-
-  if (
-    typeof project.cover === "string" &&
-    project.cover.length > 0
-  ) {
-    image.src =
-      project.cover;
-
-    image.dataset.source =
-      "supabase-cover";
-
-    console.log(
-      `[Baal Studio] Cover asignado: ${project.displayName}`,
-      project.cover
-    );
-  }
-
-  image.addEventListener(
-    "load",
-    () => {
-      console.log(
-        `[Baal Studio] Cover cargado: ${project.displayName}`,
-        {
-          width:
-            image.naturalWidth,
-
-          height:
-            image.naturalHeight,
-
-          src:
-            image.src
-        }
-      );
-    }
-  );
-
-  image.addEventListener(
-    "error",
-    event => {
-      console.error(
-        `[Baal Studio] ERROR cargando cover: ${project.displayName}`,
-        {
-          url:
-            image.src,
-
-          event
-        }
-      );
-    }
-  );
-
-  media.appendChild(
-    image
-  );
-
-  const overlay =
-    document.createElement(
-      "div"
-    );
-
-  overlay.className =
-    "project-card-overlay";
-
-  media.appendChild(
-    overlay
-  );
-
-  card.appendChild(
-    media
-  );
-
-  const content =
-    document.createElement(
-      "div"
-    );
-
-  content.className =
-    "project-card-content";
-
-  if (project.location) {
-    const location =
-      document.createElement(
-        "p"
-      );
-
-    location.className =
-      "project-card-location";
-
-    location.textContent =
-      project.location;
-
-    content.appendChild(
-      location
-    );
-  }
-
-  const title =
-    document.createElement(
-      "h3"
-    );
-
-  title.className =
-    "project-card-title";
-
-  title.textContent =
-    project.displayName ||
-    project.name;
-
-  content.appendChild(
-    title
-  );
-
-  const meta =
-    document.createElement(
-      "div"
-    );
-
-  meta.className =
-    "project-card-meta";
-
-  if (project.year) {
-    const span =
-      document.createElement(
-        "span"
-      );
-
-    span.textContent =
-      project.year;
-
-    meta.appendChild(
-      span
-    );
-  }
-
-  if (project.category) {
-    const span =
-      document.createElement(
-        "span"
-      );
-
-    span.textContent =
-      project.category;
-
-    meta.appendChild(
-      span
-    );
-  }
-
-  if (meta.children.length) {
-    content.appendChild(
-      meta
-    );
-  }
-
-  card.appendChild(
-    content
-  );
-
-  card.addEventListener(
-    "click",
-    () => {
-      if (
-        project.url &&
-        isProbablyUrl(project.url)
-      ) {
-        window.location.href =
-          project.url;
-
-        return;
-      }
-
-      const params =
-        new URLSearchParams({
-          project:
-            project.name || ""
-        });
-
-      window.location.href =
-        `./proyectos.html?${params.toString()}`;
-    }
-  );
-
-  return card;
-}
-
-function setupMediaProtection() {
-  document.addEventListener(
-    "contextmenu",
-    event => {
-      const target =
-        event.target;
-
-      if (
-        target instanceof
-          HTMLImageElement ||
-        target.closest(
-          ".protected-media"
-        ) ||
-        target.closest(
-          ".protected-image"
-        )
-      ) {
-        event.preventDefault();
-      }
-    }
-  );
-
-  document.addEventListener(
-    "dragstart",
-    event => {
-      const target =
-        event.target;
-
-      if (
-        target instanceof
-          HTMLImageElement ||
-        target.closest(
-          ".protected-media"
-        ) ||
-        target.closest(
-          ".protected-image"
-        )
-      ) {
-        event.preventDefault();
-      }
-    }
-  );
-
-  document.addEventListener(
-    "selectstart",
-    event => {
-      const target =
-        event.target;
-
-      if (
-        target instanceof
-          HTMLImageElement ||
-        target.closest(
-          ".protected-media"
-        )
-      ) {
-        event.preventDefault();
-      }
-    }
-  );
-
-  document.addEventListener(
-    "keydown",
-    event => {
-      const key =
-        String(event.key).toLowerCase();
-
-      const forbidden =
-        (
-          event.ctrlKey ||
-          event.metaKey
-        ) &&
-        [
-          "s",
-          "u"
-        ].includes(key);
-
-      if (forbidden) {
-        event.preventDefault();
-      }
-    }
-  );
-}
-
-function setupHeaderScroll() {
   const header =
-    document.getElementById(
-      "main-header"
-    );
+    document.getElementById("main-header");
+
 
   if (!header) {
     return;
   }
 
-  const update =
-    () => {
-      if (
-        window.scrollY > 30
-      ) {
-        header.classList.add(
-          "scrolled"
-        );
-      } else {
-        header.classList.remove(
-          "scrolled"
-        );
-      }
-    };
 
-  update();
+  function updateHeader() {
+
+    if (window.scrollY > 30) {
+
+      header.classList.add("scrolled");
+
+    } else {
+
+      header.classList.remove("scrolled");
+
+    }
+
+  }
+
+
+  updateHeader();
+
 
   window.addEventListener(
     "scroll",
-    update,
+    updateHeader,
     {
       passive: true
     }
   );
+
 }
 
-function setupMobileMenu() {
+
+/* ------------------------------------------------------------
+   MENÚ MÓVIL
+   ------------------------------------------------------------ */
+
+function initMobileMenu() {
+
   const button =
     document.getElementById(
       "mobile-menu-button"
@@ -854,87 +103,1198 @@ function setupMobileMenu() {
       "mobile-menu"
     );
 
-  if (
-    !button ||
-    !menu
-  ) {
+
+  if (!button || !menu) {
     return;
   }
 
-  button.addEventListener(
-    "click",
-    () => {
-      const open =
-        button.classList.toggle(
-          "open"
-        );
 
-      menu.classList.toggle(
-        "open",
-        open
+  button.addEventListener("click", () => {
+
+    const isOpen =
+      button.classList.toggle("open");
+
+
+    menu.classList.toggle(
+      "open",
+      isOpen
+    );
+
+
+    button.setAttribute(
+      "aria-expanded",
+      String(isOpen)
+    );
+
+
+    menu.setAttribute(
+      "aria-hidden",
+      String(!isOpen)
+    );
+
+  });
+
+
+  menu.querySelectorAll("a").forEach(
+    link => {
+
+      link.addEventListener(
+        "click",
+        () => {
+
+          button.classList.remove("open");
+
+          menu.classList.remove("open");
+
+          button.setAttribute(
+            "aria-expanded",
+            "false"
+          );
+
+          menu.setAttribute(
+            "aria-hidden",
+            "true"
+          );
+
+        }
       );
 
-      button.setAttribute(
-        "aria-expanded",
-        String(open)
-      );
-
-      menu.setAttribute(
-        "aria-hidden",
-        String(!open)
-      );
     }
   );
 
-  menu
-    .querySelectorAll("a")
-    .forEach(
-      link => {
-        link.addEventListener(
-          "click",
-          () => {
-            button.classList.remove(
-              "open"
-            );
-
-            menu.classList.remove(
-              "open"
-            );
-
-            button.setAttribute(
-              "aria-expanded",
-              "false"
-            );
-
-            menu.setAttribute(
-              "aria-hidden",
-              "true"
-            );
-          }
-        );
-      }
-    );
 }
 
-document.addEventListener(
-  "DOMContentLoaded",
-  () => {
-    log(
-      "Inicializando Baal Studio V08..."
+
+/* ------------------------------------------------------------
+   ASSETS
+   ------------------------------------------------------------ */
+
+async function loadSiteAssets() {
+
+  try {
+
+    const response =
+      await fetch(
+        FUNCTIONS.siteAssets,
+        {
+          method: "GET",
+          headers: {
+            "Accept": "application/json"
+          }
+        }
+      );
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        `get-site-assets respondió ${response.status}`
+      );
+
+    }
+
+
+    const result =
+      await response.json();
+
+
+    if (
+      !result.success ||
+      !result.assets
+    ) {
+
+      throw new Error(
+        "get-site-assets no devolvió assets válidos."
+      );
+
+    }
+
+
+    const assets =
+      result.assets;
+
+
+    setImageSource(
+      "hero-background",
+      assets.fondo
     );
 
-    loadSiteAssets();
 
-    loadSelectedProjects();
-
-    setupMediaProtection();
-
-    setupHeaderScroll();
-
-    setupMobileMenu();
-
-    log(
-      "Inicialización completada."
+    setImageSource(
+      "site-logo",
+      assets.logoPrincipal
     );
+
+
+    setImageSource(
+      "footer-logo-baal",
+      assets.logoPrincipal
+    );
+
+
+    setImageSource(
+      "footer-logo-lns",
+      assets.logoLNS
+    );
+
+
+    setImageSource(
+      "footer-qr",
+      assets.qr
+    );
+
+
+    applyProtectionToImages();
+
+
+  } catch (error) {
+
+    console.error(
+      "Error cargando assets:",
+      error
+    );
+
   }
-);
+
+}
+
+
+/* ------------------------------------------------------------
+   ASIGNAR IMAGEN
+   ------------------------------------------------------------ */
+
+function setImageSource(
+  elementId,
+  source
+) {
+
+  const element =
+    document.getElementById(elementId);
+
+
+  if (
+    element &&
+    source
+  ) {
+
+    element.src =
+      source;
+
+  }
+
+}
+
+
+/* ------------------------------------------------------------
+   PROYECTOS
+   ------------------------------------------------------------ */
+
+async function loadSelectedProjects() {
+
+  const container =
+    document.getElementById(
+      "selected-projects-grid"
+    );
+
+
+  if (!container) {
+    return;
+  }
+
+
+  try {
+
+    const response =
+      await fetch(
+        FUNCTIONS.projects,
+        {
+          method: "GET",
+          headers: {
+            "Accept": "application/json"
+          }
+        }
+      );
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        `list-projects respondió ${response.status}`
+      );
+
+    }
+
+
+    const result =
+      await response.json();
+
+
+    const projects =
+      normalizeProjectsResponse(
+        result
+      );
+
+
+    if (!projects.length) {
+
+      showProjectsMessage(
+        container,
+        "No hay proyectos disponibles."
+      );
+
+      return;
+    }
+
+
+    projects.sort(
+      (a, b) =>
+        Number(a.order || 999) -
+        Number(b.order || 999)
+    );
+
+
+    const selected =
+      projects.slice(0, 3);
+
+
+    container.innerHTML = "";
+
+
+    selected.forEach(
+      (project, index) => {
+
+        const card =
+          createProjectCard(
+            project,
+            index
+          );
+
+
+        if (card) {
+
+          container.appendChild(card);
+
+        }
+
+      }
+    );
+
+
+    applyProtectionToImages();
+
+
+  } catch (error) {
+
+    console.error(
+      "Error cargando proyectos:",
+      error
+    );
+
+
+    showProjectsMessage(
+      container,
+      "No se han podido cargar los proyectos."
+    );
+
+  }
+
+}
+
+
+/* ------------------------------------------------------------
+   NORMALIZAR RESPUESTA
+   ------------------------------------------------------------ */
+
+function normalizeProjectsResponse(
+  result
+) {
+
+  if (!result) {
+    return [];
+  }
+
+
+  let projects = [];
+
+
+  if (Array.isArray(result)) {
+
+    projects = result;
+
+  } else if (
+    Array.isArray(result.projects)
+  ) {
+
+    projects = result.projects;
+
+  } else if (
+    Array.isArray(result.data)
+  ) {
+
+    projects = result.data;
+
+  } else if (
+    Array.isArray(result.results)
+  ) {
+
+    projects = result.results;
+
+  }
+
+
+  return projects
+    .map(normalizeProject)
+    .filter(Boolean);
+
+}
+
+
+/* ------------------------------------------------------------
+   NORMALIZAR PROYECTO
+   ------------------------------------------------------------ */
+
+function normalizeProject(
+  project
+) {
+
+  if (
+    !project ||
+    typeof project !== "object"
+  ) {
+
+    return null;
+
+  }
+
+
+  const rawName =
+    project.name ||
+    project.title ||
+    project.nombre ||
+    project.titulo ||
+    project.projectName ||
+    "";
+
+
+  let metadata =
+    project?.metadata ||
+    null;
+
+
+  if (typeof metadata === "string") {
+
+    try {
+
+      metadata = JSON.parse(metadata);
+
+    } catch (error) {
+
+      metadata = null;
+
+    }
+
+  }
+
+
+  const metadataTitle =
+    project?.title ||
+    metadata?.title ||
+    metadata?.titulo ||
+    metadata?.nombre ||
+    metadata?.name ||
+    project?.metadataTitle ||
+    project?.metadata_title ||
+    "";
+
+
+  const fallbackName =
+    String(rawName)
+      .replace(/\s*\(\d+\)\s*$/i, "")
+      .trim();
+
+
+  const displayName =
+    String(metadataTitle || fallbackName)
+      .replace(/\s*[.!?]+\s*$/, "")
+      .trim();
+
+
+  const order =
+    project.order ??
+    project.orden ??
+    project.position ??
+    999;
+
+
+  const cover =
+    extractCover(project);
+
+
+  const location =
+    metadata?.location ||
+    metadata?.localizacion ||
+    project.location ||
+    project.localizacion ||
+    "";
+
+
+  const year =
+    metadata?.year ||
+    metadata?.ano ||
+    metadata?.año ||
+    project.year ||
+    project.año ||
+    "";
+
+
+  const rawCategory =
+    metadata?.category ||
+    metadata?.categoria ||
+    project.category ||
+    project.categoria ||
+    "";
+
+
+  const category = Array.isArray(rawCategory)
+    ? rawCategory.slice(0, 2).join(", ")
+    : String(rawCategory);
+
+
+  return {
+
+    ...project,
+
+    metadata,
+
+    name: rawName,
+
+    displayName,
+
+    order,
+
+    cover,
+
+    location,
+
+    year,
+
+    category
+
+  };
+
+}
+
+
+/* ------------------------------------------------------------
+   EXTRAER COVER
+   ------------------------------------------------------------ */
+
+function extractCover(
+  project
+) {
+
+  const directCandidates = [
+
+    project.cover,
+
+    project.coverUrl,
+
+    project.cover_url,
+
+    project.coverURL,
+
+    project.image,
+
+    project.imageUrl,
+
+    project.image_url,
+
+    project.thumbnail,
+
+    project.thumbnailUrl,
+
+    project.thumbnail_url,
+
+    project.portada,
+
+    project.portadaUrl,
+
+    project.portada_url
+
+  ];
+
+
+  for (
+    const candidate
+    of directCandidates
+  ) {
+
+    const url =
+      extractUrlFromValue(
+        candidate
+      );
+
+
+    if (url) {
+
+      return url;
+
+    }
+
+  }
+
+
+  return findImageUrl(
+    project
+  );
+
+}
+
+
+/* ------------------------------------------------------------
+   EXTRAER URL DE UN VALOR
+   ------------------------------------------------------------ */
+
+function extractUrlFromValue(
+  value
+) {
+
+  if (!value) {
+    return "";
+  }
+
+
+  if (
+    typeof value === "string"
+  ) {
+
+    return isImageUrl(value)
+      ? value
+      : "";
+
+  }
+
+
+  if (
+    typeof value === "object"
+  ) {
+
+    const candidates = [
+
+      value.url,
+
+      value.signedUrl,
+
+      value.signed_url,
+
+      value.publicUrl,
+
+      value.public_url
+
+    ];
+
+
+    for (
+      const candidate
+      of candidates
+    ) {
+
+      if (
+        typeof candidate === "string" &&
+        candidate.length > 0
+      ) {
+
+        return candidate;
+
+      }
+
+    }
+
+  }
+
+
+  return "";
+
+}
+
+
+/* ------------------------------------------------------------
+   BUSCAR IMAGEN RECURSIVAMENTE
+   ------------------------------------------------------------ */
+
+function findImageUrl(
+  value,
+  depth = 0
+) {
+
+  if (
+    !value ||
+    depth > 5
+  ) {
+
+    return "";
+
+  }
+
+
+  if (
+    typeof value === "string"
+  ) {
+
+    return isImageUrl(value)
+      ? value
+      : "";
+
+  }
+
+
+  if (
+    typeof value !== "object"
+  ) {
+
+    return "";
+
+  }
+
+
+  const priorityKeys = [
+
+    "cover",
+    "coverUrl",
+    "cover_url",
+    "image",
+    "imageUrl",
+    "image_url",
+    "thumbnail",
+    "thumbnailUrl",
+    "thumbnail_url",
+    "portada",
+    "url",
+    "signedUrl",
+    "signed_url"
+
+  ];
+
+
+  for (
+    const key
+    of priorityKeys
+  ) {
+
+    if (
+      Object.prototype.hasOwnProperty.call(
+        value,
+        key
+      )
+    ) {
+
+      const result =
+        findImageUrl(
+          value[key],
+          depth + 1
+        );
+
+
+      if (result) {
+
+        return result;
+
+      }
+
+    }
+
+  }
+
+
+  for (
+    const key
+    of Object.keys(value)
+  ) {
+
+    if (
+      priorityKeys.includes(key)
+    ) {
+
+      continue;
+
+    }
+
+
+    const result =
+      findImageUrl(
+        value[key],
+        depth + 1
+      );
+
+
+    if (result) {
+
+      return result;
+
+    }
+
+  }
+
+
+  return "";
+
+}
+
+
+/* ------------------------------------------------------------
+   COMPROBAR URL DE IMAGEN
+   ------------------------------------------------------------ */
+
+function isImageUrl(
+  value
+) {
+
+  if (
+    typeof value !== "string"
+  ) {
+
+    return false;
+
+  }
+
+
+  const clean =
+    value
+      .split("?")[0]
+      .toLowerCase();
+
+
+  return (
+
+    clean.includes(".jpg") ||
+    clean.includes(".jpeg") ||
+    clean.includes(".png") ||
+    clean.includes(".webp") ||
+    clean.includes(".avif") ||
+    clean.includes(".gif")
+
+  );
+
+}
+
+
+/* ------------------------------------------------------------
+   CREAR TARJETA
+   ------------------------------------------------------------ */
+
+function createProjectCard(
+  project,
+  index
+) {
+
+  const card =
+    document.createElement("a");
+
+
+  card.classList.add(
+    "project-card"
+  );
+
+
+  if (index === 0) {
+
+    card.classList.add(
+      "project-card-large"
+    );
+
+  } else {
+
+    card.classList.add(
+      "project-card-medium"
+    );
+
+
+    if (index === 1) {
+
+      card.classList.add(
+        "project-card-left"
+      );
+
+    } else {
+
+      card.classList.add(
+        "project-card-right"
+      );
+
+    }
+
+  }
+
+
+  const projectName =
+    project.name || "";
+
+
+  const displayName =
+    project.displayName ||
+    projectName;
+
+
+  card.href =
+    `./proyectos.html?proyecto=${encodeURIComponent(projectName)}`;
+
+
+  card.setAttribute(
+    "aria-label",
+    `Ver proyecto ${displayName}`
+  );
+
+
+  const media =
+    document.createElement("div");
+
+
+  media.className =
+    "project-card-media protected-media";
+
+
+  const image =
+    document.createElement("img");
+
+
+  image.className =
+    "protected-image";
+
+
+  image.alt =
+    displayName;
+
+
+  image.loading =
+    index === 0
+      ? "eager"
+      : "lazy";
+
+
+  image.decoding =
+    "async";
+
+
+  image.draggable =
+    false;
+
+
+  if (project.cover) {
+
+    image.src =
+      project.cover;
+
+  }
+
+
+  media.appendChild(image);
+
+
+  const overlay =
+    document.createElement("div");
+
+
+  overlay.className =
+    "project-card-overlay";
+
+
+  media.appendChild(overlay);
+
+
+  const content =
+    document.createElement("div");
+
+
+  content.className =
+    "project-card-content";
+
+
+  if (project.location) {
+
+    const location =
+      document.createElement("p");
+
+
+    location.className =
+      "project-card-location";
+
+
+    location.textContent =
+      project.location;
+
+
+    content.appendChild(location);
+
+  }
+
+
+  const title =
+    document.createElement("h2");
+
+
+  title.className =
+    "project-card-title";
+
+
+  title.textContent =
+    displayName;
+
+
+  content.appendChild(title);
+
+
+  const meta =
+    document.createElement("div");
+
+
+  meta.className =
+    "project-card-meta";
+
+
+  if (project.year) {
+
+    const year =
+      document.createElement("span");
+
+
+    year.textContent =
+      project.year;
+
+
+    meta.appendChild(year);
+
+  }
+
+
+  if (project.category) {
+
+    const category =
+      document.createElement("span");
+
+
+    category.textContent =
+      project.category;
+
+
+    meta.appendChild(category);
+
+  }
+
+
+  if (
+    meta.children.length
+  ) {
+
+    content.appendChild(meta);
+
+  }
+
+
+  card.appendChild(media);
+
+  card.appendChild(content);
+
+
+  return card;
+
+}
+
+
+/* ------------------------------------------------------------
+   MENSAJE DE PROYECTOS
+   ------------------------------------------------------------ */
+
+function showProjectsMessage(
+  container,
+  message
+) {
+
+  container.innerHTML = "";
+
+
+  const element =
+    document.createElement("div");
+
+
+  element.className =
+    "project-loading";
+
+
+  const text =
+    document.createElement("p");
+
+
+  text.textContent =
+    message;
+
+
+  element.appendChild(text);
+
+
+  container.appendChild(
+    element
+  );
+
+}
+
+
+/* ------------------------------------------------------------
+   PROTECCIÓN
+   ------------------------------------------------------------ */
+
+function initProtection() {
+
+
+  document.addEventListener(
+    "contextmenu",
+    event => {
+
+      const target =
+        event.target;
+
+
+      if (
+        target.closest(
+          "input, textarea, select, [contenteditable='true'], video, audio, iframe"
+        )
+      ) {
+
+        return;
+
+      }
+
+
+      event.preventDefault();
+
+    }
+  );
+
+
+  document.addEventListener(
+    "dragstart",
+    event => {
+
+      const target =
+        event.target;
+
+
+      if (
+        target instanceof HTMLImageElement ||
+        target.closest?.(".protected-media")
+      ) {
+
+        event.preventDefault();
+
+      }
+
+    }
+  );
+
+
+  document.addEventListener(
+    "keydown",
+    event => {
+
+      const key =
+        event.key.toLowerCase();
+
+
+      const modifier =
+        event.ctrlKey ||
+        event.metaKey;
+
+
+      if (
+        modifier &&
+        (
+          key === "s" ||
+          key === "u"
+        )
+      ) {
+
+        event.preventDefault();
+
+        return;
+
+      }
+
+
+      if (
+        modifier &&
+        event.shiftKey &&
+        (
+          key === "i" ||
+          key === "j" ||
+          key === "c"
+        )
+      ) {
+
+        event.preventDefault();
+
+        return;
+
+      }
+
+
+      if (
+        event.key === "F12"
+      ) {
+
+        event.preventDefault();
+
+      }
+
+    }
+  );
+
+
+  applyProtectionToImages();
+
+}
+
+
+/* ------------------------------------------------------------
+   PROTECCIÓN DE IMÁGENES
+   ------------------------------------------------------------ */
+
+function applyProtectionToImages() {
+
+  document
+    .querySelectorAll(
+      "img.protected-image"
+    )
+    .forEach(
+      image => {
+
+        image.setAttribute(
+          "draggable",
+          "false"
+        );
+
+
+        image.style.userSelect =
+          "none";
+
+
+        image.style.webkitUserDrag =
+          "none";
+
+      }
+    );
+
+
+  document
+    .querySelectorAll(
+      ".project-card-media"
+    )
+    .forEach(
+      media => {
+
+        media.classList.add(
+          "protected-media"
+        );
+
+      }
+    );
+
+}
