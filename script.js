@@ -1,274 +1,157 @@
 /* ============================================================
    BAAL STUDIO
-   SCRIPT.JS — RECOVERY V08
+   SCRIPT.JS — V08
    ============================================================ */
 
 
 /* ------------------------------------------------------------
-   CONFIGURACIÓN
+   CONFIGURACIÓN GENERAL
    ------------------------------------------------------------ */
 
-const SUPABASE_FUNCTION_BASE =
-  "https://hlyzyeatnbulyfiiwvsq.supabase.co/functions/v1";
-
+const SUPABASE_URL = "https://fayxkqzqvthwqjtrvphk.supabase.co";
 
 const FUNCTIONS = {
 
-  siteAssets:
-    `${SUPABASE_FUNCTION_BASE}/get-site-assets`,
-
   projects:
-    `${SUPABASE_FUNCTION_BASE}/list-projects`
+    `${SUPABASE_URL}/functions/v1/list-projects`,
+
+  assets:
+    `${SUPABASE_URL}/functions/v1/get-site-assets`
 
 };
 
 
 /* ------------------------------------------------------------
-   INICIO
+   UTILIDADES
    ------------------------------------------------------------ */
 
-document.addEventListener("DOMContentLoaded", () => {
+function log(...args) {
+  console.log("[Baal Studio]", ...args);
+}
 
-  initHeader();
 
-  initMobileMenu();
+function warn(...args) {
+  console.warn("[Baal Studio]", ...args);
+}
 
-  initProtection();
 
-  loadSiteAssets();
+function error(...args) {
+  console.error("[Baal Studio]", ...args);
+}
 
-  loadSelectedProjects();
 
-});
+function isObject(value) {
+
+  return (
+    value !== null &&
+    typeof value === "object" &&
+    !Array.isArray(value)
+  );
+
+}
+
+
+function isString(value) {
+
+  return (
+    typeof value === "string" &&
+    value.trim().length > 0
+  );
+
+}
+
+
+function normalizeText(value) {
+
+  if (!isString(value)) {
+    return "";
+  }
+
+  return value.trim();
+
+}
 
 
 /* ------------------------------------------------------------
-   HEADER
+   URL
    ------------------------------------------------------------ */
 
-function initHeader() {
+function isProbablyImageUrl(value) {
 
-  const header =
-    document.getElementById("main-header");
-
-
-  if (!header) {
-    return;
+  if (!isString(value)) {
+    return false;
   }
 
+  const clean = value
+    .split("?")[0]
+    .split("#")[0]
+    .toLowerCase();
 
-  function updateHeader() {
+  return (
+    clean.endsWith(".jpg") ||
+    clean.endsWith(".jpeg") ||
+    clean.endsWith(".png") ||
+    clean.endsWith(".webp") ||
+    clean.endsWith(".gif") ||
+    clean.endsWith(".avif")
+  );
 
-    if (window.scrollY > 30) {
+}
 
-      header.classList.add("scrolled");
 
-    } else {
+function isProbablyUrl(value) {
 
-      header.classList.remove("scrolled");
-
-    }
-
+  if (!isString(value)) {
+    return false;
   }
 
-
-  updateHeader();
-
-
-  window.addEventListener(
-    "scroll",
-    updateHeader,
-    {
-      passive: true
-    }
+  return (
+    value.startsWith("http://") ||
+    value.startsWith("https://") ||
+    value.startsWith("blob:")
   );
 
 }
 
 
 /* ------------------------------------------------------------
-   MENÚ MÓVIL
-   ------------------------------------------------------------ */
-
-function initMobileMenu() {
-
-  const button =
-    document.getElementById(
-      "mobile-menu-button"
-    );
-
-  const menu =
-    document.getElementById(
-      "mobile-menu"
-    );
-
-
-  if (!button || !menu) {
-    return;
-  }
-
-
-  button.addEventListener("click", () => {
-
-    const isOpen =
-      button.classList.toggle("open");
-
-
-    menu.classList.toggle(
-      "open",
-      isOpen
-    );
-
-
-    button.setAttribute(
-      "aria-expanded",
-      String(isOpen)
-    );
-
-
-    menu.setAttribute(
-      "aria-hidden",
-      String(!isOpen)
-    );
-
-  });
-
-
-  menu.querySelectorAll("a").forEach(
-    link => {
-
-      link.addEventListener(
-        "click",
-        () => {
-
-          button.classList.remove("open");
-
-          menu.classList.remove("open");
-
-          button.setAttribute(
-            "aria-expanded",
-            "false"
-          );
-
-          menu.setAttribute(
-            "aria-hidden",
-            "true"
-          );
-
-        }
-      );
-
-    }
-  );
-
-}
-
-
-/* ------------------------------------------------------------
-   ASSETS GENERALES
+   ASSETS
    ------------------------------------------------------------ */
 
 async function loadSiteAssets() {
 
   try {
 
-    console.log(
-      "[Baal Studio] Cargando assets..."
-    );
+    log("Solicitando assets:", FUNCTIONS.assets);
 
-
-    const response =
-      await fetch(
-        FUNCTIONS.siteAssets,
-        {
-          method: "GET",
-          headers: {
-            "Accept": "application/json"
-          }
-        }
-      );
-
+    const response = await fetch(FUNCTIONS.assets);
 
     if (!response.ok) {
 
       throw new Error(
-        `get-site-assets respondió ${response.status}`
+        `HTTP ${response.status} al cargar assets`
       );
 
     }
 
+    const data = await response.json();
 
-    const result =
-      await response.json();
+    log("Assets recibidos:", data);
 
-
-    console.log(
-      "[Baal Studio] Respuesta get-site-assets:",
-      result
-    );
-
-
-    if (
-      !result ||
-      result.success !== true ||
-      !result.assets
-    ) {
+    if (!data || data.success !== true) {
 
       throw new Error(
-        "get-site-assets no devolvió assets válidos."
+        data?.error ||
+        "Respuesta no válida de get-site-assets"
       );
 
     }
 
+    applySiteAssets(data.assets || {});
 
-    const assets =
-      result.assets;
+  } catch (err) {
 
-
-    setImageSource(
-      "hero-background",
-      assets.fondo
-    );
-
-
-    setImageSource(
-      "site-logo",
-      assets.logoPrincipal
-    );
-
-
-    setImageSource(
-      "footer-logo-baal",
-      assets.logoPrincipal
-    );
-
-
-    setImageSource(
-      "footer-logo-lns",
-      assets.logoLNS
-    );
-
-
-    setImageSource(
-      "footer-qr",
-      assets.qr
-    );
-
-
-    applyProtectionToImages();
-
-
-    console.log(
-      "[Baal Studio] Assets cargados correctamente."
-    );
-
-
-  } catch (error) {
-
-    console.error(
-      "[Baal Studio] Error cargando assets:",
-      error
-    );
+    error("Error cargando assets:", err);
 
   }
 
@@ -276,244 +159,68 @@ async function loadSiteAssets() {
 
 
 /* ------------------------------------------------------------
-   ASIGNAR IMAGEN
+   APLICAR ASSETS
    ------------------------------------------------------------ */
 
-function setImageSource(
-  elementId,
-  source
-) {
+function applySiteAssets(assets) {
 
-  const element =
-    document.getElementById(elementId);
-
-
-  if (!element) {
-
-    console.warn(
-      `[Baal Studio] No existe el elemento #${elementId}`
-    );
-
+  if (!assets || typeof assets !== "object") {
     return;
+  }
+
+
+  const siteLogo =
+    document.getElementById("site-logo");
+
+  const heroBackground =
+    document.getElementById("hero-background");
+
+  const footerLogoBaal =
+    document.getElementById("footer-logo-baal");
+
+  const footerLogoLns =
+    document.getElementById("footer-logo-lns");
+
+  const footerQr =
+    document.getElementById("footer-qr");
+
+
+  if (siteLogo && assets.logoPrincipal) {
+
+    siteLogo.src = assets.logoPrincipal;
 
   }
 
 
-  if (!source) {
+  if (heroBackground && assets.fondo) {
 
-    console.warn(
-      `[Baal Studio] No hay URL para #${elementId}`
-    );
-
-    return;
+    heroBackground.src = assets.fondo;
 
   }
 
 
-  element.src =
-    source;
+  if (footerLogoBaal && assets.logoPrincipal) {
 
-
-  console.log(
-    `[Baal Studio] Imagen asignada: #${elementId}`
-  );
-
-}
-
-
-/* ------------------------------------------------------------
-   PROYECTOS
-   ------------------------------------------------------------ */
-
-async function loadSelectedProjects() {
-
-  const container =
-    document.getElementById(
-      "selected-projects-grid"
-    );
-
-
-  if (!container) {
-
-    console.warn(
-      "[Baal Studio] No existe #selected-projects-grid"
-    );
-
-    return;
+    footerLogoBaal.src = assets.logoPrincipal;
 
   }
 
 
-  try {
+  if (footerLogoLns && assets.logoLNS) {
 
-    console.log(
-      "[Baal Studio] Cargando proyectos..."
-    );
-
-
-    const response =
-      await fetch(
-        FUNCTIONS.projects,
-        {
-          method: "GET",
-          headers: {
-            "Accept": "application/json"
-          }
-        }
-      );
-
-
-    if (!response.ok) {
-
-      throw new Error(
-        `list-projects respondió ${response.status}`
-      );
-
-    }
-
-
-    const result =
-      await response.json();
-
-
-    console.log(
-      "[Baal Studio] Respuesta list-projects:",
-      result
-    );
-
-
-    const projects =
-      normalizeProjectsResponse(
-        result
-      );
-
-
-    console.log(
-      "[Baal Studio] Proyectos normalizados:",
-      projects
-    );
-
-
-    if (!projects.length) {
-
-      showProjectsMessage(
-        container,
-        "No hay proyectos disponibles."
-      );
-
-      return;
-
-    }
-
-
-    projects.sort(
-      (a, b) =>
-        Number(a.order || 999) -
-        Number(b.order || 999)
-    );
-
-
-    const selected =
-      projects.slice(0, 3);
-
-
-    container.innerHTML = "";
-
-
-    selected.forEach(
-      (project, index) => {
-
-        const card =
-          createProjectCard(
-            project,
-            index
-          );
-
-
-        if (card) {
-
-          container.appendChild(card);
-
-        }
-
-      }
-    );
-
-
-    applyProtectionToImages();
-
-
-    console.log(
-      "[Baal Studio] Proyectos cargados correctamente."
-    );
-
-
-  } catch (error) {
-
-    console.error(
-      "[Baal Studio] Error cargando proyectos:",
-      error
-    );
-
-
-    showProjectsMessage(
-      container,
-      "No se han podido cargar los proyectos."
-    );
-
-  }
-
-}
-
-
-/* ------------------------------------------------------------
-   NORMALIZAR RESPUESTA
-   ------------------------------------------------------------ */
-
-function normalizeProjectsResponse(
-  result
-) {
-
-  if (!result) {
-    return [];
-  }
-
-
-  let projects = [];
-
-
-  if (Array.isArray(result)) {
-
-    projects =
-      result;
-
-  } else if (
-    Array.isArray(result.projects)
-  ) {
-
-    projects =
-      result.projects;
-
-  } else if (
-    Array.isArray(result.data)
-  ) {
-
-    projects =
-      result.data;
-
-  } else if (
-    Array.isArray(result.results)
-  ) {
-
-    projects =
-      result.results;
+    footerLogoLns.src = assets.logoLNS;
 
   }
 
 
-  return projects
-    .map(normalizeProject)
-    .filter(Boolean);
+  if (footerQr && assets.qr) {
+
+    footerQr.src = assets.qr;
+
+  }
+
+
+  log("Assets aplicados.");
 
 }
 
@@ -522,179 +229,93 @@ function normalizeProjectsResponse(
    NORMALIZAR PROYECTO
    ------------------------------------------------------------ */
 
-function normalizeProject(
-  project
-) {
+function normalizeProject(project, index = 0) {
 
-  if (
-    !project ||
-    typeof project !== "object"
-  ) {
-
+  if (!isObject(project)) {
     return null;
-
   }
 
-
-  /*
-     NOMBRE DE CARPETA / IDENTIFICADOR
-  */
 
   const rawName =
-    project.name ||
-    project.projectName ||
-    project.nombre ||
-    project.title ||
-    project.titulo ||
+    normalizeText(
+      project.name ||
+      project.folder ||
+      project.nombre ||
+      project.id ||
+      `Proyecto ${index + 1}`
+    );
+
+
+  const metadataTitle =
+    project?.metadata?.titulo ||
+    project?.metadata?.title ||
+    project?.metadata?.nombre ||
+    project?.metadata?.name ||
+    project?.titulo ||
+    project?.title ||
     "";
-
-
-  /*
-     METADATA
-  */
-
-  let metadata =
-    project.metadata ||
-    null;
-
-
-  if (
-    typeof metadata === "string"
-  ) {
-
-    try {
-
-      metadata =
-        JSON.parse(metadata);
-
-    } catch (error) {
-
-      metadata =
-        null;
-
-    }
-
-  }
-
-
-  /*
-     TÍTULO VISIBLE
-
-     Primero utilizamos los campos que
-     list-projects ya devuelve directamente.
-  */
-
-  const titleFromResponse =
-    project.titulo ||
-    project.title ||
-    "";
-
-
-  const titleFromMetadata =
-    metadata?.titulo ||
-    metadata?.title ||
-    metadata?.nombre ||
-    metadata?.name ||
-    "";
-
-
-  const fallbackName =
-    String(rawName)
-      .replace(
-        /\s*\(\d+\)\s*$/i,
-        ""
-      )
-      .trim();
 
 
   const displayName =
-    String(
-      titleFromResponse ||
-      titleFromMetadata ||
-      fallbackName
-    )
-      .replace(
-        /\s*[.!?]+\s*$/,
-        ""
-      )
+    String(metadataTitle || rawName)
+      .replace(/\s*[.!?]+\s*$/, "")
       .trim();
 
 
-  /*
-     ORDEN
-  */
-
-  const order =
+  const order = Number(
     project.order ??
     project.orden ??
     project.position ??
-    999;
+    project.posicion ??
+    index + 1
+  );
 
-
-  /*
-     COVER
-  */
 
   const cover =
     extractCover(project);
 
 
-  /*
-     LOCALIZACIÓN
-  */
-
   const location =
-    project.location ||
-    project.localizacion ||
-    project.ubicacion ||
-    project.place ||
-    metadata?.location ||
-    metadata?.localizacion ||
-    "";
+    normalizeText(
+      project.location ||
+      project.ubicacion ||
+      project.lugar ||
+      project.procedencia ||
+      project?.metadata?.ubicacion ||
+      project?.metadata?.location ||
+      ""
+    );
 
-
-  /*
-     AÑO
-  */
 
   const year =
-    project.year ||
-    project.año ||
-    project.ano ||
-    metadata?.year ||
-    metadata?.año ||
-    metadata?.ano ||
-    "";
-
-
-  /*
-     CATEGORÍA
-  */
-
-  const rawCategory =
-    project.category ||
-    project.categoria ||
-    metadata?.category ||
-    metadata?.categoria ||
-    "";
+    normalizeText(
+      project.year ||
+      project.ano ||
+      project.año ||
+      project.fecha ||
+      project?.metadata?.year ||
+      project?.metadata?.ano ||
+      project?.metadata?.año ||
+      ""
+    );
 
 
   const category =
-    Array.isArray(rawCategory)
-      ? rawCategory
-          .slice(0, 2)
-          .join(", ")
-      : String(rawCategory);
+    normalizeText(
+      project.category ||
+      project.categoria ||
+      project.tipo ||
+      project?.metadata?.category ||
+      project?.metadata?.categoria ||
+      ""
+    );
 
 
   return {
 
     ...project,
 
-    metadata,
-
-    name:
-      rawName,
+    name: rawName,
 
     displayName,
 
@@ -717,60 +338,35 @@ function normalizeProject(
    EXTRAER COVER
    ------------------------------------------------------------ */
 
-function extractCover(
-  project
-) {
+function extractCover(project) {
 
-  if (
-    !project ||
-    typeof project !== "object"
-  ) {
-
+  if (!isObject(project)) {
     return "";
-
   }
 
 
-  /*
-     CASO PRINCIPAL DE list-projects:
-
-     cover: {
-       file: "cover.webp",
-       path: "...",
-       url: "..."
-     }
-  */
-
   if (
-    project.cover &&
-    typeof project.cover === "object"
+    isObject(project.cover) &&
+    isString(project.cover.url)
   ) {
 
-    const coverUrl =
-      project.cover.url ||
-      project.cover.signedUrl ||
-      project.cover.signed_url ||
-      project.cover.publicUrl ||
-      project.cover.public_url ||
-      "";
-
-
-    if (coverUrl) {
-
-      return coverUrl;
-
-    }
+    return project.cover.url;
 
   }
 
 
-  /*
-     COVER COMO STRING
-  */
+  if (
+    isObject(project.cover) &&
+    isString(project.cover.signedUrl)
+  ) {
+
+    return project.cover.signedUrl;
+
+  }
+
 
   if (
-    typeof project.cover === "string" &&
-    project.cover.length > 0
+    isString(project.cover)
   ) {
 
     return project.cover;
@@ -778,49 +374,33 @@ function extractCover(
   }
 
 
-  /*
-     OTROS CAMPOS POSIBLES
-  */
-
-  const candidates = [
+  const directCandidates = [
 
     project.coverUrl,
-
     project.cover_url,
 
-    project.coverURL,
-
     project.imageUrl,
-
     project.image_url,
 
     project.image,
 
     project.thumbnailUrl,
-
     project.thumbnail_url,
 
     project.thumbnail,
 
+    project.portada,
+
     project.portadaUrl,
-
-    project.portada_url,
-
-    project.portada
+    project.portada_url
 
   ];
 
 
-  for (
-    const candidate
-    of candidates
-  ) {
+  for (const candidate of directCandidates) {
 
     const url =
-      extractUrlFromValue(
-        candidate
-      );
-
+      extractUrlFromValue(candidate);
 
     if (url) {
 
@@ -831,56 +411,7 @@ function extractCover(
   }
 
 
-  /*
-     ÚLTIMO RECURSO
-  */
-
-  return findImageUrl(
-    project
-  );
-
-}
-
-
-/* ------------------------------------------------------------
-   EXTRAER URL DE UN VALOR
-   ------------------------------------------------------------ */
-
-function extractUrlFromValue(
-  value
-) {
-
-  if (!value) {
-    return "";
-  }
-
-
-  if (
-    typeof value === "string"
-  ) {
-
-    return value;
-
-  }
-
-
-  if (
-    typeof value === "object"
-  ) {
-
-    return (
-      value.url ||
-      value.signedUrl ||
-      value.signed_url ||
-      value.publicUrl ||
-      value.public_url ||
-      ""
-    );
-
-  }
-
-
-  return "";
+  return findImageUrl(project);
 
 }
 
@@ -889,28 +420,18 @@ function extractUrlFromValue(
    BUSCAR IMAGEN RECURSIVAMENTE
    ------------------------------------------------------------ */
 
-function findImageUrl(
-  value,
-  depth = 0
-) {
+function findImageUrl(value, depth = 0) {
 
-  if (
-    !value ||
-    depth > 5
-  ) {
-
+  if (depth > 6) {
     return "";
-
   }
 
 
-  if (
-    typeof value === "string"
-  ) {
+  if (isString(value)) {
 
     if (
-      value.startsWith("http://") ||
-      value.startsWith("https://")
+      isProbablyUrl(value) &&
+      isProbablyImageUrl(value)
     ) {
 
       return value;
@@ -922,12 +443,8 @@ function findImageUrl(
   }
 
 
-  if (
-    typeof value !== "object"
-  ) {
-
+  if (!isObject(value)) {
     return "";
-
   }
 
 
@@ -936,76 +453,112 @@ function findImageUrl(
     "cover",
     "coverUrl",
     "cover_url",
+
     "image",
     "imageUrl",
     "image_url",
+
     "thumbnail",
     "thumbnailUrl",
     "thumbnail_url",
+
     "portada",
     "portadaUrl",
     "portada_url",
+
     "url",
-    "signedUrl",
-    "signed_url"
+    "signedUrl"
 
   ];
 
 
-  for (
-    const key
-    of priorityKeys
-  ) {
+  for (const key of priorityKeys) {
 
-    if (
-      Object.prototype.hasOwnProperty.call(
-        value,
-        key
-      )
-    ) {
+    if (!(key in value)) {
+      continue;
+    }
 
-      const result =
-        findImageUrl(
-          value[key],
-          depth + 1
-        );
+    const found =
+      extractUrlFromValue(
+        value[key]
+      );
 
-
-      if (result) {
-
-        return result;
-
-      }
-
+    if (found) {
+      return found;
     }
 
   }
 
 
-  for (
-    const key
-    of Object.keys(value)
-  ) {
+  for (const key of Object.keys(value)) {
 
-    if (
-      priorityKeys.includes(key)
-    ) {
-
-      continue;
-
-    }
-
-
-    const result =
+    const found =
       findImageUrl(
         value[key],
         depth + 1
       );
 
+    if (found) {
+      return found;
+    }
 
-    if (result) {
+  }
 
-      return result;
+
+  return "";
+
+}
+
+
+/* ------------------------------------------------------------
+   EXTRAER URL DE VALOR
+   ------------------------------------------------------------ */
+
+function extractUrlFromValue(value) {
+
+  if (isString(value)) {
+
+    if (isProbablyUrl(value)) {
+
+      return value;
+
+    }
+
+    return "";
+
+  }
+
+
+  if (!isObject(value)) {
+    return "";
+  }
+
+
+  const candidates = [
+
+    value.url,
+    value.signedUrl,
+    value.signed_url,
+
+    value.publicUrl,
+    value.public_url,
+
+    value.href,
+
+    value.downloadUrl,
+    value.download_url
+
+  ];
+
+
+  for (const candidate of candidates) {
+
+    if (
+      isString(candidate) &&
+      isProbablyUrl(candidate)
+    ) {
+
+      return candidate;
 
     }
 
@@ -1013,6 +566,185 @@ function findImageUrl(
 
 
   return "";
+
+}
+
+
+/* ------------------------------------------------------------
+   CARGAR PROYECTOS DESTACADOS
+   ------------------------------------------------------------ */
+
+async function loadSelectedProjects() {
+
+  const container =
+    document.getElementById(
+      "selected-projects-grid"
+    );
+
+
+  if (!container) {
+    return;
+  }
+
+
+  try {
+
+    log(
+      "Solicitando proyectos:",
+      FUNCTIONS.projects
+    );
+
+
+    const response =
+      await fetch(
+        FUNCTIONS.projects
+      );
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        `HTTP ${response.status} al cargar proyectos`
+      );
+
+    }
+
+
+    const data =
+      await response.json();
+
+
+    log(
+      "Proyectos recibidos:",
+      data
+    );
+
+
+    if (
+      !data ||
+      data.success !== true
+    ) {
+
+      throw new Error(
+        data?.error ||
+        "Respuesta no válida de list-projects"
+      );
+
+    }
+
+
+    const projects =
+      Array.isArray(data.projects)
+        ? data.projects
+        : [];
+
+
+    const normalized =
+      projects
+        .map(
+          (project, index) =>
+            normalizeProject(
+              project,
+              index
+            )
+        )
+        .filter(Boolean)
+        .sort(
+          (a, b) =>
+            Number(a.order || 0) -
+            Number(b.order || 0)
+        );
+
+
+    renderSelectedProjects(
+      container,
+      normalized
+    );
+
+
+  } catch (err) {
+
+    error(
+      "Error cargando proyectos:",
+      err
+    );
+
+
+    container.innerHTML = `
+
+      <div class="project-loading">
+
+        <p>
+          No se pudieron cargar los proyectos.
+        </p>
+
+      </div>
+
+    `;
+
+  }
+
+}
+
+
+/* ------------------------------------------------------------
+   RENDER PROYECTOS
+   ------------------------------------------------------------ */
+
+function renderSelectedProjects(
+  container,
+  projects
+) {
+
+  container.innerHTML = "";
+
+
+  if (!projects.length) {
+
+    container.innerHTML = `
+
+      <div class="project-loading">
+
+        <p>
+          No hay proyectos disponibles.
+        </p>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  /*
+     Para la home utilizamos:
+     - primer proyecto como grande
+     - segundo y tercero como medianos
+  */
+
+  const selected =
+    projects.slice(0, 3);
+
+
+  selected.forEach(
+    (project, index) => {
+
+      const card =
+        createProjectCard(
+          project,
+          index
+        );
+
+      if (card) {
+
+        container.appendChild(card);
+
+      }
+
+    }
+  );
 
 }
 
@@ -1027,70 +759,21 @@ function createProjectCard(
 ) {
 
   const card =
-    document.createElement("a");
-
-
-  card.classList.add(
-    "project-card"
-  );
-
-
-  if (index === 0) {
-
-    card.classList.add(
-      "project-card-large"
-    );
-
-  } else {
-
-    card.classList.add(
-      "project-card-medium"
+    document.createElement(
+      "article"
     );
 
 
-    if (index === 1) {
+  card.className =
+    index === 0
+      ? "project-card project-card-large"
+      : "project-card project-card-medium";
 
-      card.classList.add(
-        "project-card-left"
-      );
-
-    } else {
-
-      card.classList.add(
-        "project-card-right"
-      );
-
-    }
-
-  }
-
-
-  const projectName =
-    project.name ||
-    "";
-
-
-  const displayName =
-    project.displayName ||
-    projectName;
-
-
-  card.href =
-    `./proyectos.html?proyecto=${encodeURIComponent(projectName)}`;
-
-
-  card.setAttribute(
-    "aria-label",
-    `Ver proyecto ${displayName}`
-  );
-
-
-  /*
-     MEDIA
-  */
 
   const media =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
 
   media.className =
@@ -1098,7 +781,9 @@ function createProjectCard(
 
 
   const image =
-    document.createElement("img");
+    document.createElement(
+      "img"
+    );
 
 
   image.className =
@@ -1106,49 +791,30 @@ function createProjectCard(
 
 
   image.alt =
-    displayName;
-
-
-  image.loading =
-    index === 0
-      ? "eager"
-      : "lazy";
-
-
-  image.decoding =
-    "async";
+    project.displayName ||
+    project.name ||
+    "Proyecto Baal Studio";
 
 
   image.draggable =
     false;
 
 
-  /*
-     ASIGNACIÓN DEL COVER
-
-     No se modifica ni se transforma
-     la URL que devuelve Supabase.
-  */
-
-  if (project.cover) {
+  if (
+    typeof project.cover === "string" &&
+    project.cover.length > 0
+  ) {
 
     image.src =
       project.cover;
-
 
     image.dataset.source =
       "supabase-cover";
 
 
     console.log(
-      `[Baal Studio] Cover asignado: ${displayName}`,
+      `[Baal Studio] Cover asignado: ${project.displayName}`,
       project.cover
-    );
-
-  } else {
-
-    console.warn(
-      `[Baal Studio] El proyecto no tiene cover: ${displayName}`
     );
 
   }
@@ -1159,13 +825,16 @@ function createProjectCard(
     () => {
 
       console.log(
-        `[Baal Studio] Cover cargado: ${displayName}`,
+        `[Baal Studio] Cover cargado: ${project.displayName}`,
         {
-          naturalWidth:
+          width:
             image.naturalWidth,
 
-          naturalHeight:
-            image.naturalHeight
+          height:
+            image.naturalHeight,
+
+          src:
+            image.src
         }
       );
 
@@ -1175,19 +844,15 @@ function createProjectCard(
 
   image.addEventListener(
     "error",
-    () => {
+    event => {
 
       console.error(
-        `[Baal Studio] ERROR cargando cover: ${displayName}`,
+        `[Baal Studio] ERROR cargando cover: ${project.displayName}`,
         {
           url:
             image.src,
 
-          naturalWidth:
-            image.naturalWidth,
-
-          naturalHeight:
-            image.naturalHeight
+          event
         }
       );
 
@@ -1201,7 +866,9 @@ function createProjectCard(
 
 
   const overlay =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
 
   overlay.className =
@@ -1213,12 +880,15 @@ function createProjectCard(
   );
 
 
-  /*
-     CONTENIDO
-  */
+  card.appendChild(
+    media
+  );
+
 
   const content =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
 
   content.className =
@@ -1228,16 +898,15 @@ function createProjectCard(
   if (project.location) {
 
     const location =
-      document.createElement("p");
-
+      document.createElement(
+        "p"
+      );
 
     location.className =
       "project-card-location";
 
-
     location.textContent =
       project.location;
-
 
     content.appendChild(
       location
@@ -1247,7 +916,9 @@ function createProjectCard(
 
 
   const title =
-    document.createElement("h2");
+    document.createElement(
+      "h3"
+    );
 
 
   title.className =
@@ -1255,7 +926,8 @@ function createProjectCard(
 
 
   title.textContent =
-    displayName;
+    project.displayName ||
+    project.name;
 
 
   content.appendChild(
@@ -1263,12 +935,10 @@ function createProjectCard(
   );
 
 
-  /*
-     METADATA
-  */
-
   const meta =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
 
   meta.className =
@@ -1277,16 +947,16 @@ function createProjectCard(
 
   if (project.year) {
 
-    const year =
-      document.createElement("span");
+    const span =
+      document.createElement(
+        "span"
+      );
 
-
-    year.textContent =
+    span.textContent =
       project.year;
 
-
     meta.appendChild(
-      year
+      span
     );
 
   }
@@ -1294,24 +964,22 @@ function createProjectCard(
 
   if (project.category) {
 
-    const category =
-      document.createElement("span");
+    const span =
+      document.createElement(
+        "span"
+      );
 
-
-    category.textContent =
+    span.textContent =
       project.category;
 
-
     meta.appendChild(
-      category
+      span
     );
 
   }
 
 
-  if (
-    meta.children.length > 0
-  ) {
+  if (meta.children.length) {
 
     content.appendChild(
       meta
@@ -1321,12 +989,40 @@ function createProjectCard(
 
 
   card.appendChild(
-    media
+    content
   );
 
 
-  card.appendChild(
-    content
+  card.addEventListener(
+    "click",
+    () => {
+
+      if (
+        project.url &&
+        isProbablyUrl(project.url)
+      ) {
+
+        window.location.href =
+          project.url;
+
+        return;
+
+      }
+
+
+      const params =
+        new URLSearchParams({
+
+          project:
+            project.name || ""
+
+        });
+
+
+      window.location.href =
+        `./proyectos.html?${params.toString()}`;
+
+    }
   );
 
 
@@ -1336,51 +1032,10 @@ function createProjectCard(
 
 
 /* ------------------------------------------------------------
-   MENSAJE DE PROYECTOS
+   PROTECCIÓN DE MEDIOS
    ------------------------------------------------------------ */
 
-function showProjectsMessage(
-  container,
-  message
-) {
-
-  container.innerHTML =
-    "";
-
-
-  const element =
-    document.createElement("div");
-
-
-  element.className =
-    "project-loading";
-
-
-  const text =
-    document.createElement("p");
-
-
-  text.textContent =
-    message;
-
-
-  element.appendChild(
-    text
-  );
-
-
-  container.appendChild(
-    element
-  );
-
-}
-
-
-/* ------------------------------------------------------------
-   PROTECCIÓN
-   ------------------------------------------------------------ */
-
-function initProtection() {
+function setupMediaProtection() {
 
   document.addEventListener(
     "contextmenu",
@@ -1389,19 +1044,20 @@ function initProtection() {
       const target =
         event.target;
 
-
       if (
+        target instanceof
+          HTMLImageElement ||
         target.closest(
-          "input, textarea, select, [contenteditable='true'], video, audio, iframe"
+          ".protected-media"
+        ) ||
+        target.closest(
+          ".protected-image"
         )
       ) {
 
-        return;
+        event.preventDefault();
 
       }
-
-
-      event.preventDefault();
 
     }
   );
@@ -1414,10 +1070,38 @@ function initProtection() {
       const target =
         event.target;
 
+      if (
+        target instanceof
+          HTMLImageElement ||
+        target.closest(
+          ".protected-media"
+        ) ||
+        target.closest(
+          ".protected-image"
+        )
+      ) {
+
+        event.preventDefault();
+
+      }
+
+    }
+  );
+
+
+  document.addEventListener(
+    "selectstart",
+    event => {
+
+      const target =
+        event.target;
 
       if (
-        target instanceof HTMLImageElement ||
-        target.closest?.(".protected-media")
+        target instanceof
+          HTMLImageElement ||
+        target.closest(
+          ".protected-media"
+        )
       ) {
 
         event.preventDefault();
@@ -1433,49 +1117,21 @@ function initProtection() {
     event => {
 
       const key =
-        event.key.toLowerCase();
+        String(event.key).toLowerCase();
 
 
-      const modifier =
-        event.ctrlKey ||
-        event.metaKey;
-
-
-      if (
-        modifier &&
+      const forbidden =
         (
-          key === "s" ||
-          key === "u"
-        )
-      ) {
-
-        event.preventDefault();
-
-        return;
-
-      }
+          event.ctrlKey ||
+          event.metaKey
+        ) &&
+        [
+          "s",
+          "u"
+        ].includes(key);
 
 
-      if (
-        modifier &&
-        event.shiftKey &&
-        (
-          key === "i" ||
-          key === "j" ||
-          key === "c"
-        )
-      ) {
-
-        event.preventDefault();
-
-        return;
-
-      }
-
-
-      if (
-        event.key === "F12"
-      ) {
+      if (forbidden) {
 
         event.preventDefault();
 
@@ -1484,54 +1140,184 @@ function initProtection() {
     }
   );
 
+}
 
-  applyProtectionToImages();
+
+/* ------------------------------------------------------------
+   HEADER SCROLL
+   ------------------------------------------------------------ */
+
+function setupHeaderScroll() {
+
+  const header =
+    document.getElementById(
+      "main-header"
+    );
+
+
+  if (!header) {
+    return;
+  }
+
+
+  const update =
+    () => {
+
+      if (
+        window.scrollY > 30
+      ) {
+
+        header.classList.add(
+          "scrolled"
+        );
+
+      } else {
+
+        header.classList.remove(
+          "scrolled"
+        );
+
+      }
+
+    };
+
+
+  update();
+
+
+  window.addEventListener(
+    "scroll",
+    update,
+    {
+      passive: true
+    }
+  );
 
 }
 
 
 /* ------------------------------------------------------------
-   PROTECCIÓN DE IMÁGENES
+   MENÚ MÓVIL
    ------------------------------------------------------------ */
 
-function applyProtectionToImages() {
+function setupMobileMenu() {
 
-  document
-    .querySelectorAll(
-      "img.protected-image"
-    )
-    .forEach(
-      image => {
-
-        image.setAttribute(
-          "draggable",
-          "false"
-        );
-
-
-        image.style.userSelect =
-          "none";
-
-
-        image.style.webkitUserDrag =
-          "none";
-
-      }
+  const button =
+    document.getElementById(
+      "mobile-menu-button"
     );
 
 
-  document
-    .querySelectorAll(
-      ".project-card-media"
-    )
-    .forEach(
-      media => {
+  const menu =
+    document.getElementById(
+      "mobile-menu"
+    );
 
-        media.classList.add(
-          "protected-media"
+
+  if (
+    !button ||
+    !menu
+  ) {
+
+    return;
+
+  }
+
+
+  button.addEventListener(
+    "click",
+    () => {
+
+      const open =
+        button.classList.toggle(
+          "open"
+        );
+
+
+      menu.classList.toggle(
+        "open",
+        open
+      );
+
+
+      button.setAttribute(
+        "aria-expanded",
+        String(open)
+      );
+
+
+      menu.setAttribute(
+        "aria-hidden",
+        String(!open)
+      );
+
+    }
+  );
+
+
+  menu
+    .querySelectorAll("a")
+    .forEach(
+      link => {
+
+        link.addEventListener(
+          "click",
+          () => {
+
+            button.classList.remove(
+              "open"
+            );
+
+            menu.classList.remove(
+              "open"
+            );
+
+            button.setAttribute(
+              "aria-expanded",
+              "false"
+            );
+
+            menu.setAttribute(
+              "aria-hidden",
+              "true"
+            );
+
+          }
         );
 
       }
     );
 
 }
+
+
+/* ------------------------------------------------------------
+   INICIALIZACIÓN
+   ------------------------------------------------------------ */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    log(
+      "Inicializando Baal Studio V08..."
+    );
+
+
+    loadSiteAssets();
+
+    loadSelectedProjects();
+
+    setupMediaProtection();
+
+    setupHeaderScroll();
+
+    setupMobileMenu();
+
+
+    log(
+      "Inicialización completada."
+    );
+
+  }
+);
