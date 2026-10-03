@@ -1,6 +1,6 @@
 /* ============================================================
    BAAL STUDIO
-   STYLE.CSS — V05
+   STYLE.CSS — V04
    ============================================================ */
 
 
@@ -16,7 +16,6 @@
   font-display: swap;
 }
 
-
 @font-face {
   font-family: "Cormorant Garamond";
   src: url("./fonts/CormorantGaramond-Light.woff2") format("woff2");
@@ -24,7 +23,6 @@
   font-weight: 300;
   font-display: swap;
 }
-
 
 @font-face {
   font-family: "Cormorant Garamond";
@@ -34,7 +32,6 @@
   font-display: swap;
 }
 
-
 @font-face {
   font-family: "Cormorant Garamond";
   src: url("./fonts/CormorantGaramond-Medium.woff2") format("woff2");
@@ -42,7 +39,6 @@
   font-weight: 500;
   font-display: swap;
 }
-
 
 @font-face {
   font-family: "Cormorant Garamond";
@@ -52,27 +48,11 @@
   font-display: swap;
 }
 
-
 @font-face {
   font-family: "Cormorant Garamond";
   src: url("./fonts/CormorantGaramond-Bold.woff2") format("woff2");
   font-style: normal;
   font-weight: 700;
-  font-display: swap;
-}
-
-
-/*
-   Nueva tipografía exclusiva para el nombre Baal Studio.
-   El archivo debe estar en:
-   ./fonts/LibreBodoniVariable.ttf
-*/
-
-@font-face {
-  font-family: "Libre Bodoni";
-  src: url("./fonts/LibreBodoniVariable.ttf") format("truetype");
-  font-style: normal;
-  font-weight: 400 700;
   font-display: swap;
 }
 
@@ -97,7 +77,6 @@
   --section-space: 140px;
 
   --font-display: "Cormorant Garamond", serif;
-  --font-hero: "Libre Bodoni", "Bodoni 72", "Bodoni MT", Georgia, serif;
   --font-body: "Inter", sans-serif;
 
 }
@@ -445,7 +424,7 @@ select {
   padding: 14px 0;
 
   border-bottom:
-    1px solid rgba(255,255,255,0.12);
+    1px solid rgba(176,138,87,0.35);
 
   color: white;
 
@@ -512,9 +491,24 @@ select {
 
   object-fit: cover;
 
+  /*
+     Antes estaba object-position:center top.
+     Ahora centramos la fotografía para evitar
+     que aparezca el marco blanco.
+  */
+
   object-position: center center;
 
+  /*
+     Ampliación moderada para cubrir los bordes.
+  */
+
   transform: scale(1.085);
+
+  /*
+     El fondo debe estar presente pero no dominar
+     el contenido.
+  */
 
   opacity: 0.40;
 
@@ -618,17 +612,15 @@ select {
 
   margin: 0;
 
-  font-family: var(--font-hero);
+  font-family: var(--font-display);
 
-  font-size: clamp(76px, 10vw, 148px);
+  font-size: clamp(62px, 7.2vw, 108px);
 
-  font-weight: 500;
+  font-weight: 600;
 
-  line-height: 0.78;
+  line-height: 0.86;
 
-  letter-spacing: -0.045em;
-
-  text-rendering: geometricPrecision;
+  letter-spacing: -0.035em;
 }
 
 
@@ -784,7 +776,9 @@ select {
 
   font-size: 9px;
 
-  letter-spacing: 0.08em;
+  line-height: 1.4;
+
+  letter-spacing: 0.06em;
 
   text-transform: uppercase;
 }
@@ -798,7 +792,7 @@ select {
 
   font-size: 7px;
 
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
 
   text-transform: uppercase;
 }
@@ -825,9 +819,9 @@ select {
   grid-template-columns:
     4fr 8fr;
 
-  align-items: end;
+  align-items: start;
 
-  margin-bottom: 65px;
+  margin-bottom: 52px;
 }
 
 
@@ -841,35 +835,30 @@ select {
 
   justify-self: end;
 
-  display: flex;
+  display: inline-flex;
 
   align-items: center;
 
-  gap: 12px;
+  gap: 9px;
 
-  color: var(--gray);
+  padding-bottom: 5px;
+
+  border-bottom:
+    1px solid var(--light-gray);
 
   font-size: 9px;
 
-  letter-spacing: 0.12em;
+  letter-spacing: 0.09em;
 
   text-transform: uppercase;
-
-  transition: color 0.25s ease;
-}
-
-
-.view-all-link:hover {
-
-  color: var(--accent);
 }
 
 
 .view-all-link span:nth-child(2) {
 
-  color: #aaa59c;
+  color: var(--gray);
 
-  font-size: 7px;
+  font-size: 8px;
 }
 
 
@@ -884,7 +873,7 @@ select {
 
 
 /* ------------------------------------------------------------
-   GRID PROYECTOS
+   TARJETAS DE PROYECTOS
    ------------------------------------------------------------ */
 
 .selected-projects-grid {
@@ -892,13 +881,9 @@ select {
   display: grid;
 
   grid-template-columns:
-    7fr 5fr;
+    repeat(12, 1fr);
 
-  grid-template-rows:
-    560px
-    330px;
-
-  gap: 16px;
+  gap: 24px;
 }
 
 
@@ -906,25 +891,39 @@ select {
 
   position: relative;
 
+  display: block;
+
   overflow: hidden;
 
-  background: #1a1a1a;
+  background: #dedbd4;
 
-  color: var(--white);
-
-  cursor: pointer;
+  color: white;
 }
 
 
 .project-card-large {
 
-  grid-row: 1 / 3;
+  grid-column: 1 / -1;
+
+  height: 560px;
 }
 
 
 .project-card-medium {
 
-  height: 100%;
+  height: 420px;
+}
+
+
+.project-card-left {
+
+  grid-column: 1 / span 7;
+}
+
+
+.project-card-right {
+
+  grid-column: 8 / -1;
 }
 
 
@@ -943,12 +942,8 @@ select {
   width: 100%;
   height: 100%;
 
-  object-fit: contain;
-
-  object-position: center center;
-
+  object-fit: cover;
   opacity: 0.60;
-
   transform: scale(0.85);
 
   transition:
@@ -957,16 +952,10 @@ select {
 
 
 .project-card-large .project-card-media img {
-
   object-fit: contain;
-
-  object-position: center center;
-
   transform: scale(0.85);
-
-  background: transparent;
+  background: #dedbd4;
 }
-
 
 .project-card:hover
 .project-card-media img {
@@ -1117,53 +1106,30 @@ select {
    ------------------------------------------------------------ */
 
 .section-kicker {
-
   margin: 0;
-
   font-family: var(--font-display);
-
-  font-size: clamp(48px, 5vw, 72px);
-
+  font-size: clamp(42px, 4.2vw, 62px);
   font-weight: 600;
-
-  line-height: 0.90;
-
+  line-height: 0.98;
   letter-spacing: -0.035em;
-
   color: var(--black);
-
-  text-wrap: balance;
 }
 
-
 .section-kicker-en {
-
-  margin: 12px 0 0;
-
-  color: var(--accent);
-
+  margin: 9px 0 0;
+  color: var(--gray);
   font-family: var(--font-body);
-
-  font-size: 8px;
-
+  font-size: 9px;
   font-weight: 500;
-
   line-height: 1.3;
-
   letter-spacing: 0.14em;
-
   text-transform: uppercase;
 }
 
-
 .section-rule {
-
   width: 52px;
-
   height: 2px;
-
   margin-top: 22px;
-
   background: var(--accent);
 }
 
@@ -1237,30 +1203,23 @@ select {
 
 
 .capability-icon {
-
   width: 42px;
   height: 42px;
-
   margin-bottom: 22px;
-
   color: var(--accent);
 }
 
-
 .capability-icon svg {
-
   width: 100%;
   height: 100%;
-
   fill: none;
-
   stroke: currentColor;
-
   stroke-width: 1.25;
-
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+
+
 
 
 .capability-item h3 {
@@ -1269,13 +1228,11 @@ select {
 
   font-family: var(--font-display);
 
-  font-size: 29px;
+  font-size: 27px;
 
-  font-weight: 600;
+  font-weight: 400;
 
-  line-height: 1.02;
-
-  letter-spacing: -0.02em;
+  line-height: 1.05;
 }
 
 
@@ -1288,11 +1245,8 @@ select {
   color: var(--gray);
 
   font-family: var(--font-body);
-
   font-size: 9px;
-
   font-weight: 500;
-
   line-height: 1.3;
 
   letter-spacing: 0.12em;
@@ -1321,13 +1275,9 @@ select {
 
 .main-footer {
 
-  position: relative;
-
   background: var(--black);
 
   color: var(--white);
-
-  border-top: 3px solid var(--accent);
 
   padding:
     80px
@@ -1362,7 +1312,7 @@ select {
   padding-bottom: 60px;
 
   border-bottom:
-    1px solid rgba(255,255,255,0.12);
+    1px solid rgba(176,138,87,0.35);
 }
 
 
@@ -1376,7 +1326,7 @@ select {
 
   margin: 0;
 
-  color: rgba(255,255,255,0.82);
+  color: rgba(255,255,255,0.84);
 
   font-size: 11px;
 
@@ -1392,7 +1342,7 @@ select {
 
   margin-top: 7px !important;
 
-  color: rgba(176,138,87,0.86) !important;
+  color: rgba(176,138,87,0.82) !important;
 
   font-size: 9px !important;
 }
@@ -1414,7 +1364,7 @@ select {
 
 .footer-nav-column a {
 
-  color: rgba(255,255,255,0.78);
+  color: rgba(255,255,255,0.65);
 
   font-size: 10px;
 
@@ -1434,6 +1384,8 @@ select {
 
 .footer-identity {
 
+  position: relative;
+
   display: flex;
 
   flex-direction: column;
@@ -1448,6 +1400,14 @@ select {
     42px;
 }
 
+.footer-identity::before {
+  content: "";
+  width: 52px;
+  height: 2px;
+  margin-bottom: 28px;
+  background: var(--accent);
+}
+
 
 .footer-logos {
 
@@ -1458,8 +1418,6 @@ select {
   justify-content: center;
 
   gap: 55px;
-
-  width: 100%;
 }
 
 
@@ -1494,7 +1452,7 @@ select {
 
   object-fit: contain;
 
-  opacity: 0.72;
+  opacity: 0.62;
 
   transition: opacity 0.25s ease;
 }
@@ -1559,23 +1517,17 @@ select {
 @media (max-width: 1000px) {
 
   :root {
-
     --page-padding: 48px;
-
   }
 
 
   .desktop-nav {
-
     gap: 25px;
-
   }
 
 
   .hero-content {
-
     padding-bottom: 100px;
-
   }
 
 
@@ -1630,16 +1582,12 @@ select {
 
 
   .desktop-nav {
-
     display: none;
-
   }
 
 
   .mobile-menu-button {
-
     display: block;
-
   }
 
 
@@ -1695,7 +1643,7 @@ select {
   .hero-content h1 {
 
     font-size:
-      clamp(62px, 18vw, 88px);
+      clamp(58px, 18vw, 82px);
 
   }
 
@@ -1738,13 +1686,6 @@ select {
   .section-heading {
 
     padding-right: 0;
-
-  }
-
-
-  .section-kicker {
-
-    font-size: clamp(44px, 14vw, 62px);
 
   }
 
@@ -1850,7 +1791,7 @@ select {
 
   .footer-secondary-logo {
 
-    max-width: 170px;
+    max-width: 180px;
 
     max-height: 48px;
 
@@ -1874,9 +1815,7 @@ select {
 @media (prefers-reduced-motion: reduce) {
 
   html {
-
     scroll-behavior: auto;
-
   }
 
 
