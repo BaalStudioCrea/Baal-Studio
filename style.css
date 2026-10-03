@@ -1,6 +1,6 @@
 /* ============================================================
    BAAL STUDIO
-   STYLE.CSS — V04
+   STYLE.CSS — V05
    ============================================================ */
 
 
@@ -16,6 +16,7 @@
   font-display: swap;
 }
 
+
 @font-face {
   font-family: "Cormorant Garamond";
   src: url("./fonts/CormorantGaramond-Light.woff2") format("woff2");
@@ -23,6 +24,7 @@
   font-weight: 300;
   font-display: swap;
 }
+
 
 @font-face {
   font-family: "Cormorant Garamond";
@@ -32,6 +34,7 @@
   font-display: swap;
 }
 
+
 @font-face {
   font-family: "Cormorant Garamond";
   src: url("./fonts/CormorantGaramond-Medium.woff2") format("woff2");
@@ -39,6 +42,7 @@
   font-weight: 500;
   font-display: swap;
 }
+
 
 @font-face {
   font-family: "Cormorant Garamond";
@@ -48,11 +52,27 @@
   font-display: swap;
 }
 
+
 @font-face {
   font-family: "Cormorant Garamond";
   src: url("./fonts/CormorantGaramond-Bold.woff2") format("woff2");
   font-style: normal;
   font-weight: 700;
+  font-display: swap;
+}
+
+
+/*
+   Nueva tipografía exclusiva para el nombre Baal Studio.
+   El archivo debe estar en:
+   ./fonts/LibreBodoniVariable.ttf
+*/
+
+@font-face {
+  font-family: "Libre Bodoni";
+  src: url("./fonts/LibreBodoniVariable.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400 700;
   font-display: swap;
 }
 
@@ -77,6 +97,7 @@
   --section-space: 140px;
 
   --font-display: "Cormorant Garamond", serif;
+  --font-hero: "Libre Bodoni", "Bodoni 72", "Bodoni MT", Georgia, serif;
   --font-body: "Inter", sans-serif;
 
 }
@@ -231,7 +252,7 @@ select {
 
   width: auto;
 
-  height: 40px;
+  height: 30px;
 
   max-width: 155px;
 
@@ -597,15 +618,17 @@ select {
 
   margin: 0;
 
-  font-family: var(--font-display);
+  font-family: var(--font-hero);
 
-  font-size: clamp(68px, 9vw, 138px);
+  font-size: clamp(76px, 10vw, 148px);
 
-  font-weight: 400;
+  font-weight: 500;
 
-  line-height: 0.82;
+  line-height: 0.78;
 
-  letter-spacing: -0.025em;
+  letter-spacing: -0.045em;
+
+  text-rendering: geometricPrecision;
 }
 
 
@@ -745,15 +768,13 @@ select {
 
 .stat-item strong {
 
-  font-family: var(--font-body);
+  font-family: var(--font-display);
 
-  font-size: 40px;
+  font-size: 48px;
 
-  font-weight: 300;
+  font-weight: 400;
 
   line-height: 1;
-
-  letter-spacing: -0.02em;
 }
 
 
@@ -763,9 +784,7 @@ select {
 
   font-size: 9px;
 
-  line-height: 1.4;
-
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
 
   text-transform: uppercase;
 }
@@ -779,7 +798,7 @@ select {
 
   font-size: 7px;
 
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
 
   text-transform: uppercase;
 }
@@ -806,9 +825,9 @@ select {
   grid-template-columns:
     4fr 8fr;
 
-  align-items: start;
+  align-items: end;
 
-  margin-bottom: 52px;
+  margin-bottom: 65px;
 }
 
 
@@ -822,30 +841,35 @@ select {
 
   justify-self: end;
 
-  display: inline-flex;
+  display: flex;
 
   align-items: center;
 
-  gap: 9px;
+  gap: 12px;
 
-  padding-bottom: 5px;
-
-  border-bottom:
-    1px solid var(--light-gray);
+  color: var(--gray);
 
   font-size: 9px;
 
-  letter-spacing: 0.09em;
+  letter-spacing: 0.12em;
 
   text-transform: uppercase;
+
+  transition: color 0.25s ease;
+}
+
+
+.view-all-link:hover {
+
+  color: var(--accent);
 }
 
 
 .view-all-link span:nth-child(2) {
 
-  color: var(--gray);
+  color: #aaa59c;
 
-  font-size: 8px;
+  font-size: 7px;
 }
 
 
@@ -860,7 +884,7 @@ select {
 
 
 /* ------------------------------------------------------------
-   TARJETAS DE PROYECTOS
+   GRID PROYECTOS
    ------------------------------------------------------------ */
 
 .selected-projects-grid {
@@ -868,9 +892,13 @@ select {
   display: grid;
 
   grid-template-columns:
-    repeat(12, 1fr);
+    7fr 5fr;
 
-  gap: 24px;
+  grid-template-rows:
+    560px
+    330px;
+
+  gap: 16px;
 }
 
 
@@ -878,39 +906,25 @@ select {
 
   position: relative;
 
-  display: block;
-
   overflow: hidden;
 
-  background: #dedbd4;
+  background: #1a1a1a;
 
-  color: white;
+  color: var(--white);
+
+  cursor: pointer;
 }
 
 
 .project-card-large {
 
-  grid-column: 1 / -1;
-
-  height: 560px;
+  grid-row: 1 / 3;
 }
 
 
 .project-card-medium {
 
-  height: 420px;
-}
-
-
-.project-card-left {
-
-  grid-column: 1 / span 7;
-}
-
-
-.project-card-right {
-
-  grid-column: 8 / -1;
+  height: 100%;
 }
 
 
@@ -929,8 +943,13 @@ select {
   width: 100%;
   height: 100%;
 
-  object-fit: cover;
-  opacity: 0.50;
+  object-fit: contain;
+
+  object-position: center center;
+
+  opacity: 0.60;
+
+  transform: scale(0.85);
 
   transition:
     transform 0.8s cubic-bezier(.2,.65,.2,1);
@@ -938,14 +957,21 @@ select {
 
 
 .project-card-large .project-card-media img {
+
   object-fit: contain;
-  background: #dedbd4;
+
+  object-position: center center;
+
+  transform: scale(0.85);
+
+  background: transparent;
 }
+
 
 .project-card:hover
 .project-card-media img {
 
-  transform: scale(1.00);
+  transform: scale(0.85);
 }
 
 
@@ -1096,25 +1122,29 @@ select {
 
   font-family: var(--font-display);
 
-  font-size: clamp(32px, 3.2vw, 44px);
+  font-size: clamp(48px, 5vw, 72px);
 
-  font-weight: 400;
+  font-weight: 600;
 
-  line-height: 1;
+  line-height: 0.90;
 
-  letter-spacing: -0.015em;
+  letter-spacing: -0.035em;
+
+  color: var(--black);
+
+  text-wrap: balance;
 }
 
 
 .section-kicker-en {
 
-  margin: 9px 0 0;
+  margin: 12px 0 0;
 
-  color: var(--gray);
+  color: var(--accent);
 
   font-family: var(--font-body);
 
-  font-size: 9px;
+  font-size: 8px;
 
   font-weight: 500;
 
@@ -1209,7 +1239,6 @@ select {
 .capability-icon {
 
   width: 42px;
-
   height: 42px;
 
   margin-bottom: 22px;
@@ -1221,7 +1250,6 @@ select {
 .capability-icon svg {
 
   width: 100%;
-
   height: 100%;
 
   fill: none;
@@ -1231,7 +1259,6 @@ select {
   stroke-width: 1.25;
 
   stroke-linecap: round;
-
   stroke-linejoin: round;
 }
 
@@ -1242,11 +1269,13 @@ select {
 
   font-family: var(--font-display);
 
-  font-size: 27px;
+  font-size: 29px;
 
-  font-weight: 400;
+  font-weight: 600;
 
-  line-height: 1.05;
+  line-height: 1.02;
+
+  letter-spacing: -0.02em;
 }
 
 
@@ -1272,7 +1301,7 @@ select {
 }
 
 
-.capability-item > p {
+.capability-item > p:last-child {
 
   max-width: 330px;
 
@@ -1286,27 +1315,19 @@ select {
 }
 
 
-.capability-en-desc {
-
-  margin-top: 5px !important;
-
-  color: var(--gray) !important;
-
-  font-size: 8.5px !important;
-
-  line-height: 1.6 !important;
-}
-
-
 /* ------------------------------------------------------------
    FOOTER
    ------------------------------------------------------------ */
 
 .main-footer {
 
+  position: relative;
+
   background: var(--black);
 
   color: var(--white);
+
+  border-top: 3px solid var(--accent);
 
   padding:
     80px
@@ -1334,7 +1355,7 @@ select {
   display: grid;
 
   grid-template-columns:
-    8fr 4fr;
+    7fr 5fr;
 
   gap: 50px;
 
@@ -1347,7 +1368,7 @@ select {
 
 .footer-services {
 
-  max-width: 100%;
+  max-width: 650px;
 }
 
 
@@ -1355,17 +1376,15 @@ select {
 
   margin: 0;
 
-  color: rgba(255,255,255,0.68);
+  color: rgba(255,255,255,0.82);
 
-  font-size: 9.5px;
+  font-size: 11px;
 
-  line-height: 1.4;
+  line-height: 1.7;
 
   text-transform: uppercase;
 
-  letter-spacing: 0.02em;
-
-  white-space: nowrap;
+  letter-spacing: 0.04em;
 }
 
 
@@ -1373,11 +1392,9 @@ select {
 
   margin-top: 7px !important;
 
-  color: rgba(255,255,255,0.32) !important;
+  color: rgba(176,138,87,0.86) !important;
 
-  font-size: 8.5px !important;
-
-  white-space: nowrap;
+  font-size: 9px !important;
 }
 
 
@@ -1397,7 +1414,7 @@ select {
 
 .footer-nav-column a {
 
-  color: rgba(255,255,255,0.65);
+  color: rgba(255,255,255,0.78);
 
   font-size: 10px;
 
@@ -1441,6 +1458,8 @@ select {
   justify-content: center;
 
   gap: 55px;
+
+  width: 100%;
 }
 
 
@@ -1448,13 +1467,13 @@ select {
 
   width: auto;
 
-  max-width: 170px;
+  max-width: 230px;
 
-  max-height: 42px;
+  max-height: 58px;
 
   object-fit: contain;
 
-  opacity: 0.15;
+  opacity: 0.42;
 
   transition: opacity 0.25s ease;
 }
@@ -1469,14 +1488,13 @@ select {
 .footer-qr {
 
   width: 100px;
-
   height: 100px;
 
   margin-top: 28px;
 
   object-fit: contain;
 
-  opacity: 0.62;
+  opacity: 0.72;
 
   transition: opacity 0.25s ease;
 }
@@ -1541,17 +1559,23 @@ select {
 @media (max-width: 1000px) {
 
   :root {
+
     --page-padding: 48px;
+
   }
 
 
   .desktop-nav {
+
     gap: 25px;
+
   }
 
 
   .hero-content {
+
     padding-bottom: 100px;
+
   }
 
 
@@ -1577,13 +1601,6 @@ select {
 
     grid-template-columns:
       repeat(2, 1fr);
-
-  }
-
-
-  .footer-services p {
-
-    white-space: normal;
 
   }
 
@@ -1613,12 +1630,16 @@ select {
 
 
   .desktop-nav {
+
     display: none;
+
   }
 
 
   .mobile-menu-button {
+
     display: block;
+
   }
 
 
@@ -1674,7 +1695,7 @@ select {
   .hero-content h1 {
 
     font-size:
-      clamp(58px, 18vw, 82px);
+      clamp(62px, 18vw, 88px);
 
   }
 
@@ -1717,6 +1738,13 @@ select {
   .section-heading {
 
     padding-right: 0;
+
+  }
+
+
+  .section-kicker {
+
+    font-size: clamp(44px, 14vw, 62px);
 
   }
 
@@ -1822,9 +1850,9 @@ select {
 
   .footer-secondary-logo {
 
-    max-width: 125px;
+    max-width: 170px;
 
-    max-height: 35px;
+    max-height: 48px;
 
   }
 
@@ -1832,7 +1860,6 @@ select {
   .footer-qr {
 
     width: 90px;
-
     height: 90px;
 
   }
@@ -1847,7 +1874,9 @@ select {
 @media (prefers-reduced-motion: reduce) {
 
   html {
+
     scroll-behavior: auto;
+
   }
 
 
