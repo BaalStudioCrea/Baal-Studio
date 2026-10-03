@@ -1,6 +1,6 @@
 /* ============================================================
    BAAL STUDIO
-   SCRIPT.JS — RECOVERY V08
+   SCRIPT.JS — V08
    ============================================================ */
 
 
@@ -17,6 +17,7 @@ const FUNCTIONS = {
   siteAssets:
     `${SUPABASE_FUNCTION_BASE}/get-site-assets`,
 
+  // CORREGIDO: Ahora apunta a list-projects
   projects:
     `${SUPABASE_FUNCTION_BASE}/list-projects`
 
@@ -165,17 +166,12 @@ function initMobileMenu() {
 
 
 /* ------------------------------------------------------------
-   ASSETS GENERALES
+   ASSETS
    ------------------------------------------------------------ */
 
 async function loadSiteAssets() {
 
   try {
-
-    console.log(
-      "[Baal Studio] Cargando assets..."
-    );
-
 
     const response =
       await fetch(
@@ -202,15 +198,8 @@ async function loadSiteAssets() {
       await response.json();
 
 
-    console.log(
-      "[Baal Studio] Respuesta get-site-assets:",
-      result
-    );
-
-
     if (
-      !result ||
-      result.success !== true ||
+      !result.success ||
       !result.assets
     ) {
 
@@ -258,15 +247,10 @@ async function loadSiteAssets() {
     applyProtectionToImages();
 
 
-    console.log(
-      "[Baal Studio] Assets cargados correctamente."
-    );
-
-
   } catch (error) {
 
     console.error(
-      "[Baal Studio] Error cargando assets:",
+      "Error cargando assets:",
       error
     );
 
@@ -288,35 +272,15 @@ function setImageSource(
     document.getElementById(elementId);
 
 
-  if (!element) {
+  if (
+    element &&
+    source
+  ) {
 
-    console.warn(
-      `[Baal Studio] No existe el elemento #${elementId}`
-    );
-
-    return;
-
-  }
-
-
-  if (!source) {
-
-    console.warn(
-      `[Baal Studio] No hay URL para #${elementId}`
-    );
-
-    return;
+    element.src =
+      source;
 
   }
-
-
-  element.src =
-    source;
-
-
-  console.log(
-    `[Baal Studio] Imagen asignada: #${elementId}`
-  );
 
 }
 
@@ -334,22 +298,11 @@ async function loadSelectedProjects() {
 
 
   if (!container) {
-
-    console.warn(
-      "[Baal Studio] No existe #selected-projects-grid"
-    );
-
     return;
-
   }
 
 
   try {
-
-    console.log(
-      "[Baal Studio] Cargando proyectos..."
-    );
-
 
     const response =
       await fetch(
@@ -376,22 +329,10 @@ async function loadSelectedProjects() {
       await response.json();
 
 
-    console.log(
-      "[Baal Studio] Respuesta list-projects:",
-      result
-    );
-
-
     const projects =
       normalizeProjectsResponse(
         result
       );
-
-
-    console.log(
-      "[Baal Studio] Proyectos normalizados:",
-      projects
-    );
 
 
     if (!projects.length) {
@@ -402,7 +343,6 @@ async function loadSelectedProjects() {
       );
 
       return;
-
     }
 
 
@@ -443,15 +383,10 @@ async function loadSelectedProjects() {
     applyProtectionToImages();
 
 
-    console.log(
-      "[Baal Studio] Proyectos cargados correctamente."
-    );
-
-
   } catch (error) {
 
     console.error(
-      "[Baal Studio] Error cargando proyectos:",
+      "Error cargando proyectos:",
       error
     );
 
@@ -484,29 +419,25 @@ function normalizeProjectsResponse(
 
   if (Array.isArray(result)) {
 
-    projects =
-      result;
+    projects = result;
 
   } else if (
     Array.isArray(result.projects)
   ) {
 
-    projects =
-      result.projects;
+    projects = result.projects;
 
   } else if (
     Array.isArray(result.data)
   ) {
 
-    projects =
-      result.data;
+    projects = result.data;
 
   } else if (
     Array.isArray(result.results)
   ) {
 
-    projects =
-      result.results;
+    projects = result.results;
 
   }
 
@@ -536,41 +467,29 @@ function normalizeProject(
   }
 
 
-  /*
-     NOMBRE DE CARPETA / IDENTIFICADOR
-  */
-
   const rawName =
     project.name ||
-    project.projectName ||
-    project.nombre ||
     project.title ||
+    project.nombre ||
     project.titulo ||
+    project.projectName ||
     "";
 
 
-  /*
-     METADATA
-  */
-
   let metadata =
-    project.metadata ||
+    project?.metadata ||
     null;
 
 
-  if (
-    typeof metadata === "string"
-  ) {
+  if (typeof metadata === "string") {
 
     try {
 
-      metadata =
-        JSON.parse(metadata);
+      metadata = JSON.parse(metadata);
 
     } catch (error) {
 
-      metadata =
-        null;
+      metadata = null;
 
     }
 
@@ -578,51 +497,35 @@ function normalizeProject(
 
 
   /*
-     TÍTULO VISIBLE
-
-     Primero utilizamos los campos que
-     list-projects ya devuelve directamente.
+     Buscamos la propiedad de título en la raíz o en metadata.
   */
 
-  const titleFromResponse =
-    project.titulo ||
-    project.title ||
-    "";
-
-
-  const titleFromMetadata =
-    metadata?.titulo ||
+  const metadataTitle =
+    project?.title ||
     metadata?.title ||
+    metadata?.titulo ||
     metadata?.nombre ||
     metadata?.name ||
+    project?.metadataTitle ||
+    project?.metadata_title ||
     "";
 
+
+  /*
+     Fallback en caso de que no exista título en el txt.
+  */
 
   const fallbackName =
     String(rawName)
-      .replace(
-        /\s*\(\d+\)\s*$/i,
-        ""
-      )
+      .replace(/\s*\(\d+\)\s*$/i, "")
       .trim();
 
 
   const displayName =
-    String(
-      titleFromResponse ||
-      titleFromMetadata ||
-      fallbackName
-    )
-      .replace(
-        /\s*[.!?]+\s*$/,
-        ""
-      )
+    String(metadataTitle || fallbackName)
+      .replace(/\s*[.!?]+\s*$/, "")
       .trim();
 
-
-  /*
-     ORDEN
-  */
 
   const order =
     project.order ??
@@ -631,60 +534,43 @@ function normalizeProject(
     999;
 
 
-  /*
-     COVER
-  */
-
   const cover =
     extractCover(project);
 
 
   /*
-     LOCALIZACIÓN
+     CORREGIDO: Leemos location, year y category tanto de la raíz 
+     como dentro del objeto metadata.
   */
 
   const location =
-    project.location ||
-    project.localizacion ||
-    project.ubicacion ||
-    project.place ||
     metadata?.location ||
     metadata?.localizacion ||
+    project.location ||
+    project.localizacion ||
     "";
 
-
-  /*
-     AÑO
-  */
 
   const year =
+    metadata?.year ||
+    metadata?.ano ||
+    metadata?.año ||
     project.year ||
     project.año ||
-    project.ano ||
-    metadata?.year ||
-    metadata?.año ||
-    metadata?.ano ||
     "";
 
-
-  /*
-     CATEGORÍA
-  */
 
   const rawCategory =
-    project.category ||
-    project.categoria ||
     metadata?.category ||
     metadata?.categoria ||
+    project.category ||
+    project.categoria ||
     "";
 
-
-  const category =
-    Array.isArray(rawCategory)
-      ? rawCategory
-          .slice(0, 2)
-          .join(", ")
-      : String(rawCategory);
+  // Si la categoría viene como Array (list-projects la devuelve así), tomamos las primeras
+  const category = Array.isArray(rawCategory) 
+    ? rawCategory.slice(0, 2).join(", ") 
+    : String(rawCategory);
 
 
   return {
@@ -693,8 +579,7 @@ function normalizeProject(
 
     metadata,
 
-    name:
-      rawName,
+    name: rawName,
 
     displayName,
 
@@ -721,68 +606,9 @@ function extractCover(
   project
 ) {
 
-  if (
-    !project ||
-    typeof project !== "object"
-  ) {
+  const directCandidates = [
 
-    return "";
-
-  }
-
-
-  /*
-     CASO PRINCIPAL DE list-projects:
-
-     cover: {
-       file: "cover.webp",
-       path: "...",
-       url: "..."
-     }
-  */
-
-  if (
-    project.cover &&
-    typeof project.cover === "object"
-  ) {
-
-    const coverUrl =
-      project.cover.url ||
-      project.cover.signedUrl ||
-      project.cover.signed_url ||
-      project.cover.publicUrl ||
-      project.cover.public_url ||
-      "";
-
-
-    if (coverUrl) {
-
-      return coverUrl;
-
-    }
-
-  }
-
-
-  /*
-     COVER COMO STRING
-  */
-
-  if (
-    typeof project.cover === "string" &&
-    project.cover.length > 0
-  ) {
-
-    return project.cover;
-
-  }
-
-
-  /*
-     OTROS CAMPOS POSIBLES
-  */
-
-  const candidates = [
+    project.cover,
 
     project.coverUrl,
 
@@ -790,30 +616,30 @@ function extractCover(
 
     project.coverURL,
 
+    project.image,
+
     project.imageUrl,
 
     project.image_url,
 
-    project.image,
+    project.thumbnail,
 
     project.thumbnailUrl,
 
     project.thumbnail_url,
 
-    project.thumbnail,
+    project.portada,
 
     project.portadaUrl,
 
-    project.portada_url,
-
-    project.portada
+    project.portada_url
 
   ];
 
 
   for (
     const candidate
-    of candidates
+    of directCandidates
   ) {
 
     const url =
@@ -830,10 +656,6 @@ function extractCover(
 
   }
 
-
-  /*
-     ÚLTIMO RECURSO
-  */
 
   return findImageUrl(
     project
@@ -859,7 +681,9 @@ function extractUrlFromValue(
     typeof value === "string"
   ) {
 
-    return value;
+    return isImageUrl(value)
+      ? value
+      : "";
 
   }
 
@@ -868,14 +692,36 @@ function extractUrlFromValue(
     typeof value === "object"
   ) {
 
-    return (
-      value.url ||
-      value.signedUrl ||
-      value.signed_url ||
-      value.publicUrl ||
-      value.public_url ||
-      ""
-    );
+    const candidates = [
+
+      value.url,
+
+      value.signedUrl,
+
+      value.signed_url,
+
+      value.publicUrl,
+
+      value.public_url
+
+    ];
+
+
+    for (
+      const candidate
+      of candidates
+    ) {
+
+      if (
+        typeof candidate === "string" &&
+        candidate.length > 0
+      ) {
+
+        return candidate;
+
+      }
+
+    }
 
   }
 
@@ -908,16 +754,9 @@ function findImageUrl(
     typeof value === "string"
   ) {
 
-    if (
-      value.startsWith("http://") ||
-      value.startsWith("https://")
-    ) {
-
-      return value;
-
-    }
-
-    return "";
+    return isImageUrl(value)
+      ? value
+      : "";
 
   }
 
@@ -943,8 +782,6 @@ function findImageUrl(
     "thumbnailUrl",
     "thumbnail_url",
     "portada",
-    "portadaUrl",
-    "portada_url",
     "url",
     "signedUrl",
     "signed_url"
@@ -1018,7 +855,44 @@ function findImageUrl(
 
 
 /* ------------------------------------------------------------
-   CREAR TARJETA DE PROYECTO
+   COMPROBAR URL DE IMAGEN
+   ------------------------------------------------------------ */
+
+function isImageUrl(
+  value
+) {
+
+  if (
+    typeof value !== "string"
+  ) {
+
+    return false;
+
+  }
+
+
+  const clean =
+    value
+      .split("?")[0]
+      .toLowerCase();
+
+
+  return (
+
+    clean.includes(".jpg") ||
+    clean.includes(".jpeg") ||
+    clean.includes(".png") ||
+    clean.includes(".webp") ||
+    clean.includes(".avif") ||
+    clean.includes(".gif")
+
+  );
+
+}
+
+
+/* ------------------------------------------------------------
+   CREAR TARJETA
    ------------------------------------------------------------ */
 
 function createProjectCard(
@@ -1066,8 +940,7 @@ function createProjectCard(
 
 
   const projectName =
-    project.name ||
-    "";
+    project.name || "";
 
 
   const displayName =
@@ -1123,81 +996,15 @@ function createProjectCard(
     false;
 
 
-  /*
-     ASIGNACIÓN DEL COVER
-
-     No se modifica ni se transforma
-     la URL que devuelve Supabase.
-  */
-
   if (project.cover) {
 
     image.src =
       project.cover;
 
-
-    image.dataset.source =
-      "supabase-cover";
-
-
-    console.log(
-      `[Baal Studio] Cover asignado: ${displayName}`,
-      project.cover
-    );
-
-  } else {
-
-    console.warn(
-      `[Baal Studio] El proyecto no tiene cover: ${displayName}`
-    );
-
   }
 
 
-  image.addEventListener(
-    "load",
-    () => {
-
-      console.log(
-        `[Baal Studio] Cover cargado: ${displayName}`,
-        {
-          naturalWidth:
-            image.naturalWidth,
-
-          naturalHeight:
-            image.naturalHeight
-        }
-      );
-
-    }
-  );
-
-
-  image.addEventListener(
-    "error",
-    () => {
-
-      console.error(
-        `[Baal Studio] ERROR cargando cover: ${displayName}`,
-        {
-          url:
-            image.src,
-
-          naturalWidth:
-            image.naturalWidth,
-
-          naturalHeight:
-            image.naturalHeight
-        }
-      );
-
-    }
-  );
-
-
-  media.appendChild(
-    image
-  );
+  media.appendChild(image);
 
 
   const overlay =
@@ -1208,9 +1015,7 @@ function createProjectCard(
     "project-card-overlay";
 
 
-  media.appendChild(
-    overlay
-  );
+  media.appendChild(overlay);
 
 
   /*
@@ -1239,9 +1044,7 @@ function createProjectCard(
       project.location;
 
 
-    content.appendChild(
-      location
-    );
+    content.appendChild(location);
 
   }
 
@@ -1258,9 +1061,7 @@ function createProjectCard(
     displayName;
 
 
-  content.appendChild(
-    title
-  );
+  content.appendChild(title);
 
 
   /*
@@ -1285,9 +1086,7 @@ function createProjectCard(
       project.year;
 
 
-    meta.appendChild(
-      year
-    );
+    meta.appendChild(year);
 
   }
 
@@ -1302,32 +1101,23 @@ function createProjectCard(
       project.category;
 
 
-    meta.appendChild(
-      category
-    );
+    meta.appendChild(category);
 
   }
 
 
   if (
-    meta.children.length > 0
+    meta.children.length
   ) {
 
-    content.appendChild(
-      meta
-    );
+    content.appendChild(meta);
 
   }
 
 
-  card.appendChild(
-    media
-  );
+  card.appendChild(media);
 
-
-  card.appendChild(
-    content
-  );
+  card.appendChild(content);
 
 
   return card;
@@ -1344,8 +1134,7 @@ function showProjectsMessage(
   message
 ) {
 
-  container.innerHTML =
-    "";
+  container.innerHTML = "";
 
 
   const element =
@@ -1364,9 +1153,7 @@ function showProjectsMessage(
     message;
 
 
-  element.appendChild(
-    text
-  );
+  element.appendChild(text);
 
 
   container.appendChild(
@@ -1381,6 +1168,7 @@ function showProjectsMessage(
    ------------------------------------------------------------ */
 
 function initProtection() {
+
 
   document.addEventListener(
     "contextmenu",
