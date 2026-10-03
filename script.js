@@ -1,83 +1,46 @@
-/* ============================================================
-   BAAL STUDIO
-   SCRIPT.JS — V08
-   ============================================================ */
-
-
-/* ------------------------------------------------------------
-   CONFIGURACIÓN GENERAL
-   ------------------------------------------------------------ */
-
 const SUPABASE_URL = "https://fayxkqzqvthwqjtrvphk.supabase.co";
 
 const FUNCTIONS = {
-
-  projects:
-    `${SUPABASE_URL}/functions/v1/list-projects`,
-
-  assets:
-    `${SUPABASE_URL}/functions/v1/get-site-assets`
-
+  projects: `${SUPABASE_URL}/functions/v1/list-projects`,
+  assets: `${SUPABASE_URL}/functions/v1/get-site-assets`
 };
-
-
-/* ------------------------------------------------------------
-   UTILIDADES
-   ------------------------------------------------------------ */
 
 function log(...args) {
   console.log("[Baal Studio]", ...args);
 }
 
-
 function warn(...args) {
   console.warn("[Baal Studio]", ...args);
 }
-
 
 function error(...args) {
   console.error("[Baal Studio]", ...args);
 }
 
-
 function isObject(value) {
-
   return (
     value !== null &&
     typeof value === "object" &&
     !Array.isArray(value)
   );
-
 }
 
-
 function isString(value) {
-
   return (
     typeof value === "string" &&
     value.trim().length > 0
   );
-
 }
 
-
 function normalizeText(value) {
-
   if (!isString(value)) {
     return "";
   }
 
   return value.trim();
-
 }
 
-
-/* ------------------------------------------------------------
-   URL
-   ------------------------------------------------------------ */
-
 function isProbablyImageUrl(value) {
-
   if (!isString(value)) {
     return false;
   }
@@ -95,12 +58,9 @@ function isProbablyImageUrl(value) {
     clean.endsWith(".gif") ||
     clean.endsWith(".avif")
   );
-
 }
 
-
 function isProbablyUrl(value) {
-
   if (!isString(value)) {
     return false;
   }
@@ -110,28 +70,18 @@ function isProbablyUrl(value) {
     value.startsWith("https://") ||
     value.startsWith("blob:")
   );
-
 }
 
-
-/* ------------------------------------------------------------
-   ASSETS
-   ------------------------------------------------------------ */
-
 async function loadSiteAssets() {
-
   try {
-
     log("Solicitando assets:", FUNCTIONS.assets);
 
     const response = await fetch(FUNCTIONS.assets);
 
     if (!response.ok) {
-
       throw new Error(
         `HTTP ${response.status} al cargar assets`
       );
-
     }
 
     const data = await response.json();
@@ -139,35 +89,22 @@ async function loadSiteAssets() {
     log("Assets recibidos:", data);
 
     if (!data || data.success !== true) {
-
       throw new Error(
         data?.error ||
         "Respuesta no válida de get-site-assets"
       );
-
     }
 
     applySiteAssets(data.assets || {});
-
   } catch (err) {
-
     error("Error cargando assets:", err);
-
   }
-
 }
 
-
-/* ------------------------------------------------------------
-   APLICAR ASSETS
-   ------------------------------------------------------------ */
-
 function applySiteAssets(assets) {
-
   if (!assets || typeof assets !== "object") {
     return;
   }
-
 
   const siteLogo =
     document.getElementById("site-logo");
@@ -184,57 +121,33 @@ function applySiteAssets(assets) {
   const footerQr =
     document.getElementById("footer-qr");
 
-
   if (siteLogo && assets.logoPrincipal) {
-
     siteLogo.src = assets.logoPrincipal;
-
   }
-
 
   if (heroBackground && assets.fondo) {
-
     heroBackground.src = assets.fondo;
-
   }
-
 
   if (footerLogoBaal && assets.logoPrincipal) {
-
     footerLogoBaal.src = assets.logoPrincipal;
-
   }
-
 
   if (footerLogoLns && assets.logoLNS) {
-
     footerLogoLns.src = assets.logoLNS;
-
   }
-
 
   if (footerQr && assets.qr) {
-
     footerQr.src = assets.qr;
-
   }
 
-
   log("Assets aplicados.");
-
 }
 
-
-/* ------------------------------------------------------------
-   NORMALIZAR PROYECTO
-   ------------------------------------------------------------ */
-
 function normalizeProject(project, index = 0) {
-
   if (!isObject(project)) {
     return null;
   }
-
 
   const rawName =
     normalizeText(
@@ -245,7 +158,6 @@ function normalizeProject(project, index = 0) {
       `Proyecto ${index + 1}`
     );
 
-
   const metadataTitle =
     project?.metadata?.titulo ||
     project?.metadata?.title ||
@@ -255,12 +167,10 @@ function normalizeProject(project, index = 0) {
     project?.title ||
     "";
 
-
   const displayName =
     String(metadataTitle || rawName)
       .replace(/\s*[.!?]+\s*$/, "")
       .trim();
-
 
   const order = Number(
     project.order ??
@@ -270,10 +180,8 @@ function normalizeProject(project, index = 0) {
     index + 1
   );
 
-
   const cover =
     extractCover(project);
-
 
   const location =
     normalizeText(
@@ -285,7 +193,6 @@ function normalizeProject(project, index = 0) {
       project?.metadata?.location ||
       ""
     );
-
 
   const year =
     normalizeText(
@@ -299,7 +206,6 @@ function normalizeProject(project, index = 0) {
       ""
     );
 
-
   const category =
     normalizeText(
       project.category ||
@@ -310,188 +216,118 @@ function normalizeProject(project, index = 0) {
       ""
     );
 
-
   return {
-
     ...project,
-
     name: rawName,
-
     displayName,
-
     order,
-
     cover,
-
     location,
-
     year,
-
     category
-
   };
-
 }
 
-
-/* ------------------------------------------------------------
-   EXTRAER COVER
-   ------------------------------------------------------------ */
-
 function extractCover(project) {
-
   if (!isObject(project)) {
     return "";
   }
-
 
   if (
     isObject(project.cover) &&
     isString(project.cover.url)
   ) {
-
     return project.cover.url;
-
   }
-
 
   if (
     isObject(project.cover) &&
     isString(project.cover.signedUrl)
   ) {
-
     return project.cover.signedUrl;
-
   }
 
-
-  if (
-    isString(project.cover)
-  ) {
-
+  if (isString(project.cover)) {
     return project.cover;
-
   }
-
 
   const directCandidates = [
-
     project.coverUrl,
     project.cover_url,
-
     project.imageUrl,
     project.image_url,
-
     project.image,
-
     project.thumbnailUrl,
     project.thumbnail_url,
-
     project.thumbnail,
-
     project.portada,
-
     project.portadaUrl,
     project.portada_url
-
   ];
 
-
   for (const candidate of directCandidates) {
-
     const url =
       extractUrlFromValue(candidate);
 
     if (url) {
-
       return url;
-
     }
-
   }
 
-
   return findImageUrl(project);
-
 }
 
-
-/* ------------------------------------------------------------
-   BUSCAR IMAGEN RECURSIVAMENTE
-   ------------------------------------------------------------ */
-
 function findImageUrl(value, depth = 0) {
-
   if (depth > 6) {
     return "";
   }
 
-
   if (isString(value)) {
-
     if (
       isProbablyUrl(value) &&
       isProbablyImageUrl(value)
     ) {
-
       return value;
-
     }
 
     return "";
-
   }
-
 
   if (!isObject(value)) {
     return "";
   }
 
-
   const priorityKeys = [
-
     "cover",
     "coverUrl",
     "cover_url",
-
     "image",
     "imageUrl",
     "image_url",
-
     "thumbnail",
     "thumbnailUrl",
     "thumbnail_url",
-
     "portada",
     "portadaUrl",
     "portada_url",
-
     "url",
     "signedUrl"
-
   ];
 
-
   for (const key of priorityKeys) {
-
     if (!(key in value)) {
       continue;
     }
 
     const found =
-      extractUrlFromValue(
-        value[key]
-      );
+      extractUrlFromValue(value[key]);
 
     if (found) {
       return found;
     }
-
   }
 
-
   for (const key of Object.keys(value)) {
-
     const found =
       findImageUrl(
         value[key],
@@ -501,143 +337,96 @@ function findImageUrl(value, depth = 0) {
     if (found) {
       return found;
     }
-
   }
 
-
   return "";
-
 }
 
-
-/* ------------------------------------------------------------
-   EXTRAER URL DE VALOR
-   ------------------------------------------------------------ */
-
 function extractUrlFromValue(value) {
-
   if (isString(value)) {
-
     if (isProbablyUrl(value)) {
-
       return value;
-
     }
 
     return "";
-
   }
-
 
   if (!isObject(value)) {
     return "";
   }
 
-
   const candidates = [
-
     value.url,
     value.signedUrl,
     value.signed_url,
-
     value.publicUrl,
     value.public_url,
-
     value.href,
-
     value.downloadUrl,
     value.download_url
-
   ];
 
-
   for (const candidate of candidates) {
-
     if (
       isString(candidate) &&
       isProbablyUrl(candidate)
     ) {
-
       return candidate;
-
     }
-
   }
 
-
   return "";
-
 }
 
-
-/* ------------------------------------------------------------
-   CARGAR PROYECTOS DESTACADOS
-   ------------------------------------------------------------ */
-
 async function loadSelectedProjects() {
-
   const container =
     document.getElementById(
       "selected-projects-grid"
     );
 
-
   if (!container) {
     return;
   }
 
-
   try {
-
     log(
       "Solicitando proyectos:",
       FUNCTIONS.projects
     );
-
 
     const response =
       await fetch(
         FUNCTIONS.projects
       );
 
-
     if (!response.ok) {
-
       throw new Error(
         `HTTP ${response.status} al cargar proyectos`
       );
-
     }
-
 
     const data =
       await response.json();
-
 
     log(
       "Proyectos recibidos:",
       data
     );
 
-
     if (
       !data ||
       data.success !== true
     ) {
-
       throw new Error(
         data?.error ||
         "Respuesta no válida de list-projects"
       );
-
     }
-
 
     const projects =
       Array.isArray(data.projects)
         ? data.projects
         : [];
-
 
     const normalized =
       projects
@@ -655,82 +444,50 @@ async function loadSelectedProjects() {
             Number(b.order || 0)
         );
 
-
     renderSelectedProjects(
       container,
       normalized
     );
 
-
   } catch (err) {
-
     error(
       "Error cargando proyectos:",
       err
     );
 
-
     container.innerHTML = `
-
       <div class="project-loading">
-
         <p>
           No se pudieron cargar los proyectos.
         </p>
-
       </div>
-
     `;
-
   }
-
 }
-
-
-/* ------------------------------------------------------------
-   RENDER PROYECTOS
-   ------------------------------------------------------------ */
 
 function renderSelectedProjects(
   container,
   projects
 ) {
-
   container.innerHTML = "";
 
-
   if (!projects.length) {
-
     container.innerHTML = `
-
       <div class="project-loading">
-
         <p>
           No hay proyectos disponibles.
         </p>
-
       </div>
-
     `;
 
     return;
-
   }
-
-
-  /*
-     Para la home utilizamos:
-     - primer proyecto como grande
-     - segundo y tercero como medianos
-  */
 
   const selected =
     projects.slice(0, 3);
 
-
   selected.forEach(
     (project, index) => {
-
       const card =
         createProjectCard(
           project,
@@ -738,92 +495,69 @@ function renderSelectedProjects(
         );
 
       if (card) {
-
         container.appendChild(card);
-
       }
-
     }
   );
-
 }
-
-
-/* ------------------------------------------------------------
-   CREAR TARJETA DE PROYECTO
-   ------------------------------------------------------------ */
 
 function createProjectCard(
   project,
   index
 ) {
-
   const card =
     document.createElement(
       "article"
     );
-
 
   card.className =
     index === 0
       ? "project-card project-card-large"
       : "project-card project-card-medium";
 
-
   const media =
     document.createElement(
       "div"
     );
 
-
   media.className =
     "project-card-media protected-media";
-
 
   const image =
     document.createElement(
       "img"
     );
 
-
   image.className =
     "protected-image";
-
 
   image.alt =
     project.displayName ||
     project.name ||
     "Proyecto Baal Studio";
 
-
   image.draggable =
     false;
-
 
   if (
     typeof project.cover === "string" &&
     project.cover.length > 0
   ) {
-
     image.src =
       project.cover;
 
     image.dataset.source =
       "supabase-cover";
 
-
     console.log(
       `[Baal Studio] Cover asignado: ${project.displayName}`,
       project.cover
     );
-
   }
-
 
   image.addEventListener(
     "load",
     () => {
-
       console.log(
         `[Baal Studio] Cover cargado: ${project.displayName}`,
         {
@@ -837,15 +571,12 @@ function createProjectCard(
             image.src
         }
       );
-
     }
   );
-
 
   image.addEventListener(
     "error",
     event => {
-
       console.error(
         `[Baal Studio] ERROR cargando cover: ${project.displayName}`,
         {
@@ -855,48 +586,38 @@ function createProjectCard(
           event
         }
       );
-
     }
   );
-
 
   media.appendChild(
     image
   );
-
 
   const overlay =
     document.createElement(
       "div"
     );
 
-
   overlay.className =
     "project-card-overlay";
-
 
   media.appendChild(
     overlay
   );
 
-
   card.appendChild(
     media
   );
-
 
   const content =
     document.createElement(
       "div"
     );
 
-
   content.className =
     "project-card-content";
 
-
   if (project.location) {
-
     const location =
       document.createElement(
         "p"
@@ -911,42 +632,33 @@ function createProjectCard(
     content.appendChild(
       location
     );
-
   }
-
 
   const title =
     document.createElement(
       "h3"
     );
 
-
   title.className =
     "project-card-title";
-
 
   title.textContent =
     project.displayName ||
     project.name;
 
-
   content.appendChild(
     title
   );
-
 
   const meta =
     document.createElement(
       "div"
     );
 
-
   meta.className =
     "project-card-meta";
 
-
   if (project.year) {
-
     const span =
       document.createElement(
         "span"
@@ -958,12 +670,9 @@ function createProjectCard(
     meta.appendChild(
       span
     );
-
   }
 
-
   if (project.category) {
-
     const span =
       document.createElement(
         "span"
@@ -975,72 +684,49 @@ function createProjectCard(
     meta.appendChild(
       span
     );
-
   }
 
-
   if (meta.children.length) {
-
     content.appendChild(
       meta
     );
-
   }
-
 
   card.appendChild(
     content
   );
 
-
   card.addEventListener(
     "click",
     () => {
-
       if (
         project.url &&
         isProbablyUrl(project.url)
       ) {
-
         window.location.href =
           project.url;
 
         return;
-
       }
-
 
       const params =
         new URLSearchParams({
-
           project:
             project.name || ""
-
         });
-
 
       window.location.href =
         `./proyectos.html?${params.toString()}`;
-
     }
   );
 
-
   return card;
-
 }
 
-
-/* ------------------------------------------------------------
-   PROTECCIÓN DE MEDIOS
-   ------------------------------------------------------------ */
-
 function setupMediaProtection() {
-
   document.addEventListener(
     "contextmenu",
     event => {
-
       const target =
         event.target;
 
@@ -1054,19 +740,14 @@ function setupMediaProtection() {
           ".protected-image"
         )
       ) {
-
         event.preventDefault();
-
       }
-
     }
   );
-
 
   document.addEventListener(
     "dragstart",
     event => {
-
       const target =
         event.target;
 
@@ -1080,19 +761,14 @@ function setupMediaProtection() {
           ".protected-image"
         )
       ) {
-
         event.preventDefault();
-
       }
-
     }
   );
-
 
   document.addEventListener(
     "selectstart",
     event => {
-
       const target =
         event.target;
 
@@ -1103,22 +779,16 @@ function setupMediaProtection() {
           ".protected-media"
         )
       ) {
-
         event.preventDefault();
-
       }
-
     }
   );
-
 
   document.addEventListener(
     "keydown",
     event => {
-
       const key =
         String(event.key).toLowerCase();
-
 
       const forbidden =
         (
@@ -1130,60 +800,39 @@ function setupMediaProtection() {
           "u"
         ].includes(key);
 
-
       if (forbidden) {
-
         event.preventDefault();
-
       }
-
     }
   );
-
 }
 
-
-/* ------------------------------------------------------------
-   HEADER SCROLL
-   ------------------------------------------------------------ */
-
 function setupHeaderScroll() {
-
   const header =
     document.getElementById(
       "main-header"
     );
 
-
   if (!header) {
     return;
   }
 
-
   const update =
     () => {
-
       if (
         window.scrollY > 30
       ) {
-
         header.classList.add(
           "scrolled"
         );
-
       } else {
-
         header.classList.remove(
           "scrolled"
         );
-
       }
-
     };
 
-
   update();
-
 
   window.addEventListener(
     "scroll",
@@ -1192,78 +841,58 @@ function setupHeaderScroll() {
       passive: true
     }
   );
-
 }
 
-
-/* ------------------------------------------------------------
-   MENÚ MÓVIL
-   ------------------------------------------------------------ */
-
 function setupMobileMenu() {
-
   const button =
     document.getElementById(
       "mobile-menu-button"
     );
-
 
   const menu =
     document.getElementById(
       "mobile-menu"
     );
 
-
   if (
     !button ||
     !menu
   ) {
-
     return;
-
   }
-
 
   button.addEventListener(
     "click",
     () => {
-
       const open =
         button.classList.toggle(
           "open"
         );
-
 
       menu.classList.toggle(
         "open",
         open
       );
 
-
       button.setAttribute(
         "aria-expanded",
         String(open)
       );
 
-
       menu.setAttribute(
         "aria-hidden",
         String(!open)
       );
-
     }
   );
-
 
   menu
     .querySelectorAll("a")
     .forEach(
       link => {
-
         link.addEventListener(
           "click",
           () => {
-
             button.classList.remove(
               "open"
             );
@@ -1281,28 +910,18 @@ function setupMobileMenu() {
               "aria-hidden",
               "true"
             );
-
           }
         );
-
       }
     );
-
 }
-
-
-/* ------------------------------------------------------------
-   INICIALIZACIÓN
-   ------------------------------------------------------------ */
 
 document.addEventListener(
   "DOMContentLoaded",
   () => {
-
     log(
       "Inicializando Baal Studio V08..."
     );
-
 
     loadSiteAssets();
 
@@ -1314,10 +933,8 @@ document.addEventListener(
 
     setupMobileMenu();
 
-
     log(
       "Inicialización completada."
     );
-
   }
 );
