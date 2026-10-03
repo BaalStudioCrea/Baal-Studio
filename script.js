@@ -1144,7 +1144,6 @@ function showProjectsMessage(
 
 function initProtection() {
 
-
   document.addEventListener(
     "contextmenu",
     event => {
