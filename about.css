@@ -3,8 +3,15 @@
    ABOUT.CSS — ESTILOS ESPECÍFICOS PARA LA PÁGINA "SOBRE MÍ"
    ============================================================ */
 
+/* Tipografía base Inter para todo el cuerpo de texto de la página */
+.about-page-hero,
+.about-background-section,
+.tools-section {
+  font-family: 'Inter', var(--font-body), system-ui, -apple-system, sans-serif;
+}
+
 /* ------------------------------------------------------------
-   HEADER ESPECÍFICO (FONDO OSCURO PARA CONTRASTE)
+   HEADER ESPECÍFICO (FONDO OSCURO)
    ------------------------------------------------------------ */
 .about-header {
   background-color: #111111 !important;
@@ -12,103 +19,254 @@
 }
 
 /* ------------------------------------------------------------
-   HERO DE LA PÁGINA
+   HERO DE LA PÁGINA (ESTRUCTURA 50/50 CON CONTRASTE OSCURO)
    ------------------------------------------------------------ */
 .about-page-hero {
-  background: var(--bg);
-  padding: 180px 0 var(--section-space) 0;
+  background: #111111;
+  color: #ffffff;
+  padding: 160px 0 var(--section-space) 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* Logo grande a la izquierda */
+.about-hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+/* Contenedor del Logo Izquierdo */
+.about-hero-logo-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 50px 40px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
 .about-hero-logo {
   width: 100%;
-  max-width: 220px;
+  max-width: 320px;
+  height: auto;
   display: block;
-  margin-bottom: 40px;
-  opacity: 0.9;
+  object-fit: contain;
 }
 
-/* Etiquetas de especialidad */
+/* Contenido del Hero */
+.about-hero-content .section-kicker {
+  color: #ffffff;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.about-hero-content .section-kicker-en {
+  color: #888888;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.about-hero-content .section-rule {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.15);
+  margin: 15px 0 25px 0;
+}
+
+.about-hero-content .bilingual-copy p {
+  font-family: 'Inter', var(--font-body), sans-serif !important;
+  color: #e0e0e0;
+  font-size: 13px;
+  line-height: 1.75;
+  font-weight: 300;
+  margin-bottom: 0;
+}
+
+.about-hero-content .bilingual-copy p.english-copy {
+  color: #888888;
+  font-size: 11px;
+  margin-top: 6px;
+}
+
+.about-hero-content .copy-separator {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 18px 0;
+}
+
+/* Etiquetas de Especialidad */
 .expertise-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin: 30px 0;
+  gap: 8px;
+  margin: 25px 0;
 }
 
 .expertise-tag {
-  padding: 8px 16px;
-  border: 1px solid var(--light-gray);
+  padding: 8px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   font-size: 10px;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  background: var(--white);
+  letter-spacing: 0.08em;
+  background: rgba(255, 255, 255, 0.04);
+  color: #ffffff;
+  font-weight: 500;
 }
 
 .expertise-tag span {
-  color: var(--gray);
+  color: #888888;
   margin-left: 6px;
+  font-weight: 400;
+}
+
+/* Stats Grid */
+.about-hero-content .stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  margin-top: 30px;
+  padding-top: 25px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.about-hero-content .stat-item strong {
+  display: block;
+  font-size: 26px;
+  font-weight: 300;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.about-hero-content .stat-item span {
+  display: block;
+  font-size: 10px;
+  color: #cccccc;
+  margin-top: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.about-hero-content .stat-item small {
+  display: block;
+  font-size: 9px;
+  color: #777777;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 /* ------------------------------------------------------------
-   SECCIÓN DE FORMACIÓN / BACKGROUND
+   SECCIÓN DE FORMACIÓN / BACKGROUND (FONDO CLARO)
    ------------------------------------------------------------ */
 .about-background-section {
-  background: var(--white);
+  background: #ffffff;
   padding: var(--section-space) 0;
+  color: #111111;
+}
+
+.about-background-section .section-kicker {
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.about-background-section .section-kicker-en {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #888888;
+}
+
+.about-background-section .bilingual-copy p {
+  font-family: 'Inter', var(--font-body), sans-serif !important;
+  font-size: 14px;
+  line-height: 1.8;
+  color: #222222;
+  font-weight: 300;
+  margin-bottom: 0;
+}
+
+.about-background-section .bilingual-copy p.english-copy {
+  color: #666666;
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+.about-background-section .copy-separator {
+  height: 1px;
+  background: var(--light-gray, #e5e5e5);
+  margin: 20px 0;
 }
 
 /* ------------------------------------------------------------
    SECCIÓN DE HERRAMIENTAS Y SOFTWARE (CAJETINES ELEGANTES)
    ------------------------------------------------------------ */
 .tools-section {
-  background: var(--bg);
+  background: var(--bg, #f7f7f7);
   padding: var(--section-space) 0;
+}
+
+.tools-section .section-kicker {
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.tools-section .section-kicker-en {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #888888;
 }
 
 .tools-category-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Grid de 2x2 para ocupar mejor el espacio */
+  grid-template-columns: repeat(2, 1fr);
   gap: 20px;
   margin-top: 40px;
 }
 
 .tool-group {
-  background: var(--white);
-  border: 1px solid var(--light-gray);
-  padding: 40px;
+  background: #ffffff;
+  border: 1px solid var(--light-gray, #e0e0e0);
+  padding: 35px;
   display: flex;
   flex-direction: column;
   transition: border-color 0.3s ease;
 }
 
 .tool-group:hover {
-  border-color: #cccccc;
+  border-color: #111111;
 }
 
 .tool-group-header {
-  border-bottom: 1px solid var(--light-gray);
+  border-bottom: 1px solid #f0f0f0;
   padding-bottom: 15px;
   margin-bottom: 20px;
 }
 
 .tool-group h3 {
-  font-family: var(--font-title);
-  font-size: 18px;
-  font-weight: 400;
-  margin: 0 0 5px 0;
-  color: var(--black);
+  font-family: 'Inter', var(--font-body), sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin: 0 0 4px 0;
+  color: #111111;
 }
 
 .tool-group .tool-group-en {
   font-size: 10px;
-  color: var(--gray);
+  color: #888888;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   display: block;
 }
 
-/* Las herramientas como etiquetas dentro del cajetín */
 .tool-group ul {
   list-style: none;
   padding: 0;
@@ -119,39 +277,40 @@
 }
 
 .tool-group li {
+  font-family: 'Inter', var(--font-body), sans-serif;
   font-size: 10px;
-  color: var(--black);
+  color: #333333;
   padding: 8px 14px;
-  border: 1px solid var(--light-gray);
+  background: #f9f9f9;
+  border: 1px solid #e5e5e5;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  font-weight: 500;
 }
 
 /* ------------------------------------------------------------
    RESPONSIVE
    ------------------------------------------------------------ */
-@media (max-width: 1000px) {
-  .about-page-hero {
-    padding-top: 150px;
+@media (max-width: 950px) {
+  .about-hero-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
   }
-}
 
-@media (max-width: 700px) {
-  .about-page-hero {
-    padding-top: 130px;
+  .about-hero-logo-wrapper {
+    padding: 40px 20px;
   }
-  
-  .tools-category-grid {
-    grid-template-columns: 1fr; /* En móvil pasa a 1 columna */
-    gap: 15px;
-  }
-  
+
   .about-hero-logo {
-    max-width: 160px;
-    margin-bottom: 30px;
+    max-width: 240px;
   }
-  
-  .tool-group {
-    padding: 30px;
+
+  .tools-category-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .about-hero-content .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
   }
 }
