@@ -18,7 +18,7 @@
 
   <title>Sobre mí — Baal Studio</title>
 
-  <!-- CARGAMOS EL CSS PRINCIPAL (ESTABLE) Y LUEGO EL ESPECÍFICO -->
+  <!-- CARGAMOS EL CSS PRINCIPAL (ESTABLE) Y EL CSS ESPECÍFICO DE ABOUT -->
   <link rel="stylesheet" href="./style.css">
   <link rel="stylesheet" href="./about.css">
 </head>
@@ -149,7 +149,7 @@
   <main>
 
     <!-- =====================================================
-         SOBRE MÍ / HERO ENCABEZADO (GRID 50/50 CON LOGO GRANDE)
+         SOBRE MÍ / HERO ENCABEZADO
          ===================================================== -->
     <section class="about-page-hero">
       
@@ -157,7 +157,7 @@
 
         <div class="about-hero-grid">
 
-          <!-- COLUMNA IZQUIERDA: LOGO BAAL BLANCO (Carga directa de archivo) -->
+          <!-- COLUMNA IZQUIERDA: LOGO BAAL BLANCO CON FALLBACK AUTOMÁTICO -->
           <div class="about-hero-logo-wrapper">
             <img
               id="about-hero-logo"
@@ -235,7 +235,7 @@
 
 
     <!-- =====================================================
-         FORMACIÓN / BACKGROUND
+         FORMACIÓN / BACKGROUND (DISTRIBUIDO EN EL ESPACIO ÚTIL)
          ===================================================== -->
     <section class="about-background-section">
 
@@ -248,32 +248,41 @@
         </div>
 
         <div class="about-home-content">
-          <div class="bilingual-copy">
-            <p>
-              La formación académica proporciona la doble base de una práctica que une la precisión técnica con la comprensión del patrimonio.
-            </p>
-            <p class="english-copy">
-              Academic formation provides the dual foundation for a practice that bridges technical precision with heritage understanding.
-            </p>
+          
+          <div class="background-grid-layout">
 
-            <div class="copy-separator"></div>
+            <div class="background-card">
+              <span class="background-card-num">01 / BASE TÉCNICA</span>
+              <p>
+                La formación académica proporciona la doble base de una práctica que une la precisión técnica con la comprensión del patrimonio.
+              </p>
+              <p class="english-copy">
+                Academic formation provides the dual foundation for a practice that bridges technical precision with heritage understanding.
+              </p>
+            </div>
 
-            <p>
-              El trabajo en diferentes ámbitos ha establecido el rigor metodológico que define el enfoque del estudio. La colaboración posterior con la Universidad de Granada amplió la práctica a contextos patrimoniales internacionales.
-            </p>
-            <p class="english-copy">
-              Work across various fields established the methodological rigor that defines the study's approach. Subsequent collaboration with the University of Granada extended this practice to international heritage contexts.
-            </p>
+            <div class="background-card">
+              <span class="background-card-num">02 / RIGOR CIENTÍFICO</span>
+              <p>
+                El trabajo en diferentes ámbitos ha establecido el rigor metodológico que define el enfoque del estudio. La colaboración posterior con la Universidad de Granada amplió la práctica a contextos patrimoniales internacionales.
+              </p>
+              <p class="english-copy">
+                Work across various fields established the methodological rigor that defines the study's approach. Subsequent collaboration with the University of Granada extended this practice to international heritage contexts.
+              </p>
+            </div>
 
-            <div class="copy-separator"></div>
+            <div class="background-card">
+              <span class="background-card-num">03 / PRÁCTICA INDEPENDIENTE</span>
+              <p>
+                El estudio opera como práctica independiente, colaborando con equipos de conservación, arqueología y agencias de gestión del patrimonio en proyectos que requieren los más altos estándares de documentación digital, así como investigaciones universitarias.
+              </p>
+              <p class="english-copy">
+                The studio operates as an independent practice, collaborating with conservation teams, archaeological teams, and heritage management agencies on projects requiring the highest standards of digital documentation.
+              </p>
+            </div>
 
-            <p>
-              El estudio opera como práctica independiente, colaborando con equipos de conservación, equipos arqueológicos y agencias de gestión del patrimonio en proyectos que requieren los más altos estándares de documentación digital, así como para proyectos de investigación de la universidad y cualquier otra entidad que lo requiera.
-            </p>
-            <p class="english-copy">
-              The studio operates as an independent practice, collaborating with conservation teams, archaeological teams, and heritage management agencies on projects requiring the highest standards of digital documentation, as well as for research projects of the university and any other entity that requires it.
-            </p>
           </div>
+
         </div>
 
       </div>
@@ -479,8 +488,32 @@
   </footer>
 
 
-
   <script src="./script.js"></script>
+
+  <!-- GARANTIZA LA SINCRONIZACIÓN DEL LOGO DEL HERO CON EL SCRIPT DEL SITIO -->
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const heroLogo = document.getElementById('about-hero-logo');
+      const siteLogo = document.getElementById('site-logo');
+      
+      const syncLogo = () => {
+        if (siteLogo && siteLogo.src && siteLogo.src !== window.location.href) {
+          heroLogo.src = siteLogo.src;
+        }
+      };
+
+      // Intenta la sincronización
+      syncLogo();
+      setTimeout(syncLogo, 100);
+      setTimeout(syncLogo, 500);
+
+      heroLogo.onerror = () => {
+        if (siteLogo && siteLogo.src) {
+          heroLogo.src = siteLogo.src;
+        }
+      };
+    });
+  </script>
 
 </body>
 
