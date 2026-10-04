@@ -27,7 +27,7 @@
 <body>
 
   <!-- =====================================================
-       HEADER (Añadida clase .about-header para el fondo oscuro)
+       HEADER
        ===================================================== -->
 
   <header class="main-header about-header" id="main-header">
@@ -39,7 +39,6 @@
         class="header-logo-link"
         aria-label="Baal Studio — Inicio"
       >
-
         <img
           id="site-logo"
           class="header-logo protected-image"
@@ -49,48 +48,26 @@
           height="40"
           draggable="false"
         >
-
       </a>
 
 
-      <nav
-        class="desktop-nav"
-        aria-label="Navegación principal"
-      >
-
-        <a
-          href="./index.html"
-          class="nav-link"
-        >
+      <nav class="desktop-nav" aria-label="Navegación principal">
+        <a href="./index.html" class="nav-link">
           <span>Inicio</span>
           <span class="nav-link-en">Home</span>
         </a>
-
-        <a
-          href="./proyectos.html"
-          class="nav-link"
-        >
+        <a href="./proyectos.html" class="nav-link">
           <span>Proyectos</span>
           <span class="nav-link-en">Projects</span>
         </a>
-
-        <a
-          href="./about.html"
-          class="nav-link active"
-          aria-current="page"
-        >
+        <a href="./about.html" class="nav-link active" aria-current="page">
           <span>Sobre mí</span>
           <span class="nav-link-en">About</span>
         </a>
-
-        <a
-          href="./contact.html"
-          class="nav-link"
-        >
+        <a href="./contact.html" class="nav-link">
           <span>Contacto</span>
           <span class="nav-link-en">Contact</span>
         </a>
-
       </nav>
 
 
@@ -110,36 +87,25 @@
     </div>
 
 
-    <div
-      class="mobile-menu"
-      id="mobile-menu"
-      aria-hidden="true"
-    >
-
+    <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
       <nav aria-label="Navegación móvil">
-
         <a href="./index.html">
           <span>Inicio</span>
           <small>Home</small>
         </a>
-
         <a href="./proyectos.html">
           <span>Proyectos</span>
           <small>Projects</small>
         </a>
-
         <a href="./about.html">
           <span>Sobre mí</span>
           <small>About</small>
         </a>
-
         <a href="./contact.html">
           <span>Contacto</span>
           <small>Contact</small>
         </a>
-
       </nav>
-
     </div>
 
   </header>
@@ -156,12 +122,22 @@
       <div class="section-container about-home-layout">
 
         <div class="about-home-heading">
+          <!-- LOGO GRANDE AÑADIDO AQUÍ -->
+          <img 
+            id="about-hero-logo" 
+            class="about-hero-logo protected-image" 
+            src="" 
+            alt="Baal Studio Logo" 
+            draggable="false"
+          >
+          
           <p class="section-kicker">Especialista en Documentación del Patrimonio</p>
           <p class="section-kicker-en">Heritage Documentation Specialist</p>
           <div class="section-rule"></div>
         </div>
 
         <div class="about-home-content">
+          <!-- Tipografías unificadas: fuera etiquetas de estilo en línea -->
           <div class="bilingual-copy">
             <p>
               Con más de 12 años de práctica en la intersección entre tecnología digital y patrimonio cultural, el estudio ha documentado más de 30 casos entre España y Portugal — desde manufactura prehistórica hasta yacimientos arqueológicos completos.
@@ -172,7 +148,7 @@
             
             <div class="copy-separator"></div>
             
-            <p style="font-size: 18px; font-family: var(--font-body); line-height: 1.6;">
+            <p>
               Formado en diseño, conservación, restauración y arqueología, la práctica integra una metodología científica rigurosa con herramientas digitales avanzadas para producir documentación que cumple los más altos estándares de conservación, investigación y gestión.
             </p>
             <p class="english-copy">
@@ -268,7 +244,7 @@
 
 
     <!-- =====================================================
-         HERRAMIENTAS
+         HERRAMIENTAS / NUEVO DISEÑO EN CAJETINES
          ===================================================== -->
     <section class="tools-section">
 
@@ -285,8 +261,10 @@
           <div class="tools-category-grid">
             
             <div class="tool-group">
-              <h3>Captura de Datos</h3>
-              <span class="tool-group-en">Data Capture</span>
+              <div class="tool-group-header">
+                <h3>Captura de Datos</h3>
+                <span class="tool-group-en">Data Capture</span>
+              </div>
               <ul>
                 <li>Cámara de fotos</li>
                 <li>Escáner 3D</li>
@@ -295,8 +273,10 @@
             </div>
 
             <div class="tool-group">
-              <h3>Procesamiento</h3>
-              <span class="tool-group-en">Processing</span>
+              <div class="tool-group-header">
+                <h3>Procesamiento</h3>
+                <span class="tool-group-en">Processing</span>
+              </div>
               <ul>
                 <li>Autodesk ReCap</li>
                 <li>CloudCompare</li>
@@ -306,8 +286,10 @@
             </div>
 
             <div class="tool-group">
-              <h3>Modelado</h3>
-              <span class="tool-group-en">Modeling & CAD</span>
+              <div class="tool-group-header">
+                <h3>Modelado</h3>
+                <span class="tool-group-en">Modeling & CAD</span>
+              </div>
               <ul>
                 <li>Blender</li>
                 <li>ZBrush</li>
@@ -316,8 +298,10 @@
             </div>
 
             <div class="tool-group">
-              <h3>Visualización</h3>
-              <span class="tool-group-en">Visualization</span>
+              <div class="tool-group-header">
+                <h3>Visualización</h3>
+                <span class="tool-group-en">Visualization</span>
+              </div>
               <ul>
                 <li>Sketchfab</li>
                 <li>Vídeo</li>
@@ -337,88 +321,39 @@
 
 
   <!-- =====================================================
-       FOOTER (INTACTO DEL INDEX ESTABLE)
+       FOOTER
        ===================================================== -->
 
   <footer class="main-footer">
-
     <div class="footer-container">
-
       <div class="footer-top">
-
         <div class="footer-services">
-          <p>
-            Documentación del Patrimonio · Planimetrías · Mapeados · Levantamiento y Modelado 3D · Reconstrucción Virtual · Fotografía con Drone
-          </p>
-          <p class="footer-services-en">
-            Heritage Documentation · Mapping · 3D Survey · Virtual reconstruction · Drone Photo
-          </p>
+          <p>Documentación del Patrimonio · Planimetrías · Mapeados · Levantamiento y Modelado 3D · Reconstrucción Virtual · Fotografía con Drone</p>
+          <p class="footer-services-en">Heritage Documentation · Mapping · 3D Survey · Virtual reconstruction · Drone Photo</p>
         </div>
-
         <div class="footer-nav-column">
           <a href="./index.html">Inicio · Home</a>
           <a href="./proyectos.html">Proyectos · Projects</a>
           <a href="./about.html">Sobre mí · About</a>
           <a href="./contact.html">Contacto · Contact</a>
         </div>
-
       </div>
 
       <div class="footer-identity">
-
         <div class="footer-logos">
-          <img
-            id="footer-logo-baal"
-            class="footer-secondary-logo protected-image"
-            src=""
-            alt="Baal Studio"
-            draggable="false"
-          >
-          <img
-            id="footer-logo-lns"
-            class="footer-secondary-logo protected-image"
-            src=""
-            alt="LNS"
-            draggable="false"
-          >
+          <img id="footer-logo-baal" class="footer-secondary-logo protected-image" src="" alt="Baal Studio" draggable="false">
+          <img id="footer-logo-lns" class="footer-secondary-logo protected-image" src="" alt="LNS" draggable="false">
         </div>
-
-        <a
-          href="https://linktr.ee/baalstudio"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Baal Studio — Redes sociales"
-        >
-          <img
-            id="footer-qr"
-            class="footer-qr protected-image"
-            src=""
-            alt="Redes sociales de Baal Studio"
-            width="100"
-            height="100"
-            draggable="false"
-          >
+        <a href="https://linktr.ee/baalstudio" target="_blank" rel="noopener noreferrer" aria-label="Baal Studio — Redes sociales">
+          <img id="footer-qr" class="footer-qr protected-image" src="" alt="Redes sociales de Baal Studio" width="100" height="100" draggable="false">
         </a>
-
-        <a
-          href="https://linktr.ee/baalstudio"
-          class="footer-social-link"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          RRSS
-        </a>
-
+        <a href="https://linktr.ee/baalstudio" class="footer-social-link" target="_blank" rel="noopener noreferrer">RRSS</a>
       </div>
 
       <div class="footer-bottom">
-        <p>
-          © Juan Jesús Lupiáñez Moreno · Baal Studio · Todos los derechos reservados · All rights reserved.
-        </p>
+        <p>© Juan Jesús Lupiáñez Moreno · Baal Studio · Todos los derechos reservados · All rights reserved.</p>
       </div>
-
     </div>
-
   </footer>
 
   <script src="./script.js"></script>
