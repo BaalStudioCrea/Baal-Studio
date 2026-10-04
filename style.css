@@ -1867,3 +1867,37 @@ select {
   }
 
 }
+
+
+/* =========================================================
+   1. DECLARACIÓN DE FUENTE: BODONI MODA
+   ========================================================= */
+@font-face {
+  font-family: 'Bodoni Moda';
+  src: url('./fonts/BodoniModaVariable.ttf') format('truetype-variations'),
+       url('./fonts/BodoniModaVariable.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* =========================================================
+   2. CAMBIO DE TIPOGRAFÍA (TÍTULOS EN ESPAÑOL)
+   ========================================================= */
+
+/* Título principal: Baal Studio */
+.site-title,
+.brand-title,
+.header-title {
+  font-family: 'Bodoni Moda', Georgia, serif;
+}
+
+/* Títulos de secciones: Sobre el estudio, Proyectos seleccionados, Capacidades */
+#sobre-el-estudio h2,
+#proyectos-seleccionados h2,
+#capacidades h2,
+.sobre-el-estudio h2,
+.proyectos-seleccionados h2,
+.capacidades h2 {
+  font-family: 'Bodoni Moda', Georgia, serif;
+}
