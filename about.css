@@ -3,13 +3,6 @@
    ABOUT.CSS — ESTILOS ESPECÍFICOS PARA LA PÁGINA "SOBRE MÍ"
    ============================================================ */
 
-/* Tipografía base Inter para todo el cuerpo de texto de la página */
-.about-page-hero,
-.about-background-section,
-.tools-section {
-  font-family: 'Inter', var(--font-body), system-ui, -apple-system, sans-serif;
-}
-
 /* ------------------------------------------------------------
    HEADER ESPECÍFICO (FONDO OSCURO)
    ------------------------------------------------------------ */
@@ -53,21 +46,25 @@
   object-fit: contain;
 }
 
-/* Contenido del Hero */
-.about-hero-content .section-kicker {
-  color: #ffffff;
-  font-size: 11px;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  font-weight: 600;
-  margin-bottom: 2px;
+/* Títulos con la tipografía oficial de títulos (igual que index.html) */
+.section-kicker {
+  font-family: var(--font-title);
+  font-size: 26px;
+  font-weight: 400;
+  line-height: 1.2;
+  margin-bottom: 4px;
 }
 
-.about-hero-content .section-kicker-en {
-  color: #888888;
-  font-size: 10px;
-  letter-spacing: 0.12em;
+.about-hero-content .section-kicker {
+  color: #ffffff;
+}
+
+.section-kicker-en {
+  font-family: 'Inter', var(--font-body), sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
+  color: #888888;
 }
 
 .about-hero-content .section-rule {
@@ -76,6 +73,7 @@
   margin: 15px 0 25px 0;
 }
 
+/* Cuerpo de texto en Inter */
 .about-hero-content .bilingual-copy p {
   font-family: 'Inter', var(--font-body), sans-serif !important;
   color: #e0e0e0;
@@ -106,6 +104,7 @@
 }
 
 .expertise-tag {
+  font-family: 'Inter', var(--font-body), sans-serif;
   padding: 8px 12px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   font-size: 10px;
@@ -133,14 +132,16 @@
 }
 
 .about-hero-content .stat-item strong {
+  font-family: var(--font-title);
   display: block;
-  font-size: 26px;
+  font-size: 28px;
   font-weight: 300;
   color: #ffffff;
   line-height: 1;
 }
 
 .about-hero-content .stat-item span {
+  font-family: 'Inter', var(--font-body), sans-serif;
   display: block;
   font-size: 10px;
   color: #cccccc;
@@ -150,6 +151,7 @@
 }
 
 .about-hero-content .stat-item small {
+  font-family: 'Inter', var(--font-body), sans-serif;
   display: block;
   font-size: 9px;
   color: #777777;
@@ -167,22 +169,12 @@
 }
 
 .about-background-section .section-kicker {
-  font-size: 11px;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  font-weight: 600;
-}
-
-.about-background-section .section-kicker-en {
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #888888;
+  color: #111111;
 }
 
 .about-background-section .bilingual-copy p {
   font-family: 'Inter', var(--font-body), sans-serif !important;
-  font-size: 14px;
+  font-size: 13.5px;
   line-height: 1.8;
   color: #222222;
   font-weight: 300;
@@ -191,14 +183,14 @@
 
 .about-background-section .bilingual-copy p.english-copy {
   color: #666666;
-  font-size: 12px;
+  font-size: 11.5px;
   margin-top: 6px;
 }
 
 .about-background-section .copy-separator {
   height: 1px;
   background: var(--light-gray, #e5e5e5);
-  margin: 20px 0;
+  margin: 22px 0;
 }
 
 /* ------------------------------------------------------------
@@ -210,17 +202,7 @@
 }
 
 .tools-section .section-kicker {
-  font-size: 11px;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  font-weight: 600;
-}
-
-.tools-section .section-kicker-en {
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #888888;
+  color: #111111;
 }
 
 .tools-category-grid {
@@ -250,16 +232,15 @@
 }
 
 .tool-group h3 {
-  font-family: 'Inter', var(--font-body), sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-family: var(--font-title);
+  font-size: 20px;
+  font-weight: 400;
   margin: 0 0 4px 0;
   color: #111111;
 }
 
 .tool-group .tool-group-en {
+  font-family: 'Inter', var(--font-body), sans-serif;
   font-size: 10px;
   color: #888888;
   text-transform: uppercase;
@@ -276,16 +257,16 @@
   gap: 8px;
 }
 
+/* Herramientas en texto normal */
 .tool-group li {
   font-family: 'Inter', var(--font-body), sans-serif;
-  font-size: 10px;
+  font-size: 11px;
   color: #333333;
   padding: 8px 14px;
   background: #f9f9f9;
   border: 1px solid #e5e5e5;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 500;
+  font-weight: 400;
+  text-transform: none; /* Texto normal sin forzar mayúsculas */
 }
 
 /* ------------------------------------------------------------
