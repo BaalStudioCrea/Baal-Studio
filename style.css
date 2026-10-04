@@ -1,10 +1,9 @@
 /* ============================================================
-   BAAL STUDIO
-   STYLE.CSS — V05 (UNIFICADO)
+   BAAL STUDIO — STYLE.CSS
    ============================================================ */
 
 /* ------------------------------------------------------------
-   FUENTES LOCALES — GITHUB
+   FUENTES LOCALES
    ------------------------------------------------------------ */
 
 @font-face {
@@ -154,10 +153,6 @@ select {
   margin: 0;
   padding-left: var(--page-padding);
   padding-right: var(--page-padding);
-}
-
-.page-wrapper {
-  padding-top: 64px;
 }
 
 /* ------------------------------------------------------------
@@ -335,7 +330,7 @@ select {
 }
 
 /* ------------------------------------------------------------
-   TÍTULOS DE SECCIÓN
+   TÍTULOS Y REGLAS DE SECCIÓN
    ------------------------------------------------------------ */
 
 .section-kicker {
@@ -366,7 +361,7 @@ select {
 }
 
 /* ------------------------------------------------------------
-   ESTRUCTURA DE SECCIÓN DE 2 COLUMNAS (SOBRE EL ESTUDIO / SOBRE MÍ)
+   ESTRUCTURA DE SECCIONES (COMPATIBLE CON INDEX Y SUBPÁGINAS)
    ------------------------------------------------------------ */
 
 .about-home-section {
@@ -388,15 +383,6 @@ select {
 
 .about-home-heading {
   padding-right: 50px;
-}
-
-.about-left-logo {
-  width: 100%;
-  max-width: 220px;
-  height: auto;
-  object-fit: contain;
-  margin-bottom: 30px;
-  opacity: 0.85;
 }
 
 .about-home-content {
@@ -428,33 +414,6 @@ select {
   height: 1px;
   margin: 35px 0;
   background: var(--light-gray);
-}
-
-/* ETIQUETAS DE ESPECIALIDADES */
-
-.about-tags-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 14px;
-  margin: 40px 0;
-}
-
-.about-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  background: var(--bg);
-  border: 1px solid var(--light-gray);
-  font-size: 10px;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.about-tag em {
-  font-style: normal;
-  color: var(--gray);
-  font-size: 8.5px;
 }
 
 /* ESTADÍSTICAS */
@@ -496,63 +455,7 @@ select {
 }
 
 /* ------------------------------------------------------------
-   HERRAMIENTAS Y SOFTWARE
-   ------------------------------------------------------------ */
-
-.tools-section {
-  background: #eae7df;
-  padding: var(--section-space) 0;
-  border-top: 1px solid var(--light-gray);
-}
-
-.tools-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
-}
-
-.tool-category-card {
-  padding: 32px 28px;
-  background: var(--white);
-  border: 1px solid var(--light-gray);
-}
-
-.tool-category-card h3 {
-  margin: 0;
-  font-family: var(--font-title);
-  font-size: 20px;
-  font-weight: 400;
-  line-height: 1.2;
-}
-
-.tool-category-en {
-  display: block;
-  margin: 4px 0 20px;
-  color: var(--gray);
-  font-size: 8.5px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.tool-category-card ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.tool-category-card li {
-  padding: 8px 0;
-  border-bottom: 1px solid var(--bg);
-  font-size: 11px;
-  color: #444;
-}
-
-.tool-category-card li:last-child {
-  border-bottom: none;
-}
-
-/* ------------------------------------------------------------
-   FOOTER (EXACTAMENTE IGUAL AL INDEX)
+   FOOTER (EXACTO DEL INDEX)
    ------------------------------------------------------------ */
 
 .main-footer {
@@ -682,8 +585,100 @@ select {
 }
 
 /* ------------------------------------------------------------
-   RESPONSIVE
+   EXTENSIONES ESPECÍFICAS PARA SUBPÁGINAS (NO AFECTAN AL INDEX)
    ------------------------------------------------------------ */
+
+.page-wrapper {
+  padding-top: 64px;
+}
+
+.about-left-logo {
+  width: 100%;
+  max-width: 220px;
+  height: auto;
+  object-fit: contain;
+  margin-bottom: 30px;
+  opacity: 0.85;
+}
+
+.about-tags-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  margin: 40px 0;
+}
+
+.about-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--bg);
+  border: 1px solid var(--light-gray);
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.about-tag em {
+  font-style: normal;
+  color: var(--gray);
+  font-size: 8.5px;
+}
+
+.tools-section {
+  background: #eae7df;
+  padding: var(--section-space) 0;
+  border-top: 1px solid var(--light-gray);
+}
+
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.tool-category-card {
+  padding: 32px 28px;
+  background: var(--white);
+  border: 1px solid var(--light-gray);
+}
+
+.tool-category-card h3 {
+  margin: 0;
+  font-family: var(--font-title);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.tool-category-en {
+  display: block;
+  margin: 4px 0 20px;
+  color: var(--gray);
+  font-size: 8.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.tool-category-card ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tool-category-card li {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--bg);
+  font-size: 11px;
+  color: #444;
+}
+
+.tool-category-card li:last-child {
+  border-bottom: none;
+}
+
+/* RESPONSIVE SUBPÁGINAS */
 
 @media (max-width: 1000px) {
   :root {
@@ -782,19 +777,5 @@ select {
   .footer-qr {
     width: 90px;
     height: 90px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
   }
 }
