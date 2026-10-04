@@ -12,7 +12,7 @@
 }
 
 /* ------------------------------------------------------------
-   HERO DE LA PÁGINA (ESTRUCTURA 50/50 CON CONTRASTE OSCURO)
+   HERO DE LA PÁGINA (ESTRUCTURA CON CONTRASTE OSCURO)
    ------------------------------------------------------------ */
 .about-page-hero {
   background: #111111;
@@ -28,26 +28,34 @@
   align-items: center;
 }
 
-/* Contenedor del Logo Izquierdo */
+/* Logo Izquierdo sin cajetín e integrado directamente */
 .about-hero-logo-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 60px 40px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  min-height: 320px;
+  padding: 20px 0;
+  width: 100%;
 }
 
 .about-hero-logo {
   width: 100%;
-  max-width: 280px;
+  max-width: 360px;
   height: auto;
   display: block;
   object-fit: contain;
 }
 
-/* Títulos con la tipografía oficial (idéntica a style.css) */
+/* Títulos principales del bloque */
+.about-page-hero .section-kicker,
+.about-background-section .section-kicker,
+.tools-section .section-kicker {
+  font-family: var(--font-title);
+  font-size: clamp(24px, 2.5vw, 34px);
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
 .about-page-hero .section-kicker {
   color: #ffffff;
 }
@@ -144,7 +152,7 @@
 }
 
 /* ------------------------------------------------------------
-   SECCIÓN DE FORMACIÓN / BACKGROUND (REDISTRIBUCIÓN COMPLETA)
+   SECCIÓN DE FORMACIÓN / BACKGROUND (TEXTO CONTINUO)
    ------------------------------------------------------------ */
 .about-background-section {
   background: #ffffff;
@@ -152,33 +160,11 @@
   color: var(--black);
 }
 
-.background-grid-layout {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  width: 100%;
+.about-background-section .bilingual-copy {
+  max-width: 100%;
 }
 
-.background-card {
-  background: var(--bg);
-  border: 1px solid var(--light-gray);
-  padding: 32px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.background-card-num {
-  font-family: var(--font-body);
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  color: var(--accent);
-  font-weight: 600;
-  margin-bottom: 20px;
-  display: block;
-}
-
-.background-card p {
+.about-background-section .bilingual-copy p {
   font-family: var(--font-body);
   font-size: 13px;
   line-height: 1.75;
@@ -187,21 +173,34 @@
   margin: 0;
 }
 
-.background-card p.english-copy {
+.about-background-section .bilingual-copy p.english-copy {
   color: var(--gray);
-  font-size: 10.5px;
+  font-size: 10px;
   line-height: 1.65;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--light-gray);
+  margin-top: 6px;
+}
+
+.about-background-section .copy-separator {
+  height: 1px;
+  background: var(--light-gray);
+  margin: 24px 0;
 }
 
 /* ------------------------------------------------------------
-   SECCIÓN DE HERRAMIENTAS Y SOFTWARE (PROFUNDIDAD CUIDADA)
+   SECCIÓN DE HERRAMIENTAS Y SOFTWARE (PROFUNDIDAD Y CAPAS)
    ------------------------------------------------------------ */
 .tools-section {
   background: var(--bg);
   padding: var(--section-space) 0;
+  border-top: 1px solid var(--light-gray);
+}
+
+.tools-section .section-kicker {
+  color: var(--black);
+}
+
+.tools-section .section-kicker-en {
+  color: var(--gray);
 }
 
 .tools-category-grid {
@@ -212,8 +211,8 @@
 }
 
 .tool-group {
-  background: #ffffff; /* Capa blanca para separar del fondo beige de sección */
-  border: 1px solid var(--light-gray); /* Perfil gris por defecto */
+  background: #ffffff; /* Capa blanca que resalta sobre el beige de fondo */
+  border: 1px solid var(--light-gray);
   padding: 35px;
   display: flex;
   flex-direction: column;
@@ -221,7 +220,7 @@
 }
 
 .tool-group:hover {
-  border-color: var(--accent); /* Al pasar el ratón: cambio suave a marrón acento */
+  border-color: var(--accent); /* Transición suave a marrón acento */
 }
 
 .tool-group-header {
@@ -263,15 +262,14 @@
   font-size: 11px;
   color: var(--black);
   padding: 8px 14px;
-  background: #f2f0e8; /* Tono cálido intermedio para destacar de forma elegante */
-  border: 1px solid var(--light-gray); /* Perfil gris sutil */
+  background: #f2f0e8; /* Tono beige suave intermedio para dar relieve */
+  border: 1px solid var(--light-gray);
   font-weight: 400;
-  text-transform: none;
   transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
 .tool-group li:hover {
-  background: #e8e5dc; /* Contraste interactivo refinado al posar el cursor */
+  background: #e8e5dc;
   border-color: rgba(0, 0, 0, 0.2);
 }
 
@@ -284,23 +282,14 @@
     gap: 40px;
   }
 
-  .background-grid-layout {
-    grid-template-columns: 1fr;
-  }
-
   .tools-category-grid {
     grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 700px) {
-  .about-hero-logo-wrapper {
-    padding: 40px 20px;
-    min-height: 200px;
-  }
-
   .about-hero-logo {
-    max-width: 220px;
+    max-width: 280px;
   }
 
   .about-hero-content .stats-grid {
