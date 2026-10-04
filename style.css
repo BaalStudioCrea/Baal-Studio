@@ -1870,11 +1870,12 @@ select {
 
 
 /* =========================================================
-   1. DECLARACIÓN DE FUENTE: BODONI MODA
+   1. DECLARACIÓN DE FUENTE BODONI MODA
    ========================================================= */
 @font-face {
   font-family: 'Bodoni Moda';
-  src: url('./fonts/BodoniModaVariable.ttf') format('truetype-variations'),
+  src: url('/fonts/BodoniModaVariable.ttf') format('truetype-variations'),
+       url('../fonts/BodoniModaVariable.ttf') format('truetype-variations'),
        url('./fonts/BodoniModaVariable.ttf') format('truetype');
   font-weight: 100 900;
   font-style: normal;
@@ -1882,22 +1883,25 @@ select {
 }
 
 /* =========================================================
-   2. CAMBIO DE TIPOGRAFÍA (TÍTULOS EN ESPAÑOL)
+   2. APLICACIÓN FORZADA EN TÍTULOS EN ESPAÑOL
    ========================================================= */
 
-/* Título principal: Baal Studio */
-.site-title,
-.brand-title,
-.header-title {
-  font-family: 'Bodoni Moda', Georgia, serif;
+/* Título principal "Baal Studio" */
+h1, 
+.site-title, 
+.brand-title, 
+.logo, 
+header h1 {
+  font-family: 'Bodoni Moda', Georgia, serif !important;
 }
 
-/* Títulos de secciones: Sobre el estudio, Proyectos seleccionados, Capacidades */
+/* Cabeceras de los bloques principales en español */
+h2,
 #sobre-el-estudio h2,
 #proyectos-seleccionados h2,
 #capacidades h2,
 .sobre-el-estudio h2,
 .proyectos-seleccionados h2,
 .capacidades h2 {
-  font-family: 'Bodoni Moda', Georgia, serif;
+  font-family: 'Bodoni Moda', Georgia, serif !important;
 }
