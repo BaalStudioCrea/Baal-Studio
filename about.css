@@ -4,85 +4,97 @@
    ============================================================ */
 
 /* ------------------------------------------------------------
-   HERO DE LA PÁGINA (COMPENSA EL HEADER FIJO)
+   HEADER ESPECÍFICO (FONDO OSCURO PARA CONTRASTE)
    ------------------------------------------------------------ */
-.about-page-hero {
-  background: var(--bg);
-  /* Un padding superior mayor para dar aire debajo del header fijo */
-  padding: 180px 0 var(--section-space) 0;
+.about-header {
+  background-color: #111111 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* ------------------------------------------------------------
-   SECCIÓN DE METODOLOGÍA
+   HERO DE LA PÁGINA
    ------------------------------------------------------------ */
-.about-methodology-section {
+.about-page-hero {
+  background: var(--bg);
+  padding: 180px 0 var(--section-space) 0;
+}
+
+/* Etiquetas de especialidad */
+.expertise-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 30px 0;
+}
+
+.expertise-tag {
+  padding: 8px 16px;
+  border: 1px solid var(--light-gray);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--white);
+}
+
+.expertise-tag span {
+  color: var(--gray);
+  margin-left: 6px;
+}
+
+/* ------------------------------------------------------------
+   SECCIÓN DE FORMACIÓN / BACKGROUND
+   ------------------------------------------------------------ */
+.about-background-section {
   background: var(--white);
   padding: var(--section-space) 0;
 }
 
-.methodology-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 50px;
-  margin-top: 60px;
-  border-top: 1px solid var(--light-gray);
-  padding-top: 60px;
-}
-
-.methodology-card {
-  display: flex;
-  flex-direction: column;
-}
-
-.methodology-card h3 {
-  margin: 0 0 15px 0;
-  font-family: var(--font-title);
-  font-size: 24px;
-  font-weight: 400;
-  line-height: 1.2;
-}
-
-.methodology-card p {
-  margin: 0;
-  color: #56534e;
-  font-size: 10px;
-  line-height: 1.7;
-}
-
-.methodology-card .english-copy {
-  margin-top: 8px;
-  color: var(--gray);
-  font-size: 9px;
-}
-
 /* ------------------------------------------------------------
-   SECCIÓN DE HERRAMIENTAS
+   SECCIÓN DE HERRAMIENTAS Y SOFTWARE
    ------------------------------------------------------------ */
 .tools-section {
   background: var(--bg);
   padding: var(--section-space) 0;
 }
 
-.tools-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
+.tools-category-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
   margin-top: 40px;
+  padding-top: 40px;
+  border-top: 1px solid var(--light-gray);
 }
 
-.tool-tag {
-  padding: 12px 20px;
-  border: 1px solid var(--light-gray);
-  font-size: 9px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--black);
-  background: var(--white);
-  transition: border-color 0.25s ease;
+.tool-group h3 {
+  font-family: var(--font-title);
+  font-size: 16px;
+  margin-bottom: 4px;
 }
 
-.tool-tag:hover {
-  border-color: var(--accent);
+.tool-group .tool-group-en {
+  font-size: 11px;
+  color: var(--gray);
+  margin-bottom: 15px;
+  display: block;
+}
+
+.tool-group ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tool-group li {
+  font-size: 12px;
+  margin-bottom: 10px;
+  color: #56534e;
+}
+
+.tool-group li::before {
+  content: "•";
+  margin-right: 8px;
+  color: var(--light-gray);
 }
 
 /* ------------------------------------------------------------
@@ -92,17 +104,17 @@
   .about-page-hero {
     padding-top: 150px;
   }
+  .tools-category-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 700px) {
   .about-page-hero {
     padding-top: 130px;
   }
-  
-  .methodology-grid {
+  .tools-category-grid {
     grid-template-columns: 1fr;
     gap: 40px;
-    margin-top: 45px;
-    padding-top: 45px;
   }
 }
