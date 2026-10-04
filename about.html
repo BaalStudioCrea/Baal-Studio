@@ -1,227 +1,108 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Baal Studio — Sobre mí, trayectoria y metodología en documentación patrimonial.">
+  <meta name="theme-color" content="#111111">
   <title>Sobre mí — Baal Studio</title>
   <link rel="stylesheet" href="./style.css">
 </head>
+
 <body>
 
-  <!-- HEADER (Misma estructura del index con estado scrolled) -->
-  <header class="main-header scrolled">
+  <header class="main-header" id="main-header">
     <div class="header-inner">
-      <a href="index.html" class="header-logo-link">
-        <img src="Logos/logo.svg" alt="Baal Studio" class="header-logo protected-image">
+      <a href="./index.html" class="header-logo-link" aria-label="Baal Studio — Inicio">
+        <img
+          id="site-logo"
+          class="header-logo protected-image"
+          src="./Logos/NEWBaal_Logo_White.png"
+          alt="Baal Studio"
+          width="180"
+          height="40"
+          draggable="false"
+        >
       </a>
 
-      <nav class="desktop-nav">
-        <a href="index.html" class="nav-link">
+      <nav class="desktop-nav" aria-label="Navegación principal">
+        <a href="./index.html" class="nav-link">
           <span>Inicio</span>
           <span class="nav-link-en">Home</span>
         </a>
-        <a href="projects.html" class="nav-link">
+        <a href="./proyectos.html" class="nav-link">
           <span>Proyectos</span>
           <span class="nav-link-en">Projects</span>
         </a>
-        <a href="about.html" class="nav-link active">
+        <a href="./about.html" class="nav-link active" aria-current="page">
           <span>Sobre mí</span>
           <span class="nav-link-en">About</span>
         </a>
-        <a href="contact.html" class="nav-link">
+        <a href="./contact.html" class="nav-link">
           <span>Contacto</span>
           <span class="nav-link-en">Contact</span>
         </a>
       </nav>
 
-      <button class="mobile-menu-button" id="mobileMenuBtn" aria-label="Abrir menú">
+      <button
+        class="mobile-menu-button"
+        id="mobile-menu-button"
+        type="button"
+        aria-label="Abrir menú"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
         <span></span>
         <span></span>
         <span></span>
       </button>
     </div>
+
+    <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+      <nav aria-label="Navegación móvil">
+        <a href="./index.html"><span>Inicio</span><small>Home</small></a>
+        <a href="./proyectos.html"><span>Proyectos</span><small>Projects</small></a>
+        <a href="./about.html"><span>Sobre mí</span><small>About</small></a>
+        <a href="./contact.html"><span>Contacto</span><small>Contact</small></a>
+      </nav>
+    </div>
   </header>
 
-  <!-- MENÚ MÓVIL -->
-  <div class="mobile-menu" id="mobileMenu">
-    <nav>
-      <a href="index.html">Inicio <small>Home</small></a>
-      <a href="projects.html">Proyectos <small>Projects</small></a>
-      <a href="about.html">Sobre mí <small>About</small></a>
-      <a href="contact.html">Contacto <small>Contact</small></a>
-    </nav>
-  </div>
-
-  <div class="page-wrapper">
-
-    <!-- SECCIÓN INTRODUCCIÓN CON LOGO A LA IZQUIERDA -->
-    <section class="about-home-section">
-      <div class="section-container">
-        
-        <div class="about-home-layout">
-          
-          <!-- COLUMNA IZQUIERDA: LOGO GRANDE + ENCABEZADO -->
-          <div class="about-home-heading">
-            <img src="Logos/logo.svg" alt="Baal Studio Logo" class="about-left-logo protected-image">
-            <h1 class="section-kicker">Especialista en Documentación del Patrimonio</h1>
-            <p class="section-kicker-en">Heritage Documentation Specialist</p>
-            <div class="section-rule"></div>
-          </div>
-
-          <!-- COLUMNA DERECHA: TEXTO + ESPECIALIDADES + ESTADÍSTICAS -->
-          <div class="about-home-content">
-            <div class="bilingual-copy">
-              <p>Con más de 12 años de práctica en la intersección entre tecnología digital y patrimonio cultural, el estudio ha documentado más de 30 casos entre España y Portugal — desde manufactura prehistórica hasta yacimientos arqueológicos completos.</p>
-              <p class="english-copy">With over 12 years of practice at the intersection of digital technology and cultural heritage, the studio has documented more than 30 cases across Spain and Portugal — from prehistoric artifacts to entire archaeological sites.</p>
-              
-              <div class="copy-separator"></div>
-
-              <p>Formado en diseño, conservación, restauración y arqueología, la práctica integra una metodología científica rigurosa con herramientas digitales avanzadas para producir documentación que cumple los más altos estándares de conservación, investigación y gestión.</p>
-              <p class="english-copy">Trained in design, conservation, restoration, and archaeology, the practice integrates rigorous scientific methodology with advanced digital tools to produce documentation that meets the highest conservation, research, and management standards.</p>
-            </div>
-
-            <!-- ESPECIALIDADES -->
-            <div class="about-tags-row">
-              <span class="about-tag">Fotogrametría <em>Photogrammetry</em></span>
-              <span class="about-tag">Modelado 3D <em>3D Modeling</em></span>
-              <span class="about-tag">Análisis Patrimonial <em>Heritage Analysis</em></span>
-              <span class="about-tag">Reconstrucción Virtual <em>Virtual Reconstruction</em></span>
-              <span class="about-tag">Mapeo de Daños <em>Damage Mapping</em></span>
-            </div>
-
-            <!-- ESTADÍSTICAS -->
-            <div class="stats-grid">
-              <div class="stat-item">
-                <strong>8+</strong>
-                <span>Años de experiencia</span>
-                <small>Years experience</small>
-              </div>
-              <div class="stat-item">
-                <strong>30+</strong>
-                <span>Casos documentados</span>
-                <small>Cases documented</small>
-              </div>
-              <div class="stat-item">
-                <strong>2</strong>
-                <span>Países</span>
-                <small>Countries</small>
-              </div>
-              <div class="stat-item">
-                <strong>11</strong>
-                <span>Herramientas de software</span>
-                <small>Software tools</small>
-              </div>
-            </div>
-
-          </div>
+  <main>
+    <section class="about-home-section" style="padding-top: 160px;">
+      <div class="section-container about-home-layout">
+        <div class="about-home-heading">
+          <p class="section-kicker">Juan Jesús Lupiáñez Moreno</p>
+          <p class="section-kicker-en">Baal Studio Lead</p>
+          <div class="section-rule"></div>
         </div>
 
-      </div>
-    </section>
+        <div class="about-home-content">
+          <div class="bilingual-copy">
+            <p>
+              Especialista en documentación, levantamiento 3D y análisis tridimensional del patrimonio cultural e histórico.
+            </p>
+            <p class="english-copy">
+              Specialist in documentation, 3D survey, and three-dimensional analysis of cultural and historical heritage.
+            </p>
 
-    <!-- SECCIÓN FORMACIÓN / BACKGROUND -->
-    <section class="about-bg-section">
-      <div class="section-container">
-        
-        <div class="about-home-layout">
-          <div class="about-home-heading">
-            <h2 class="section-kicker">Formación</h2>
-            <p class="section-kicker-en">Background</p>
-            <div class="section-rule"></div>
-          </div>
+            <div class="copy-separator"></div>
 
-          <div class="about-home-content">
-            <div class="bilingual-copy">
-              <p>La formación académica proporciona la doble base de una práctica que une la precisión técnica con la comprensión del patrimonio.</p>
-              <p class="english-copy">Academic formation provides the dual foundation for a practice that bridges technical precision with heritage understanding.</p>
-
-              <div class="copy-separator"></div>
-
-              <p>El trabajo en diferentes ámbitos ha establecido el rigor metodológico que define el enfoque del estudio. La colaboración posterior con la Universidad de Granada amplió la práctica a contextos patrimoniales internacionales.</p>
-              <p class="english-copy">Work across various fields established the methodological rigor that defines the study's approach. Subsequent collaboration with the University of Granada extended this practice to international heritage contexts.</p>
-
-              <div class="copy-separator"></div>
-
-              <p>El estudio opera como práctica independiente, colaborando con equipos de conservación, equipos arqueológicos y agencias de gestión del patrimonio en proyectos que requieren los más altos estándares de documentación digital, así como para proyectos de investigación de la universidad y cualquier otra entidad que lo requiera.</p>
-              <p class="english-copy">The studio operates as an independent practice, collaborating with conservation teams, archaeological teams, and heritage management agencies on projects requiring the highest standards of digital documentation, as well as for research projects of the university and any other entity that requires it.</p>
-            </div>
+            <p>
+              Desarrollo metodologías de captura, procesado e interpretación gráfica combinando fotogrametría, modelado digital y planimetría precisa para proyectos de investigación, conservación y difusión.
+            </p>
+            <p class="english-copy">
+              Developing capture, processing, and graphic interpretation methodologies combining photogrammetry, digital modeling, and precise planimetry for research, conservation, and dissemination projects.
+            </p>
           </div>
         </div>
-
       </div>
     </section>
+  </main>
 
-    <!-- SECCIÓN HERRAMIENTAS Y SOFTWARE -->
-    <section class="tools-section">
-      <div class="section-container">
-        
-        <div class="about-home-layout">
-          <div class="about-home-heading">
-            <h2 class="section-kicker">Herramientas y Software</h2>
-            <p class="section-kicker-en">Tools & Software</p>
-            <div class="section-rule"></div>
-          </div>
-
-          <div class="about-home-content">
-            <div class="tools-grid">
-              
-              <!-- Captura de Datos -->
-              <div class="tool-category-card">
-                <h3>Captura de Datos</h3>
-                <span class="tool-category-en">Data Capture</span>
-                <ul>
-                  <li>Cámara de fotos</li>
-                  <li>Escáner 3D</li>
-                  <li>Drone</li>
-                </ul>
-              </div>
-
-              <!-- Procesamiento -->
-              <div class="tool-category-card">
-                <h3>Procesamiento</h3>
-                <span class="tool-category-en">Processing</span>
-                <ul>
-                  <li>Autodesk ReCap</li>
-                  <li>CloudCompare</li>
-                  <li>Agisoft Metashape</li>
-                  <li>RealityScan</li>
-                </ul>
-              </div>
-
-              <!-- Modelado -->
-              <div class="tool-category-card">
-                <h3>Modelado y CAD</h3>
-                <span class="tool-category-en">Modeling & CAD</span>
-                <ul>
-                  <li>Blender</li>
-                  <li>ZBrush</li>
-                  <li>AutoCAD</li>
-                </ul>
-              </div>
-
-              <!-- Visualización -->
-              <div class="tool-category-card">
-                <h3>Visualización</h3>
-                <span class="tool-category-en">Visualization</span>
-                <ul>
-                  <li>Sketchfab</li>
-                  <li>Vídeo</li>
-                </ul>
-              </div>
-
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-  </div>
-
-  <!-- FOOTER IDÉNTICO AL INDEX -->
   <footer class="main-footer">
     <div class="footer-container">
-      
       <div class="footer-top">
         <div class="footer-services">
           <p>Documentación del Patrimonio · Planimetrías · Mapeados · Levantamiento y Modelado 3D · Reconstrucción Virtual · Fotografía con Drone</p>
@@ -229,51 +110,53 @@
         </div>
 
         <div class="footer-nav-column">
-          <a href="index.html">Inicio / Home</a>
-          <a href="projects.html">Proyectos / Projects</a>
-          <a href="about.html">Sobre mí / About</a>
-          <a href="contact.html">Contacto / Contact</a>
+          <a href="./index.html">Inicio · Home</a>
+          <a href="./proyectos.html">Proyectos · Projects</a>
+          <a href="./about.html">Sobre mí · About</a>
+          <a href="./contact.html">Contacto · Contact</a>
         </div>
       </div>
 
       <div class="footer-identity">
         <div class="footer-logos">
-          <a href="index.html">
-            <img src="Logos/logo.svg" alt="Baal Studio Logo" class="footer-secondary-logo protected-image">
-          </a>
+          <img
+            id="footer-logo-baal"
+            class="footer-secondary-logo protected-image"
+            src="./Logos/NEWBaal_Logo_White.png"
+            alt="Baal Studio"
+            draggable="false"
+          >
+          <img
+            id="footer-logo-lns"
+            class="footer-secondary-logo protected-image"
+            src="./Logos/LNS_LOGO_WHITE.png"
+            alt="LNS"
+            draggable="false"
+          >
         </div>
 
-        <a href="contact.html">
-          <img src="Logos/qr.svg" alt="Código QR" class="footer-qr protected-image">
+        <a href="https://linktr.ee/baalstudio" target="_blank" rel="noopener noreferrer" aria-label="Baal Studio — Redes sociales">
+          <img
+            id="footer-qr"
+            class="footer-qr protected-image"
+            src="./Logos/QRBAAL.png"
+            alt="Redes sociales de Baal Studio"
+            width="100"
+            height="100"
+            draggable="false"
+          >
         </a>
 
-        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="footer-social-link">Instagram</a>
+        <a href="https://linktr.ee/baalstudio" class="footer-social-link" target="_blank" rel="noopener noreferrer">RRSS</a>
       </div>
 
       <div class="footer-bottom">
         <p>© Juan Jesús Lupiáñez Moreno · Baal Studio · Todos los derechos reservados · All rights reserved.</p>
       </div>
-
     </div>
   </footer>
 
-  <script>
-    // Protecciones de imagen y botón derecho
-    document.addEventListener('contextmenu', (e) => e.preventDefault());
-    document.querySelectorAll('img').forEach(img => {
-      img.addEventListener('dragstart', (e) => e.preventDefault());
-    });
+  <script src="./script.js"></script>
 
-    // Menú móvil
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    const mobileMenu = document.getElementById('mobileMenu');
-
-    if (mobileMenuBtn && mobileMenu) {
-      mobileMenuBtn.addEventListener('click', () => {
-        mobileMenuBtn.classList.toggle('open');
-        mobileMenu.classList.toggle('open');
-      });
-    }
-  </script>
 </body>
 </html>
