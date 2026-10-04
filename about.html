@@ -8,11 +8,11 @@
 </head>
 <body>
 
-  <!-- HEADER FIJO E IDÉNTICO -->
+  <!-- HEADER (Misma estructura del index con estado scrolled) -->
   <header class="main-header scrolled">
     <div class="header-inner">
       <a href="index.html" class="header-logo-link">
-        <img src="./assets/logo.svg" alt="Baal Studio" class="header-logo protected-image">
+        <img src="Logos/logo.svg" alt="Baal Studio" class="header-logo protected-image">
       </a>
 
       <nav class="desktop-nav">
@@ -60,15 +60,15 @@
         
         <div class="about-home-layout">
           
-          <!-- COLUMNA IZQUIERDA: LOGO GRANDE + TÍTULO DE SECCIÓN -->
+          <!-- COLUMNA IZQUIERDA: LOGO GRANDE + ENCABEZADO -->
           <div class="about-home-heading">
-            <img src="./assets/logo.svg" alt="Baal Studio Logo" class="about-left-logo protected-image">
+            <img src="Logos/logo.svg" alt="Baal Studio Logo" class="about-left-logo protected-image">
             <h1 class="section-kicker">Especialista en Documentación del Patrimonio</h1>
             <p class="section-kicker-en">Heritage Documentation Specialist</p>
             <div class="section-rule"></div>
           </div>
 
-          <!-- COLUMNA DERECHA: TEXTO BILINGÜE + ETIQUETAS + ESTADÍSTICAS -->
+          <!-- COLUMNA DERECHA: TEXTO + ESPECIALIDADES + ESTADÍSTICAS -->
           <div class="about-home-content">
             <div class="bilingual-copy">
               <p>Con más de 12 años de práctica en la intersección entre tecnología digital y patrimonio cultural, el estudio ha documentado más de 30 casos entre España y Portugal — desde manufactura prehistórica hasta yacimientos arqueológicos completos.</p>
@@ -218,7 +218,7 @@
 
   </div>
 
-  <!-- FOOTER 100% IDÉNTICO AL INDEX -->
+  <!-- FOOTER IDÉNTICO AL INDEX -->
   <footer class="main-footer">
     <div class="footer-container">
       
@@ -239,12 +239,12 @@
       <div class="footer-identity">
         <div class="footer-logos">
           <a href="index.html">
-            <img src="./assets/logo.svg" alt="Baal Studio Logo" class="footer-secondary-logo protected-image">
+            <img src="Logos/logo.svg" alt="Baal Studio Logo" class="footer-secondary-logo protected-image">
           </a>
         </div>
 
         <a href="contact.html">
-          <img src="./assets/qr.svg" alt="Código QR" class="footer-qr protected-image">
+          <img src="Logos/qr.svg" alt="Código QR" class="footer-qr protected-image">
         </a>
 
         <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="footer-social-link">Instagram</a>
@@ -258,7 +258,7 @@
   </footer>
 
   <script>
-    // Protecciones de imagen y deshabilitar botón derecho
+    // Protecciones de imagen y botón derecho
     document.addEventListener('contextmenu', (e) => e.preventDefault());
     document.querySelectorAll('img').forEach(img => {
       img.addEventListener('dragstart', (e) => e.preventDefault());
