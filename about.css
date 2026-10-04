@@ -12,7 +12,7 @@
 }
 
 /* ------------------------------------------------------------
-   HERO DE LA PÁGINA (ESTRUCTURA 50/50 CON CONTRASTE OSCURO)
+   HERO DE LA PÁGINA (ESTRUCTURA CON CONTRASTE OSCURO)
    ------------------------------------------------------------ */
 .about-page-hero {
   background: #111111;
@@ -28,26 +28,34 @@
   align-items: center;
 }
 
-/* Contenedor del Logo Izquierdo */
+/* Imagen/Logo Izquierdo sin cajetín y más grande */
 .about-hero-logo-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 60px 40px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  min-height: 320px;
+  padding: 20px 0;
+  width: 100%;
 }
 
 .about-hero-logo {
   width: 100%;
-  max-width: 280px;
+  max-width: 360px;
   height: auto;
   display: block;
   object-fit: contain;
 }
 
-/* Títulos con la tipografía oficial (idéntica a style.css) */
+/* Títulos en Bodoni Moda (var(--font-title)) */
+.about-page-hero .section-kicker,
+.about-background-section .section-kicker,
+.tools-section .section-kicker {
+  font-family: var(--font-title);
+  font-size: clamp(24px, 2.5vw, 34px);
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
 .about-page-hero .section-kicker {
   color: #ffffff;
 }
@@ -144,7 +152,7 @@
 }
 
 /* ------------------------------------------------------------
-   SECCIÓN DE FORMACIÓN / BACKGROUND (REDISTRIBUCIÓN COMPLETA)
+   SECCIÓN DE FORMACIÓN / BACKGROUND (TEXTO A LO LARGO DE LA PÁGINA)
    ------------------------------------------------------------ */
 .about-background-section {
   background: #ffffff;
@@ -152,33 +160,11 @@
   color: var(--black);
 }
 
-.background-grid-layout {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  width: 100%;
+.about-background-section .bilingual-copy {
+  max-width: 100%;
 }
 
-.background-card {
-  background: var(--bg);
-  border: 1px solid var(--light-gray);
-  padding: 32px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.background-card-num {
-  font-family: var(--font-body);
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  color: var(--accent);
-  font-weight: 600;
-  margin-bottom: 20px;
-  display: block;
-}
-
-.background-card p {
+.about-background-section .bilingual-copy p {
   font-family: var(--font-body);
   font-size: 13px;
   line-height: 1.75;
@@ -187,21 +173,35 @@
   margin: 0;
 }
 
-.background-card p.english-copy {
+.about-background-section .bilingual-copy p.english-copy {
   color: var(--gray);
-  font-size: 10.5px;
+  font-size: 10px;
   line-height: 1.65;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--light-gray);
+  margin-top: 6px;
+}
+
+.about-background-section .copy-separator {
+  height: 1px;
+  background: var(--light-gray);
+  margin: 24px 0;
 }
 
 /* ------------------------------------------------------------
-   SECCIÓN DE HERRAMIENTAS Y SOFTWARE
+   SECCIÓN DE HERRAMIENTAS Y SOFTWARE (ESTILO OSCURO Y ELEGANTE)
    ------------------------------------------------------------ */
 .tools-section {
-  background: var(--bg);
+  background: #111111;
+  color: #ffffff;
   padding: var(--section-space) 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.tools-section .section-kicker {
+  color: #ffffff;
+}
+
+.tools-section .section-kicker-en {
+  color: rgba(255, 255, 255, 0.45);
 }
 
 .tools-category-grid {
@@ -212,38 +212,39 @@
 }
 
 .tool-group {
-  background: #ffffff;
-  border: 1px solid var(--light-gray);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 35px;
   display: flex;
   flex-direction: column;
-  transition: border-color 0.3s ease;
+  transition: border-color 0.3s ease, background 0.3s ease;
 }
 
 .tool-group:hover {
-  border-color: var(--black);
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .tool-group-header {
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding-bottom: 15px;
   margin-bottom: 20px;
 }
 
-/* Títulos de bloque con escala idéntica a capability-item h3 del index */
+/* Título de bloque en Bodoni Moda */
 .tool-group h3 {
   font-family: var(--font-title);
   font-size: 27px;
   font-weight: 400;
   line-height: 1.05;
   margin: 0 0 6px 0;
-  color: var(--black);
+  color: #ffffff;
 }
 
 .tool-group .tool-group-en {
   font-family: var(--font-body);
   font-size: 9px;
-  color: var(--gray);
+  color: var(--accent);
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.14em;
@@ -262,12 +263,11 @@
 .tool-group li {
   font-family: var(--font-body);
   font-size: 11px;
-  color: #333333;
+  color: #e0e0e0;
   padding: 8px 14px;
-  background: #f9f8f5;
-  border: 1px solid var(--light-gray);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   font-weight: 400;
-  text-transform: none; /* Texto normal */
 }
 
 /* ------------------------------------------------------------
@@ -279,23 +279,14 @@
     gap: 40px;
   }
 
-  .background-grid-layout {
-    grid-template-columns: 1fr;
-  }
-
   .tools-category-grid {
     grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 700px) {
-  .about-hero-logo-wrapper {
-    padding: 40px 20px;
-    min-height: 200px;
-  }
-
   .about-hero-logo {
-    max-width: 220px;
+    max-width: 280px;
   }
 
   .about-hero-content .stats-grid {
