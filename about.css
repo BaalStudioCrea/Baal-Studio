@@ -211,7 +211,7 @@
 }
 
 .tool-group {
-  background: #555555; /* Capa blanca que resalta sobre el beige de fondo */
+  background: #888888; /* Capa blanca que resalta sobre el beige de fondo */
   border: 1px solid var(--light-gray);
   padding: 35px;
   display: flex;
@@ -262,14 +262,14 @@
   font-size: 11px;
   color: var(--white);
   padding: 8px 14px;
-  background: #666666; /* Tono beige suave intermedio para dar relieve */
+  background: #999999; /* Tono beige suave intermedio para dar relieve */
   border: 1px solid var(--light-gray);
   font-weight: 400;
   transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
 .tool-group li:hover {
-  background: #e8e5dc;
+  background: #333333;
   border-color: rgba(0, 0, 0, 0.2);
 }
 
