@@ -1,0 +1,108 @@
+/* ============================================================
+   BAAL STUDIO
+   ABOUT.CSS — ESTILOS ESPECÍFICOS PARA LA PÁGINA "SOBRE MÍ"
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   HERO DE LA PÁGINA (COMPENSA EL HEADER FIJO)
+   ------------------------------------------------------------ */
+.about-page-hero {
+  background: var(--bg);
+  /* Un padding superior mayor para dar aire debajo del header fijo */
+  padding: 180px 0 var(--section-space) 0;
+}
+
+/* ------------------------------------------------------------
+   SECCIÓN DE METODOLOGÍA
+   ------------------------------------------------------------ */
+.about-methodology-section {
+  background: var(--white);
+  padding: var(--section-space) 0;
+}
+
+.methodology-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 50px;
+  margin-top: 60px;
+  border-top: 1px solid var(--light-gray);
+  padding-top: 60px;
+}
+
+.methodology-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.methodology-card h3 {
+  margin: 0 0 15px 0;
+  font-family: var(--font-title);
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.methodology-card p {
+  margin: 0;
+  color: #56534e;
+  font-size: 10px;
+  line-height: 1.7;
+}
+
+.methodology-card .english-copy {
+  margin-top: 8px;
+  color: var(--gray);
+  font-size: 9px;
+}
+
+/* ------------------------------------------------------------
+   SECCIÓN DE HERRAMIENTAS
+   ------------------------------------------------------------ */
+.tools-section {
+  background: var(--bg);
+  padding: var(--section-space) 0;
+}
+
+.tools-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 40px;
+}
+
+.tool-tag {
+  padding: 12px 20px;
+  border: 1px solid var(--light-gray);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--black);
+  background: var(--white);
+  transition: border-color 0.25s ease;
+}
+
+.tool-tag:hover {
+  border-color: var(--accent);
+}
+
+/* ------------------------------------------------------------
+   RESPONSIVE
+   ------------------------------------------------------------ */
+@media (max-width: 1000px) {
+  .about-page-hero {
+    padding-top: 150px;
+  }
+}
+
+@media (max-width: 700px) {
+  .about-page-hero {
+    padding-top: 130px;
+  }
+  
+  .methodology-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    margin-top: 45px;
+    padding-top: 45px;
+  }
+}
