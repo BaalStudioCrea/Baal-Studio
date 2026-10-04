@@ -28,7 +28,7 @@
   align-items: center;
 }
 
-/* Logo Izquierdo integrado directamente sobre el fondo oscuro */
+/* Logo Izquierdo sin cajetín e integrado directamente */
 .about-hero-logo-wrapper {
   display: flex;
   justify-content: center;
@@ -45,7 +45,7 @@
   object-fit: contain;
 }
 
-/* Títulos principales en Bodoni Moda (var(--font-title)) */
+/* Títulos principales del bloque */
 .about-page-hero .section-kicker,
 .about-background-section .section-kicker,
 .tools-section .section-kicker {
@@ -152,7 +152,7 @@
 }
 
 /* ------------------------------------------------------------
-   SECCIÓN DE FORMACIÓN / BACKGROUND (TEXTO EN ANCHO CONTINUO)
+   SECCIÓN DE FORMACIÓN / BACKGROUND (TEXTO A LO LARGO)
    ------------------------------------------------------------ */
 .about-background-section {
   background: #ffffff;
@@ -187,7 +187,7 @@
 }
 
 /* ------------------------------------------------------------
-   SECCIÓN DE HERRAMIENTAS Y SOFTWARE (CLARO CON FRANJA MARRÓN)
+   SECCIÓN DE HERRAMIENTAS Y SOFTWARE
    ------------------------------------------------------------ */
 .tools-section {
   background: var(--bg);
@@ -211,27 +211,24 @@
 }
 
 .tool-group {
-  background: #ffffff;
-  border: 1px solid var(--light-gray);
-  border-top: 3px solid var(--accent); /* Franja en tono marrón acento */
+  background: var(--bg); /* Mismo fondo que el bloque */
+  border: 1px solid var(--light-gray); /* Perfil en gris de separación */
   padding: 35px;
   display: flex;
   flex-direction: column;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: border-color 0.3s ease;
 }
 
 .tool-group:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+  border-color: var(--accent); /* Al pasar el ratón: perfil marrón */
 }
 
 .tool-group-header {
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--light-gray);
   padding-bottom: 15px;
   margin-bottom: 20px;
 }
 
-/* Título de bloque en Bodoni Moda */
 .tool-group h3 {
   font-family: var(--font-title);
   font-size: 27px;
@@ -244,7 +241,7 @@
 .tool-group .tool-group-en {
   font-family: var(--font-body);
   font-size: 9px;
-  color: var(--accent); /* Acento de color en el subtítulo en inglés */
+  color: var(--gray);
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.14em;
@@ -261,12 +258,12 @@
 }
 
 .tool-group li {
-  font-family: var(--font-body);
+  font-family: var(--font-body); /* Tipografía Inter */
   font-size: 11px;
-  color: #333333;
+  color: var(--black);
   padding: 8px 14px;
-  background: #f9f8f5;
-  border: 1px solid var(--light-gray);
+  background: var(--bg); /* Mismo fondo que el bloque */
+  border: 1px solid var(--light-gray); /* Perfil en el mismo gris */
   font-weight: 400;
 }
 
