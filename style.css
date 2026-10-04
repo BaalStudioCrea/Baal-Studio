@@ -1879,22 +1879,159 @@ select {
 
 
 /* ------------------------------------------------------------
-   LOGO GRANDE EN SECCIÓN SOBRE MÍ
+   ESTILOS PARA SUBPÁGINAS Y PÁGINA "SOBRE MÍ"
    ------------------------------------------------------------ */
 
-.about-hero-logo {
+/* Encabezado fijo con fondo oscuro en subpáginas */
+.main-header.subpage-header {
+  background: #111111;
+}
+
+.subpage-main {
+  padding-top: 64px; /* Compensa la altura del header fijo */
+}
+
+/* Retícula principal de 2 columnas */
+.about-grid-layout {
+  display: grid;
+  grid-template-columns: 4fr 8fr;
+  column-gap: 50px;
+  align-items: start;
+}
+
+.about-grid-left {
+  position: sticky;
+  top: 94px;
+}
+
+.about-big-logo {
   width: 100%;
-  max-width: 240px;
+  max-width: 280px;
   height: auto;
   object-fit: contain;
-  margin-bottom: 35px;
   opacity: 0.85;
   display: block;
 }
 
+.about-copy-block {
+  margin-top: 30px;
+}
+
+.about-hero-section {
+  padding: var(--section-space) 0;
+  background: var(--white);
+}
+
+.background-section {
+  padding: var(--section-space) 0;
+  background: var(--bg);
+  border-top: 1px solid var(--light-gray);
+}
+
+/* Etiquetas de especialidades */
+.about-tags-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  margin: 40px 0;
+}
+
+.about-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--bg);
+  border: 1px solid var(--light-gray);
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.about-tag em {
+  font-style: normal;
+  color: var(--gray);
+  font-size: 8.5px;
+}
+
+/* Herramientas y software */
+.tools-section {
+  padding: var(--section-space) 0;
+  background: #eae7df;
+  border-top: 1px solid var(--light-gray);
+}
+
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.tool-category-card {
+  padding: 32px 28px;
+  background: var(--white);
+  border: 1px solid var(--light-gray);
+}
+
+.tool-category-card h3 {
+  margin: 0;
+  font-family: var(--font-title);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.tool-category-en {
+  display: block;
+  margin: 4px 0 20px;
+  color: var(--gray);
+  font-size: 8.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.tool-category-card ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tool-category-card li {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--bg);
+  font-size: 11px;
+  color: #444;
+}
+
+.tool-category-card li:last-child {
+  border-bottom: none;
+}
+
+/* Adaptación responsive */
+@media (max-width: 1000px) {
+  .about-grid-layout {
+    grid-template-columns: 1fr 2fr;
+    column-gap: 30px;
+  }
+}
+
 @media (max-width: 700px) {
-  .about-hero-logo {
+  .about-grid-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+  }
+
+  .about-grid-left {
+    position: relative;
+    top: 0;
+  }
+
+  .about-big-logo {
     max-width: 180px;
-    margin-bottom: 25px;
+  }
+
+  .tools-grid {
+    grid-template-columns: 1fr;
   }
 }
