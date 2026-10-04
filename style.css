@@ -56,6 +56,14 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "Bodoni Moda";
+  src: url("./fonts/BodoniModaVariable.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
 
 /* ------------------------------------------------------------
    VARIABLES
@@ -77,6 +85,7 @@
   --section-space: 140px;
 
   --font-display: "Cormorant Garamond", serif;
+  --font-title: "Bodoni Moda", Georgia, serif;
   --font-body: "Inter", sans-serif;
 
 }
@@ -597,7 +606,7 @@ select {
 
   margin: 0;
 
-  font-family: var(--font-display);
+  font-family: var(--font-title);
 
   font-size: clamp(52px, 7.5vw, 100px);
 
@@ -1097,7 +1106,7 @@ select {
 
   margin: 0;
 
-  font-family: var(--font-display);
+  font-family: var(--font-title);
 
   font-size: clamp(38px, 4vw, 54px);
 
@@ -1243,7 +1252,7 @@ select {
 
   margin: 0;
 
-  font-family: var(--font-display);
+  font-family: var(--font-title);
 
   font-size: 27px;
 
@@ -1866,42 +1875,4 @@ select {
 
   }
 
-}
-
-
-/* =========================================================
-   1. DECLARACIÓN DE FUENTE BODONI MODA
-   ========================================================= */
-@font-face {
-  font-family: 'Bodoni Moda';
-  src: url('/fonts/BodoniModaVariable.ttf') format('truetype-variations'),
-       url('../fonts/BodoniModaVariable.ttf') format('truetype-variations'),
-       url('./fonts/BodoniModaVariable.ttf') format('truetype');
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* =========================================================
-   2. APLICACIÓN FORZADA EN TÍTULOS EN ESPAÑOL
-   ========================================================= */
-
-/* Título principal "Baal Studio" */
-h1, 
-.site-title, 
-.brand-title, 
-.logo, 
-header h1 {
-  font-family: 'Bodoni Moda', Georgia, serif !important;
-}
-
-/* Cabeceras de los bloques principales en español */
-h2,
-#sobre-el-estudio h2,
-#proyectos-seleccionados h2,
-#capacidades h2,
-.sobre-el-estudio h2,
-.proyectos-seleccionados h2,
-.capacidades h2 {
-  font-family: 'Bodoni Moda', Georgia, serif !important;
 }
