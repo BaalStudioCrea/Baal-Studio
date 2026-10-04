@@ -23,7 +23,7 @@
 
 .about-hero-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 4fr 8fr;
   gap: 60px;
   align-items: center;
 }
@@ -33,50 +33,37 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 50px 40px;
+  padding: 60px 40px;
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.08);
+  min-height: 320px;
 }
 
 .about-hero-logo {
   width: 100%;
-  max-width: 320px;
+  max-width: 280px;
   height: auto;
   display: block;
   object-fit: contain;
 }
 
-/* Títulos con la tipografía oficial de títulos (igual que index.html) */
-.section-kicker {
-  font-family: var(--font-title);
-  font-size: 26px;
-  font-weight: 400;
-  line-height: 1.2;
-  margin-bottom: 4px;
-}
-
-.about-hero-content .section-kicker {
+/* Títulos con la tipografía oficial (idéntica a style.css) */
+.about-page-hero .section-kicker {
   color: #ffffff;
 }
 
-.section-kicker-en {
-  font-family: 'Inter', var(--font-body), sans-serif;
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #888888;
+.about-page-hero .section-kicker-en {
+  color: rgba(255, 255, 255, 0.45);
 }
 
-.about-hero-content .section-rule {
-  height: 1px;
-  background: rgba(255, 255, 255, 0.15);
-  margin: 15px 0 25px 0;
+.about-hero-content .bilingual-copy {
+  max-width: 100%;
+  margin-top: 25px;
 }
 
-/* Cuerpo de texto en Inter */
 .about-hero-content .bilingual-copy p {
-  font-family: 'Inter', var(--font-body), sans-serif !important;
-  color: #e0e0e0;
+  font-family: var(--font-body);
+  color: rgba(255, 255, 255, 0.90);
   font-size: 13px;
   line-height: 1.75;
   font-weight: 300;
@@ -84,15 +71,15 @@
 }
 
 .about-hero-content .bilingual-copy p.english-copy {
-  color: #888888;
-  font-size: 11px;
+  color: rgba(255, 255, 255, 0.40);
+  font-size: 10px;
   margin-top: 6px;
 }
 
 .about-hero-content .copy-separator {
   height: 1px;
-  background: rgba(255, 255, 255, 0.08);
-  margin: 18px 0;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 20px 0;
 }
 
 /* Etiquetas de Especialidad */
@@ -100,11 +87,11 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin: 25px 0;
+  margin: 28px 0;
 }
 
 .expertise-tag {
-  font-family: 'Inter', var(--font-body), sans-serif;
+  font-family: var(--font-body);
   padding: 8px 12px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   font-size: 10px;
@@ -116,7 +103,7 @@
 }
 
 .expertise-tag span {
-  color: #888888;
+  color: rgba(255, 255, 255, 0.45);
   margin-left: 6px;
   font-weight: 400;
 }
@@ -125,96 +112,108 @@
 .about-hero-content .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 15px;
-  margin-top: 30px;
-  padding-top: 25px;
+  gap: 20px;
+  margin-top: 35px;
+  padding-top: 30px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .about-hero-content .stat-item strong {
-  font-family: var(--font-title);
-  display: block;
-  font-size: 28px;
+  font-family: var(--font-body);
+  font-size: 38px;
   font-weight: 300;
   color: #ffffff;
   line-height: 1;
 }
 
 .about-hero-content .stat-item span {
-  font-family: 'Inter', var(--font-body), sans-serif;
-  display: block;
-  font-size: 10px;
-  color: #cccccc;
-  margin-top: 6px;
+  font-family: var(--font-body);
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 8px;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
 }
 
 .about-hero-content .stat-item small {
-  font-family: 'Inter', var(--font-body), sans-serif;
-  display: block;
-  font-size: 9px;
-  color: #777777;
+  font-family: var(--font-body);
+  font-size: 7.5px;
+  color: rgba(255, 255, 255, 0.4);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
 }
 
 /* ------------------------------------------------------------
-   SECCIÓN DE FORMACIÓN / BACKGROUND (FONDO CLARO)
+   SECCIÓN DE FORMACIÓN / BACKGROUND (REDISTRIBUCIÓN COMPLETA)
    ------------------------------------------------------------ */
 .about-background-section {
   background: #ffffff;
   padding: var(--section-space) 0;
-  color: #111111;
+  color: var(--black);
 }
 
-.about-background-section .section-kicker {
-  color: #111111;
+.background-grid-layout {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  width: 100%;
 }
 
-.about-background-section .bilingual-copy p {
-  font-family: 'Inter', var(--font-body), sans-serif !important;
-  font-size: 13.5px;
-  line-height: 1.8;
+.background-card {
+  background: var(--bg);
+  border: 1px solid var(--light-gray);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.background-card-num {
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.background-card p {
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.75;
   color: #222222;
   font-weight: 300;
-  margin-bottom: 0;
+  margin: 0;
 }
 
-.about-background-section .bilingual-copy p.english-copy {
-  color: #666666;
-  font-size: 11.5px;
-  margin-top: 6px;
-}
-
-.about-background-section .copy-separator {
-  height: 1px;
-  background: var(--light-gray, #e5e5e5);
-  margin: 22px 0;
+.background-card p.english-copy {
+  color: var(--gray);
+  font-size: 10.5px;
+  line-height: 1.65;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--light-gray);
 }
 
 /* ------------------------------------------------------------
-   SECCIÓN DE HERRAMIENTAS Y SOFTWARE (CAJETINES ELEGANTES)
+   SECCIÓN DE HERRAMIENTAS Y SOFTWARE
    ------------------------------------------------------------ */
 .tools-section {
-  background: var(--bg, #f7f7f7);
+  background: var(--bg);
   padding: var(--section-space) 0;
-}
-
-.tools-section .section-kicker {
-  color: #111111;
 }
 
 .tools-category-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-  margin-top: 40px;
+  gap: 24px;
+  width: 100%;
 }
 
 .tool-group {
   background: #ffffff;
-  border: 1px solid var(--light-gray, #e0e0e0);
+  border: 1px solid var(--light-gray);
   padding: 35px;
   display: flex;
   flex-direction: column;
@@ -222,7 +221,7 @@
 }
 
 .tool-group:hover {
-  border-color: #111111;
+  border-color: var(--black);
 }
 
 .tool-group-header {
@@ -231,20 +230,23 @@
   margin-bottom: 20px;
 }
 
+/* Títulos de bloque con escala idéntica a capability-item h3 del index */
 .tool-group h3 {
   font-family: var(--font-title);
-  font-size: 20px;
+  font-size: 27px;
   font-weight: 400;
-  margin: 0 0 4px 0;
-  color: #111111;
+  line-height: 1.05;
+  margin: 0 0 6px 0;
+  color: var(--black);
 }
 
 .tool-group .tool-group-en {
-  font-family: 'Inter', var(--font-body), sans-serif;
-  font-size: 10px;
-  color: #888888;
+  font-family: var(--font-body);
+  font-size: 9px;
+  color: var(--gray);
+  font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   display: block;
 }
 
@@ -254,44 +256,50 @@
   margin: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px;
 }
 
-/* Herramientas en texto normal */
 .tool-group li {
-  font-family: 'Inter', var(--font-body), sans-serif;
+  font-family: var(--font-body);
   font-size: 11px;
   color: #333333;
   padding: 8px 14px;
-  background: #f9f9f9;
-  border: 1px solid #e5e5e5;
+  background: #f9f8f5;
+  border: 1px solid var(--light-gray);
   font-weight: 400;
-  text-transform: none; /* Texto normal sin forzar mayúsculas */
+  text-transform: none; /* Texto normal */
 }
 
 /* ------------------------------------------------------------
    RESPONSIVE
    ------------------------------------------------------------ */
-@media (max-width: 950px) {
+@media (max-width: 1000px) {
   .about-hero-grid {
     grid-template-columns: 1fr;
     gap: 40px;
   }
 
-  .about-hero-logo-wrapper {
-    padding: 40px 20px;
-  }
-
-  .about-hero-logo {
-    max-width: 240px;
+  .background-grid-layout {
+    grid-template-columns: 1fr;
   }
 
   .tools-category-grid {
     grid-template-columns: 1fr;
   }
+}
+
+@media (max-width: 700px) {
+  .about-hero-logo-wrapper {
+    padding: 40px 20px;
+    min-height: 200px;
+  }
+
+  .about-hero-logo {
+    max-width: 220px;
+  }
 
   .about-hero-content .stats-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
+    gap: 25px 15px;
   }
 }
