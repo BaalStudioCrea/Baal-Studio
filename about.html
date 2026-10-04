@@ -3,54 +3,97 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Baal Studio — Trayectoria, metodología y capacidades en documentación y análisis del patrimonio cultural.">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Baal Studio — Trayectoria, metodología y capacidades en documentación y análisis del patrimonio cultural."
+  >
+
   <meta name="theme-color" content="#111111">
+
   <title>Sobre mí — Baal Studio</title>
+
+  <!-- CARGAMOS EL CSS PRINCIPAL (ESTABLE) Y LUEGO EL ESPECÍFICO -->
   <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./about.css">
 </head>
+
 
 <body>
 
   <!-- =====================================================
-       HEADER
+       HEADER (COPIA EXACTA DEL INDEX ESTABLE)
        ===================================================== -->
+
   <header class="main-header" id="main-header">
+
     <div class="header-inner">
 
-      <a href="./index.html" class="header-logo-link" aria-label="Baal Studio — Inicio">
+      <a
+        href="./index.html"
+        class="header-logo-link"
+        aria-label="Baal Studio — Inicio"
+      >
+
         <img
           id="site-logo"
           class="header-logo protected-image"
-          src="./Logos/NEWBaal_Logo_White.png"
+          src=""
           alt="Baal Studio"
           width="180"
           height="40"
           draggable="false"
         >
+
       </a>
 
-      <nav class="desktop-nav" aria-label="Navegación principal">
-        <a href="./index.html" class="nav-link">
+
+      <nav
+        class="desktop-nav"
+        aria-label="Navegación principal"
+      >
+
+        <a
+          href="./index.html"
+          class="nav-link"
+        >
           <span>Inicio</span>
           <span class="nav-link-en">Home</span>
         </a>
 
-        <a href="./proyectos.html" class="nav-link">
+        <a
+          href="./proyectos.html"
+          class="nav-link"
+        >
           <span>Proyectos</span>
           <span class="nav-link-en">Projects</span>
         </a>
 
-        <a href="./about.html" class="nav-link active" aria-current="page">
+        <!-- CLASE ACTIVE APLICADA AQUÍ -->
+        <a
+          href="./about.html"
+          class="nav-link active"
+          aria-current="page"
+        >
           <span>Sobre mí</span>
           <span class="nav-link-en">About</span>
         </a>
 
-        <a href="./contact.html" class="nav-link">
+        <a
+          href="./contact.html"
+          class="nav-link"
+        >
           <span>Contacto</span>
           <span class="nav-link-en">Contact</span>
         </a>
+
       </nav>
+
 
       <button
         class="mobile-menu-button"
@@ -67,205 +110,334 @@
 
     </div>
 
-    <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+
+    <div
+      class="mobile-menu"
+      id="mobile-menu"
+      aria-hidden="true"
+    >
+
       <nav aria-label="Navegación móvil">
+
         <a href="./index.html">
           <span>Inicio</span>
           <small>Home</small>
         </a>
+
         <a href="./proyectos.html">
           <span>Proyectos</span>
           <small>Projects</small>
         </a>
+
         <a href="./about.html">
           <span>Sobre mí</span>
           <small>About</small>
         </a>
+
         <a href="./contact.html">
           <span>Contacto</span>
           <small>Contact</small>
         </a>
+
       </nav>
+
     </div>
+
   </header>
+
+
 
   <main>
 
     <!-- =====================================================
          SOBRE MÍ / HERO ENCABEZADO
          ===================================================== -->
-    <section class="about-hero-section">
-      <div class="section-container">
-        <p class="section-kicker">Juan Jesús Lupiáñez Moreno</p>
-        <p class="section-kicker-en">Baal Studio Director & Heritage Specialist</p>
-        <div class="section-rule"></div>
+    <section class="about-page-hero">
+      
+      <div class="section-container about-home-layout">
 
-        <div style="margin-top: 40px;" class="bilingual-copy">
-          <p>
-            Especialista en documentación, levantamiento 3D y análisis tridimensional del patrimonio cultural e histórico con más de 8 años de experiencia en el sector técnico y académico.
-          </p>
-          <p class="english-copy">
-            Specialist in documentation, 3D surveying, and three-dimensional analysis of cultural and historical heritage with over 8 years of experience across technical and academic domains.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- =====================================================
-         METODOLOGÍA & VISIÓN TÉCNICA
-         ===================================================== -->
-    <section class="about-home-section">
-      <div class="section-container">
         <div class="about-home-heading">
-          <p class="section-kicker">Metodología y Enfoque</p>
-          <p class="section-kicker-en">Methodology &amp; Approach</p>
+          <p class="section-kicker">Juan Jesús Lupiáñez</p>
+          <p class="section-kicker-en">Baal Studio Director & Heritage Specialist</p>
           <div class="section-rule"></div>
         </div>
 
-        <div class="about-grid-details">
-          <div class="about-card-box">
-            <h4>Flujos de Trabajo Rigurosos</h4>
-            <p style="font-size: 0.95rem; color: var(--text-muted);">
-              Cada intervención patrimonial exige rigor métrico y conceptual. Nos especializamos en la integración de fotogrametría terrestre y aérea con escaneado tridimensional para obtener representaciones digitales fidedignas.
+        <div class="about-home-content">
+          <div class="bilingual-copy">
+            <p>
+              Especialista en documentación, levantamiento 3D y análisis tridimensional del patrimonio cultural e histórico con más de 8 años de experiencia en el sector técnico y académico.
             </p>
-            <p class="english-copy" style="margin-top: 12px; font-size: 0.88rem;">
-              Every heritage intervention demands metric and conceptual rigor. We specialize in integrating terrestrial and aerial photogrammetry with 3D scanning to achieve authentic digital representations.
+            <p class="english-copy">
+              Specialist in documentation, 3D surveying, and three-dimensional analysis of cultural and historical heritage with over 8 years of experience across technical and academic domains.
+            </p>
+            
+            <div class="copy-separator"></div>
+            
+            <p style="font-size: 18px; font-family: var(--font-body); line-height: 1.6;">
+              Mi enfoque se basa en la obtención de datos métricos rigurosos mediante fotogrametría y escaneado, transformando esa información en planimetrías detalladas y modelos fidedignos para investigación, conservación y divulgación interactiva.
+            </p>
+            <p class="english-copy">
+              My approach relies on obtaining rigorous metric data through photogrammetry and scanning, transforming that information into detailed planimetry and faithful models for research, conservation, and interactive dissemination.
+            </p>
+          </div>
+          
+          <!-- RECICLAMOS EL STATS-GRID DEL STYLE PRINCIPAL -->
+          <div class="stats-grid">
+            <div class="stat-item">
+              <strong>8+</strong>
+              <span>Años de exp.</span>
+              <small>Years exp.</small>
+            </div>
+            <div class="stat-item">
+              <strong>30+</strong>
+              <span>Proyectos</span>
+              <small>Projects</small>
+            </div>
+            <div class="stat-item">
+              <strong>2</strong>
+              <span>Países</span>
+              <small>Countries</small>
+            </div>
+            <div class="stat-item">
+              <strong>100%</strong>
+              <span>Rigor métrico</span>
+              <small>Metric rigor</small>
+            </div>
+          </div>
+          
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         METODOLOGÍA
+         ===================================================== -->
+    <section class="about-methodology-section">
+
+      <div class="section-container about-home-layout">
+
+        <div class="about-home-heading">
+          <p class="section-kicker">Metodología</p>
+          <p class="section-kicker-en">Methodology</p>
+          <div class="section-rule"></div>
+        </div>
+
+        <div class="about-home-content">
+          <div class="bilingual-copy">
+            <p>
+              Cada intervención patrimonial exige rigor conceptual. Integramos fotogrametría terrestre y aérea con escaneado láser para obtener representaciones digitales hiperrealistas.
+            </p>
+            <p class="english-copy">
+              Every heritage intervention demands conceptual rigor. We integrate terrestrial and aerial photogrammetry with laser scanning to achieve hyper-realistic digital representations.
             </p>
           </div>
 
-          <div class="about-card-box">
-            <h4>Restauración y Reconstrucción Virtual</h4>
-            <p style="font-size: 0.95rem; color: var(--text-muted);">
-              Aplicamos principios de anastilosis digital e hipótesis históricas fundamentadas en evidencias arqueológicas, diferenciando claramente las estructuras originales de las propuestas reconstructivas.
-            </p>
-            <p class="english-copy" style="margin-top: 12px; font-size: 0.88rem;">
-              We apply digital anastylosis principles and historical hypotheses grounded in archaeological evidence, clearly distinguishing original structures from reconstructive proposals.
-            </p>
+          <div class="methodology-grid">
+            
+            <div class="methodology-card">
+              <h3>Alta Precisión</h3>
+              <p>Generación de nubes de puntos densas, modelos de malla texturizados y ortofotografías gigapíxel con control topográfico para garantizar la fiabilidad del levantamiento as-built.</p>
+              <p class="english-copy">Generation of dense point clouds, textured mesh models, and gigapixel orthophotos with topographic control to ensure the reliability of the as-built survey.</p>
+            </div>
+
+            <div class="methodology-card">
+              <h3>Reconstrucción Virtual</h3>
+              <p>Aplicación de principios de anastilosis digital e hipótesis históricas fundamentadas en evidencias arqueológicas, diferenciando claramente los restos originales de las propuestas reconstructivas.</p>
+              <p class="english-copy">Application of digital anastylosis principles and historical hypotheses grounded in archaeological evidence, clearly distinguishing original remains from reconstructive proposals.</p>
+            </div>
+
+            <div class="methodology-card">
+              <h3>Planimetría y Patologías</h3>
+              <p>Redacción de plantas, alzados, secciones arquitectónicas y cartografía temática (mapeado de alteraciones y materiales) esenciales para proyectos de restauración.</p>
+              <p class="english-copy">Drafting of floor plans, elevations, architectural sections, and thematic cartography (mapping of alterations and materials) essential for restoration projects.</p>
+            </div>
+
+            <div class="methodology-card">
+              <h3>Difusión Interactiva</h3>
+              <p>Optimización retopológica de activos 3D pesados para su integración fluida en visores web, entornos de realidad virtual, museografía y plataformas como Unreal Engine.</p>
+              <p class="english-copy">Retopological optimization of heavy 3D assets for seamless integration into web viewers, virtual reality environments, museography, and platforms like Unreal Engine.</p>
+            </div>
+
           </div>
         </div>
 
-        <ul class="methodology-list">
-          <li>
-            <strong>Levantamientos de Alta Precisión:</strong> Generación de nubes de puntos densas, modelos de malla texturizados y ortofotografías gigapíxel.
-          </li>
-          <li>
-            <strong>Planimetría y Mapeado de Patologías:</strong> Redacción de plantas, alzados, secciones y cartografía temática para proyectos de conservación.
-          </li>
-          <li>
-            <strong>Difusión Cultural Accesible:</strong> Optimización de activos 3D para visores interactivos, entornos virtuales y museografía.
-          </li>
-        </ul>
       </div>
+
     </section>
 
+
+
     <!-- =====================================================
-         ESTADÍSTICAS & SOFTWARE
+         HERRAMIENTAS
          ===================================================== -->
-    <section class="capabilities-section">
-      <div class="section-container">
-        <div class="capabilities-heading">
-          <p class="section-kicker">Herramientas y Software</p>
+    <section class="tools-section">
+
+      <div class="section-container about-home-layout">
+
+        <div class="about-home-heading">
+          <p class="section-kicker">Software Stack</p>
           <p class="section-kicker-en">Technical Arsenal</p>
           <div class="section-rule"></div>
         </div>
 
-        <div class="tools-grid">
-          <div class="tool-tag">Agisoft Metashape</div>
-          <div class="tool-tag">Blender 3D</div>
-          <div class="tool-tag">AutoCAD / QGIS</div>
-          <div class="tool-tag">Unreal Engine</div>
-          <div class="tool-tag">RealityCapture</div>
-          <div class="tool-tag">CloudCompare</div>
-          <div class="tool-tag">Adobe Suite</div>
-          <div class="tool-tag">Meshlab</div>
+        <div class="about-home-content">
+          <div class="bilingual-copy">
+            <p>
+              Dominio técnico de las herramientas estándar de la industria gráfica, topográfica y de desarrollo 3D en tiempo real.
+            </p>
+            <p class="english-copy">
+              Technical mastery of industry-standard tools for graphics, topography, and real-time 3D development.
+            </p>
+          </div>
+
+          <div class="tools-grid">
+            <div class="tool-tag">Agisoft Metashape</div>
+            <div class="tool-tag">RealityCapture</div>
+            <div class="tool-tag">Blender 3D</div>
+            <div class="tool-tag">CloudCompare</div>
+            <div class="tool-tag">AutoCAD</div>
+            <div class="tool-tag">QGIS</div>
+            <div class="tool-tag">Unreal Engine</div>
+            <div class="tool-tag">Meshlab</div>
+            <div class="tool-tag">Adobe Suite</div>
+          </div>
         </div>
 
-        <div class="stats-grid">
-          <div class="stat-item">
-            <strong>8+</strong>
-            <span>Años de experiencia</span>
-            <small>Years experience</small>
-          </div>
-          <div class="stat-item">
-            <strong>30+</strong>
-            <span>Casos documentados</span>
-            <small>Cases documented</small>
-          </div>
-          <div class="stat-item">
-            <strong>2</strong>
-            <span>Países de actuación</span>
-            <small>Countries active</small>
-          </div>
-          <div class="stat-item">
-            <strong>100%</strong>
-            <span>Rigor técnico</span>
-            <small>Technical accuracy</small>
-          </div>
-        </div>
       </div>
+
     </section>
 
   </main>
 
+
+
   <!-- =====================================================
-       FOOTER
+       FOOTER (COPIA EXACTA DEL INDEX ESTABLE)
        ===================================================== -->
+
   <footer class="main-footer">
+
     <div class="footer-container">
+
+
       <div class="footer-top">
+
+
         <div class="footer-services">
-          <p>Documentación del Patrimonio · Planimetrías · Mapeados · Levantamiento y Modelado 3D · Reconstrucción Virtual · Fotografía con Drone</p>
-          <p class="footer-services-en">Heritage Documentation · Mapping · 3D Survey · Virtual reconstruction · Drone Photo</p>
+
+          <p>
+            Documentación del Patrimonio · Planimetrías · Mapeados · Levantamiento y Modelado 3D · Reconstrucción Virtual · Fotografía con Drone
+          </p>
+
+          <p class="footer-services-en">
+            Heritage Documentation · Mapping · 3D Survey · Virtual reconstruction · Drone Photo
+          </p>
+
         </div>
+
 
         <div class="footer-nav-column">
-          <a href="./index.html">Inicio · Home</a>
-          <a href="./proyectos.html">Proyectos · Projects</a>
-          <a href="./about.html">Sobre mí · About</a>
-          <a href="./contact.html">Contacto · Contact</a>
+
+          <a href="./index.html">
+            Inicio · Home
+          </a>
+
+          <a href="./proyectos.html">
+            Proyectos · Projects
+          </a>
+
+          <a href="./about.html">
+            Sobre mí · About
+          </a>
+
+          <a href="./contact.html">
+            Contacto · Contact
+          </a>
+
         </div>
+
+
       </div>
 
+
+
       <div class="footer-identity">
+
         <div class="footer-logos">
+
           <img
             id="footer-logo-baal"
             class="footer-secondary-logo protected-image"
-            src="./Logos/NEWBaal_Logo_White.png"
+            src=""
             alt="Baal Studio"
             draggable="false"
           >
+
+
           <img
             id="footer-logo-lns"
             class="footer-secondary-logo protected-image"
-            src="./Logos/LNS_LOGO_WHITE.png"
+            src=""
             alt="LNS"
             draggable="false"
           >
+
         </div>
 
-        <a href="https://linktr.ee/baalstudio" target="_blank" rel="noopener noreferrer" aria-label="Baal Studio — Redes sociales">
+
+        <a
+          href="https://linktr.ee/baalstudio"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Baal Studio — Redes sociales"
+        >
+
           <img
             id="footer-qr"
             class="footer-qr protected-image"
-            src="./Logos/QRBAAL.png"
+            src=""
             alt="Redes sociales de Baal Studio"
             width="100"
             height="100"
             draggable="false"
           >
+
         </a>
 
-        <a href="https://linktr.ee/baalstudio" class="footer-social-link" target="_blank" rel="noopener noreferrer">RRSS</a>
+
+        <a
+          href="https://linktr.ee/baalstudio"
+          class="footer-social-link"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          RRSS
+        </a>
+
       </div>
 
+
+
       <div class="footer-bottom">
-        <p>© Juan Jesús Lupiáñez Moreno · Baal Studio · Todos los derechos reservados · All rights reserved.</p>
+
+        <p>
+          © Juan Jesús Lupiáñez Moreno · Baal Studio · Todos los derechos reservados · All rights reserved.
+        </p>
+
       </div>
+
     </div>
+
   </footer>
+
+
 
   <script src="./script.js"></script>
 
 </body>
+
 </html>
