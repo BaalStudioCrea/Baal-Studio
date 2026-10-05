@@ -4,7 +4,7 @@
    ============================================================ */
 
 /* ------------------------------------------------------------
-   HEADER ESPECÍFICO (HEREDA DE ABOUT ESTABLE)
+   HEADER ESPECÍFICO
    ------------------------------------------------------------ */
 .contact-header {
   background-color: #111111 !important;
@@ -15,7 +15,7 @@
    CONTENEDOR PRINCIPAL
    ------------------------------------------------------------ */
 .contact-main {
-  background: var(--bg, #f5f4f0); /* Fondo claro de la web */
+  background: var(--bg, #f5f4f0);
   color: var(--black, #111111);
   min-height: 100vh;
   padding: 160px 0 100px 0;
@@ -29,7 +29,7 @@
 }
 
 /* ------------------------------------------------------------
-   COLUMNA IZQUIERDA (TEXTOS E INFO)
+   COLUMNA IZQUIERDA (INFO)
    ------------------------------------------------------------ */
 .contact-info-col {
   position: sticky;
@@ -95,11 +95,6 @@
   font-weight: 500;
 }
 
-.detail-label small {
-  margin-left: 6px;
-  color: rgba(0, 0, 0, 0.3);
-}
-
 .detail-value {
   font-family: var(--font-body, 'Inter', sans-serif);
   font-size: 15px;
@@ -159,67 +154,64 @@
   margin-left: 4px;
 }
 
-/* TAMAÑO DE TEXTO Y ESTILO BASE DE CAMPOS */
+/* CAMPOS DELIMITADOS (CAJETINES VISIBLES Y ELEGANTES) */
 .form-group input,
 .form-group select,
 .form-group textarea {
   width: 100%;
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-  padding: 12px 0;
+  background: #e8e5dc; /* Fondo ligeramente más oscuro que el cajetín base #f0eee8 */
+  border: 1px solid rgba(0, 0, 0, 0.15); /* Borde completo delimitado */
+  border-radius: 2px;
+  padding: 14px 16px;
   font-family: var(--font-body, 'Inter', sans-serif);
-  font-size: 16px;
+  font-size: 15px;
   color: var(--black, #111111);
-  transition: border-color 0.3s ease, background-color 0.3s ease;
+  transition: all 0.3s ease;
   outline: none;
-  border-radius: 0;
+  box-sizing: border-box;
+}
+
+/* EFECTO AL HACER CLIC EN UN CAMPO (FOCUS) */
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  background: #ffffff; /* Se ilumina en blanco al interactuar */
+  border-color: #2b2823; /* Borde oscuro para máxima claridad */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .form-group select {
   cursor: pointer;
   appearance: none;
   -webkit-appearance: none;
-  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="%23111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>') no-repeat right center;
+  -moz-appearance: none;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="%23111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 40px;
 }
 
-/* OPCIONES DEL DESPLEGABLE EN TONOS SUAVES */
 .form-group select option {
-  background-color: #faf9f6; /* Fondo crema suave, más claro que el cajetín #f0eee8 */
-  color: #2b2b2b;            /* Texto gris oscuro neutro */
-  font-size: 15px;
+  background-color: #faf9f6;
+  color: #111111;
   padding: 12px;
-}
-
-.form-group select option:checked,
-.form-group select option:focus {
-  background-color: #e2ded4 !important; /* Tono arena muy suave para la opción activa */
-  color: #111111 !important;
 }
 
 .form-group textarea {
   resize: vertical;
-  min-height: 110px;
+  min-height: 120px;
 }
 
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-  border-bottom-color: var(--black, #111111);
-}
-
-/* AUTOCOMPLETADO SUAVE */
+/* SOBREESCRITURA DEL AUTOCOMPLETADO */
 .form-group input:-webkit-autofill,
 .form-group input:-webkit-autofill:hover,
 .form-group input:-webkit-autofill:focus,
 .form-group textarea:-webkit-autofill,
 .form-group textarea:-webkit-autofill:hover,
 .form-group textarea:-webkit-autofill:focus,
-.form-group select:-webkit-autofill,
-.form-group select:-webkit-autofill:hover,
-.form-group select:-webkit-autofill:focus {
+.form-group select:-webkit-autofill {
   -webkit-text-fill-color: #111111 !important;
-  -webkit-box-shadow: 0 0 0px 1000px #e8e4dc inset !important;
+  -webkit-box-shadow: 0 0 0px 1000px #e8e5dc inset !important;
   transition: background-color 5000s ease-in-out 0s;
 }
 
@@ -232,7 +224,7 @@
   color: var(--gray, #777777);
 }
 
-/* Pie del Formulario */
+/* PIE DEL FORMULARIO */
 .form-footer {
   display: flex;
   justify-content: space-between;
@@ -271,9 +263,7 @@
   background: var(--accent, #a28b6d);
 }
 
-/* ------------------------------------------------------------
-   RESPONSIVE
-   ------------------------------------------------------------ */
+/* RESPONSIVE */
 @media (max-width: 900px) {
   .contact-grid {
     grid-template-columns: 1fr;
