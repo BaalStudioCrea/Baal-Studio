@@ -12,7 +12,7 @@
 }
 
 /* ------------------------------------------------------------
-   HERO DE LA PÁGINA (ESTRUCTURA UNIFICADA CON OTRAS SECCIONES)
+   HERO DE LA PÁGINA
    ------------------------------------------------------------ */
 .about-page-hero {
   background: #111111;
@@ -22,16 +22,16 @@
 }
 
 /* ------------------------------------------------------------
-   VISOR DE PORTAFOLIO EN HERO (COLUMNA IZQUIERDA)
+   VISOR DE PORTAFOLIO EN HERO (COLUMNA IZQUIERDA CENTRADA)
    ------------------------------------------------------------ */
 .portfolio-column-wrapper {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Centra horizontalmente el visor y el subtítulo */
+  align-items: center;
   justify-content: flex-start;
   gap: 16px;
   width: 100%;
-  margin: 0 auto; /* Centra el bloque entero en el hueco de la columna */
+  margin: 0 auto;
 }
 
 .portfolio-viewer-card {
@@ -42,7 +42,7 @@
   flex-direction: column;
   gap: 10px;
   width: 100%;
-  max-width: 380px; /* Ancho ajustado para mantener proporción perfecta */
+  max-width: 380px;
   box-sizing: border-box;
   margin: 0 auto;
 }
@@ -131,7 +131,7 @@
   border-color: #ffffff;
 }
 
-/* SUBTÍTULO PORTAFOLIO EN TONO MARRÓN DORADO BRILLANTE Y CENTRADO */
+/* SUBTÍTULO PORTAFOLIO CENTRADO Y TONO MARRÓN BRONCE */
 .portfolio-subtitle-container {
   text-align: center;
   width: 100%;
@@ -142,7 +142,7 @@
 .portfolio-main-title-label {
   font-family: var(--font-title);
   font-size: 18px;
-  color: var(--accent, #a28b6d); /* Mismo tono acento brillante que la barra de título */
+  color: var(--accent, #a28b6d);
   letter-spacing: 0.12em;
   font-weight: 400;
   text-transform: uppercase;
@@ -206,7 +206,7 @@
 }
 
 /* ------------------------------------------------------------
-   TÍTULOS Y CONTENIDO DERECHO (ALINEADO Y UNIFICADO)
+   TÍTULOS Y CONTENIDO DERECHO
    ------------------------------------------------------------ */
 .about-page-hero .section-kicker,
 .about-background-section .section-kicker,
