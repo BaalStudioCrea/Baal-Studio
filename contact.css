@@ -159,7 +159,7 @@
   margin-left: 4px;
 }
 
-/* TAMAÑO DE TEXTO INCREMENTADO Y ESTILO BASE DE CAMPOS */
+/* TAMAÑO DE TEXTO Y ESTILO BASE DE CAMPOS */
 .form-group input,
 .form-group select,
 .form-group textarea {
@@ -183,20 +183,18 @@
   background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="%23111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>') no-repeat right center;
 }
 
-/* OPCIONES DEL SELECT Y EFECTO HOVER */
+/* OPCIONES DEL DESPLEGABLE EN TONOS SUAVES */
 .form-group select option {
-  background-color: #e0dcd3;
-  color: #111111;
+  background-color: #faf9f6; /* Fondo crema suave, más claro que el cajetín #f0eee8 */
+  color: #2b2b2b;            /* Texto gris oscuro neutro */
   font-size: 15px;
-  padding: 10px;
+  padding: 12px;
 }
 
-.form-group select option:hover,
-.form-group select option:focus,
-.form-group select option:checked {
-  background-color: #a28b6d !important;
-  color: #ffffff !important;
-  box-shadow: 0 0 10px 100px #a28b6d inset !important;
+.form-group select option:checked,
+.form-group select option:focus {
+  background-color: #e2ded4 !important; /* Tono arena muy suave para la opción activa */
+  color: #111111 !important;
 }
 
 .form-group textarea {
@@ -210,7 +208,7 @@
   border-bottom-color: var(--black, #111111);
 }
 
-/* SOBREESCRITURA DEL AUTOCOMPLETADO CELESTE DEL NAVEGADOR */
+/* AUTOCOMPLETADO SUAVE */
 .form-group input:-webkit-autofill,
 .form-group input:-webkit-autofill:hover,
 .form-group input:-webkit-autofill:focus,
@@ -221,7 +219,7 @@
 .form-group select:-webkit-autofill:hover,
 .form-group select:-webkit-autofill:focus {
   -webkit-text-fill-color: #111111 !important;
-  -webkit-box-shadow: 0 0 0px 1000px #e0dcd3 inset !important;
+  -webkit-box-shadow: 0 0 0px 1000px #e8e4dc inset !important;
   transition: background-color 5000s ease-in-out 0s;
 }
 
