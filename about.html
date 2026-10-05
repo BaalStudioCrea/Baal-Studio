@@ -161,9 +161,16 @@
           <div class="portfolio-column-wrapper">
             <div class="portfolio-viewer-card">
               
-              <div class="portfolio-viewer-header">
-                <span class="portfolio-tag">SELECCIÓN DE TRABAJOS</span>
+              <div class="portfolio-viewer-top">
                 <span id="portfolio-counter" class="portfolio-counter">01 / 16</span>
+                <button type="button" class="portfolio-zoom-btn" id="portfolio-zoom-btn" aria-label="Ampliar lámina">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    <line x1="11" y1="8" x2="11" y2="14"></line>
+                    <line x1="8" y1="11" x2="14" y2="11"></line>
+                  </svg>
+                </button>
               </div>
 
               <div class="portfolio-stage" id="portfolio-stage">
@@ -173,29 +180,20 @@
                   alt="Lámina de Portafolio Baal Studio"
                   class="portfolio-img protected-image"
                   loading="lazy"
+                  draggable="false"
                 >
-                <button type="button" class="portfolio-zoom-btn" id="portfolio-zoom-btn" aria-label="Ampliar lámina">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    <line x1="11" y1="8" x2="11" y2="14"></line>
-                    <line x1="8" y1="11" x2="14" y2="11"></line>
-                  </svg>
-                </button>
               </div>
 
               <div class="portfolio-controls">
-                <button type="button" id="portfolio-prev-btn" class="portfolio-nav-btn">&larr; Ant.</button>
-                <span id="portfolio-title-display" class="portfolio-title-display">Cargando...</span>
-                <button type="button" id="portfolio-next-btn" class="portfolio-nav-btn">Sig. &rarr;</button>
+                <button type="button" id="portfolio-prev-btn" class="portfolio-nav-btn" aria-label="Anterior">&larr;</button>
+                <button type="button" id="portfolio-next-btn" class="portfolio-nav-btn" aria-label="Siguiente">&rarr;</button>
               </div>
 
             </div>
 
-            <!-- SUBTÍTULO BAJO EL VISOR -->
+            <!-- SUBTÍTULO CENTRADO BAJO EL VISOR -->
             <div class="portfolio-subtitle-container">
               <span class="portfolio-main-title-label">PORTAFOLIO</span>
-              <span class="portfolio-main-title-sub">Documentación y Análisis Gráfico</span>
             </div>
           </div>
 
@@ -516,7 +514,7 @@
   </footer>
 
 
-  <!-- MODAL DE AMPLIACIÓN (AJUSTADO Y ELEGANTE) -->
+  <!-- MODAL DE AMPLIACIÓN (ZOOM) -->
   <div id="portfolio-modal" class="portfolio-modal" aria-hidden="true">
     <button id="portfolio-modal-close" class="portfolio-modal-close" aria-label="Cerrar">&times;</button>
     <div class="portfolio-modal-content-box">
@@ -527,38 +525,36 @@
 
   <script src="./script.js"></script>
 
-  <!-- SCRIPT DINÁMICO PARA EL VISOR DE LAS 16 LÁMINAS -->
+  <!-- LÓGICA DEL VISOR DE LÁMINAS -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Reemplaza esta URL con la ruta pública exacta de tu bucket de Supabase (carpeta PORTAFOLIO)
-      const SUPABASE_STORAGE_URL = "https://TU_PROYECTO_SUPABASE.supabase.co/storage/v1/object/public/PORTAFOLIO/";
-
-      // Listado exacto de las 16 láminas ordenadas
+      // Listado exacto con las 16 láminas y el orden proporcionado
       const portfolioFiles = [
         "LAMINA_01_EPIGRAFIA_LVPIOPT.webp",
-        "LAMINA_02_ESTRUCTURA_LVPIOPT.webp",
-        "LAMINA_03_PLANIMETRIA_LVPIOPT.webp",
-        "LAMINA_04.1_CABALLO_LVPIOPT.webp",
+        "LAMINA_01.2_EPIGRAFIA_LVPIOPT.webp",
+        "LAMINA_02.2_BARTOLOS_LVPIOPT.webp",
+        "LAMINA_03_MESQUITA_LVPIOPT.webp",
+        "LAMINA_04_CABALLO_LVPIOPT.webp",
         "LAMINA_04.2_CABALLO_LVPIOPT.webp",
-        "LAMINA_05_YACIMIENTO_LVPIOPT.webp",
-        "LAMINA_06_FOTOGRAMETRIA_LVPIOPT.webp",
-        "LAMINA_07_MODELADO_LVPIOPT.webp",
-        "LAMINA_08_MAPADAÑOS_LVPIOPT.webp",
-        "LAMINA_09_ALZADO_LVPIOPT.webp",
-        "LAMINA_10_SECCION_LVPIOPT.webp",
-        "LAMINA_11_DETALLE_LVPIOPT.webp",
-        "LAMINA_12_CERAMICA_LVPIOPT.webp",
-        "LAMINA_13_RECONSTRUCCION_LVPIOPT.webp",
-        "LAMINA_14_INFORME_LVPIOPT.webp",
-        "LAMINA_15_GENERAL_LVPIOPT.webp",
-        "LAMINA_16_CIERRE_LVPIOPT.webp"
+        "LAMINA_05_PLANOS_LVPIOPT.webp",
+        "LAMINA_05.2_PLANOS_LVPIOPT.webp",
+        "LAMINA_06_3D_1_LVPIOPT.webp",
+        "LAMINA_06_3D_2_LVPIOPT.webp",
+        "LAMINA_06_3D_3_LVPIOPT.webp",
+        "LAMINA_06_3D_4_LVPIOPT.webp",
+        "LAMINA_06_3D_5_LVPIOPT.webp",
+        "LAMINA_06_3D_6_LVPIOPT.webp",
+        "LAMINA_06_3D_7_LVPIOPT.webp",
+        "LAMINA_06_3D_8_LVPIOPT.webp"
       ];
+
+      const BUCKET_NAME = "proyectospriv";
+      const FOLDER_PATH = "PORTAFOLIO";
 
       let currentIndex = 0;
 
       const imgEl = document.getElementById('portfolio-current-img');
       const counterEl = document.getElementById('portfolio-counter');
-      const titleEl = document.getElementById('portfolio-title-display');
       const prevBtn = document.getElementById('portfolio-prev-btn');
       const nextBtn = document.getElementById('portfolio-next-btn');
       const zoomBtn = document.getElementById('portfolio-zoom-btn');
@@ -566,32 +562,61 @@
       const modalImgEl = document.getElementById('portfolio-modal-img');
       const modalCloseBtn = document.getElementById('portfolio-modal-close');
 
-      function updateSheet(index) {
+      // Obtención dinámica de la URL desde Supabase
+      async function getImageUrl(fileName) {
+        const filePath = `${FOLDER_PATH}/${fileName}`;
+
+        // 1. Usar el cliente global de Supabase si está inicializado en script.js
+        const client = window.supabaseClient || window.supabase;
+        if (client && client.storage) {
+          try {
+            const { data, error } = await client.storage
+              .from(BUCKET_NAME)
+              .createSignedUrl(filePath, 3600);
+            if (!error && data?.signedUrl) return data.signedUrl;
+
+            const { data: pubData } = client.storage
+              .from(BUCKET_NAME)
+              .getPublicUrl(filePath);
+            if (pubData?.publicUrl) return pubData.publicUrl;
+          } catch (err) {
+            console.warn("Error resolviendo URL en Supabase:", err);
+          }
+        }
+
+        // 2. Si script.js tiene una función auxiliar
+        if (typeof window.getProtectedImageUrl === 'function') {
+          return window.getProtectedImageUrl(BUCKET_NAME, filePath);
+        }
+
+        // 3. Fallback a URL del proyecto si existe variable global
+        if (window.SUPABASE_PROJECT_URL) {
+          return `${window.SUPABASE_PROJECT_URL}/storage/v1/object/public/${BUCKET_NAME}/${filePath}`;
+        }
+
+        return `./${FOLDER_PATH}/${fileName}`;
+      }
+
+      async function updateSheet(index) {
         if (portfolioFiles.length === 0) return;
         currentIndex = (index + portfolioFiles.length) % portfolioFiles.length;
-        
-        const fileName = portfolioFiles[currentIndex];
-        const fullUrl = SUPABASE_STORAGE_URL + fileName;
 
-        // Carga bajo demanda de la lámina activa actual
-        imgEl.src = fullUrl;
-        
+        const fileName = portfolioFiles[currentIndex];
+        const url = await getImageUrl(fileName);
+
+        imgEl.src = url;
+
         const total = String(portfolioFiles.length).padStart(2, '0');
         const current = String(currentIndex + 1).padStart(2, '0');
         counterEl.textContent = `${current} / ${total}`;
-
-        // Limpiar el nombre para mostrar el título amigable debajo
-        const cleanTitle = fileName
-          .replace('_LVPIOPT.webp', '')
-          .replace(/_/g, ' ');
-        titleEl.textContent = cleanTitle;
       }
 
       prevBtn.addEventListener('click', () => updateSheet(currentIndex - 1));
       nextBtn.addEventListener('click', () => updateSheet(currentIndex + 1));
 
-      // Control del visor de ampliación (Lightbox contenido y elegante)
+      // Lógica de Zoom / Lightbox
       const openZoom = () => {
+        if (!imgEl.src) return;
         modalImgEl.src = imgEl.src;
         modalEl.classList.add('active');
         modalEl.setAttribute('aria-hidden', 'false');
@@ -610,8 +635,8 @@
         if (e.target === modalEl) closeZoom();
       });
 
-      // Inicializar en la primera lámina
-      updateSheet(0);
+      // Inicialización
+      setTimeout(() => updateSheet(0), 150);
     });
   </script>
 
