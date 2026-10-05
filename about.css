@@ -12,7 +12,7 @@
 }
 
 /* ------------------------------------------------------------
-   HERO DE LA PÁGINA
+   HERO DE LA PÁGINA (ESTRUCTURA UNIFICADA CON OTRAS SECCIONES)
    ------------------------------------------------------------ */
 .about-page-hero {
   background: #111111;
@@ -21,24 +21,17 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.about-hero-grid {
-  display: grid;
-  grid-template-columns: 4fr 8fr;
-  gap: 60px;
-  align-items: center;
-}
-
 /* ------------------------------------------------------------
-   VISOR DE PORTAFOLIO EN HERO (AJUSTADO Y COMPACTO)
+   VISOR DE PORTAFOLIO EN HERO (COLUMNA IZQUIERDA)
    ------------------------------------------------------------ */
 .portfolio-column-wrapper {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: 16px;
   width: 100%;
-  max-width: 360px; /* Tamaño equivalente al logo original */
-  margin: 0 auto;
+  max-width: 360px;
+  margin: 0;
 }
 
 .portfolio-viewer-card {
@@ -89,7 +82,7 @@
 .portfolio-stage {
   position: relative;
   width: 100%;
-  height: 280px; /* Altura acotada para no alterar la estructura vertical */
+  height: 280px;
   background: #0d0d0d;
   display: flex;
   align-items: center;
@@ -136,7 +129,7 @@
   border-color: #ffffff;
 }
 
-/* Subtítulo bajo el visor (Centrado) */
+/* SUBTÍTULO PORTAFOLIO EN TONO MARRÓN DORADO BRILLANTE Y CENTRADO */
 .portfolio-subtitle-container {
   text-align: center;
   width: 100%;
@@ -145,9 +138,9 @@
 .portfolio-main-title-label {
   font-family: var(--font-title);
   font-size: 18px;
-  color: #ffffff;
+  color: var(--accent, #a28b6d); /* Mismo tono acento brillante que la barra de título */
   letter-spacing: 0.12em;
-  font-weight: 300;
+  font-weight: 400;
   text-transform: uppercase;
   display: block;
 }
@@ -209,7 +202,7 @@
 }
 
 /* ------------------------------------------------------------
-   TÍTULOS Y CONTENIDO DERECHO
+   TÍTULOS Y CONTENIDO DERECHO (ALINEADO Y UNIFICADO)
    ------------------------------------------------------------ */
 .about-page-hero .section-kicker,
 .about-background-section .section-kicker,
@@ -227,6 +220,11 @@
 
 .about-page-hero .section-kicker-en {
   color: rgba(255, 255, 255, 0.45);
+}
+
+.about-hero-content {
+  margin: 0;
+  padding: 0;
 }
 
 .about-hero-content .bilingual-copy {
@@ -444,11 +442,6 @@
    RESPONSIVE
    ------------------------------------------------------------ */
 @media (max-width: 1000px) {
-  .about-hero-grid {
-    grid-template-columns: 1fr;
-    gap: 40px;
-  }
-
   .tools-category-grid {
     grid-template-columns: 1fr;
   }
