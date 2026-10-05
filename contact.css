@@ -147,7 +147,7 @@
 
 .form-group label {
   font-family: var(--font-body, 'Inter', sans-serif);
-  font-size: 10px;
+  font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 500;
@@ -159,6 +159,7 @@
   margin-left: 4px;
 }
 
+/* TAMAÑO DE TEXTO INCREMENTADO Y ESTILO BASE DE CAMPOS */
 .form-group input,
 .form-group select,
 .form-group textarea {
@@ -166,12 +167,13 @@
   background: transparent;
   border: none;
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-  padding: 10px 0;
+  padding: 12px 0;
   font-family: var(--font-body, 'Inter', sans-serif);
-  font-size: 14px;
+  font-size: 16px; /* Aumentado a 16px para mayor legibilidad */
   color: var(--black, #111111);
-  transition: border-color 0.3s ease;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
   outline: none;
+  border-radius: 0;
 }
 
 .form-group select {
@@ -181,9 +183,15 @@
   background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="%23111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>') no-repeat right center;
 }
 
+.form-group select option {
+  background-color: #f0eee8;
+  color: #111111;
+  font-size: 15px;
+}
+
 .form-group textarea {
   resize: vertical;
-  min-height: 100px;
+  min-height: 110px;
 }
 
 .form-group input:focus,
@@ -192,9 +200,24 @@
   border-bottom-color: var(--black, #111111);
 }
 
+/* SOBREESCRITURA DEL AUTOCOMPLETADO CELESTE DEL NAVEGADOR */
+.form-group input:-webkit-autofill,
+.form-group input:-webkit-autofill:hover,
+.form-group input:-webkit-autofill:focus,
+.form-group textarea:-webkit-autofill,
+.form-group textarea:-webkit-autofill:hover,
+.form-group textarea:-webkit-autofill:focus,
+.form-group select:-webkit-autofill,
+.form-group select:-webkit-autofill:hover,
+.form-group select:-webkit-autofill:focus {
+  -webkit-text-fill-color: #111111 !important;
+  -webkit-box-shadow: 0 0 0px 1000px #e0dcd3 inset !important; /* Tono cálido más oscuro acorde a la paleta */
+  transition: background-color 5000s ease-in-out 0s;
+}
+
 .char-counter {
   position: absolute;
-  bottom: -20px;
+  bottom: -22px;
   right: 0;
   font-family: var(--font-body, 'Inter', sans-serif);
   font-size: 10px;
@@ -237,7 +260,7 @@
 }
 
 .btn-submit:hover {
-  background: var(--accent, #a28b6d); /* Usa tu color de acento si tienes uno, si no se pondrá gris */
+  background: var(--accent, #a28b6d);
 }
 
 /* ------------------------------------------------------------
