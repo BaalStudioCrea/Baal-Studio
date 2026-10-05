@@ -27,11 +27,11 @@
 .portfolio-column-wrapper {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center; /* Centra horizontalmente el visor y el subtítulo */
+  justify-content: flex-start;
   gap: 16px;
   width: 100%;
-  max-width: 360px;
-  margin: 0;
+  margin: 0 auto; /* Centra el bloque entero en el hueco de la columna */
 }
 
 .portfolio-viewer-card {
@@ -42,7 +42,9 @@
   flex-direction: column;
   gap: 10px;
   width: 100%;
+  max-width: 380px; /* Ancho ajustado para mantener proporción perfecta */
   box-sizing: border-box;
+  margin: 0 auto;
 }
 
 .portfolio-viewer-top {
@@ -133,6 +135,8 @@
 .portfolio-subtitle-container {
   text-align: center;
   width: 100%;
+  max-width: 380px;
+  margin: 0 auto;
 }
 
 .portfolio-main-title-label {
