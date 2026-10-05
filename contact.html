@@ -91,42 +91,47 @@
 
           <!-- COLUMNA DERECHA: FORMULARIO -->
           <div class="contact-form-col">
-            <form action="#" method="POST" class="baal-contact-form">
+            <form action="https://formsubmit.co/ajax/baalstudiocrea@gmail.com" method="POST" class="baal-contact-form" id="contact-form">
               
+              <!-- Ajustes de FormSubmit -->
+              <input type="hidden" name="_subject" id="email-subject" value="Baal Studio Web Contact — Consulta General">
+              <input type="hidden" name="_captcha" value="false">
+              <input type="hidden" name="_template" value="table">
+
               <div class="form-row">
                 <div class="form-group">
                   <label for="name">Nombre <small>Name</small></label>
-                  <input type="text" id="name" name="name" required>
+                  <input type="text" id="name" name="Nombre" required>
                 </div>
                 <div class="form-group">
                   <label for="email">Correo Electrónico <small>Email</small></label>
-                  <input type="email" id="email" name="email" required>
+                  <input type="email" id="email" name="Email" required>
                 </div>
               </div>
 
               <div class="form-group">
                 <label for="organization">Organización <small>Organization</small></label>
-                <input type="text" id="organization" name="organization">
+                <input type="text" id="organization" name="Organización">
               </div>
 
               <div class="form-group">
                 <label for="project-type">Tipo de Proyecto <small>Project Type</small></label>
-                <select id="project-type" name="project-type" required>
+                <select id="project-type" name="Tipo de Proyecto" required>
                   <option value="" disabled selected>Selecciona · Select</option>
-                  <option value="heritage-doc">Documentación Patrimonial · Heritage Documentation</option>
-                  <option value="heritage-doc">Planimetrías · Mapping</option>
-                  <option value="damage-mapping">Mapeo de Daños · Damage Mapping</option>
-                  <option value="photogrammetry">Levantamiento 3D · 3D Survey</option>
-                  <option value="3d-modeling">Modelado 3D · 3D Modeling</option>
-                  <option value="virtual-reconstruction">Reconstrucción Virtual · Virtual Reconstruction</option>
-                  <option value="virtual-reconstruction">Fotografía con Drone · Drone Photography</option>
-                  <option value="other">Otro · Other</option>
+                  <option value="Documentación Patrimonial">Documentación Patrimonial · Heritage Documentation</option>
+                  <option value="Planimetrías">Planimetrías · Mapping</option>
+                  <option value="Mapeo de Daños">Mapeo de Daños · Damage Mapping</option>
+                  <option value="Levantamiento 3D">Levantamiento 3D · 3D Survey</option>
+                  <option value="Modelado 3D">Modelado 3D · 3D Modeling</option>
+                  <option value="Reconstrucción Virtual">Reconstrucción Virtual · Virtual Reconstruction</option>
+                  <option value="Fotografía con Drone">Fotografía con Drone · Drone Photography</option>
+                  <option value="Otro">Otro · Other</option>
                 </select>
               </div>
 
               <div class="form-group">
                 <label for="message">Mensaje <small>Message</small></label>
-                <textarea id="message" name="message" rows="5" maxlength="500" required></textarea>
+                <textarea id="message" name="Mensaje" rows="5" maxlength="500" required></textarea>
                 <div class="char-counter">0/500</div>
               </div>
 
@@ -185,24 +190,72 @@
 
   <script src="./script.js"></script>
 
-  <!-- SCRIPT PARA CONTADOR DE CARACTERES Y LOGO -->
+  <!-- SCRIPT ESPECÍFICO DE CONTACTO -->
   <script>
-    // Contador de caracteres
+    const contactForm = document.getElementById('contact-form');
+    const projectSelect = document.getElementById('project-type');
+    const emailSubject = document.getElementById('email-subject');
     const textarea = document.getElementById('message');
     const counter = document.querySelector('.char-counter');
+    const submitBtn = contactForm ? contactForm.querySelector('.btn-submit') : null;
+
+    // 1. Contador de caracteres del mensaje
     if (textarea && counter) {
       textarea.addEventListener('input', function() {
-        const currentLength = this.value.length;
-        counter.textContent = currentLength + '/500';
+        counter.textContent = this.value.length + '/500';
       });
     }
 
-    // Sincronización del Logo
+    // 2. Cambia el asunto del correo según el servicio elegido por el usuario
+    if (projectSelect && emailSubject) {
+      projectSelect.addEventListener('change', function() {
+        const selectedValue = this.value;
+        emailSubject.value = `Baal Studio Web Contact — ${selectedValue}`;
+      });
+    }
+
+    // 3. Envío en segundo plano (sin redireccionar al cliente)
+    if (contactForm && submitBtn) {
+      contactForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const originalBtnText = submitBtn.innerHTML;
+        submitBtn.innerHTML = 'Enviando...';
+        submitBtn.disabled = true;
+
+        try {
+          const response = await fetch(contactForm.action, {
+            method: 'POST',
+            body: new FormData(contactForm),
+            headers: {
+              'Accept': 'application/json'
+            }
+          });
+
+          if (response.ok) {
+            submitBtn.innerHTML = '¡Mensaje Enviado!';
+            contactForm.reset();
+            if (counter) counter.textContent = '0/500';
+
+            setTimeout(() => {
+              submitBtn.innerHTML = originalBtnText;
+              submitBtn.disabled = false;
+            }, 4000);
+          } else {
+            throw new Error('Error en la respuesta');
+          }
+        } catch (err) {
+          alert('Hubo un inconveniente al enviar el formulario. Por favor escríbenos a baalstudiocrea@gmail.com');
+          submitBtn.innerHTML = originalBtnText;
+          submitBtn.disabled = false;
+        }
+      });
+    }
+
+    // 4. Sincronización del Logo
     window.addEventListener('DOMContentLoaded', () => {
       const siteLogo = document.getElementById('site-logo');
-      const syncLogo = () => {
-        // Esta función se mantiene por si usas la lógica global
-      };
+      const syncLogo = () => {};
       syncLogo();
       setTimeout(syncLogo, 100);
     });
