@@ -43,7 +43,7 @@
         <img
           id="site-logo"
           class="header-logo protected-image"
-          src=""
+          src="./NEWBaal_Logo_White.png"
           alt="Baal Studio"
           width="180"
           height="40"
@@ -153,110 +153,106 @@
          ===================================================== -->
     <section class="about-page-hero">
       
-      <div class="section-container">
+      <div class="section-container about-home-layout">
 
-        <div class="about-hero-grid">
-
-          <!-- COLUMNA IZQUIERDA: VISOR DE PORTAFOLIO -->
-          <div class="portfolio-column-wrapper">
-            <div class="portfolio-viewer-card">
-              
-              <div class="portfolio-viewer-top">
-                <span id="portfolio-counter" class="portfolio-counter">01 / 16</span>
-                <button type="button" class="portfolio-zoom-btn" id="portfolio-zoom-btn" aria-label="Ampliar lámina">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    <line x1="11" y1="8" x2="11" y2="14"></line>
-                    <line x1="8" y1="11" x2="14" y2="11"></line>
-                  </svg>
-                </button>
-              </div>
-
-              <div class="portfolio-stage" id="portfolio-stage">
-                <img
-                  id="portfolio-current-img"
-                  src=""
-                  alt="Lámina de Portafolio Baal Studio"
-                  class="portfolio-img protected-image"
-                  loading="lazy"
-                  draggable="false"
-                >
-              </div>
-
-              <div class="portfolio-controls">
-                <button type="button" id="portfolio-prev-btn" class="portfolio-nav-btn" aria-label="Anterior">&larr;</button>
-                <button type="button" id="portfolio-next-btn" class="portfolio-nav-btn" aria-label="Siguiente">&rarr;</button>
-              </div>
-
+        <!-- COLUMNA IZQUIERDA: VISOR DE PORTAFOLIO -->
+        <div class="about-home-heading portfolio-column-wrapper">
+          <div class="portfolio-viewer-card">
+            
+            <div class="portfolio-viewer-top">
+              <span id="portfolio-counter" class="portfolio-counter">01 / 16</span>
+              <button type="button" class="portfolio-zoom-btn" id="portfolio-zoom-btn" aria-label="Ampliar lámina">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  <line x1="11" y1="8" x2="11" y2="14"></line>
+                  <line x1="8" y1="11" x2="14" y2="11"></line>
+                </svg>
+              </button>
             </div>
 
-            <!-- SUBTÍTULO CENTRADO BAJO EL VISOR -->
-            <div class="portfolio-subtitle-container">
-              <span class="portfolio-main-title-label">PORTAFOLIO</span>
+            <div class="portfolio-stage" id="portfolio-stage">
+              <img
+                id="portfolio-current-img"
+                src=""
+                alt="Lámina de Portafolio Baal Studio"
+                class="portfolio-img protected-image"
+                loading="eager"
+                draggable="false"
+              >
             </div>
+
+            <div class="portfolio-controls">
+              <button type="button" id="portfolio-prev-btn" class="portfolio-nav-btn" aria-label="Anterior">&larr;</button>
+              <button type="button" id="portfolio-next-btn" class="portfolio-nav-btn" aria-label="Siguiente">&rarr;</button>
+            </div>
+
           </div>
 
-          <!-- COLUMNA DERECHA: TEXTO Y DATOS -->
-          <div class="about-hero-content">
+          <!-- SUBTÍTULO CENTRADO BAJO EL VISOR -->
+          <div class="portfolio-subtitle-container">
+            <span class="portfolio-main-title-label">PORTAFOLIO</span>
+          </div>
+        </div>
+
+        <!-- COLUMNA DERECHA: TEXTO Y DATOS (ALINEADO CON RESTO DE SECCIONES) -->
+        <div class="about-home-content about-hero-content">
+          
+          <p class="section-kicker">Especialista en Documentación del Patrimonio</p>
+          <p class="section-kicker-en">Heritage Documentation Specialist</p>
+          <div class="section-rule"></div>
+
+          <div class="bilingual-copy">
+            <p>
+              Con más de 10 años de práctica en la intersección entre tecnología digital y patrimonio cultural, el estudio ha documentado más de 30 casos entre España y Portugal — desde manufactura prehistórica hasta yacimientos arqueológicos completos.
+            </p>
+            <p class="english-copy">
+              With over 10 years of practice at the intersection of digital technology and cultural heritage, the studio has documented more than 30 cases across Spain and Portugal — from prehistoric artifacts to entire archaeological sites.
+            </p>
             
-            <p class="section-kicker">Especialista en Documentación del Patrimonio</p>
-            <p class="section-kicker-en">Heritage Documentation Specialist</p>
-            <div class="section-rule"></div>
-
-            <div class="bilingual-copy">
-              <p>
-                Con más de 10 años de práctica en la intersección entre tecnología digital y patrimonio cultural, el estudio ha documentado más de 30 casos entre España y Portugal — desde manufactura prehistórica hasta yacimientos arqueológicos completos.
-              </p>
-              <p class="english-copy">
-                With over 10 years of practice at the intersection of digital technology and cultural heritage, the studio has documented more than 30 cases across Spain and Portugal — from prehistoric artifacts to entire archaeological sites.
-              </p>
-              
-              <div class="copy-separator"></div>
-              
-              <p>
-                Formado en diseño, conservación, restauración y arqueología, la práctica integra una metodología científica rigurosa con herramientas digitales avanzadas para producir documentación que cumple los más altos estándares de conservación, investigación y gestión.
-              </p>
-              <p class="english-copy">
-                Trained in design, conservation, restoration, and archaeology, the practice integrates rigorous scientific methodology with advanced digital tools to produce documentation that meets the highest conservation, research, and management standards.
-              </p>
-            </div>
-
-            <div class="expertise-tags">
-              <div class="expertise-tag">Fotogrametría <span>Photogrammetry</span></div>
-              <div class="expertise-tag">Modelado 3D <span>3D Modeling</span></div>
-              <div class="expertise-tag">Análisis Patrimonial <span>Heritage Analysis</span></div>
-              <div class="expertise-tag">Reconstrucción Virtual <span>Virtual Reconstruction</span></div>
-              <div class="expertise-tag">Planimetrías <span>Mapping</span></div>
-              <div class="expertise-tag">Mapas de Daños <span>Damage Mapping</span></div>
-              <div class="expertise-tag">CAD <span>CAD</span></div>
-              <div class="expertise-tag">Fotografía con Drone <span>Drone Photography</span></div>
-              <div class="expertise-tag">Difusión <span>Diffusion</span></div>
-            </div>
+            <div class="copy-separator"></div>
             
-            <div class="stats-grid">
-              <div class="stat-item">
-                <strong>10+</strong>
-                <span>Años experiencia</span>
-                <small>Years experience</small>
-              </div>
-              <div class="stat-item">
-                <strong>30+</strong>
-                <span>Casos documentados</span>
-                <small>Cases documented</small>
-              </div>
-              <div class="stat-item">
-                <strong>2</strong>
-                <span>Países</span>
-                <small>Countries</small>
-              </div>
-              <div class="stat-item">
-                <strong>11</strong>
-                <span>Herramientas software</span>
-                <small>Software tools</small>
-              </div>
-            </div>
+            <p>
+              Formado en diseño, conservación, restauración y arqueología, la práctica integra una metodología científica rigurosa con herramientas digitales avanzadas para producir documentación que cumple los más altos estándares de conservación, investigación y gestión.
+            </p>
+            <p class="english-copy">
+              Trained in design, conservation, restoration, and archaeology, the practice integrates rigorous scientific methodology with advanced digital tools to produce documentation that meets the highest conservation, research, and management standards.
+            </p>
+          </div>
 
+          <div class="expertise-tags">
+            <div class="expertise-tag">Fotogrametría <span>Photogrammetry</span></div>
+            <div class="expertise-tag">Modelado 3D <span>3D Modeling</span></div>
+            <div class="expertise-tag">Análisis Patrimonial <span>Heritage Analysis</span></div>
+            <div class="expertise-tag">Reconstrucción Virtual <span>Virtual Reconstruction</span></div>
+            <div class="expertise-tag">Planimetrías <span>Mapping</span></div>
+            <div class="expertise-tag">Mapas de Daños <span>Damage Mapping</span></div>
+            <div class="expertise-tag">CAD <span>CAD</span></div>
+            <div class="expertise-tag">Fotografía con Drone <span>Drone Photography</span></div>
+            <div class="expertise-tag">Difusión <span>Diffusion</span></div>
+          </div>
+          
+          <div class="stats-grid">
+            <div class="stat-item">
+              <strong>10+</strong>
+              <span>Años experiencia</span>
+              <small>Years experience</small>
+            </div>
+            <div class="stat-item">
+              <strong>30+</strong>
+              <span>Casos documentados</span>
+              <small>Cases documented</small>
+            </div>
+            <div class="stat-item">
+              <strong>2</strong>
+              <span>Países</span>
+              <small>Countries</small>
+            </div>
+            <div class="stat-item">
+              <strong>11</strong>
+              <span>Herramientas software</span>
+              <small>Software tools</small>
+            </div>
           </div>
 
         </div>
@@ -451,7 +447,7 @@
           <img
             id="footer-logo-baal"
             class="footer-secondary-logo protected-image"
-            src=""
+            src="./NEWBaal_Logo_White.png"
             alt="Baal Studio"
             draggable="false"
           >
@@ -525,10 +521,9 @@
 
   <script src="./script.js"></script>
 
-  <!-- LÓGICA DEL VISOR DE LÁMINAS -->
+  <!-- LÓGICA DEL VISOR DE LÁMINAS ROBUSTA Y CONEXIÓN CON SUPABASE -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Listado exacto con las 16 láminas y el orden proporcionado
       const portfolioFiles = [
         "LAMINA_01_EPIGRAFIA_LVPIOPT.webp",
         "LAMINA_01.2_EPIGRAFIA_LVPIOPT.webp",
@@ -562,12 +557,23 @@
       const modalImgEl = document.getElementById('portfolio-modal-img');
       const modalCloseBtn = document.getElementById('portfolio-modal-close');
 
-      // Obtención dinámica de la URL desde Supabase
+      // Función para resolver la URL firmada de la lámina activa
       async function getImageUrl(fileName) {
         const filePath = `${FOLDER_PATH}/${fileName}`;
 
-        // 1. Usar el cliente global de Supabase si está inicializado en script.js
-        const client = window.supabaseClient || window.supabase;
+        // Obtener cliente de Supabase (esperando si script.js tardó en instanciarlo)
+        const getSupabaseInstance = () => window.supabaseClient || window.supabase || (window.supabaseObj);
+
+        let client = getSupabaseInstance();
+
+        // Si script.js está aún conectando, hace breves intentos
+        let attempts = 0;
+        while (!client && attempts < 5) {
+          await new Promise(resolve => setTimeout(resolve, 150));
+          client = getSupabaseInstance();
+          attempts++;
+        }
+
         if (client && client.storage) {
           try {
             const { data, error } = await client.storage
@@ -580,21 +586,22 @@
               .getPublicUrl(filePath);
             if (pubData?.publicUrl) return pubData.publicUrl;
           } catch (err) {
-            console.warn("Error resolviendo URL en Supabase:", err);
+            console.warn("No se pudo obtener URL firmada:", err);
           }
         }
 
-        // 2. Si script.js tiene una función auxiliar
         if (typeof window.getProtectedImageUrl === 'function') {
-          return window.getProtectedImageUrl(BUCKET_NAME, filePath);
+          try {
+            return await window.getProtectedImageUrl(BUCKET_NAME, filePath);
+          } catch (e) {}
         }
 
-        // 3. Fallback a URL del proyecto si existe variable global
-        if (window.SUPABASE_PROJECT_URL) {
-          return `${window.SUPABASE_PROJECT_URL}/storage/v1/object/public/${BUCKET_NAME}/${filePath}`;
+        const projectUrl = window.SUPABASE_PROJECT_URL || window.SUPABASE_URL;
+        if (projectUrl) {
+          return `${projectUrl}/storage/v1/object/public/${BUCKET_NAME}/${filePath}`;
         }
 
-        return `./${FOLDER_PATH}/${fileName}`;
+        return '';
       }
 
       async function updateSheet(index) {
@@ -604,7 +611,9 @@
         const fileName = portfolioFiles[currentIndex];
         const url = await getImageUrl(fileName);
 
-        imgEl.src = url;
+        if (url) {
+          imgEl.src = url;
+        }
 
         const total = String(portfolioFiles.length).padStart(2, '0');
         const current = String(currentIndex + 1).padStart(2, '0');
@@ -614,7 +623,7 @@
       prevBtn.addEventListener('click', () => updateSheet(currentIndex - 1));
       nextBtn.addEventListener('click', () => updateSheet(currentIndex + 1));
 
-      // Lógica de Zoom / Lightbox
+      // Lightbox / Zoom
       const openZoom = () => {
         if (!imgEl.src) return;
         modalImgEl.src = imgEl.src;
@@ -635,8 +644,8 @@
         if (e.target === modalEl) closeZoom();
       });
 
-      // Inicialización
-      setTimeout(() => updateSheet(0), 150);
+      // Inicializar tras un pequeño retardo para asegurar scripts
+      setTimeout(() => updateSheet(0), 100);
     });
   </script>
 
