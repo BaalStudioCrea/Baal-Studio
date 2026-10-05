@@ -12,7 +12,7 @@
 }
 
 /* ------------------------------------------------------------
-   HERO DE LA PÁGINA (ESTRUCTURA CON CONTRASTE OSCURO)
+   HERO DE LA PÁGINA
    ------------------------------------------------------------ */
 .about-page-hero {
   background: #111111;
@@ -25,57 +25,71 @@
   display: grid;
   grid-template-columns: 4fr 8fr;
   gap: 60px;
-  align-items: start;
+  align-items: center;
 }
 
 /* ------------------------------------------------------------
-   VISOR DE PORTAFOLIO EN HERO (COLUMNA IZQUIERDA)
+   VISOR DE PORTAFOLIO EN HERO (AJUSTADO Y COMPACTO)
    ------------------------------------------------------------ */
 .portfolio-column-wrapper {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 16px;
   width: 100%;
+  max-width: 360px; /* Tamaño equivalente al logo original */
+  margin: 0 auto;
 }
 
 .portfolio-viewer-card {
   background: #181818;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  padding: 20px;
+  padding: 14px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 10px;
   width: 100%;
   box-sizing: border-box;
 }
 
-.portfolio-viewer-header {
+.portfolio-viewer-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-bottom: 6px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  padding-bottom: 10px;
-}
-
-.portfolio-tag {
-  font-family: var(--font-body);
-  font-size: 9px;
-  letter-spacing: 0.12em;
-  color: var(--accent, #a28b6d);
-  text-transform: uppercase;
-  font-weight: 500;
 }
 
 .portfolio-counter {
   font-family: var(--font-body);
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 0.05em;
+}
+
+.portfolio-zoom-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.portfolio-zoom-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #ffffff;
 }
 
 .portfolio-stage {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1.414; /* Proporción exacta lámina / A4 */
+  height: 280px; /* Altura acotada para no alterar la estructura vertical */
   background: #0d0d0d;
   display: flex;
   align-items: center;
@@ -89,55 +103,31 @@
   max-height: 100%;
   object-fit: contain;
   cursor: pointer;
-  transition: transform 0.3s ease;
+  transition: transform 0.25s ease;
 }
 
-.portfolio-stage:hover .portfolio-img {
+.portfolio-img:hover {
   transform: scale(1.02);
-}
-
-.portfolio-zoom-btn {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background: rgba(17, 17, 17, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #ffffff;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background 0.3s ease, border-color 0.3s ease;
-}
-
-.portfolio-zoom-btn:hover {
-  background: #a28b6d;
-  border-color: #a28b6d;
 }
 
 .portfolio-controls {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-  padding-top: 12px;
+  padding-top: 8px;
 }
 
 .portfolio-nav-btn {
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: #ffffff;
-  padding: 6px 14px;
+  padding: 5px 18px;
   font-family: var(--font-body);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-size: 13px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
+  line-height: 1;
 }
 
 .portfolio-nav-btn:hover {
@@ -146,43 +136,24 @@
   border-color: #ffffff;
 }
 
-.portfolio-title-display {
-  font-family: var(--font-body);
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.7);
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 140px;
-}
-
-/* Subtítulo bajo el visor */
+/* Subtítulo bajo el visor (Centrado) */
 .portfolio-subtitle-container {
-  padding: 0 4px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  text-align: center;
+  width: 100%;
 }
 
 .portfolio-main-title-label {
   font-family: var(--font-title);
-  font-size: 20px;
+  font-size: 18px;
   color: #ffffff;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.12em;
   font-weight: 300;
-}
-
-.portfolio-main-title-sub {
-  font-family: var(--font-body);
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.45);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  display: block;
 }
 
 /* ------------------------------------------------------------
-   MODAL DE AMPLIACIÓN (LUPA CONTENIDA)
+   MODAL DE AMPLIACIÓN (ZOOM)
    ------------------------------------------------------------ */
 .portfolio-modal {
   display: none;
@@ -191,11 +162,11 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.90);
+  background: rgba(0, 0, 0, 0.92);
   z-index: 9999;
   justify-content: center;
   align-items: center;
-  padding: 40px;
+  padding: 30px;
   box-sizing: border-box;
 }
 
@@ -204,33 +175,33 @@
 }
 
 .portfolio-modal-content-box {
-  max-width: 80vw;
-  max-height: 85vh;
+  max-width: 90vw;
+  max-height: 88vh;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.portfolio-modal-img {
+.portfolio-modal-content-box img {
   max-width: 100%;
-  max-height: 82vh;
+  max-height: 85vh;
   object-fit: contain;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .portfolio-modal-close {
   position: absolute;
-  top: 30px;
-  right: 40px;
+  top: 25px;
+  right: 30px;
   background: none;
   border: none;
   color: #ffffff;
-  font-size: 40px;
+  font-size: 36px;
   cursor: pointer;
   line-height: 1;
   opacity: 0.7;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.2s ease;
 }
 
 .portfolio-modal-close:hover {
@@ -238,7 +209,7 @@
 }
 
 /* ------------------------------------------------------------
-   TÍTULOS Y CONTENIDO DERECHO DEL HERO
+   TÍTULOS Y CONTENIDO DERECHO
    ------------------------------------------------------------ */
 .about-page-hero .section-kicker,
 .about-background-section .section-kicker,
@@ -256,7 +227,6 @@
 
 .about-page-hero .section-kicker-en {
   color: rgba(255, 255, 255, 0.45);
-  font-size: 11px;
 }
 
 .about-hero-content .bilingual-copy {
@@ -349,7 +319,7 @@
 }
 
 /* ------------------------------------------------------------
-   SECCIÓN DE FORMACIÓN / BACKGROUND (TEXTO CONTINUO)
+   SECCIÓN DE FORMACIÓN / BACKGROUND
    ------------------------------------------------------------ */
 .about-background-section {
   background: #ffffff;
