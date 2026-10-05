@@ -3,56 +3,103 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contacto - Baal Studio</title>
-  <link rel="stylesheet" href="./style.css">
+  <title>Contacto — BAAL Studio</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="contact.css">
 </head>
 <body>
 
-  <header class="main-header">
-    <div class="logo-header">
-      <a href="./index.html">
-        <img src="https://hlyzyeatnbulyfiiwvsq.supabase.co/storage/v1/object/public/proyectospriv/Logos/NEWBaal_Logo_White.png" alt="Baal Studio Logo">
+  <!-- HEADER (Mismo estilo oscuro que About) -->
+  <header class="main-header scrolled about-header">
+    <div class="header-inner">
+      <a href="index.html" class="header-logo-link">
+        <img src="logo.png" alt="BAAL Studio" class="header-logo protected-image">
       </a>
+      
+      <nav class="desktop-nav">
+        <a href="index.html" class="nav-link">Proyectos <small class="nav-link-en">Projects</small></a>
+        <a href="about.html" class="nav-link">Sobre el Estudio <small class="nav-link-en">About</small></a>
+        <a href="contact.html" class="nav-link active">Contacto <small class="nav-link-en">Contact</small></a>
+      </nav>
+
+      <button class="mobile-menu-button" aria-label="Abrir menú">
+        <span></span><span></span><span></span>
+      </button>
     </div>
-    <nav class="nav">
-      <a href="./index.html">Inicio</a>
-      <a href="./proyectos.html">Proyectos</a>
-      <a href="./sobre-mi.html">Sobre mí</a>
-      <a href="./contacto.html" class="active">Contacto</a>
-    </nav>
   </header>
 
-  <section class="section">
-    <div class="section-header">
-      <h2>Contacto</h2>
-      <span class="en-subtitle">Contact</span>
-    </div>
+  <!-- SECCIÓN PRINCIPAL DE CONTACTO -->
+  <main class="contact-page-hero">
+    <div class="section-container">
+      <div class="contact-grid">
+        
+        <!-- Columna Izquierda: Información Directa -->
+        <div class="contact-info">
+          <h1 class="section-kicker">Contacto</h1>
+          <p class="section-kicker-en">GET IN TOUCH</p>
+          <div class="section-rule"></div>
 
-    <div class="footer-container" style="justify-content: flex-start; gap: 4rem;">
-      <div class="contact-details">
-        <p><strong>Ubicación:</strong> Granada, Andalucía, España</p>
-        <p><strong>Servicios:</strong> Documentación del Patrimonio, Planimetrías, Modelado 3D, Fotogrametría</p>
+          <div class="contact-details">
+            <div class="contact-item">
+              <span class="contact-label">Email</span>
+              <a href="mailto:info@baalstudio.com" class="contact-value">info@baalstudio.com</a>
+            </div>
+
+            <div class="contact-item">
+              <span class="contact-label">Ubicación <small>/ Location</small></span>
+              <p class="contact-value">Madrid, España</p>
+            </div>
+
+            <div class="contact-item">
+              <span class="contact-label">Redes <small>/ Social</small></span>
+              <div class="contact-socials">
+                <a href="#" target="_blank" rel="noopener">Instagram</a>
+                <a href="#" target="_blank" rel="noopener">LinkedIn</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Columna Derecha: Formulario -->
+        <div class="contact-form-wrapper">
+          <form class="contact-form" action="#" method="POST">
+            
+            <div class="form-group">
+              <label for="name">Nombre completo <small>/ Full Name</small></label>
+              <input type="text" id="name" name="name" required placeholder="Tu nombre">
+            </div>
+
+            <div class="form-group">
+              <label for="email">Correo electrónico <small>/ Email</small></label>
+              <input type="email" id="email" name="email" required placeholder="tu@email.com">
+            </div>
+
+            <div class="form-group">
+              <label for="service">Servicio de interés <small>/ Service of interest</small></label>
+              <select id="service" name="service">
+                <option value="documentation">Documentación del Patrimonio / Heritage Documentation</option>
+                <option value="3d-scan">Escaneado 3D y Fotogrametría / 3D Scanning</option>
+                <option value="archviz">Visualización Arquitectónica / ArchViz</option>
+                <option value="other">Otro / Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="message">Mensaje <small>/ Message</small></label>
+              <textarea id="message" name="message" rows="5" required placeholder="Cuéntanos sobre tu proyecto..."></textarea>
+            </div>
+
+            <button type="submit" class="submit-button">
+              <span>Enviar mensaje</span>
+              <small>SEND MESSAGE</small>
+            </button>
+
+          </form>
+        </div>
+
       </div>
-
-      <div class="footer-qr-container">
-        <a href="https://linktr.ee/baalstudio" target="_blank" rel="noopener">
-          <img src="https://hlyzyeatnbulyfiiwvsq.supabase.co/storage/v1/object/public/proyectospriv/Logos/QRBAAL.png" alt="QR Linktree Baal Studio" class="footer-qr-img">
-        </a>
-      </div>
     </div>
-
-    <div class="brand-secondary-container">
-      <img src="https://hlyzyeatnbulyfiiwvsq.supabase.co/storage/v1/object/public/proyectospriv/Logos/LNS_LOGO_WHITE.png" alt="Baal Studio Secondary Logo" class="brand-secondary-img">
-    </div>
-  </section>
-
-  <footer class="main-footer">
-    <div class="footer-container">
-      <div class="footer-meta">
-        <p>© Baal Studio. Todos los derechos reservados · All rights reserved.</p>
-      </div>
-    </div>
-  </footer>
+  </main>
 
 </body>
 </html>
