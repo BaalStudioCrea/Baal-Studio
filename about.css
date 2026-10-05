@@ -262,14 +262,14 @@
   font-size: 11px;
   color: var(--black);
   padding: 8px 14px;
-  background: #e3e0d7; /* Tono beige suave intermedio para dar relieve */
+  background: #e9e7e2; /* Tono beige suave intermedio para dar relieve */
   border: 1px solid var(--light-gray);
   font-weight: 400;
   transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
 .tool-group li:hover {
-  background: #dcd8cd;
+  background: #e5e3dd;
   border-color: rgba(0, 0, 0, 0.2);
 }
 
