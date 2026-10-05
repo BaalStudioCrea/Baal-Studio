@@ -169,7 +169,7 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   padding: 12px 0;
   font-family: var(--font-body, 'Inter', sans-serif);
-  font-size: 16px; /* Aumentado a 16px para mayor legibilidad */
+  font-size: 16px;
   color: var(--black, #111111);
   transition: border-color 0.3s ease, background-color 0.3s ease;
   outline: none;
@@ -211,7 +211,7 @@
 .form-group select:-webkit-autofill:hover,
 .form-group select:-webkit-autofill:focus {
   -webkit-text-fill-color: #111111 !important;
-  -webkit-box-shadow: 0 0 0px 1000px #e0dcd3 inset !important; /* Tono cálido más oscuro acorde a la paleta */
+  -webkit-box-shadow: 0 0 0px 1000px #e0dcd3 inset !important;
   transition: background-color 5000s ease-in-out 0s;
 }
 
@@ -246,7 +246,7 @@
 }
 
 .btn-submit {
-  background: #2b2823);
+  background: #2b2823;
   color: #ffffff;
   border: none;
   padding: 16px 32px;
