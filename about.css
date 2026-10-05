@@ -102,7 +102,7 @@
 }
 
 .portfolio-img:hover {
-  transform: scale(1.00);
+  transform: (1.00);
 }
 
 .portfolio-controls {
@@ -151,7 +151,7 @@
 
 /* Contenedor del desplegable */
 .articles-dropdown-container {
-  margin-top: 9px;
+  margin-top: 6px;
   position: relative;
 }
 
@@ -205,7 +205,7 @@
 .articles-dropdown-content a {
   color: var(--accent, #a28b6d);
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 14px;
   text-decoration: none;
   letter-spacing: 0.04em;
   transition: opacity 0.2s, color 0.2s;
