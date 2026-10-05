@@ -43,6 +43,8 @@
   height: auto;
   display: block;
   object-fit: contain;
+  opacity: 0.4; /* Cambia este valor entre 0 y 1 según el tono deseado */
+  transition: opacity 0.3s ease;
 }
 
 /* Títulos principales del bloque */
@@ -149,11 +151,6 @@
   color: rgba(255, 255, 255, 0.4);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-}
-
-.about-home-heading img {
-  opacity: 0.4;
-  transition: opacity 0.3s ease;
 }
 
 /* ------------------------------------------------------------
