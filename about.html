@@ -160,7 +160,7 @@
           <div class="portfolio-viewer-card">
             
             <div class="portfolio-viewer-top">
-              <span id="portfolio-counter" class="portfolio-counter">01 / 16</span>
+              <span id="portfolio-counter" class="portfolio-counter">00 / 00</span>
               <button type="button" class="portfolio-zoom-btn" id="portfolio-zoom-btn" aria-label="Ampliar lámina">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <circle cx="11" cy="11" r="8"></circle>
@@ -195,7 +195,7 @@
           </div>
         </div>
 
-        <!-- COLUMNA DERECHA: TEXTO Y DATOS (ALINEADO CON RESTO DE SECCIONES) -->
+        <!-- COLUMNA DERECHA: TEXTO Y DATOS -->
         <div class="about-home-content about-hero-content">
           
           <p class="section-kicker">Especialista en Documentación del Patrimonio</p>
@@ -521,31 +521,14 @@
 
   <script src="./script.js"></script>
 
-  <!-- LÓGICA DEL VISOR DE LÁMINAS ROBUSTA Y CONEXIÓN CON SUPABASE -->
+  <!-- LÓGICA DINÁMICA DEL VISOR (LECTURA AUTOMÁTICA DE FORMATOS) -->
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const portfolioFiles = [
-        "LAMINA_01_EPIGRAFIA_LVPIOPT.webp",
-        "LAMINA_01.2_EPIGRAFIA_LVPIOPT.webp",
-        "LAMINA_02.2_BARTOLOS_LVPIOPT.webp",
-        "LAMINA_03_MESQUITA_LVPIOPT.webp",
-        "LAMINA_04_CABALLO_LVPIOPT.webp",
-        "LAMINA_04.2_CABALLO_LVPIOPT.webp",
-        "LAMINA_05_PLANOS_LVPIOPT.webp",
-        "LAMINA_05.2_PLANOS_LVPIOPT.webp",
-        "LAMINA_06_3D_1_LVPIOPT.webp",
-        "LAMINA_06_3D_2_LVPIOPT.webp",
-        "LAMINA_06_3D_3_LVPIOPT.webp",
-        "LAMINA_06_3D_4_LVPIOPT.webp",
-        "LAMINA_06_3D_5_LVPIOPT.webp",
-        "LAMINA_06_3D_6_LVPIOPT.webp",
-        "LAMINA_06_3D_7_LVPIOPT.webp",
-        "LAMINA_06_3D_8_LVPIOPT.webp"
-      ];
-
+    document.addEventListener('DOMContentLoaded', async () => {
       const BUCKET_NAME = "proyectospriv";
       const FOLDER_PATH = "PORTAFOLIO";
+      const ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp', '.avif', '.gif', '.svg'];
 
+      let portfolioFiles = [];
       let currentIndex = 0;
 
       const imgEl = document.getElementById('portfolio-current-img');
@@ -557,23 +540,67 @@
       const modalImgEl = document.getElementById('portfolio-modal-img');
       const modalCloseBtn = document.getElementById('portfolio-modal-close');
 
-      // Función para resolver la URL firmada de la lámina activa
+      // Esperar activamente a que script.js cargue el cliente de Supabase
+      async function getSupabaseClient() {
+        const getInst = () => window.supabaseClient || window.supabase || window.supabaseObj;
+        let client = getInst();
+        let attempts = 0;
+        while (!client && attempts < 20) {
+          await new Promise(resolve => setTimeout(resolve, 150));
+          client = getInst();
+          attempts++;
+        }
+        return client;
+      }
+
+      // Escanear dinámicamente la carpeta en Supabase
+      async function loadFolderFiles() {
+        const client = await getSupabaseClient();
+        if (!client || !client.storage) {
+          console.warn("No se pudo conectar con Supabase para explorar el bucket.");
+          return [];
+        }
+
+        try {
+          const { data, error } = await client.storage
+            .from(BUCKET_NAME)
+            .list(FOLDER_PATH, {
+              limit: 100,
+              sortBy: { column: 'name', order: 'asc' }
+            });
+
+          if (error) {
+            console.error("Error al obtener lista de imágenes:", error);
+            return [];
+          }
+
+          // Filtrar cualquier formato de imagen válido e ignorar archivos ocultos
+          return data
+            .filter(file => file.name && !file.name.startsWith('.'))
+            .filter(file => {
+              const ext = file.name.slice(file.name.lastIndexOf('.')).toLowerCase();
+              return ALLOWED_EXTENSIONS.includes(ext);
+            })
+            .map(file => file.name)
+            .sort((a, b) => a.localeCompare(undefined, { numeric: true, sensitivity: 'base' }));
+        } catch (err) {
+          console.error("Error explorando carpeta de Supabase:", err);
+          return [];
+        }
+      }
+
+      // Obtener URL de imagen activa
       async function getImageUrl(fileName) {
         const filePath = `${FOLDER_PATH}/${fileName}`;
 
-        // Obtener cliente de Supabase (esperando si script.js tardó en instanciarlo)
-        const getSupabaseInstance = () => window.supabaseClient || window.supabase || (window.supabaseObj);
-
-        let client = getSupabaseInstance();
-
-        // Si script.js está aún conectando, hace breves intentos
-        let attempts = 0;
-        while (!client && attempts < 5) {
-          await new Promise(resolve => setTimeout(resolve, 150));
-          client = getSupabaseInstance();
-          attempts++;
+        if (typeof window.getProtectedImageUrl === 'function') {
+          try {
+            const url = await window.getProtectedImageUrl(BUCKET_NAME, filePath);
+            if (url) return url;
+          } catch (e) {}
         }
 
+        const client = await getSupabaseClient();
         if (client && client.storage) {
           try {
             const { data, error } = await client.storage
@@ -585,29 +612,23 @@
               .from(BUCKET_NAME)
               .getPublicUrl(filePath);
             if (pubData?.publicUrl) return pubData.publicUrl;
-          } catch (err) {
-            console.warn("No se pudo obtener URL firmada:", err);
-          }
-        }
-
-        if (typeof window.getProtectedImageUrl === 'function') {
-          try {
-            return await window.getProtectedImageUrl(BUCKET_NAME, filePath);
-          } catch (e) {}
+          } catch (err) {}
         }
 
         const projectUrl = window.SUPABASE_PROJECT_URL || window.SUPABASE_URL;
         if (projectUrl) {
           return `${projectUrl}/storage/v1/object/public/${BUCKET_NAME}/${filePath}`;
         }
-
         return '';
       }
 
       async function updateSheet(index) {
-        if (portfolioFiles.length === 0) return;
-        currentIndex = (index + portfolioFiles.length) % portfolioFiles.length;
+        if (portfolioFiles.length === 0) {
+          counterEl.textContent = "00 / 00";
+          return;
+        }
 
+        currentIndex = (index + portfolioFiles.length) % portfolioFiles.length;
         const fileName = portfolioFiles[currentIndex];
         const url = await getImageUrl(fileName);
 
@@ -620,6 +641,16 @@
         counterEl.textContent = `${current} / ${total}`;
       }
 
+      // Ejecutar lectura automática
+      portfolioFiles = await loadFolderFiles();
+
+      if (portfolioFiles.length > 0) {
+        updateSheet(0);
+      } else {
+        console.warn("No se encontraron archivos de imagen en la carpeta PORTAFOLIO.");
+      }
+
+      // Navegación
       prevBtn.addEventListener('click', () => updateSheet(currentIndex - 1));
       nextBtn.addEventListener('click', () => updateSheet(currentIndex + 1));
 
@@ -643,9 +674,6 @@
       modalEl.addEventListener('click', (e) => {
         if (e.target === modalEl) closeZoom();
       });
-
-      // Inicializar tras un pequeño retardo para asegurar scripts
-      setTimeout(() => updateSheet(0), 100);
     });
   </script>
 
