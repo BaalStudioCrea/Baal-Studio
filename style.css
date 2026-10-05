@@ -1,6 +1,6 @@
 /* ============================================================
    BAAL STUDIO
-   STYLE.CSS — V10
+   STYLE.CSS — V10 (IGUALADO CON ABOUT.CSS)
    ============================================================ */
 
 
@@ -649,7 +649,7 @@ select {
 
 
 /* ------------------------------------------------------------
-   SOBRE EL ESTUDIO
+   SOBRE EL ESTUDIO (IGUALADO CON ABOUT.CSS)
    ------------------------------------------------------------ */
 
 .about-home-section {
@@ -695,19 +695,21 @@ select {
 
   margin: 0;
 
-  font-family: var(--font-display);
+  font-family: var(--font-body);
 
-  font-size: 27px;
+  font-size: 13px;
 
-  font-weight: 400;
+  font-weight: 300;
 
-  line-height: 1.34;
+  line-height: 1.75;
+
+  color: #222222;
 }
 
 
 .bilingual-copy .english-copy {
 
-  margin-top: 9px;
+  margin-top: 6px;
 
   color: var(--gray);
 
@@ -715,7 +717,7 @@ select {
 
   font-size: 10px;
 
-  line-height: 1.7;
+  line-height: 1.65;
 }
 
 
@@ -725,7 +727,7 @@ select {
 
   height: 1px;
 
-  margin: 35px 0;
+  margin: 24px 0;
 
   background: var(--light-gray);
 }
@@ -1729,13 +1731,6 @@ select {
   .section-heading {
 
     padding-right: 0;
-
-  }
-
-
-  .bilingual-copy p {
-
-    font-size: 23px;
 
   }
 
