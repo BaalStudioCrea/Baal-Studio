@@ -1,105 +1,209 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contacto — BAAL Studio</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="contact.css">
+  <meta name="description" content="Contacto Baal Studio — Trabajemos juntos.">
+  <meta name="theme-color" content="#111111">
+  <title>Contacto — Baal Studio</title>
+
+  <!-- CARGAMOS EL CSS PRINCIPAL Y EL ESPECÍFICO DE CONTACTO -->
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./contact.css">
 </head>
+
 <body>
 
-  <!-- HEADER (Mismo estilo oscuro que About) -->
-  <header class="main-header scrolled about-header">
+  <!-- =====================================================
+       HEADER (IDÉNTICO A ABOUT ESTABLE)
+       ===================================================== -->
+  <header class="main-header contact-header" id="main-header">
     <div class="header-inner">
-      <a href="index.html" class="header-logo-link">
-        <img src="logo.png" alt="BAAL Studio" class="header-logo protected-image">
+      <a href="./index.html" class="header-logo-link" aria-label="Baal Studio — Inicio">
+        <img id="site-logo" class="header-logo protected-image" src="" alt="Baal Studio" width="180" height="40" draggable="false">
       </a>
-      
-      <nav class="desktop-nav">
-        <a href="index.html" class="nav-link">Proyectos <small class="nav-link-en">Projects</small></a>
-        <a href="about.html" class="nav-link">Sobre el Estudio <small class="nav-link-en">About</small></a>
-        <a href="contact.html" class="nav-link active">Contacto <small class="nav-link-en">Contact</small></a>
+
+      <nav class="desktop-nav" aria-label="Navegación principal">
+        <a href="./index.html" class="nav-link">
+          <span>Inicio</span>
+          <span class="nav-link-en">Home</span>
+        </a>
+        <a href="./proyectos.html" class="nav-link">
+          <span>Proyectos</span>
+          <span class="nav-link-en">Projects</span>
+        </a>
+        <a href="./about.html" class="nav-link">
+          <span>Sobre mí</span>
+          <span class="nav-link-en">About</span>
+        </a>
+        <a href="./contact.html" class="nav-link active" aria-current="page">
+          <span>Contacto</span>
+          <span class="nav-link-en">Contact</span>
+        </a>
       </nav>
 
-      <button class="mobile-menu-button" aria-label="Abrir menú">
+      <button class="mobile-menu-button" id="mobile-menu-button" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu">
         <span></span><span></span><span></span>
       </button>
     </div>
+
+    <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+      <nav aria-label="Navegación móvil">
+        <a href="./index.html"><span>Inicio</span><small>Home</small></a>
+        <a href="./proyectos.html"><span>Proyectos</span><small>Projects</small></a>
+        <a href="./about.html"><span>Sobre mí</span><small>About</small></a>
+        <a href="./contact.html"><span>Contacto</span><small>Contact</small></a>
+      </nav>
+    </div>
   </header>
 
-  <!-- SECCIÓN PRINCIPAL DE CONTACTO -->
-  <main class="contact-page-hero">
-    <div class="section-container">
-      <div class="contact-grid">
+  <!-- =====================================================
+       MAIN CONTACTO (DISEÑO A DOS COLUMNAS)
+       ===================================================== -->
+  <main class="contact-main">
+    <section class="contact-section">
+      <div class="section-container">
         
-        <!-- Columna Izquierda: Información Directa -->
-        <div class="contact-info">
-          <h1 class="section-kicker">Contacto</h1>
-          <p class="section-kicker-en">GET IN TOUCH</p>
-          <div class="section-rule"></div>
-
-          <div class="contact-details">
-            <div class="contact-item">
-              <span class="contact-label">Email</span>
-              <a href="mailto:info@baalstudio.com" class="contact-value">info@baalstudio.com</a>
+        <div class="contact-grid">
+          
+          <!-- COLUMNA IZQUIERDA: INFORMACIÓN Y TEXTOS -->
+          <div class="contact-info-col">
+            <h1 class="contact-title">Trabajemos<br>Juntos</h1>
+            <h2 class="contact-title-en">Let's Work<br>Together</h2>
+            
+            <div class="contact-intro-copy">
+              <p>Disponible para proyectos de documentación patrimonial, levantamientos fotogramétricos, encargos de modelado 3D y programas de reconstrucción virtual.</p>
+              <p class="english-copy">Available for heritage documentation projects, photogrammetric surveys, 3D modeling commissions, and virtual reconstruction programs.</p>
             </div>
 
-            <div class="contact-item">
-              <span class="contact-label">Ubicación <small>/ Location</small></span>
-              <p class="contact-value">Madrid, España</p>
-            </div>
-
-            <div class="contact-item">
-              <span class="contact-label">Redes <small>/ Social</small></span>
-              <div class="contact-socials">
-                <a href="#" target="_blank" rel="noopener">Instagram</a>
-                <a href="#" target="_blank" rel="noopener">LinkedIn</a>
+            <div class="contact-details-grid">
+              <div class="contact-detail-item">
+                <span class="detail-label">Correo Electrónico <small>Email</small></span>
+                <a href="mailto:baalstudiocrea@gmail.com" class="detail-value">baalstudiocrea@gmail.com</a>
+              </div>
+              <div class="contact-detail-item">
+                <span class="detail-label">Tiempo de Respuesta <small>Response Time</small></span>
+                <p class="detail-value">En menos de 48 horas <br><span class="detail-value-en">Within 48 hours</span></p>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- Columna Derecha: Formulario -->
-        <div class="contact-form-wrapper">
-          <form class="contact-form" action="#" method="POST">
-            
-            <div class="form-group">
-              <label for="name">Nombre completo <small>/ Full Name</small></label>
-              <input type="text" id="name" name="name" required placeholder="Tu nombre">
-            </div>
+          <!-- COLUMNA DERECHA: FORMULARIO -->
+          <div class="contact-form-col">
+            <form action="#" method="POST" class="baal-contact-form">
+              
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="name">Nombre <small>Name</small></label>
+                  <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                  <label for="email">Correo Electrónico <small>Email</small></label>
+                  <input type="email" id="email" name="email" required>
+                </div>
+              </div>
 
-            <div class="form-group">
-              <label for="email">Correo electrónico <small>/ Email</small></label>
-              <input type="email" id="email" name="email" required placeholder="tu@email.com">
-            </div>
+              <div class="form-group">
+                <label for="organization">Organización <small>Organization</small></label>
+                <input type="text" id="organization" name="organization">
+              </div>
 
-            <div class="form-group">
-              <label for="service">Servicio de interés <small>/ Service of interest</small></label>
-              <select id="service" name="service">
-                <option value="documentation">Documentación del Patrimonio / Heritage Documentation</option>
-                <option value="3d-scan">Escaneado 3D y Fotogrametría / 3D Scanning</option>
-                <option value="archviz">Visualización Arquitectónica / ArchViz</option>
-                <option value="other">Otro / Other</option>
-              </select>
-            </div>
+              <div class="form-group">
+                <label for="project-type">Tipo de Proyecto <small>Project Type</small></label>
+                <select id="project-type" name="project-type" required>
+                  <option value="" disabled selected>Selecciona · Select</option>
+                  <option value="photogrammetry">Levantamiento Fotogramétrico · Photogrammetric Survey</option>
+                  <option value="3d-modeling">Modelado 3D · 3D Modeling</option>
+                  <option value="virtual-reconstruction">Reconstrucción Virtual · Virtual Reconstruction</option>
+                  <option value="damage-mapping">Mapeo de Daños · Damage Mapping</option>
+                  <option value="heritage-doc">Documentación Patrimonial · Heritage Documentation</option>
+                  <option value="other">Otro · Other</option>
+                </select>
+              </div>
 
-            <div class="form-group">
-              <label for="message">Mensaje <small>/ Message</small></label>
-              <textarea id="message" name="message" rows="5" required placeholder="Cuéntanos sobre tu proyecto..."></textarea>
-            </div>
+              <div class="form-group">
+                <label for="message">Mensaje <small>Message</small></label>
+                <textarea id="message" name="message" rows="5" maxlength="500" required></textarea>
+                <div class="char-counter">0/500</div>
+              </div>
 
-            <button type="submit" class="submit-button">
-              <span>Enviar mensaje</span>
-              <small>SEND MESSAGE</small>
-            </button>
+              <div class="form-footer">
+                <p class="form-disclaimer">
+                  Todos los campos obligatorios deben completarse.<br>
+                  <span class="disclaimer-en">All required fields must be completed.</span>
+                </p>
+                
+                <button type="submit" class="btn-submit">
+                  Enviar Mensaje →
+                </button>
+              </div>
 
-          </form>
+            </form>
+          </div>
+
         </div>
 
       </div>
-    </div>
+    </section>
   </main>
 
+  <!-- =====================================================
+       FOOTER (IDÉNTICO A ABOUT ESTABLE)
+       ===================================================== -->
+  <footer class="main-footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-services">
+          <p>Documentación del Patrimonio · Planimetrías · Mapeados · Levantamiento y Modelado 3D · Reconstrucción Virtual · Fotografía con Drone</p>
+          <p class="footer-services-en">Heritage Documentation · Mapping · 3D Survey · Virtual reconstruction · Drone Photography</p>
+        </div>
+        <div class="footer-nav-column">
+          <a href="./index.html">Inicio · Home</a>
+          <a href="./proyectos.html">Proyectos · Projects</a>
+          <a href="./about.html">Sobre mí · About</a>
+          <a href="./contact.html">Contacto · Contact</a>
+        </div>
+      </div>
+      <div class="footer-identity">
+        <div class="footer-logos">
+          <img id="footer-logo-baal" class="footer-secondary-logo protected-image" src="" alt="Baal Studio" draggable="false">
+          <img id="footer-logo-lns" class="footer-secondary-logo protected-image" src="" alt="LNS" draggable="false">
+        </div>
+        <a href="https://linktr.ee/baalstudio" target="_blank" rel="noopener noreferrer" aria-label="Baal Studio — Redes sociales">
+          <img id="footer-qr" class="footer-qr protected-image" src="" alt="Redes sociales de Baal Studio" width="100" height="100" draggable="false">
+        </a>
+        <a href="https://linktr.ee/baalstudio" class="footer-social-link" target="_blank" rel="noopener noreferrer">RRSS</a>
+      </div>
+      <div class="footer-bottom">
+        <p>© Juan Jesús Lupiáñez Moreno · Baal Studio · Todos los derechos reservados · All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="./script.js"></script>
+
+  <!-- SCRIPT PARA CONTADOR DE CARACTERES Y LOGO -->
+  <script>
+    // Contador de caracteres
+    const textarea = document.getElementById('message');
+    const counter = document.querySelector('.char-counter');
+    if (textarea && counter) {
+      textarea.addEventListener('input', function() {
+        const currentLength = this.value.length;
+        counter.textContent = currentLength + '/500';
+      });
+    }
+
+    // Sincronización del Logo
+    window.addEventListener('DOMContentLoaded', () => {
+      const siteLogo = document.getElementById('site-logo');
+      const syncLogo = () => {
+        // Esta función se mantiene por si usas la lógica global
+      };
+      syncLogo();
+      setTimeout(syncLogo, 100);
+    });
+  </script>
 </body>
 </html>
