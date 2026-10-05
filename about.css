@@ -211,7 +211,7 @@
 }
 
 .tool-group {
-  background: #e5e3db; /* Capa blanca que resalta sobre el beige de fondo */
+  background: #f5f3ee; /* Capa blanca que resalta sobre el beige de fondo */
   border: 1px solid var(--light-gray);
   padding: 35px;
   display: flex;
