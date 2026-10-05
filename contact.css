@@ -246,7 +246,7 @@
 }
 
 .btn-submit {
-  background: var(--black, #111111);
+  background: var(--black, #afab9f);
   color: #ffffff;
   border: none;
   padding: 16px 32px;
