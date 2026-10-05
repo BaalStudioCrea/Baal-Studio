@@ -260,5 +260,13 @@
       setTimeout(syncLogo, 100);
     });
   </script>
+  <script>
+  // Bloquear el menú contextual (clic derecho) solo dentro de los campos del formulario
+  document.querySelectorAll('.baal-contact-form input, .baal-contact-form textarea, .baal-contact-form select').forEach(element => {
+    element.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
+  });
+</script>
 </body>
 </html>
