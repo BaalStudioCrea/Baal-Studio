@@ -61,7 +61,7 @@
 
   margin: 0;
 
-  font-family: var(--font-title);
+  font-family: var(--font-display);
 
   font-size: clamp(44px, 4.2vw, 58px);
 
@@ -198,7 +198,7 @@
 
 .projects-loading-label {
 
-  font-family: var(--font-title);
+  font-family: var(--font-display);
 
   font-size: 30px;
 
@@ -430,7 +430,7 @@
 
   margin: 0;
 
-  font-family: var(--font-title);
+  font-family: var(--font-display);
 
   font-size: clamp(34px, 3vw, 48px);
 
@@ -694,7 +694,7 @@
 
   margin: 0;
 
-  font-family: var(--font-title);
+  font-family: var(--font-display);
 
   font-size: 34px;
 
