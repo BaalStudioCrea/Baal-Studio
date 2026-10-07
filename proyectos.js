@@ -513,6 +513,31 @@ function normalizeProject(
 
 
   /* ----------------------------------------------------------
+     UBICACIÓN
+     ---------------------------------------------------------- */
+
+  const location =
+    metadata?.location ||
+    metadata?.localizacion ||
+    project.location ||
+    project.localizacion ||
+    "";
+
+
+  /* ----------------------------------------------------------
+     AÑO
+     ---------------------------------------------------------- */
+
+  const year =
+    metadata?.year ||
+    metadata?.ano ||
+    metadata?.año ||
+    project.year ||
+    project.año ||
+    "";
+
+
+  /* ----------------------------------------------------------
      CATEGORÍA
      ---------------------------------------------------------- */
 
@@ -536,30 +561,6 @@ function normalizeProject(
         );
 
 
-  /* ----------------------------------------------------------
-     TÉCNICAS
-     ---------------------------------------------------------- */
-
-  const techniques =
-    metadata?.techniques ||
-    metadata?.tecnicas ||
-    project.techniques ||
-    project.tecnicas ||
-    "";
-
-
-  /* ----------------------------------------------------------
-     OBJETIVO
-     ---------------------------------------------------------- */
-
-  const objective =
-    metadata?.objective ||
-    metadata?.objetivo ||
-    project.objective ||
-    project.objetivo ||
-    "";
-
-
   return {
 
     ...project,
@@ -575,11 +576,11 @@ function normalizeProject(
 
     cover,
 
-    category,
+    location,
 
-    techniques,
+    year,
 
-    objective
+    category
 
   };
 
@@ -1156,23 +1157,32 @@ function createProjectCard(
 
 
   /*
-     KICKER FIJO DE SELECCIÓN
+     CATEGORÍA
   */
 
-  const kicker =
-    document.createElement(
-      "p"
+  if (
+    project.category
+  ) {
+
+    const kicker =
+      document.createElement(
+        "p"
+      );
+
+
+    kicker.className =
+      "project-page-card-kicker";
+
+
+    kicker.textContent =
+      project.category;
+
+
+    header.appendChild(
+      kicker
     );
 
-  kicker.className =
-    "project-page-card-kicker";
-
-  kicker.textContent =
-    "Selección de proyectos";
-
-  header.appendChild(
-    kicker
-  );
+  }
 
 
   /*
@@ -1201,6 +1211,11 @@ function createProjectCard(
 
   /*
      TÍTULO INGLÉS
+
+     De momento lo buscamos únicamente si
+     list-projects lo proporciona.
+
+     No inventamos una traducción.
   */
 
   const englishTitle =
@@ -1261,22 +1276,22 @@ function createProjectCard(
 
   addMetadataRow(
     meta,
+    "Ubicación",
+    project.location
+  );
+
+
+  addMetadataRow(
+    meta,
+    "Año",
+    project.year
+  );
+
+
+  addMetadataRow(
+    meta,
     "Categoría",
     project.category
-  );
-
-
-  addMetadataRow(
-    meta,
-    "Técnicas",
-    project.techniques
-  );
-
-
-  addMetadataRow(
-    meta,
-    "Objetivo",
-    project.objective
   );
 
 
@@ -1467,6 +1482,17 @@ function addMetadataRow(
 function createProjectUrl(
   project
 ) {
+
+  /*
+     De momento utilizamos el nombre de la carpeta
+     como parámetro.
+
+     Esto nos permitirá posteriormente crear
+     proyecto.html?project=...
+
+     sin tener que modificar la estructura
+     de las tarjetas.
+  */
 
   const projectName =
     project?.name ||
