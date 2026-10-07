@@ -1,6 +1,7 @@
 /* ============================================================
    BAAL STUDIO
-   PROYECTOS.JS — LISTADO DINÁMICO DE PROYECTOS
+   PROYECTOS.JS — V01
+   LISTADO DINÁMICO DE PROYECTOS
    ============================================================ */
 
 
@@ -46,12 +47,14 @@ async function loadProjectsPage() {
       cache: "no-store"
     });
 
+    console.log("[Baal Studio] list-projects HTTP:", response.status);
+
     if (!response.ok) {
       throw new Error(`list-projects respondió ${response.status}`);
     }
 
     const result = await response.json();
-    console.log("[Baal Studio] Respuesta de list-projects:", result);
+    console.log("[Baal Studio] Respuesta completa de list-projects:", result);
 
     const projects = normalizeProjectsResponse(result);
     console.log("[Baal Studio] Proyectos normalizados:", projects);
@@ -65,10 +68,23 @@ async function loadProjectsPage() {
       return;
     }
 
-    /* Ordenar según la carpeta/order */
-    projects.sort((a, b) => Number(a.order ?? 999) - Number(b.order ?? 999));
+    /* Ordenar proyectos */
+    projects.sort((a, b) => {
+      const orderA = Number(a.order ?? 999);
+      const orderB = Number(b.order ?? 999);
+      return orderA - orderB;
+    });
 
-    /* Limpiar contenedor y ocultar loading */
+    console.log(
+      "[Baal Studio] Orden final:",
+      projects.map(project => ({
+        order: project.order,
+        name: project.name,
+        title: project.displayName
+      }))
+    );
+
+    /* Limpiar contenedor y actualizar loader */
     container.innerHTML = "";
     if (loading) loading.style.display = "none";
     if (emptyState) {
@@ -76,13 +92,13 @@ async function loadProjectsPage() {
       emptyState.setAttribute("aria-hidden", "true");
     }
 
-    /* Renderizar tarjetas */
+    /* Crear tarjetas */
     projects.forEach((project, index) => {
       const card = createProjectCard(project, index);
       if (card) container.appendChild(card);
     });
 
-    console.log(`[Baal Studio] ${projects.length} proyectos cargados.`);
+    console.log(`[Baal Studio] ${projects.length} proyectos cargados correctamente.`);
 
     if (typeof applyProtectionToImages === "function") {
       applyProtectionToImages();
@@ -90,6 +106,7 @@ async function loadProjectsPage() {
 
   } catch (error) {
     console.error("[Baal Studio] Error cargando proyectos:", error);
+
     if (loading) loading.style.display = "none";
     if (emptyState) {
       emptyState.classList.add("visible");
@@ -123,7 +140,7 @@ function normalizeProjectsResponse(result) {
 
 
 /* ------------------------------------------------------------
-   NORMALIZAR PROYECTO Y EXTRAER CAMPOS DE PROYECTO.TXT
+   NORMALIZAR PROYECTO
    ------------------------------------------------------------ */
 
 function normalizeProject(project) {
@@ -148,77 +165,46 @@ function normalizeProject(project) {
     }
   }
 
-  /* CAMPOS REQUERIDOS DESDE PROYECTO.TXT / METADATA */
-
-  // 1. TÍTULO
   const metadataTitle =
     project?.title ||
     metadata?.title ||
     metadata?.titulo ||
-    metadata?.TÍTULO ||
-    metadata?.TITULO ||
     metadata?.nombre ||
     metadata?.name ||
+    project?.metadataTitle ||
+    project?.metadata_title ||
     "";
 
   const fallbackName = String(rawName).replace(/\s*\(\d+\)\s*$/i, "").trim();
   const displayName = String(metadataTitle || fallbackName).replace(/\s*[.!?]+\s*$/, "").trim();
 
-  // 2. CATEGORÍA
-  const rawCategory =
-    metadata?.category ||
-    metadata?.categoria ||
-    metadata?.CATEGORÍA ||
-    metadata?.CATEGORIA ||
-    project?.category ||
-    project?.categoria ||
-    "";
-
-  const category = Array.isArray(rawCategory) ? rawCategory.join(", ") : String(rawCategory).trim();
-
-  // 3. TÉCNICAS
-  const rawTechniques =
-    metadata?.techniques ||
-    metadata?.tecnicas ||
-    metadata?.TÉCNICAS ||
-    metadata?.TECNICAS ||
-    project?.techniques ||
-    project?.tecnicas ||
-    "";
-
-  const techniques = Array.isArray(rawTechniques) ? rawTechniques.join(", ") : String(rawTechniques).trim();
-
-  // 4. OBJETIVO
-  const rawObjective =
-    metadata?.objective ||
-    metadata?.objetivo ||
-    metadata?.OBJETIVO ||
-    project?.objective ||
-    project?.objetivo ||
-    "";
-
-  const objective = String(rawObjective).trim();
-
-  // OTROS CAMPOS DE APOYO
-  const order = project.order ?? project.orden ?? extractOrderFromName(rawName);
+  const order = project.order ?? project.orden ?? project.position ?? extractOrderFromName(rawName);
   const cover = extractCover(project);
+
+  const location = metadata?.location || metadata?.localizacion || project.location || project.localizacion || "";
+  const year = metadata?.year || metadata?.ano || metadata?.año || project.year || project.año || "";
+
+  const rawCategory = metadata?.category || metadata?.categoria || project.category || project.categoria || "";
+  const category = Array.isArray(rawCategory)
+    ? rawCategory.slice(0, 2).join(", ")
+    : String(rawCategory);
 
   return {
     ...project,
     metadata,
     name: rawName,
     displayName,
-    category,
-    techniques,
-    objective,
     order,
-    cover
+    cover,
+    location,
+    year,
+    category
   };
 }
 
 
 /* ------------------------------------------------------------
-   EXTRAER ORDEN Y PORTADA
+   EXTRAER ORDEN DEL NOMBRE DE CARPETA
    ------------------------------------------------------------ */
 
 function extractOrderFromName(name) {
@@ -226,14 +212,20 @@ function extractOrderFromName(name) {
   return match ? Number(match[1]) : 999;
 }
 
+
+/* ------------------------------------------------------------
+   EXTRAER COVER
+   ------------------------------------------------------------ */
+
 function extractCover(project) {
-  const candidates = [
-    project?.cover, project?.coverUrl, project?.cover_url,
+  const directCandidates = [
+    project?.cover, project?.coverUrl, project?.cover_url, project?.coverURL,
     project?.image, project?.imageUrl, project?.image_url,
+    project?.thumbnail, project?.thumbnailUrl, project?.thumbnail_url,
     project?.portada, project?.portadaUrl, project?.portada_url
   ];
 
-  for (const candidate of candidates) {
+  for (const candidate of directCandidates) {
     const url = extractUrlFromValue(candidate);
     if (isImageUrl(url)) return url;
   }
@@ -241,25 +233,55 @@ function extractCover(project) {
   return findImageUrl(project) || "";
 }
 
+
+/* ------------------------------------------------------------
+   EXTRAER URL DE UN VALOR
+   ------------------------------------------------------------ */
+
 function extractUrlFromValue(value) {
   if (typeof value === "string") return value.trim();
   if (!value || typeof value !== "object") return "";
 
-  const keys = ["url", "signedUrl", "signed_url", "publicUrl", "public_url", "src", "href"];
-  for (const k of keys) {
-    if (typeof value[k] === "string" && value[k].trim()) return value[k].trim();
+  const possibleKeys = [
+    "url", "signedUrl", "signed_url", "publicUrl", "public_url",
+    "downloadUrl", "download_url", "src", "href"
+  ];
+
+  for (const key of possibleKeys) {
+    if (typeof value[key] === "string" && value[key].trim()) {
+      return value[key].trim();
+    }
   }
+
   return "";
 }
 
+
+/* ------------------------------------------------------------
+   COMPROBAR SI UNA URL ES UNA IMAGEN
+   ------------------------------------------------------------ */
+
 function isImageUrl(url) {
   if (typeof url !== "string" || !url) return false;
-  const clean = url.split("?")[0].split("#")[0].toLowerCase();
-  return [".jpg", ".jpeg", ".png", ".webp", ".avif", ".gif"].some(ext => clean.endsWith(ext));
+  const cleanUrl = url.split("?")[0].split("#")[0].toLowerCase();
+  return (
+    cleanUrl.endsWith(".jpg") ||
+    cleanUrl.endsWith(".jpeg") ||
+    cleanUrl.endsWith(".png") ||
+    cleanUrl.endsWith(".webp") ||
+    cleanUrl.endsWith(".avif") ||
+    cleanUrl.endsWith(".gif")
+  );
 }
 
+
+/* ------------------------------------------------------------
+   BÚSQUEDA RECURSIVA DE IMAGEN
+   ------------------------------------------------------------ */
+
 function findImageUrl(value, depth = 0) {
-  if (depth > 5 || !value) return "";
+  if (depth > 6 || !value) return "";
+
   const direct = extractUrlFromValue(value);
   if (isImageUrl(direct)) return direct;
 
@@ -271,11 +293,24 @@ function findImageUrl(value, depth = 0) {
     return "";
   }
 
-  if (typeof value === "object") {
-    for (const k of Object.keys(value)) {
-      const found = findImageUrl(value[k], depth + 1);
+  if (typeof value !== "object") return "";
+
+  const priorityKeys = [
+    "cover", "coverUrl", "cover_url", "image", "imageUrl", "image_url",
+    "thumbnail", "thumbnailUrl", "thumbnail_url", "portada", "portadaUrl", "portada_url"
+  ];
+
+  for (const key of priorityKeys) {
+    if (key in value) {
+      const found = findImageUrl(value[key], depth + 1);
       if (found) return found;
     }
+  }
+
+  for (const key of Object.keys(value)) {
+    if (priorityKeys.includes(key)) continue;
+    const found = findImageUrl(value[key], depth + 1);
+    if (found) return found;
   }
 
   return "";
@@ -292,7 +327,7 @@ function createProjectCard(project, index) {
   const card = document.createElement("article");
   card.className = "project-page-card";
 
-  /* PORTADA */
+  /* MEDIA */
   const media = document.createElement("div");
   media.className = "project-page-card-media protected-media";
 
@@ -305,7 +340,21 @@ function createProjectCard(project, index) {
 
   if (project.cover) {
     image.src = project.cover;
+    console.log(`[Baal Studio] Cover asignado: ${project.displayName}`, project.cover);
+  } else {
+    console.warn(`[Baal Studio] El proyecto no tiene cover: ${project.displayName}`);
   }
+
+  image.addEventListener("load", () => {
+    console.log(`[Baal Studio] Cover cargado: ${project.displayName}`, {
+      width: image.naturalWidth,
+      height: image.naturalHeight
+    });
+  });
+
+  image.addEventListener("error", () => {
+    console.error(`[Baal Studio] ERROR cargando cover: ${project.displayName}`, image.src);
+  });
 
   media.appendChild(image);
 
@@ -316,23 +365,25 @@ function createProjectCard(project, index) {
   const header = document.createElement("div");
   header.className = "project-page-card-header";
 
-  /* Texto Fijo encima del Título */
-  const kicker = document.createElement("p");
-  kicker.className = "project-page-card-kicker";
-  kicker.textContent = "Selección de proyectos";
-  header.appendChild(kicker);
+  if (project.category) {
+    const kicker = document.createElement("p");
+    kicker.className = "project-page-card-kicker";
+    kicker.textContent = project.category;
+    header.appendChild(kicker);
+  }
 
-  /* Campo: TÍTULO */
   const title = document.createElement("h2");
   title.className = "project-page-card-title";
   title.textContent = project.displayName || "Proyecto";
   header.appendChild(title);
 
-  /* Título en Inglés (si existe) */
   const englishTitle =
     project?.metadata?.title_en ||
     project?.metadata?.titulo_en ||
     project?.metadata?.englishTitle ||
+    project?.metadata?.nombre_en ||
+    project?.title_en ||
+    project?.titulo_en ||
     "";
 
   if (englishTitle) {
@@ -344,13 +395,13 @@ function createProjectCard(project, index) {
 
   info.appendChild(header);
 
-  /* METADATOS: CATEGORÍA, TÉCNICAS Y OBJETIVO */
+  /* METADATOS */
   const meta = document.createElement("div");
   meta.className = "project-page-card-meta";
 
+  addMetadataRow(meta, "Ubicación", project.location);
+  addMetadataRow(meta, "Año", project.year);
   addMetadataRow(meta, "Categoría", project.category);
-  addMetadataRow(meta, "Técnicas", project.techniques);
-  addMetadataRow(meta, "Objetivo", project.objective);
 
   info.appendChild(meta);
 
@@ -408,7 +459,7 @@ function addMetadataRow(container, label, value) {
 
 
 /* ------------------------------------------------------------
-   URL DEL PROYECTO COMPLETO
+   URL DEL PROYECTO
    ------------------------------------------------------------ */
 
 function createProjectUrl(project) {
