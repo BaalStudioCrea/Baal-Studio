@@ -73,17 +73,22 @@
 
 
 /* ------------------------------------------------------------
-   LISTADO DE PROYECTOS
+   LISTADO DE PROYECTOS (CONTENEDOR PRINCIPAL CENTRADO)
    ------------------------------------------------------------ */
 
 .projects-list-section {
   background: var(--bg);
   padding: 80px 0 120px;
+  width: 100%;
 }
 
 
 .projects-list-section > .section-container {
   width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px;
+  box-sizing: border-box;
 }
 
 
@@ -124,20 +129,22 @@
 
 
 /* ------------------------------------------------------------
-   CONTENEDOR MULTICOLUMNA DE PROYECTOS (GRID)
+   REJILLA DINÁMICA Y CENTRADA PARA LOS PROYECTOS
    ------------------------------------------------------------ */
 
 #projects-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
-  gap: 35px 30px;
-  align-items: stretch;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 40px 32px;
+  justify-content: center;
+  justify-items: center;
+  width: 100%;
 }
 
 
 
 /* ------------------------------------------------------------
-   TARJETA DE PROYECTO (VISTA PREVIA DE CATÁLOGO)
+   TARJETA DE PROYECTO (VISTA PREVIA EN REJILLA)
    ------------------------------------------------------------ */
 
 .project-page-card {
@@ -145,6 +152,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  max-width: 420px; /* Evita que una sola tarjeta se deforme al estar sola */
   height: 100%;
   background: #ffffff;
   border: 1px solid var(--light-gray);
@@ -387,16 +395,6 @@
 
 
 /* ------------------------------------------------------------
-   SEPARACIÓN EN MIGRACIÓN DESDE LISTA
-   ------------------------------------------------------------ */
-
-.project-page-card + .project-page-card::before {
-  content: none;
-}
-
-
-
-/* ------------------------------------------------------------
    ESTADO SIN PROYECTOS
    ------------------------------------------------------------ */
 
@@ -439,8 +437,12 @@
    ------------------------------------------------------------ */
 
 @media (max-width: 1024px) {
+  .projects-list-section > .section-container {
+    padding: 0 24px;
+  }
+
   #projects-grid {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 30px 20px;
   }
 
@@ -460,9 +462,17 @@
     padding: 50px 0 80px;
   }
 
+  .projects-list-section > .section-container {
+    padding: 0 16px;
+  }
+
   #projects-grid {
     grid-template-columns: 1fr;
     gap: 30px;
+  }
+
+  .project-page-card {
+    max-width: 100%;
   }
 
   .project-page-card-media {
