@@ -233,12 +233,63 @@
       rawName
     );
 
+    const titleEn = extractFirstValue(
+      project,
+      metadata,
+      [
+        "title_en",
+        "titulo_en",
+        "name_en",
+        "nombre_en",
+        "english_title"
+      ]
+    );
+
     const order = extractProjectOrder(
       project,
       rawName
     );
 
     const cover = extractCover(project);
+
+    const category = extractFirstValue(
+      project,
+      metadata,
+      [
+        "category",
+        "categoria",
+        "categoría",
+        "tipo",
+        "type"
+      ]
+    );
+
+    const techniques = extractFirstValue(
+      project,
+      metadata,
+      [
+        "techniques",
+        "tecnicas",
+        "técnicas",
+        "tecnica",
+        "técnica",
+        "tools",
+        "herramientas"
+      ]
+    );
+
+    const objective = extractFirstValue(
+      project,
+      metadata,
+      [
+        "objective",
+        "objetivo",
+        "purpose",
+        "finalidad",
+        "meta",
+        "objetivos"
+      ]
+    );
 
     const location = extractFirstValue(
       project,
@@ -263,18 +314,6 @@
       ]
     );
 
-    const category = extractFirstValue(
-      project,
-      metadata,
-      [
-        "category",
-        "categoria",
-        "categoría",
-        "tipo",
-        "type"
-      ]
-    );
-
     return {
       ...project,
 
@@ -282,14 +321,17 @@
       name: rawName,
 
       displayName,
+      titleEn: cleanText(titleEn),
 
       order,
 
       cover,
 
+      category: cleanText(category),
+      techniques: cleanText(techniques),
+      objective: cleanText(objective),
       location: cleanText(location),
       year: cleanText(year),
-      category: cleanText(category),
 
       metadata
     };
@@ -826,17 +868,6 @@
     media.appendChild(image);
 
 
-    /* Overlay visual */
-
-    const overlay =
-      document.createElement("div");
-
-    overlay.className =
-      "project-page-card-overlay";
-
-    media.appendChild(overlay);
-
-
     /* -------------------------------------------------------
        INFORMACIÓN
        ------------------------------------------------------- */
@@ -848,18 +879,27 @@
       "project-page-card-info";
 
 
-    /* Número */
+    /* Cabecera de la tarjeta */
 
-    const number =
-      document.createElement("span");
+    const header =
+      document.createElement("div");
 
-    number.className =
-      "project-page-card-number";
+    header.className =
+      "project-page-card-header";
 
-    number.textContent =
-      String(index + 1).padStart(2, "0");
 
-    info.appendChild(number);
+    /* Kicker fijo */
+
+    const kicker =
+      document.createElement("p");
+
+    kicker.className =
+      "project-page-card-kicker";
+
+    kicker.textContent =
+      "Selección de proyectos";
+
+    header.appendChild(kicker);
 
 
     /* Título */
@@ -875,24 +915,28 @@
       project.name ||
       "";
 
-    info.appendChild(title);
+    header.appendChild(title);
 
 
-    /* Título inglés */
+    /* Título en Inglés (si existe) */
 
-    const englishTitle =
-      document.createElement("span");
+    if (project.titleEn) {
+      const titleEn =
+        document.createElement("p");
 
-    englishTitle.className =
-      "project-page-card-title-en";
+      titleEn.className =
+        "project-page-card-title-en";
 
-    englishTitle.textContent =
-      "Project";
+      titleEn.textContent =
+        project.titleEn;
 
-    info.appendChild(englishTitle);
+      header.appendChild(titleEn);
+    }
+
+    info.appendChild(header);
 
 
-    /* Metadata */
+    /* Metadatos (Categoría, Técnicas, Objetivo) */
 
     const metadata =
       document.createElement("div");
@@ -901,45 +945,76 @@
       "project-page-card-meta";
 
 
-    if (project.location) {
-      metadata.appendChild(
-        createMetaRow(
-          "Ubicación",
-          "Location",
-          project.location
-        )
-      );
-    }
-
-
-    if (project.year) {
-      metadata.appendChild(
-        createMetaRow(
-          "Año",
-          "Year",
-          project.year
-        )
-      );
-    }
-
-
     if (project.category) {
       metadata.appendChild(
-        createMetaRow(
+        createMetaItem(
           "Categoría",
-          "Category",
           project.category
         )
       );
     }
 
+    if (project.techniques) {
+      metadata.appendChild(
+        createMetaItem(
+          "Técnicas",
+          project.techniques
+        )
+      );
+    }
+
+    if (project.objective) {
+      metadata.appendChild(
+        createMetaItem(
+          "Objetivo",
+          project.objective
+        )
+      );
+    }
+
+    /* Fallbacks si no existen Técnicas u Objetivo */
+
+    if (!project.techniques && project.location) {
+      metadata.appendChild(
+        createMetaItem(
+          "Ubicación",
+          project.location
+        )
+      );
+    }
+
+    if (!project.objective && project.year) {
+      metadata.appendChild(
+        createMetaItem(
+          "Año",
+          project.year
+        )
+      );
+    }
 
     info.appendChild(metadata);
 
 
-    /* -------------------------------------------------------
-       BOTÓN / ENLACE
-       ------------------------------------------------------- */
+    /* Pie de la tarjeta (Índice y Enlace) */
+
+    const footer =
+      document.createElement("div");
+
+    footer.className =
+      "project-page-card-footer";
+
+
+    const indexSpan =
+      document.createElement("span");
+
+    indexSpan.className =
+      "project-page-card-index";
+
+    indexSpan.textContent =
+      String(index + 1).padStart(2, "0");
+
+    footer.appendChild(indexSpan);
+
 
     const link =
       document.createElement("a");
@@ -952,15 +1027,38 @@
         project
       );
 
-    link.textContent =
-      "Ver proyecto";
-
     link.setAttribute(
       "aria-label",
       `Ver proyecto ${project.displayName || ""}`
     );
 
-    info.appendChild(link);
+
+    const linkMain =
+      document.createElement("span");
+
+    linkMain.className =
+      "project-page-card-link-main";
+
+    linkMain.textContent =
+      "Ver proyecto";
+
+    link.appendChild(linkMain);
+
+
+    const linkEn =
+      document.createElement("span");
+
+    linkEn.className =
+      "project-page-card-link-en";
+
+    linkEn.textContent =
+      "View project";
+
+    link.appendChild(linkEn);
+
+
+    footer.appendChild(link);
+    info.appendChild(footer);
 
 
     /* -------------------------------------------------------
@@ -976,49 +1074,45 @@
 
 
   /* ---------------------------------------------------------
-     FILA DE METADATA
+     ITEM DE METADATA
      --------------------------------------------------------- */
 
-  function createMetaRow(
-    spanishLabel,
-    englishLabel,
+  function createMetaItem(
+    label,
     value
   ) {
-    const row =
+    const item =
       document.createElement("div");
 
-    row.className =
-      "project-page-card-meta-row";
+    item.className =
+      "project-page-card-meta-item";
 
 
-    const label =
+    const labelSpan =
       document.createElement("span");
 
-    label.className =
+    labelSpan.className =
       "project-page-card-meta-label";
 
-    label.innerHTML =
-      `${escapeHtml(spanishLabel)}
-       <span class="project-page-card-meta-en">
-         ${escapeHtml(englishLabel)}
-       </span>`;
+    labelSpan.textContent =
+      label;
 
-    row.appendChild(label);
+    item.appendChild(labelSpan);
 
 
-    const content =
+    const valueSpan =
       document.createElement("span");
 
-    content.className =
+    valueSpan.className =
       "project-page-card-meta-value";
 
-    content.textContent =
+    valueSpan.textContent =
       value;
 
-    row.appendChild(content);
+    item.appendChild(valueSpan);
 
 
-    return row;
+    return item;
   }
 
 
@@ -1036,20 +1130,6 @@
       "./proyecto.html?project=" +
       encodeURIComponent(rawName)
     );
-  }
-
-
-  /* ---------------------------------------------------------
-     ESCAPADO HTML
-     --------------------------------------------------------- */
-
-  function escapeHtml(value) {
-    return String(value)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
   }
 
 
@@ -1101,6 +1181,5 @@
       );
     });
   }
-
 
 })();
