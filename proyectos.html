@@ -1,397 +1,1516 @@
-<!DOCTYPE html>
-<html lang="es">
+/* ============================================================
+   BAAL STUDIO
+   PROYECTOS.JS — V01
+   LISTADO DINÁMICO DE PROYECTOS
+   ============================================================ */
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <meta
-    name="description"
-    content="Baal Studio — Proyectos de documentación, análisis y representación digital del patrimonio cultural."
-  >
-
-  <meta name="theme-color" content="#111111">
-
-  <title>Proyectos — Baal Studio</title>
 
-  <!-- CSS GLOBAL -->
-  <link rel="stylesheet" href="./style.css">
+/* ------------------------------------------------------------
+   CONFIGURACIÓN SUPABASE
+   ------------------------------------------------------------ */
 
-  <!-- CSS ESPECÍFICO DE PROYECTOS -->
-  <link rel="stylesheet" href="./proyectos.css">
-</head>
-
+const PROJECTS_FUNCTION =
+  "https://hlyzyeatnbulyfiiwvsq.supabase.co/functions/v1/list-projects";
 
-<body>
 
-  <!-- =====================================================
-       HEADER
-       ===================================================== -->
-
-  <header class="main-header proyectos-header" id="main-header">
+/* ------------------------------------------------------------
+   INICIO
+   ------------------------------------------------------------ */
 
-    <div class="header-inner">
-
-      <a
-        href="./index.html"
-        class="header-logo-link"
-        aria-label="Baal Studio — Inicio"
-      >
-        <img
-          id="site-logo"
-          class="header-logo protected-image"
-          src="./NEWBaal_Logo_White.png"
-          alt="Baal Studio"
-          width="180"
-          height="40"
-          draggable="false"
-        >
-      </a>
-
-
-      <!-- NAVEGACIÓN DESKTOP -->
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
 
-      <nav
-        class="desktop-nav"
-        aria-label="Navegación principal"
-      >
+    loadProjectsPage();
 
-        <a
-          href="./index.html"
-          class="nav-link"
-        >
-          <span>Inicio</span>
-          <span class="nav-link-en">Home</span>
-        </a>
+  }
+);
 
 
-        <a
-          href="./proyectos.html"
-          class="nav-link active"
-          aria-current="page"
-        >
-          <span>Proyectos</span>
-          <span class="nav-link-en">Projects</span>
-        </a>
+/* ------------------------------------------------------------
+   CARGA PRINCIPAL DE LA PÁGINA
+   ------------------------------------------------------------ */
 
+async function loadProjectsPage() {
 
-        <a
-          href="./about.html"
-          class="nav-link"
-        >
-          <span>Sobre mí</span>
-          <span class="nav-link-en">About</span>
-        </a>
+  const container =
+    document.getElementById(
+      "projects-grid"
+    );
 
+  const loading =
+    document.getElementById(
+      "projects-loading"
+    );
 
-        <a
-          href="./contact.html"
-          class="nav-link"
-        >
-          <span>Contacto</span>
-          <span class="nav-link-en">Contact</span>
-        </a>
+  const emptyState =
+    document.getElementById(
+      "projects-empty-state"
+    );
 
-      </nav>
 
+  if (!container) {
 
-      <!-- BOTÓN MENÚ MÓVIL -->
+    console.error(
+      "[Baal Studio] No existe #projects-grid."
+    );
 
-      <button
-        class="mobile-menu-button"
-        id="mobile-menu-button"
-        type="button"
-        aria-label="Abrir menú"
-        aria-expanded="false"
-        aria-controls="mobile-menu"
-      >
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
+    return;
 
-    </div>
+  }
 
 
-    <!-- MENÚ MÓVIL -->
+  try {
 
-    <div
-      class="mobile-menu"
-      id="mobile-menu"
-      aria-hidden="true"
-    >
+    console.log(
+      "[Baal Studio] Consultando list-projects..."
+    );
 
-      <nav aria-label="Navegación móvil">
 
-        <a href="./index.html">
-          <span>Inicio</span>
-          <small>Home</small>
-        </a>
+    const response =
+      await fetch(
+        PROJECTS_FUNCTION,
+        {
+          method: "GET",
+          headers: {
+            "Accept": "application/json"
+          },
+          cache: "no-store"
+        }
+      );
 
-        <a
-          href="./proyectos.html"
-          aria-current="page"
-        >
-          <span>Proyectos</span>
-          <small>Projects</small>
-        </a>
 
-        <a href="./about.html">
-          <span>Sobre mí</span>
-          <small>About</small>
-        </a>
+    console.log(
+      "[Baal Studio] list-projects HTTP:",
+      response.status
+    );
 
-        <a href="./contact.html">
-          <span>Contacto</span>
-          <small>Contact</small>
-        </a>
 
-      </nav>
+    if (!response.ok) {
 
-    </div>
+      throw new Error(
+        `list-projects respondió ${response.status}`
+      );
 
-  </header>
+    }
 
 
+    const result =
+      await response.json();
 
-  <!-- =====================================================
-       CONTENIDO PRINCIPAL
-       ===================================================== -->
 
-  <main>
+    console.log(
+      "[Baal Studio] Respuesta completa de list-projects:",
+      result
+    );
 
 
-    <!-- =====================================================
-         CABECERA DE PROYECTOS
-         ===================================================== -->
+    const projects =
+      normalizeProjectsResponse(
+        result
+      );
 
-    <section class="projects-page-header">
 
-      <div class="section-container projects-header-inner">
+    console.log(
+      "[Baal Studio] Proyectos normalizados:",
+      projects
+    );
 
-        <div class="projects-header-title">
 
-          <p class="section-kicker">
-            Proyectos
-          </p>
+    if (!projects.length) {
 
-          <p class="section-kicker-en">
-            Projects
-          </p>
+      if (loading) {
 
-          <div class="section-rule"></div>
+        loading.style.display =
+          "none";
 
-        </div>
+      }
 
-      </div>
 
-    </section>
+      if (emptyState) {
 
+        emptyState.classList.add(
+          "visible"
+        );
 
+        emptyState.setAttribute(
+          "aria-hidden",
+          "false"
+        );
 
-    <!-- =====================================================
-         LISTADO DINÁMICO DE PROYECTOS
-         ===================================================== -->
+      }
 
-    <section
-      class="projects-list-section"
-      aria-label="Listado de proyectos"
-    >
+      return;
 
-      <div
-        class="section-container"
-        id="projects-grid"
-      >
+    }
 
-        <div
-          id="projects-loading"
-          class="projects-loading"
-          aria-live="polite"
-        >
 
-          <span class="projects-loading-label">
-            Cargando proyectos
-          </span>
+    /* --------------------------------------------------------
+       ORDEN
 
-          <span class="projects-loading-en">
-            Loading projects
-          </span>
+       list-projects ya devuelve order, pero volvemos a ordenar
+       aquí para asegurarnos de que la página respeta siempre
+       el número final de la carpeta:
 
-        </div>
+       Proyecto (01)
+       Proyecto (02)
+       Proyecto (03)
+       ...
+       -------------------------------------------------------- */
 
-      </div>
+    projects.sort(
+      (a, b) => {
 
-    </section>
+        const orderA =
+          Number(a.order ?? 999);
 
+        const orderB =
+          Number(b.order ?? 999);
 
+        return orderA - orderB;
 
-    <!-- =====================================================
-         MENSAJE DE ERROR / AUSENCIA DE PROYECTOS
-         ===================================================== -->
+      }
+    );
 
-    <section
-      class="projects-empty-state"
-      id="projects-empty-state"
-      aria-hidden="true"
-    >
 
-      <div class="section-container">
+    console.log(
+      "[Baal Studio] Orden final:",
+      projects.map(
+        project => ({
+          order: project.order,
+          name: project.name,
+          title: project.displayName
+        })
+      )
+    );
 
-        <p class="projects-empty-title">
-          No hay proyectos disponibles.
-        </p>
 
-        <p class="projects-empty-en">
-          No projects available.
-        </p>
+    /* --------------------------------------------------------
+       LIMPIAR CONTENEDOR
+       -------------------------------------------------------- */
 
-      </div>
+    container.innerHTML = "";
 
-    </section>
 
+    if (loading) {
 
-  </main>
+      loading.style.display =
+        "none";
 
+    }
 
 
-  <!-- =====================================================
-       FOOTER
-       ===================================================== -->
+    if (emptyState) {
 
-  <footer class="main-footer">
+      emptyState.classList.remove(
+        "visible"
+      );
 
-    <div class="footer-container">
+      emptyState.setAttribute(
+        "aria-hidden",
+        "true"
+      );
 
+    }
 
-      <div class="footer-top">
 
+    /* --------------------------------------------------------
+       CREAR TARJETAS
+       -------------------------------------------------------- */
 
-        <div class="footer-services">
+    projects.forEach(
+      (project, index) => {
 
-          <p>
-            Documentación del Patrimonio · Planimetrías ·
-            Mapeados · Levantamiento y Modelado 3D ·
-            Reconstrucción Virtual · Fotografía con Drone
-          </p>
+        const card =
+          createProjectCard(
+            project,
+            index
+          );
 
-          <p class="footer-services-en">
-            Heritage Documentation · Mapping · 3D Survey ·
-            Virtual reconstruction · Drone Photography
-          </p>
 
-        </div>
+        if (card) {
 
+          container.appendChild(
+            card
+          );
 
-        <div class="footer-nav-column">
+        }
 
-          <a href="./index.html">
-            Inicio · Home
-          </a>
+      }
+    );
 
-          <a href="./proyectos.html">
-            Proyectos · Projects
-          </a>
 
-          <a href="./about.html">
-            Sobre mí · About
-          </a>
+    console.log(
+      `[Baal Studio] ${projects.length} proyectos cargados correctamente.`
+    );
 
-          <a href="./contact.html">
-            Contacto · Contact
-          </a>
 
-        </div>
+    /*
+       Protección de imágenes.
 
-      </div>
+       Si script.js ya ha cargado la función global,
+       la utilizamos.
 
+       No dependemos de ella para que los proyectos
+       funcionen.
+    */
 
+    if (
+      typeof applyProtectionToImages ===
+      "function"
+    ) {
 
-      <div class="footer-identity">
+      applyProtectionToImages();
 
+    }
 
-        <div class="footer-logos">
 
-          <img
-            id="footer-logo-baal"
-            class="footer-secondary-logo protected-image"
-            src="./NEWBaal_Logo_White.png"
-            alt="Baal Studio"
-            draggable="false"
-          >
+  } catch (error) {
 
-          <img
-            id="footer-logo-lns"
-            class="footer-secondary-logo protected-image"
-            src=""
-            alt="LNS"
-            draggable="false"
-          >
+    console.error(
+      "[Baal Studio] Error cargando proyectos:",
+      error
+    );
 
-        </div>
 
+    if (loading) {
 
-        <a
-          href="https://linktr.ee/baalstudio"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Baal Studio — Redes sociales"
-        >
+      loading.style.display =
+        "none";
 
-          <img
-            id="footer-qr"
-            class="footer-qr protected-image"
-            src=""
-            alt="Redes sociales de Baal Studio"
-            width="100"
-            height="100"
-            draggable="false"
-          >
+    }
 
-        </a>
 
+    if (emptyState) {
 
-        <a
-          href="https://linktr.ee/baalstudio"
-          class="footer-social-link"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          RRSS
-        </a>
+      emptyState.classList.add(
+        "visible"
+      );
 
-      </div>
+      emptyState.setAttribute(
+        "aria-hidden",
+        "false"
+      );
 
+    }
 
+  }
 
-      <div class="footer-bottom">
+}
 
-        <p>
-          © Juan Jesús Lupiáñez Moreno · Baal Studio ·
-          Todos los derechos reservados · All rights reserved.
-        </p>
 
-      </div>
+/* ------------------------------------------------------------
+   NORMALIZAR RESPUESTA DE SUPABASE
+   ------------------------------------------------------------ */
 
+function normalizeProjectsResponse(
+  result
+) {
 
-    </div>
+  if (!result) {
 
-  </footer>
+    return [];
 
+  }
 
 
-  <!-- =====================================================
-       JAVASCRIPT GLOBAL
-       ===================================================== -->
+  let projects = [];
 
-  <script src="./script.js"></script>
 
+  /*
+     La función puede devolver directamente
+     un array o un objeto con projects/data/results.
+  */
 
-  <!-- =====================================================
-       JAVASCRIPT ESPECÍFICO DE PROYECTOS
-       ===================================================== -->
+  if (
+    Array.isArray(result)
+  ) {
 
-  <script src="./proyectos.js"></script>
+    projects =
+      result;
 
-</body>
+  } else if (
+    Array.isArray(result.projects)
+  ) {
 
-</html>
+    projects =
+      result.projects;
+
+  } else if (
+    Array.isArray(result.data)
+  ) {
+
+    projects =
+      result.data;
+
+  } else if (
+    Array.isArray(result.results)
+  ) {
+
+    projects =
+      result.results;
+
+  }
+
+
+  return projects
+
+    .map(
+      normalizeProject
+    )
+
+    .filter(
+      Boolean
+    );
+
+}
+
+
+/* ------------------------------------------------------------
+   NORMALIZAR PROYECTO
+   ------------------------------------------------------------ */
+
+function normalizeProject(
+  project
+) {
+
+  if (
+    !project ||
+    typeof project !== "object"
+  ) {
+
+    return null;
+
+  }
+
+
+  /* ----------------------------------------------------------
+     NOMBRE ORIGINAL
+
+     Es el nombre real de la carpeta en Supabase.
+
+     Ejemplo:
+     Epigrafias arabes de Granada (01)
+     ---------------------------------------------------------- */
+
+  const rawName =
+    project.name ||
+    project.title ||
+    project.nombre ||
+    project.titulo ||
+    project.projectName ||
+    "";
+
+
+  /* ----------------------------------------------------------
+     METADATA
+
+     list-projects puede devolver metadata como objeto
+     o como JSON en forma de string.
+     ---------------------------------------------------------- */
+
+  let metadata =
+    project?.metadata ||
+    null;
+
+
+  if (
+    typeof metadata ===
+    "string"
+  ) {
+
+    try {
+
+      metadata =
+        JSON.parse(
+          metadata
+        );
+
+    } catch (error) {
+
+      console.warn(
+        "[Baal Studio] No se pudo interpretar metadata:",
+        error
+      );
+
+      metadata =
+        null;
+
+    }
+
+  }
+
+
+  /* ----------------------------------------------------------
+     TÍTULO
+
+     Preferencia:
+
+     1. project.title
+     2. metadata.title
+     3. metadata.titulo
+     4. metadata.nombre
+     5. metadata.name
+     6. metadataTitle
+     7. nombre de carpeta sin (01)
+     ---------------------------------------------------------- */
+
+  const metadataTitle =
+    project?.title ||
+    metadata?.title ||
+    metadata?.titulo ||
+    metadata?.nombre ||
+    metadata?.name ||
+    project?.metadataTitle ||
+    project?.metadata_title ||
+    "";
+
+
+  const fallbackName =
+    String(
+      rawName
+    )
+      .replace(
+        /\s*\(\d+\)\s*$/i,
+        ""
+      )
+      .trim();
+
+
+  const displayName =
+    String(
+      metadataTitle ||
+      fallbackName
+    )
+      .replace(
+        /\s*[.!?]+\s*$/,
+        ""
+      )
+      .trim();
+
+
+  /* ----------------------------------------------------------
+     ORDEN
+     ---------------------------------------------------------- */
+
+  const order =
+    project.order ??
+    project.orden ??
+    project.position ??
+    extractOrderFromName(
+      rawName
+    );
+
+
+  /* ----------------------------------------------------------
+     COVER
+     ---------------------------------------------------------- */
+
+  const cover =
+    extractCover(
+      project
+    );
+
+
+  /* ----------------------------------------------------------
+     UBICACIÓN
+     ---------------------------------------------------------- */
+
+  const location =
+    metadata?.location ||
+    metadata?.localizacion ||
+    project.location ||
+    project.localizacion ||
+    "";
+
+
+  /* ----------------------------------------------------------
+     AÑO
+     ---------------------------------------------------------- */
+
+  const year =
+    metadata?.year ||
+    metadata?.ano ||
+    metadata?.año ||
+    project.year ||
+    project.año ||
+    "";
+
+
+  /* ----------------------------------------------------------
+     CATEGORÍA
+     ---------------------------------------------------------- */
+
+  const rawCategory =
+    metadata?.category ||
+    metadata?.categoria ||
+    project.category ||
+    project.categoria ||
+    "";
+
+
+  const category =
+    Array.isArray(
+      rawCategory
+    )
+      ? rawCategory
+          .slice(0, 2)
+          .join(", ")
+      : String(
+          rawCategory
+        );
+
+
+  return {
+
+    ...project,
+
+    metadata,
+
+    name:
+      rawName,
+
+    displayName,
+
+    order,
+
+    cover,
+
+    location,
+
+    year,
+
+    category
+
+  };
+
+}
+
+
+/* ------------------------------------------------------------
+   EXTRAER ORDEN DEL NOMBRE DE CARPETA
+   ------------------------------------------------------------ */
+
+function extractOrderFromName(
+  name
+) {
+
+  const match =
+    String(
+      name || ""
+    ).match(
+      /\((\d+)\)\s*$/
+    );
+
+
+  if (!match) {
+
+    return 999;
+
+  }
+
+
+  return Number(
+    match[1]
+  );
+
+}
+
+
+/* ------------------------------------------------------------
+   EXTRAER COVER
+   ------------------------------------------------------------ */
+
+function extractCover(
+  project
+) {
+
+  const directCandidates = [
+
+    project?.cover,
+
+    project?.coverUrl,
+
+    project?.cover_url,
+
+    project?.coverURL,
+
+    project?.image,
+
+    project?.imageUrl,
+
+    project?.image_url,
+
+    project?.thumbnail,
+
+    project?.thumbnailUrl,
+
+    project?.thumbnail_url,
+
+    project?.portada,
+
+    project?.portadaUrl,
+
+    project?.portada_url
+
+  ];
+
+
+  for (
+    const candidate
+    of directCandidates
+  ) {
+
+    const url =
+      extractUrlFromValue(
+        candidate
+      );
+
+
+    if (
+      isImageUrl(
+        url
+      )
+    ) {
+
+      return url;
+
+    }
+
+  }
+
+
+  /*
+     Si no encontramos el cover directamente,
+     buscamos recursivamente dentro del objeto.
+  */
+
+  const recursiveUrl =
+    findImageUrl(
+      project
+    );
+
+
+  return recursiveUrl || "";
+
+}
+
+
+/* ------------------------------------------------------------
+   EXTRAER URL DE UN VALOR
+   ------------------------------------------------------------ */
+
+function extractUrlFromValue(
+  value
+) {
+
+  if (
+    typeof value ===
+    "string"
+  ) {
+
+    return value.trim();
+
+  }
+
+
+  if (
+    !value ||
+    typeof value !== "object"
+  ) {
+
+    return "";
+
+  }
+
+
+  const possibleKeys = [
+
+    "url",
+    "signedUrl",
+    "signed_url",
+    "publicUrl",
+    "public_url",
+    "downloadUrl",
+    "download_url",
+    "src",
+    "href"
+
+  ];
+
+
+  for (
+    const key
+    of possibleKeys
+  ) {
+
+    if (
+      typeof value[key] ===
+      "string" &&
+      value[key].trim()
+    ) {
+
+      return value[key].trim();
+
+    }
+
+  }
+
+
+  return "";
+
+}
+
+
+/* ------------------------------------------------------------
+   COMPROBAR SI UNA URL ES UNA IMAGEN
+   ------------------------------------------------------------ */
+
+function isImageUrl(
+  url
+) {
+
+  if (
+    typeof url !==
+    "string" ||
+    !url
+  ) {
+
+    return false;
+
+  }
+
+
+  const cleanUrl =
+    url
+      .split("?")[0]
+      .split("#")[0]
+      .toLowerCase();
+
+
+  return (
+
+    cleanUrl.endsWith(
+      ".jpg"
+    ) ||
+
+    cleanUrl.endsWith(
+      ".jpeg"
+    ) ||
+
+    cleanUrl.endsWith(
+      ".png"
+    ) ||
+
+    cleanUrl.endsWith(
+      ".webp"
+    ) ||
+
+    cleanUrl.endsWith(
+      ".avif"
+    ) ||
+
+    cleanUrl.endsWith(
+      ".gif"
+    )
+
+  );
+
+}
+
+
+/* ------------------------------------------------------------
+   BÚSQUEDA RECURSIVA DE IMAGEN
+   ------------------------------------------------------------ */
+
+function findImageUrl(
+  value,
+  depth = 0
+) {
+
+  /*
+     Evitamos recorrer objetos indefinidamente.
+  */
+
+  if (
+    depth > 6 ||
+    !value
+  ) {
+
+    return "";
+
+  }
+
+
+  const direct =
+    extractUrlFromValue(
+      value
+    );
+
+
+  if (
+    isImageUrl(
+      direct
+    )
+  ) {
+
+    return direct;
+
+  }
+
+
+  if (
+    Array.isArray(
+      value
+    )
+  ) {
+
+    for (
+      const item
+      of value
+    ) {
+
+      const found =
+        findImageUrl(
+          item,
+          depth + 1
+        );
+
+
+      if (
+        found
+      ) {
+
+        return found;
+
+      }
+
+    }
+
+    return "";
+
+  }
+
+
+  if (
+    typeof value !==
+    "object"
+  ) {
+
+    return "";
+
+  }
+
+
+  /*
+     Priorizamos nombres que suelen contener
+     la portada.
+  */
+
+  const priorityKeys = [
+
+    "cover",
+    "coverUrl",
+    "cover_url",
+    "image",
+    "imageUrl",
+    "image_url",
+    "thumbnail",
+    "thumbnailUrl",
+    "thumbnail_url",
+    "portada",
+    "portadaUrl",
+    "portada_url"
+
+  ];
+
+
+  for (
+    const key
+    of priorityKeys
+  ) {
+
+    if (
+      key in value
+    ) {
+
+      const found =
+        findImageUrl(
+          value[key],
+          depth + 1
+        );
+
+
+      if (
+        found
+      ) {
+
+        return found;
+
+      }
+
+    }
+
+  }
+
+
+  /*
+     Después buscamos en el resto de propiedades.
+  */
+
+  for (
+    const key
+    of Object.keys(
+      value
+    )
+  ) {
+
+    if (
+      priorityKeys.includes(
+        key
+      )
+    ) {
+
+      continue;
+
+    }
+
+
+    const found =
+      findImageUrl(
+        value[key],
+        depth + 1
+      );
+
+
+    if (
+      found
+    ) {
+
+      return found;
+
+    }
+
+  }
+
+
+  return "";
+
+}
+
+
+/* ------------------------------------------------------------
+   CREAR TARJETA DE PROYECTO
+   ------------------------------------------------------------ */
+
+function createProjectCard(
+  project,
+  index
+) {
+
+  if (
+    !project
+  ) {
+
+    return null;
+
+  }
+
+
+  const card =
+    document.createElement(
+      "article"
+    );
+
+
+  card.className =
+    "project-page-card";
+
+
+  /*
+     ----------------------------------------------------------
+     MEDIA
+     ----------------------------------------------------------
+  */
+
+  const media =
+    document.createElement(
+      "div"
+    );
+
+
+  media.className =
+    "project-page-card-media protected-media";
+
+
+  const image =
+    document.createElement(
+      "img"
+    );
+
+
+  image.className =
+    "protected-image";
+
+
+  image.alt =
+    `${project.displayName || "Proyecto"} — Baal Studio`;
+
+
+  image.loading =
+    index === 0
+      ? "eager"
+      : "lazy";
+
+
+  image.decoding =
+    "async";
+
+
+  image.draggable =
+    false;
+
+
+  if (
+    project.cover
+  ) {
+
+    image.src =
+      project.cover;
+
+
+    console.log(
+      `[Baal Studio] Cover asignado: ${project.displayName}`,
+      project.cover
+    );
+
+  } else {
+
+    console.warn(
+      `[Baal Studio] El proyecto no tiene cover: ${project.displayName}`
+    );
+
+  }
+
+
+  image.addEventListener(
+    "load",
+    () => {
+
+      console.log(
+        `[Baal Studio] Cover cargado: ${project.displayName}`,
+        {
+          width:
+            image.naturalWidth,
+
+          height:
+            image.naturalHeight
+        }
+      );
+
+    }
+  );
+
+
+  image.addEventListener(
+    "error",
+    () => {
+
+      console.error(
+        `[Baal Studio] ERROR cargando cover: ${project.displayName}`,
+        image.src
+      );
+
+    }
+  );
+
+
+  media.appendChild(
+    image
+  );
+
+
+  /*
+     ----------------------------------------------------------
+     INFORMACIÓN
+     ----------------------------------------------------------
+  */
+
+  const info =
+    document.createElement(
+      "div"
+    );
+
+
+  info.className =
+    "project-page-card-info";
+
+
+  const header =
+    document.createElement(
+      "div"
+    );
+
+
+  header.className =
+    "project-page-card-header";
+
+
+  /*
+     CATEGORÍA
+  */
+
+  if (
+    project.category
+  ) {
+
+    const kicker =
+      document.createElement(
+        "p"
+      );
+
+
+    kicker.className =
+      "project-page-card-kicker";
+
+
+    kicker.textContent =
+      project.category;
+
+
+    header.appendChild(
+      kicker
+    );
+
+  }
+
+
+  /*
+     TÍTULO
+  */
+
+  const title =
+    document.createElement(
+      "h2"
+    );
+
+
+  title.className =
+    "project-page-card-title";
+
+
+  title.textContent =
+    project.displayName ||
+    "Proyecto";
+
+
+  header.appendChild(
+    title
+  );
+
+
+  /*
+     TÍTULO INGLÉS
+
+     De momento lo buscamos únicamente si
+     list-projects lo proporciona.
+
+     No inventamos una traducción.
+  */
+
+  const englishTitle =
+    project?.metadata?.title_en ||
+    project?.metadata?.titulo_en ||
+    project?.metadata?.englishTitle ||
+    project?.metadata?.nombre_en ||
+    project?.title_en ||
+    project?.titulo_en ||
+    "";
+
+
+  if (
+    englishTitle
+  ) {
+
+    const titleEn =
+      document.createElement(
+        "p"
+      );
+
+
+    titleEn.className =
+      "project-page-card-title-en";
+
+
+    titleEn.textContent =
+      englishTitle;
+
+
+    header.appendChild(
+      titleEn
+    );
+
+  }
+
+
+  info.appendChild(
+    header
+  );
+
+
+  /*
+     ----------------------------------------------------------
+     METADATOS
+     ----------------------------------------------------------
+  */
+
+  const meta =
+    document.createElement(
+      "div"
+    );
+
+
+  meta.className =
+    "project-page-card-meta";
+
+
+  addMetadataRow(
+    meta,
+    "Ubicación",
+    project.location
+  );
+
+
+  addMetadataRow(
+    meta,
+    "Año",
+    project.year
+  );
+
+
+  addMetadataRow(
+    meta,
+    "Categoría",
+    project.category
+  );
+
+
+  info.appendChild(
+    meta
+  );
+
+
+  /*
+     ----------------------------------------------------------
+     FOOTER DE TARJETA
+     ----------------------------------------------------------
+  */
+
+  const footer =
+    document.createElement(
+      "div"
+    );
+
+
+  footer.className =
+    "project-page-card-footer";
+
+
+  const projectIndex =
+    document.createElement(
+      "span"
+    );
+
+
+  projectIndex.className =
+    "project-page-card-index";
+
+
+  projectIndex.textContent =
+    String(
+      project.order || index + 1
+    ).padStart(
+      2,
+      "0"
+    );
+
+
+  footer.appendChild(
+    projectIndex
+  );
+
+
+  const link =
+    document.createElement(
+      "a"
+    );
+
+
+  link.className =
+    "project-page-card-link";
+
+
+  link.href =
+    createProjectUrl(
+      project
+    );
+
+
+  link.innerHTML = `
+    <span class="project-page-card-link-main">
+      Ver proyecto
+    </span>
+    <span class="project-page-card-link-en">
+      View project
+    </span>
+  `;
+
+
+  footer.appendChild(
+    link
+  );
+
+
+  info.appendChild(
+    footer
+  );
+
+
+  /*
+     ----------------------------------------------------------
+     MONTAR TARJETA
+     ----------------------------------------------------------
+  */
+
+  card.appendChild(
+    media
+  );
+
+
+  card.appendChild(
+    info
+  );
+
+
+  return card;
+
+}
+
+
+/* ------------------------------------------------------------
+   AÑADIR FILA DE METADATO
+   ------------------------------------------------------------ */
+
+function addMetadataRow(
+  container,
+  label,
+  value
+) {
+
+  if (
+    value ===
+    undefined ||
+    value ===
+    null ||
+    String(value).trim() === ""
+  ) {
+
+    return;
+
+  }
+
+
+  const row =
+    document.createElement(
+      "div"
+    );
+
+
+  row.className =
+    "project-page-card-meta-item";
+
+
+  const labelElement =
+    document.createElement(
+      "span"
+    );
+
+
+  labelElement.className =
+    "project-page-card-meta-label";
+
+
+  labelElement.textContent =
+    label;
+
+
+  const valueElement =
+    document.createElement(
+      "span"
+    );
+
+
+  valueElement.className =
+    "project-page-card-meta-value";
+
+
+  valueElement.textContent =
+    value;
+
+
+  row.appendChild(
+    labelElement
+  );
+
+
+  row.appendChild(
+    valueElement
+  );
+
+
+  container.appendChild(
+    row
+  );
+
+}
+
+
+/* ------------------------------------------------------------
+   URL DEL PROYECTO
+   ------------------------------------------------------------ */
+
+function createProjectUrl(
+  project
+) {
+
+  /*
+     De momento utilizamos el nombre de la carpeta
+     como parámetro.
+
+     Esto nos permitirá posteriormente crear
+     proyecto.html?project=...
+
+     sin tener que modificar la estructura
+     de las tarjetas.
+  */
+
+  const projectName =
+    project?.name ||
+    project?.displayName ||
+    "";
+
+
+  if (
+    !projectName
+  ) {
+
+    return "#";
+
+  }
+
+
+  return (
+    `./proyecto.html?project=${encodeURIComponent(projectName)}`
+  );
+
+}
