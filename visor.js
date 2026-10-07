@@ -1,124 +1,92 @@
-/* =========================================================
+/* ============================================================
    BAAL STUDIO
-   proyecto.js
-   PÁGINA INDIVIDUAL DE PROYECTO
-   ========================================================= */
+   VISOR.JS
+   VISOR DINÁMICO DE PROYECTOS
+   ============================================================ */
 
 (() => {
 
   "use strict";
 
 
-  /* ---------------------------------------------------------
+  /* ----------------------------------------------------------
      PROTECCIÓN CONTRA DOBLE CARGA
-     --------------------------------------------------------- */
+     ---------------------------------------------------------- */
 
-  if (window.__BAAL_PROYECTO_LOADED__) {
-    console.warn("[Baal Studio] proyecto.js ya estaba cargado.");
+  if (window.__BAAL_VISOR_JS_LOADED__) {
     return;
   }
 
-  window.__BAAL_PROYECTO_LOADED__ = true;
+  window.__BAAL_VISOR_JS_LOADED__ = true;
 
 
-  /* ---------------------------------------------------------
+  /* ----------------------------------------------------------
      CONFIGURACIÓN
-     --------------------------------------------------------- */
+     ---------------------------------------------------------- */
 
-  const PROJECTS_FUNCTION =
-    "https://hlyzyeatnbulyfiiwvsq.supabase.co/functions/v1/list-projects";
+  const SUPABASE_URL =
+    "https://hlyzyeatnbulyfiiwvsq.supabase.co";
+
+  const PROJECT_FUNCTION =
+    `${SUPABASE_URL}/functions/v1/get-projects`;
 
 
-  /* ---------------------------------------------------------
+  /* ----------------------------------------------------------
      INICIO
-     --------------------------------------------------------- */
+     ---------------------------------------------------------- */
 
   document.addEventListener(
     "DOMContentLoaded",
-    loadProject
+    () => {
+
+      initializeViewer();
+
+    }
   );
 
 
-  /* ---------------------------------------------------------
-     CARGA DEL PROYECTO
-     --------------------------------------------------------- */
+  /* ----------------------------------------------------------
+     INICIALIZAR
+     ---------------------------------------------------------- */
 
-  async function loadProject() {
+  async function initializeViewer() {
 
     const params =
       new URLSearchParams(
         window.location.search
       );
 
-
-    const requestedProject =
+    const projectName =
       params.get("project");
 
 
-    if (!requestedProject) {
+    if (!projectName) {
 
       showError(
-        "No se ha indicado ningún proyecto."
+        "No se ha especificado ningún proyecto."
       );
 
       return;
-
     }
+
+
+    console.log(
+      "[Baal Studio] Proyecto solicitado:",
+      projectName
+    );
 
 
     try {
 
-      console.log(
-        "[Baal Studio] Cargando proyecto:",
-        requestedProject
-      );
-
-
-      const response =
-        await fetch(
-          PROJECTS_FUNCTION,
-          {
-            method: "GET",
-            headers: {
-              "Accept": "application/json"
-            },
-            cache: "no-store"
-          }
-        );
-
-
-      if (!response.ok) {
-
-        throw new Error(
-          `list-projects respondió con HTTP ${response.status}`
-        );
-
-      }
-
-
-      const data =
-        await response.json();
-
-
-      const projects =
-        normalizeResponse(data);
-
-
       const project =
-        findProject(
-          projects,
-          requestedProject
+        await loadProject(
+          projectName
         );
-
 
       if (!project) {
-
-        showError(
-          "No se ha encontrado el proyecto solicitado."
+        throw new Error(
+          "El proyecto no existe."
         );
-
-        return;
-
       }
 
 
@@ -127,127 +95,257 @@
       );
 
 
-      applyImageProtection();
-
-
     } catch (error) {
 
       console.error(
-        "[Baal Studio] Error cargando proyecto:",
+        "[Baal Studio] Error cargando visor:",
         error
       );
 
-
       showError(
-        "No ha sido posible cargar este proyecto."
+        error.message
       );
-
     }
-
   }
 
 
-  /* ---------------------------------------------------------
-     NORMALIZACIÓN
-     --------------------------------------------------------- */
+  /* ----------------------------------------------------------
+     CARGAR PROYECTO
+     ---------------------------------------------------------- */
 
-  function normalizeResponse(data) {
+  async function loadProject(
+    projectName
+  ) {
+
+    /*
+     * Enviamos el nombre de la carpeta como parámetro.
+     *
+     * La Edge Function debe encargarse de:
+     * - localizar la carpeta
+     * - leer proyecto.txt
+     * - resolver URLs firmadas
+     * - devolver los recursos
+     */
+
+    const url =
+      PROJECT_FUNCTION +
+      "?project=" +
+      encodeURIComponent(
+        projectName
+      );
+
+
+    console.log(
+      "[Baal Studio] Consultando:",
+      url
+    );
+
+
+    const response =
+      await fetch(
+        url,
+        {
+          method: "GET",
+          cache: "no-store"
+        }
+      );
+
+
+    console.log(
+      "[Baal Studio] get-projects HTTP:",
+      response.status
+    );
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        `HTTP ${response.status}`
+      );
+    }
+
+
+    const data =
+      await response.json();
+
+
+    console.log(
+      "[Baal Studio] Respuesta get-projects:",
+      data
+    );
+
+
+    if (
+      data &&
+      data.success === false
+    ) {
+
+      throw new Error(
+        data.error ||
+        "La función no pudo cargar el proyecto."
+      );
+    }
+
+
+    return normalizeProjectResponse(
+      data
+    );
+  }
+
+
+  /* ----------------------------------------------------------
+     NORMALIZAR RESPUESTA
+     ---------------------------------------------------------- */
+
+  function normalizeProjectResponse(
+    data
+  ) {
 
     if (!data) {
-      return [];
+      return null;
     }
 
 
-    if (Array.isArray(data)) {
-      return data;
+    if (
+      data.project &&
+      typeof data.project === "object"
+    ) {
+
+      return data.project;
     }
 
 
-    if (Array.isArray(data.projects)) {
-      return data.projects;
+    if (
+      data.data &&
+      data.data.project &&
+      typeof data.data.project === "object"
+    ) {
+
+      return data.data.project;
     }
 
 
-    if (Array.isArray(data.data)) {
+    if (
+      data.data &&
+      typeof data.data === "object" &&
+      !Array.isArray(data.data)
+    ) {
+
       return data.data;
     }
 
 
-    return [];
-
+    return data;
   }
 
 
-  /* ---------------------------------------------------------
-     BUSCAR PROYECTO
-     --------------------------------------------------------- */
+  /* ----------------------------------------------------------
+     RENDERIZAR PROYECTO
+     ---------------------------------------------------------- */
 
-  function findProject(
-    projects,
-    requestedProject
+  function renderProject(
+    project
   ) {
 
     const normalized =
-      normalizeName(
-        requestedProject
+      normalizeProject(
+        project
       );
 
 
-    return projects.find(
-      (project) => {
+    /*
+     * Título
+     */
 
-        const candidates = [
-
-          project.name,
-
-          project.folder,
-
-          project.folderName,
-
-          project.projectName,
-
-          project.nombre
-
-        ];
-
-
-        return candidates.some(
-          (candidate) =>
-            normalizeName(
-              candidate
-            ) === normalized
-        );
-
-      }
+    setText(
+      "visor-title",
+      normalized.title
     );
 
+
+    setText(
+      "visor-title-en",
+      normalized.titleEn
+    );
+
+
+    /*
+     * Datos
+     */
+
+    setText(
+      "visor-category",
+      normalized.category
+    );
+
+    setText(
+      "visor-techniques",
+      normalized.techniques
+    );
+
+    setText(
+      "visor-objective",
+      normalized.objective
+    );
+
+
+    /*
+     * Descripción
+     */
+
+    renderDescription(
+      normalized.description
+    );
+
+
+    /*
+     * Recursos
+     */
+
+    renderResources(
+      normalized
+    );
+
+
+    /*
+     * Título del navegador
+     */
+
+    document.title =
+      normalized.title
+        ? `${normalized.title} — Baal Studio`
+        : "Baal Studio — Proyecto";
+
+
+    /*
+     * Mostrar página
+     */
+
+    const loading =
+      document.getElementById(
+        "visor-loading"
+      );
+
+    const projectContainer =
+      document.getElementById(
+        "visor-project"
+      );
+
+    if (loading) {
+      loading.style.display = "none";
+    }
+
+    if (projectContainer) {
+      projectContainer.hidden = false;
+    }
   }
 
 
-  /* ---------------------------------------------------------
-     NORMALIZAR NOMBRE
-     --------------------------------------------------------- */
+  /* ----------------------------------------------------------
+     NORMALIZAR PROYECTO
+     ---------------------------------------------------------- */
 
-  function normalizeName(
-    value
-  ) {
-
-    return String(
-      value || ""
-    )
-
-      .trim()
-
-      .toLowerCase();
-
-  }
-
-
-  /* ---------------------------------------------------------
-     RENDER PRINCIPAL
-     --------------------------------------------------------- */
-
-  function renderProject(
+  function normalizeProject(
     project
   ) {
 
@@ -255,869 +353,841 @@
       project.metadata &&
       typeof project.metadata === "object"
         ? project.metadata
-        : {};
-
-
-    const title =
-      cleanTitle(
-        metadata.titulo ||
-        metadata.title ||
-        project.titulo ||
-        project.title ||
-        project.name ||
-        "Proyecto"
-      );
-
-
-    document.title =
-      `${title} — Baal Studio`;
-
-
-    /* -------------------------------------------------------
-       HERO
-       ------------------------------------------------------- */
-
-    setText(
-      "project-title",
-      title
-    );
-
-
-    setText(
-      "project-title-en",
-      metadata.titulo_en ||
-      metadata.title_en ||
-      "Project"
-    );
-
-
-    setText(
-      "project-category",
-      metadata.categoria ||
-      metadata.category ||
-      "Proyecto"
-    );
-
-
-    renderHeroMeta(
-      metadata,
-      project
-    );
-
-
-    renderCover(
-      project
-    );
-
-
-    /* -------------------------------------------------------
-       INFORMACIÓN
-       ------------------------------------------------------- */
-
-    renderInformation(
-      metadata
-    );
-
-
-    /* -------------------------------------------------------
-       CONTENIDO
-       ------------------------------------------------------- */
-
-    renderBlocks(
-      project.blocks || []
-    );
-
-
-    /* -------------------------------------------------------
-       RECURSOS
-       ------------------------------------------------------- */
-
-    renderResources(
-      project
-    );
-
-  }
-
-
-  /* ---------------------------------------------------------
-     HERO — METADATA
-     --------------------------------------------------------- */
-
-  function renderHeroMeta(
-    metadata,
-    project
-  ) {
-
-    const container =
-      document.getElementById(
-        "project-hero-meta"
-      );
-
-
-    if (!container) {
-      return;
-    }
-
-
-    container.innerHTML = "";
-
-
-    addHeroMeta(
-      container,
-      "Ubicación",
-      "Location",
-      metadata.localizacion ||
-      metadata.location ||
-      project.localizacion ||
-      project.location
-    );
-
-
-    addHeroMeta(
-      container,
-      "Año",
-      "Year",
-      metadata.año ||
-      metadata.year ||
-      project.año ||
-      project.year
-    );
-
-
-    addHeroMeta(
-      container,
-      "Categoría",
-      "Category",
-      metadata.categoria ||
-      metadata.category
-    );
-
-
-    addHeroMeta(
-      container,
-      "Subcategoría",
-      "Subcategory",
-      metadata.subcategoria ||
-      metadata.subcategory
-    );
-
-  }
-
-
-  function addHeroMeta(
-    container,
-    label,
-    english,
-    value
-  ) {
-
-    if (
-      value === undefined ||
-      value === null ||
-      !String(value).trim()
-    ) {
-      return;
-    }
-
-
-    const item =
-      document.createElement(
-        "div"
-      );
-
-
-    item.className =
-      "project-hero-meta-item";
-
-
-    item.innerHTML =
-      `
-        <span class="project-hero-meta-label">
-          ${escapeHtml(label)}
-          ·
-          ${escapeHtml(english)}
-        </span>
-
-        <span class="project-hero-meta-value">
-          ${escapeHtml(String(value))}
-        </span>
-      `;
-
-
-    container.appendChild(
-      item
-    );
-
-  }
-
-
-  /* ---------------------------------------------------------
-     PORTADA
-     --------------------------------------------------------- */
-
-  function renderCover(
-    project
-  ) {
-
-    const image =
-      document.getElementById(
-        "project-cover"
-      );
-
-
-    if (!image) {
-      return;
-    }
-
-
-    const cover =
-      extractCover(
-        project
-      );
-
-
-    if (!cover) {
-
-      image.style.display =
-        "none";
-
-      return;
-
-    }
-
-
-    image.src =
-      cover;
-
-
-    image.alt =
-      cleanTitle(
-        project.metadata?.titulo ||
-        project.metadata?.title ||
-        project.name ||
-        "Proyecto Baal Studio"
-      );
-
-
-    image.addEventListener(
-      "error",
-      () => {
-
-        console.error(
-          "[Baal Studio] Error cargando portada:",
-          cover
-        );
-
-      }
-    );
-
-  }
-
-
-  /* ---------------------------------------------------------
-     INFORMACIÓN
-     --------------------------------------------------------- */
-
-  function renderInformation(
-    metadata
-  ) {
-
-    const container =
-      document.getElementById(
-        "project-information-content"
-      );
-
-
-    if (!container) {
-      return;
-    }
-
-
-    container.innerHTML = "";
-
-
-    const description =
-      metadata.descripcion ||
-      metadata.description;
-
-
-    if (description) {
-
-      const paragraph =
-        document.createElement(
-          "p"
-        );
-
-
-      paragraph.className =
-        "project-description";
-
-
-      paragraph.textContent =
-        String(description).trim();
-
-
-      container.appendChild(
-        paragraph
-      );
-
-    }
-
-
-    const dataGrid =
-      document.createElement(
-        "div"
-      );
-
-
-    dataGrid.className =
-      "project-data-grid";
-
-
-    addData(
-      dataGrid,
-      "Técnicas",
-      "Techniques",
-      metadata.tecnicas ||
-      metadata.techniques
-    );
-
-
-    addData(
-      dataGrid,
-      "Objetivo",
-      "Objective",
-      metadata.objetivo ||
-      metadata.objective
-    );
-
-
-    addData(
-      dataGrid,
-      "Autoría",
-      "Authorship",
-      metadata.autoria ||
-      metadata.authorship
-    );
-
-
-    addData(
-      dataGrid,
-      "Colaboración",
-      "Collaboration",
-      metadata.colaboracion ||
-      metadata.collaboration
-    );
-
-
-    if (
-      dataGrid.children.length
-    ) {
-
-      container.appendChild(
-        dataGrid
-      );
-
-    }
-
-  }
-
-
-  function addData(
-    container,
-    label,
-    english,
-    value
-  ) {
-
-    if (
-      value === undefined ||
-      value === null ||
-      !String(value).trim()
-    ) {
-      return;
-    }
-
-
-    const item =
-      document.createElement(
-        "div"
-      );
-
-
-    item.className =
-      "project-data-item";
-
-
-    item.innerHTML =
-      `
-        <span class="project-data-label">
-          ${escapeHtml(label)}
-          ·
-          ${escapeHtml(english)}
-        </span>
-
-        <span class="project-data-value">
-          ${escapeHtml(String(value))}
-        </span>
-      `;
-
-
-    container.appendChild(
-      item
-    );
-
-  }
-
-
-  /* ---------------------------------------------------------
-     BLOQUES
-     --------------------------------------------------------- */
-
-  function renderBlocks(
-    blocks
-  ) {
-
-    const container =
-      document.getElementById(
-        "project-content"
-      );
-
-
-    if (!container) {
-      return;
-    }
-
-
-    container.innerHTML = "";
-
-
-    if (
-      !Array.isArray(blocks) ||
-      !blocks.length
-    ) {
-
-      document
-        .getElementById(
-          "project-content-section"
+        : project;
+
+
+    return {
+
+      title:
+        cleanText(
+          metadata.titulo ||
+          metadata.title ||
+          metadata.nombre ||
+          project.titulo ||
+          project.title ||
+          project.nombre ||
+          project.name ||
+          "Proyecto"
+        ),
+
+
+      titleEn:
+        cleanText(
+          metadata.titulo_en ||
+          metadata.title_en ||
+          metadata.titleEn ||
+          project.titulo_en ||
+          project.title_en ||
+          project.titleEn ||
+          ""
+        ),
+
+
+      category:
+        cleanText(
+          metadata.categoria ||
+          metadata.category ||
+          project.categoria ||
+          project.category ||
+          ""
+        ),
+
+
+      techniques:
+        cleanText(
+          metadata.tecnicas ||
+          metadata.técnicas ||
+          metadata.techniques ||
+          project.tecnicas ||
+          project.técnicas ||
+          project.techniques ||
+          ""
+        ),
+
+
+      objective:
+        cleanText(
+          metadata.objetivo ||
+          metadata.objective ||
+          project.objetivo ||
+          project.objective ||
+          ""
+        ),
+
+
+      description:
+        metadata.descripcion ||
+        metadata.description ||
+        project.descripcion ||
+        project.description ||
+        project.text ||
+        "",
+
+
+      /*
+       * Recursos.
+       *
+       * Se aceptan distintas estructuras porque
+       * get-projects puede devolverlas agrupadas.
+       */
+
+      resources:
+        collectResources(
+          project
         )
-        ?.remove();
 
+    };
+  }
+
+
+  /* ----------------------------------------------------------
+     DESCRIPCIÓN
+     ---------------------------------------------------------- */
+
+  function renderDescription(
+    description
+  ) {
+
+    const container =
+      document.getElementById(
+        "visor-description"
+      );
+
+    if (!container) {
       return;
-
     }
 
 
-    blocks.forEach(
-      (block, index) => {
+    container.innerHTML = "";
 
-        renderBlock(
-          container,
-          block,
-          index
+
+    if (!description) {
+
+      const section =
+        document.querySelector(
+          ".visor-description"
         );
+
+      if (section) {
+        section.style.display = "none";
+      }
+
+      return;
+    }
+
+
+    /*
+     * Si llega como array,
+     * cada elemento se convierte en párrafo.
+     */
+
+    if (
+      Array.isArray(description)
+    ) {
+
+      description.forEach(
+        paragraph => {
+
+          const p =
+            document.createElement("p");
+
+          p.textContent =
+            cleanText(
+              paragraph
+            );
+
+          if (p.textContent) {
+            container.appendChild(p);
+          }
+
+        }
+      );
+
+      return;
+    }
+
+
+    /*
+     * Si llega como texto,
+     * respetamos saltos de línea.
+     */
+
+    const paragraphs =
+      String(description)
+        .split(/\n\s*\n/);
+
+
+    paragraphs.forEach(
+      paragraph => {
+
+        const text =
+          paragraph.trim();
+
+        if (!text) {
+          return;
+        }
+
+        const p =
+          document.createElement("p");
+
+        p.textContent =
+          text;
+
+        container.appendChild(
+          p
+        );
+      }
+    );
+  }
+
+
+  /* ----------------------------------------------------------
+     RECURSOS
+     ---------------------------------------------------------- */
+
+  function collectResources(
+    project
+  ) {
+
+    const resources = [];
+
+
+    /*
+     * Estructuras habituales
+     */
+
+    const possibleArrays = [
+
+      project.resources,
+
+      project.recursos,
+
+      project.blocks,
+
+      project.bloques,
+
+      project.media,
+
+      project.images,
+
+      project.imagenes
+
+    ];
+
+
+    possibleArrays.forEach(
+      value => {
+
+        if (
+          Array.isArray(value)
+        ) {
+
+          value.forEach(
+            resource => {
+
+              resources.push(
+                normalizeResource(
+                  resource
+                )
+              );
+
+            }
+          );
+        }
 
       }
     );
 
+
+    /*
+     * Recursos individuales
+     */
+
+    const individualKeys = [
+
+      "cover",
+      "coverUrl",
+      "cover_url",
+
+      "video",
+      "videoUrl",
+      "video_url",
+
+      "sketchfab",
+      "sketchfabUrl",
+      "sketchfab_url",
+
+      "pdf",
+      "pdfUrl",
+      "pdf_url"
+
+    ];
+
+
+    individualKeys.forEach(
+      key => {
+
+        if (
+          project[key]
+        ) {
+
+          resources.push(
+            normalizeResource(
+              project[key],
+              key
+            )
+          );
+        }
+
+      }
+    );
+
+
+    return resources.filter(
+      resource =>
+        resource &&
+        (
+          resource.url ||
+          resource.items.length
+        )
+    );
   }
 
 
-  /* ---------------------------------------------------------
-     BLOQUE INDIVIDUAL
-     --------------------------------------------------------- */
+  /* ----------------------------------------------------------
+     NORMALIZAR RECURSO
+     ---------------------------------------------------------- */
 
-  function renderBlock(
-    container,
-    block,
-    index
+  function normalizeResource(
+    resource,
+    fallbackType = ""
   ) {
 
     if (
-      !block ||
-      typeof block !== "object"
+      typeof resource === "string"
     ) {
-      return;
+
+      return {
+
+        type:
+          detectResourceType(
+            resource,
+            fallbackType
+          ),
+
+        url:
+          resource,
+
+        title:
+          "",
+
+        caption:
+          "",
+
+        items:
+          []
+
+      };
     }
+
+
+    if (
+      !resource ||
+      typeof resource !== "object"
+    ) {
+
+      return null;
+    }
+
+
+    const url =
+      extractUrl(
+        resource
+      );
+
+
+    const items =
+      extractItems(
+        resource
+      );
 
 
     const type =
-      String(
-        block.type ||
-        ""
-      ).toLowerCase();
+      resource.type ||
+      resource.tipo ||
+      resource.kind ||
+      detectResourceType(
+        url,
+        fallbackType
+      );
 
 
-    switch (type) {
+    return {
 
-      case "image":
-        renderImageBlock(
-          container,
-          block,
-          index
-        );
-        break;
+      type:
+        String(type || "image")
+          .toLowerCase(),
 
+      url,
 
-      case "carousel":
-        renderCarouselBlock(
-          container,
-          block,
-          index
-        );
-        break;
+      title:
+        cleanText(
+          resource.title ||
+          resource.titulo ||
+          resource.name ||
+          resource.nombre ||
+          ""
+        ),
 
+      caption:
+        cleanText(
+          resource.caption ||
+          resource.caption_es ||
+          resource.descripcion ||
+          resource.description ||
+          resource.text ||
+          ""
+        ),
 
-      case "video":
-        renderVideoBlock(
-          container,
-          block,
-          index
-        );
-        break;
+      items
 
-
-      case "pdf":
-        renderPdfBlock(
-          container,
-          block,
-          index
-        );
-        break;
-
-
-      case "sketchfab":
-        renderSketchfabBlock(
-          container,
-          block,
-          index
-        );
-        break;
-
-
-      case "text":
-        renderTextBlock(
-          container,
-          block,
-          index
-        );
-        break;
-
-
-      default:
-
-        console.warn(
-          "[Baal Studio] Tipo de bloque no reconocido:",
-          type,
-          block
-        );
-
-        renderUnknownBlock(
-          container,
-          block,
-          index
-        );
-
-        break;
-
-    }
-
+    };
   }
 
 
-  /* ---------------------------------------------------------
-     IMAGEN
-     --------------------------------------------------------- */
+  /* ----------------------------------------------------------
+     EXTRAER ITEMS
+     ---------------------------------------------------------- */
 
-  function renderImageBlock(
-    container,
-    block,
-    index
+  function extractItems(
+    resource
   ) {
 
-    const url =
-      block.url ||
-      block.src;
+    const values = [
 
+      resource.items,
+
+      resource.images,
+
+      resource.imagenes,
+
+      resource.files,
+
+      resource.archivos,
+
+      resource.gallery,
+
+      resource.galeria
+
+    ];
+
+
+    for (
+      const value of values
+    ) {
+
+      if (
+        Array.isArray(value)
+      ) {
+
+        return value
+          .map(
+            item =>
+              normalizeResource(
+                item
+              )
+          )
+          .filter(Boolean);
+      }
+    }
+
+
+    return [];
+  }
+
+
+  /* ----------------------------------------------------------
+     RENDERIZAR RECURSOS
+     ---------------------------------------------------------- */
+
+  function renderResources(
+    project
+  ) {
+
+    const container =
+      document.getElementById(
+        "visor-resources"
+      );
+
+
+    if (!container) {
+      return;
+    }
+
+
+    container.innerHTML = "";
+
+
+    const resources =
+      project.resources || [];
+
+
+    if (!resources.length) {
+
+      const message =
+        document.createElement("p");
+
+      message.className =
+        "visor-resource-caption";
+
+      message.textContent =
+        "No hay recursos adicionales disponibles.";
+
+      container.appendChild(
+        message
+      );
+
+      return;
+    }
+
+
+    resources.forEach(
+      resource => {
+
+        renderResource(
+          container,
+          resource
+        );
+
+      }
+    );
+  }
+
+
+  /* ----------------------------------------------------------
+     RENDERIZAR UN RECURSO
+     ---------------------------------------------------------- */
+
+  function renderResource(
+    container,
+    resource
+  ) {
+
+    if (!resource) {
+      return;
+    }
+
+
+    const wrapper =
+      document.createElement("article");
+
+    wrapper.className =
+      "visor-resource";
+
+
+    /*
+     * Cabecera del recurso
+     */
+
+    if (
+      resource.title ||
+      resource.caption
+    ) {
+
+      const header =
+        document.createElement("div");
+
+      header.className =
+        "visor-resource-header";
+
+
+      if (resource.title) {
+
+        const title =
+          document.createElement("h2");
+
+        title.className =
+          "visor-resource-title";
+
+        title.textContent =
+          resource.title;
+
+        header.appendChild(
+          title
+        );
+      }
+
+
+      if (resource.caption) {
+
+        const caption =
+          document.createElement("p");
+
+        caption.className =
+          "visor-resource-caption";
+
+        caption.textContent =
+          resource.caption;
+
+        header.appendChild(
+          caption
+        );
+      }
+
+
+      wrapper.appendChild(
+        header
+      );
+    }
+
+
+    /*
+     * GALERÍA
+     */
+
+    if (
+      resource.items &&
+      resource.items.length > 1
+    ) {
+
+      renderGallery(
+        wrapper,
+        resource.items
+      );
+
+      container.appendChild(
+        wrapper
+      );
+
+      return;
+    }
+
+
+    /*
+     * RECURSO INDIVIDUAL
+     */
+
+    const type =
+      resource.type;
+
+
+    if (
+      type.includes("image") ||
+      type === "imagen" ||
+      type === "photo" ||
+      type === "fotografia"
+    ) {
+
+      renderImage(
+        wrapper,
+        resource.url
+      );
+
+    } else if (
+      type.includes("video")
+    ) {
+
+      renderVideo(
+        wrapper,
+        resource.url
+      );
+
+    } else if (
+      type.includes("pdf") ||
+      type.includes("document")
+    ) {
+
+      renderDocument(
+        wrapper,
+        resource.url
+      );
+
+    } else if (
+      type.includes("sketchfab") ||
+      type.includes("iframe") ||
+      type.includes("embed")
+    ) {
+
+      renderEmbed(
+        wrapper,
+        resource.url
+      );
+
+    } else if (
+      resource.url
+    ) {
+
+      renderImage(
+        wrapper,
+        resource.url
+      );
+    }
+
+
+    container.appendChild(
+      wrapper
+    );
+  }
+
+
+  /* ----------------------------------------------------------
+     IMAGEN
+     ---------------------------------------------------------- */
+
+  function renderImage(
+    container,
+    url
+  ) {
 
     if (!url) {
       return;
     }
 
 
-    const section =
-      createBlockContainer();
+    const media =
+      document.createElement("div");
 
-
-    addBlockTitle(
-      section,
-      block.title ||
-      block.text
-    );
-
-
-    const frame =
-      document.createElement(
-        "div"
-      );
-
-
-    frame.className =
-      "project-image-frame protected-media";
+    media.className =
+      "visor-resource-image protected-media";
 
 
     const image =
-      document.createElement(
-        "img"
-      );
-
+      document.createElement("img");
 
     image.className =
       "protected-image";
 
-
     image.src =
       url;
-
-
-    image.alt =
-      block.file ||
-      block.reference ||
-      `Imagen ${index + 1}`;
-
 
     image.loading =
       "lazy";
 
+    image.decoding =
+      "async";
 
     image.draggable =
       false;
 
 
-    frame.appendChild(
+    media.appendChild(
       image
     );
 
-
-    section.appendChild(
-      frame
-    );
-
-
     container.appendChild(
-      section
+      media
     );
-
   }
 
 
-  /* ---------------------------------------------------------
-     CARRUSEL
-     --------------------------------------------------------- */
+  /* ----------------------------------------------------------
+     GALERÍA / CARRUSEL
+     ---------------------------------------------------------- */
 
-  function renderCarouselBlock(
+  function renderGallery(
     container,
-    block,
-    index
+    items
   ) {
 
-    const images =
-      Array.isArray(block.images)
-        ? block.images
-        : [];
+    const gallery =
+      document.createElement("div");
 
-
-    const validImages =
-      images.filter(
-        image =>
-          image &&
-          (
-            image.url ||
-            image.src
-          )
-      );
-
-
-    if (!validImages.length) {
-      return;
-    }
-
-
-    const section =
-      createBlockContainer();
-
-
-    addBlockTitle(
-      section,
-      block.text ||
-      block.title
-    );
-
-
-    const carousel =
-      document.createElement(
-        "div"
-      );
-
-
-    carousel.className =
-      "project-carousel";
+    gallery.className =
+      "visor-gallery";
 
 
     const stage =
-      document.createElement(
-        "div"
-      );
-
+      document.createElement("div");
 
     stage.className =
-      "project-carousel-stage";
+      "visor-gallery-stage";
 
 
     const image =
-      document.createElement(
-        "img"
-      );
-
+      document.createElement("img");
 
     image.className =
-      "project-carousel-image protected-image";
-
+      "visor-gallery-image protected-image";
 
     image.draggable =
       false;
 
 
-    stage.appendChild(
-      image
-    );
+    const controls =
+      document.createElement("div");
+
+    controls.className =
+      "visor-gallery-controls";
 
 
     const previous =
-      document.createElement(
-        "button"
-      );
+      document.createElement("button");
 
+    previous.className =
+      "visor-gallery-button";
 
     previous.type =
       "button";
 
-
-    previous.className =
-      "project-carousel-button prev";
-
-
-    previous.innerHTML =
-      "←";
+    previous.textContent =
+      "← Anterior";
 
 
-    previous.setAttribute(
-      "aria-label",
-      "Imagen anterior"
-    );
+    const counter =
+      document.createElement("span");
+
+    counter.className =
+      "visor-gallery-counter";
 
 
     const next =
-      document.createElement(
-        "button"
-      );
+      document.createElement("button");
 
+    next.className =
+      "visor-gallery-button";
 
     next.type =
       "button";
 
-
-    next.className =
-      "project-carousel-button next";
-
-
-    next.innerHTML =
-      "→";
-
-
-    next.setAttribute(
-      "aria-label",
-      "Imagen siguiente"
-    );
-
-
-    stage.appendChild(
-      previous
-    );
-
-
-    stage.appendChild(
-      next
-    );
-
-
-    carousel.appendChild(
-      stage
-    );
-
-
-    const counter =
-      document.createElement(
-        "div"
-      );
-
-
-    counter.className =
-      "project-carousel-counter";
-
-
-    carousel.appendChild(
-      counter
-    );
-
-
-    if (block.text) {
-
-      const caption =
-        document.createElement(
-          "div"
-        );
-
-
-      caption.className =
-        "project-carousel-caption";
-
-
-      caption.textContent =
-        block.text;
-
-
-      carousel.appendChild(
-        caption
-      );
-
-    }
+    next.textContent =
+      "Siguiente →";
 
 
     let current =
       0;
 
 
-    function updateCarousel() {
+    function getImageUrl(
+      item
+    ) {
 
-      const currentImage =
-        validImages[current];
+      if (
+        typeof item ===
+        "string"
+      ) {
+        return item;
+      }
+
+      return extractUrl(
+        item
+      );
+    }
+
+
+    function update() {
+
+      const url =
+        getImageUrl(
+          items[current]
+        );
 
 
       image.src =
-        currentImage.url ||
-        currentImage.src;
-
-
-      image.alt =
-        currentImage.file ||
-        currentImage.reference ||
-        "";
+        url;
 
 
       counter.textContent =
-        `${String(current + 1).padStart(2, "0")} / ${String(validImages.length).padStart(2, "0")}`;
-
+        `${current + 1} / ${items.length}`;
     }
 
 
@@ -1125,17 +1195,15 @@
       "click",
       () => {
 
-        current--;
+        current =
+          (
+            current -
+            1 +
+            items.length
+          ) %
+          items.length;
 
-        if (
-          current < 0
-        ) {
-          current =
-            validImages.length - 1;
-        }
-
-        updateCarousel();
-
+        update();
       }
     );
 
@@ -1144,829 +1212,373 @@
       "click",
       () => {
 
-        current++;
+        current =
+          (
+            current +
+            1
+          ) %
+          items.length;
 
-        if (
-          current >=
-          validImages.length
-        ) {
-          current = 0;
-        }
-
-        updateCarousel();
-
+        update();
       }
     );
 
 
-    updateCarousel();
+    stage.appendChild(
+      image
+    );
 
 
-    section.appendChild(
-      carousel
+    controls.appendChild(
+      previous
+    );
+
+    controls.appendChild(
+      counter
+    );
+
+    controls.appendChild(
+      next
+    );
+
+
+    gallery.appendChild(
+      stage
+    );
+
+    gallery.appendChild(
+      controls
     );
 
 
     container.appendChild(
-      section
+      gallery
     );
 
+
+    update();
   }
 
 
-  /* ---------------------------------------------------------
-     VÍDEO
-     --------------------------------------------------------- */
+  /* ----------------------------------------------------------
+     VIDEO
+     ---------------------------------------------------------- */
 
-  function renderVideoBlock(
+  function renderVideo(
     container,
-    block,
-    index
+    url
   ) {
-
-    const value =
-      block.value ||
-      block.url ||
-      block.src;
-
-
-    if (!value) {
-      return;
-    }
-
-
-    const embed =
-      convertVideoToEmbed(
-        value
-      );
-
-
-    if (!embed) {
-      return;
-    }
-
-
-    const section =
-      createBlockContainer();
-
-
-    addBlockTitle(
-      section,
-      block.title
-    );
-
-
-    const frame =
-      document.createElement(
-        "div"
-      );
-
-
-    frame.className =
-      "project-video-frame";
-
-
-    const iframe =
-      document.createElement(
-        "iframe"
-      );
-
-
-    iframe.src =
-      embed;
-
-
-    iframe.loading =
-      "lazy";
-
-
-    iframe.allow =
-      "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-
-
-    iframe.allowFullscreen =
-      true;
-
-
-    frame.appendChild(
-      iframe
-    );
-
-
-    section.appendChild(
-      frame
-    );
-
-
-    container.appendChild(
-      section
-    );
-
-  }
-
-
-  /* ---------------------------------------------------------
-     PDF
-     --------------------------------------------------------- */
-
-  function renderPdfBlock(
-    container,
-    block,
-    index
-  ) {
-
-    const url =
-      block.url;
-
 
     if (!url) {
       return;
     }
 
 
-    const section =
-      createBlockContainer();
+    const wrapper =
+      document.createElement("div");
+
+    wrapper.className =
+      "visor-video";
 
 
-    addBlockTitle(
-      section,
-      block.title ||
-      block.file
+    const video =
+      document.createElement("video");
+
+    video.src =
+      url;
+
+    video.controls =
+      true;
+
+    video.preload =
+      "metadata";
+
+    video.playsInline =
+      true;
+
+
+    wrapper.appendChild(
+      video
     );
 
+    container.appendChild(
+      wrapper
+    );
+  }
 
-    const frame =
-      document.createElement(
-        "div"
-      );
+
+  /* ----------------------------------------------------------
+     PDF
+     ---------------------------------------------------------- */
+
+  function renderDocument(
+    container,
+    url
+  ) {
+
+    if (!url) {
+      return;
+    }
 
 
-    frame.className =
-      "project-pdf-frame";
+    const wrapper =
+      document.createElement("div");
+
+    wrapper.className =
+      "visor-document";
 
 
     const iframe =
-      document.createElement(
-        "iframe"
-      );
-
+      document.createElement("iframe");
 
     iframe.src =
       url;
 
+    iframe.loading =
+      "lazy";
+
+    iframe.title =
+      "Documento del proyecto";
+
+
+    wrapper.appendChild(
+      iframe
+    );
+
+    container.appendChild(
+      wrapper
+    );
+  }
+
+
+  /* ----------------------------------------------------------
+     EMBED / SKETCHFAB
+     ---------------------------------------------------------- */
+
+  function renderEmbed(
+    container,
+    url
+  ) {
+
+    if (!url) {
+      return;
+    }
+
+
+    const wrapper =
+      document.createElement("div");
+
+    wrapper.className =
+      "visor-embed";
+
+
+    const iframe =
+      document.createElement("iframe");
+
+    iframe.src =
+      url;
 
     iframe.loading =
       "lazy";
 
+    iframe.allow =
+      "autoplay; fullscreen; xr-spatial-tracking";
+
+    iframe.allowFullscreen =
+      true;
 
     iframe.title =
-      block.file ||
-      "Documento PDF";
+      "Visor del proyecto";
 
 
-    frame.appendChild(
+    wrapper.appendChild(
       iframe
     );
 
-
-    section.appendChild(
-      frame
-    );
-
-
     container.appendChild(
-      section
+      wrapper
     );
-
   }
 
 
-  /* ---------------------------------------------------------
-     SKETCHFAB
-     --------------------------------------------------------- */
-
-  function renderSketchfabBlock(
-    container,
-    block,
-    index
-  ) {
-
-    const urls =
-      Array.isArray(block.urls)
-        ? block.urls
-        : [];
-
-
-    if (!urls.length) {
-      return;
-    }
-
-
-    urls.forEach(
-      (url, modelIndex) => {
-
-        const section =
-          createBlockContainer();
-
-
-        if (urls.length > 1) {
-
-          addBlockTitle(
-            section,
-            `Modelo 3D ${modelIndex + 1}`
-          );
-
-        } else {
-
-          addBlockTitle(
-            section,
-            block.title ||
-            "Modelo 3D"
-          );
-
-        }
-
-
-        const frame =
-          document.createElement(
-            "div"
-          );
-
-
-        frame.className =
-          "project-model-frame";
-
-
-        const iframe =
-          document.createElement(
-            "iframe"
-          );
-
-
-        iframe.src =
-          url;
-
-
-        iframe.loading =
-          "lazy";
-
-
-        iframe.allowFullscreen =
-          true;
-
-
-        iframe.allow =
-          "autoplay; fullscreen; xr-spatial-tracking";
-
-
-        frame.appendChild(
-          iframe
-        );
-
-
-        section.appendChild(
-          frame
-        );
-
-
-        const link =
-          document.createElement(
-            "a"
-          );
-
-
-        link.className =
-          "project-model-link";
-
-
-        link.href =
-          url;
-
-
-        link.target =
-          "_blank";
-
-
-        link.rel =
-          "noopener noreferrer";
-
-
-        link.textContent =
-          "Abrir modelo 3D";
-
-
-        section.appendChild(
-          link
-        );
-
-
-        container.appendChild(
-          section
-        );
-
-      }
-    );
-
-  }
-
-
-  /* ---------------------------------------------------------
-     TEXTO
-     --------------------------------------------------------- */
-
-  function renderTextBlock(
-    container,
-    block,
-    index
-  ) {
-
-    const text =
-      block.text ||
-      block.value;
-
-
-    if (!text) {
-      return;
-    }
-
-
-    const section =
-      createBlockContainer();
-
-
-    addBlockTitle(
-      section,
-      block.title
-    );
-
-
-    const paragraph =
-      document.createElement(
-        "p"
-      );
-
-
-    paragraph.className =
-      "project-description";
-
-
-    paragraph.textContent =
-      text;
-
-
-    section.appendChild(
-      paragraph
-    );
-
-
-    container.appendChild(
-      section
-    );
-
-  }
-
-
-  /* ---------------------------------------------------------
-     BLOQUE DESCONOCIDO
-     --------------------------------------------------------- */
-
-  function renderUnknownBlock(
-    container,
-    block,
-    index
-  ) {
-
-    if (!block.url) {
-      return;
-    }
-
-
-    if (
-      isImageUrl(
-        block.url
-      )
-    ) {
-
-      renderImageBlock(
-        container,
-        block,
-        index
-      );
-
-    }
-
-  }
-
-
-  /* ---------------------------------------------------------
-     CONTENEDOR DE BLOQUE
-     --------------------------------------------------------- */
-
-  function createBlockContainer() {
-
-    const section =
-      document.createElement(
-        "article"
-      );
-
-
-    section.className =
-      "project-block";
-
-
-    return section;
-
-  }
-
-
-  /* ---------------------------------------------------------
-     TÍTULO DE BLOQUE
-     --------------------------------------------------------- */
-
-  function addBlockTitle(
-    section,
-    title
-  ) {
-
-    if (
-      !title ||
-      !String(title).trim()
-    ) {
-      return;
-    }
-
-
-    const heading =
-      document.createElement(
-        "h2"
-      );
-
-
-    heading.className =
-      "project-block-title";
-
-
-    heading.textContent =
-      title;
-
-
-    section.appendChild(
-      heading
-    );
-
-  }
-
-
-  /* ---------------------------------------------------------
-     RECURSOS EXTERNOS
-     --------------------------------------------------------- */
-
-  function renderResources(
-    project
-  ) {
-
-    const container =
-      document.getElementById(
-        "project-resources"
-      );
-
-
-    const section =
-      document.getElementById(
-        "project-resources-section"
-      );
-
-
-    if (
-      !container ||
-      !section
-    ) {
-      return;
-    }
-
-
-    container.innerHTML =
-      "";
-
-
-    let hasResources =
-      false;
-
-
-    const articles =
-      Array.isArray(project.articles)
-        ? project.articles
-        : [];
-
-
-    articles.forEach(
-      (url, index) => {
-
-        if (!url) {
-          return;
-        }
-
-
-        hasResources =
-          true;
-
-
-        container.appendChild(
-          createResourceLink(
-            url,
-            `Artículo ${index + 1}`,
-            "Article"
-          )
-        );
-
-      }
-    );
-
-
-    if (
-      project.video &&
-      !hasVideoBlock(
-        project
-      )
-    ) {
-
-      hasResources =
-        true;
-
-
-      container.appendChild(
-        createResourceLink(
-          project.video,
-          "Vídeo",
-          "Video"
-        )
-      );
-
-    }
-
-
-    if (
-      !hasResources
-    ) {
-
-      section.remove();
-
-    }
-
-  }
-
-
-  function createResourceLink(
-    url,
-    spanish,
-    english
-  ) {
-
-    const link =
-      document.createElement(
-        "a"
-      );
-
-
-    link.className =
-      "project-resource-link";
-
-
-    link.href =
-      url;
-
-
-    link.target =
-      "_blank";
-
-
-    link.rel =
-      "noopener noreferrer";
-
-
-    link.innerHTML =
-      `
-        <span class="project-resource-link-main">
-          ${escapeHtml(spanish)}
-        </span>
-
-        <span class="project-resource-link-en">
-          ${escapeHtml(english)}
-        </span>
-      `;
-
-
-    return link;
-
-  }
-
-
-  /* ---------------------------------------------------------
-     VÍDEO
-     --------------------------------------------------------- */
-
-  function convertVideoToEmbed(
-    url
-  ) {
-
-    try {
-
-      const parsed =
-        new URL(url);
-
-
-      if (
-        parsed.hostname.includes(
-          "youtu.be"
-        )
-      ) {
-
-        const id =
-          parsed.pathname
-            .replace(
-              /^\/+/,
-              ""
-            )
-            .split("/")[0];
-
-
-        return id
-          ? `https://www.youtube.com/embed/${id}`
-          : "";
-
-      }
-
-
-      if (
-        parsed.hostname.includes(
-          "youtube.com"
-        )
-      ) {
-
-        const id =
-          parsed.searchParams.get(
-            "v"
-          );
-
-
-        if (id) {
-
-          return (
-            `https://www.youtube.com/embed/${id}`
-          );
-
-        }
-
-
-        if (
-          parsed.pathname.startsWith(
-            "/embed/"
-          )
-        ) {
-
-          return url;
-
-        }
-
-      }
-
-
-      return "";
-
-    } catch {
-
-      return "";
-
-    }
-
-  }
-
-
-  /* ---------------------------------------------------------
-     DETECTAR VÍDEO YA REPRESENTADO
-     --------------------------------------------------------- */
-
-  function hasVideoBlock(
-    project
-  ) {
-
-    return Array.isArray(
-      project.blocks
-    ) &&
-    project.blocks.some(
-      block =>
-        String(
-          block?.type ||
-          ""
-        ).toLowerCase() ===
-        "video"
-    );
-
-  }
-
-
-  /* ---------------------------------------------------------
-     PORTADA
-     --------------------------------------------------------- */
-
-  function extractCover(
-    project
-  ) {
-
-    if (
-      project.cover &&
-      typeof project.cover === "object"
-    ) {
-
-      return (
-        project.cover.url ||
-        project.cover.signedUrl ||
-        ""
-      );
-
-    }
-
-
-    if (
-      typeof project.cover === "string"
-    ) {
-
-      return project.cover;
-
-    }
-
-
-    return (
-      project.coverUrl ||
-      project.cover_url ||
-      project.imageUrl ||
-      project.image_url ||
-      ""
-    );
-
-  }
-
-
-  /* ---------------------------------------------------------
-     IMAGEN
-     --------------------------------------------------------- */
-
-  function isImageUrl(
+  /* ----------------------------------------------------------
+     EXTRAER URL
+     ---------------------------------------------------------- */
+
+  function extractUrl(
     value
   ) {
 
     if (
-      typeof value !== "string"
+      typeof value ===
+      "string"
     ) {
-      return false;
+
+      return value.trim();
     }
 
 
-    const url =
-      value
+    if (
+      !value ||
+      typeof value !==
+      "object"
+    ) {
+
+      return "";
+    }
+
+
+    const keys = [
+
+      "url",
+      "signedUrl",
+      "signed_url",
+      "publicUrl",
+      "public_url",
+      "href",
+      "src"
+
+    ];
+
+
+    for (
+      const key of keys
+    ) {
+
+      if (
+        typeof value[key] ===
+        "string"
+      ) {
+
+        return value[key].trim();
+      }
+    }
+
+
+    return "";
+  }
+
+
+  /* ----------------------------------------------------------
+     DETECTAR TIPO
+     ---------------------------------------------------------- */
+
+  function detectResourceType(
+    url,
+    fallback = ""
+  ) {
+
+    if (!url) {
+      return fallback || "image";
+    }
+
+
+    const clean =
+      url
         .split("?")[0]
+        .split("#")[0]
         .toLowerCase();
 
 
-    return (
-      url.endsWith(".jpg") ||
-      url.endsWith(".jpeg") ||
-      url.endsWith(".png") ||
-      url.endsWith(".webp") ||
-      url.endsWith(".avif") ||
-      url.endsWith(".gif") ||
-      url.includes("/storage/")
-    );
+    if (
+      clean.endsWith(".jpg") ||
+      clean.endsWith(".jpeg") ||
+      clean.endsWith(".png") ||
+      clean.endsWith(".webp") ||
+      clean.endsWith(".avif") ||
+      clean.endsWith(".gif")
+    ) {
+      return "image";
+    }
 
+
+    if (
+      clean.endsWith(".mp4") ||
+      clean.endsWith(".webm") ||
+      clean.endsWith(".mov")
+    ) {
+      return "video";
+    }
+
+
+    if (
+      clean.endsWith(".pdf")
+    ) {
+      return "pdf";
+    }
+
+
+    if (
+      clean.includes("sketchfab.com")
+    ) {
+      return "sketchfab";
+    }
+
+
+    return fallback || "image";
   }
 
 
-  /* ---------------------------------------------------------
+  /* ----------------------------------------------------------
      TEXTO
-     --------------------------------------------------------- */
+     ---------------------------------------------------------- */
 
-  function cleanTitle(
+  function cleanText(
     value
   ) {
 
-    return String(
-      value || ""
-    )
+    if (
+      value === null ||
+      value === undefined
+    ) {
+      return "";
+    }
 
-      .replace(
-        /\s*[.!?]+\s*$/,
+
+    if (
+      Array.isArray(value)
+    ) {
+
+      return value
+        .map(
+          item =>
+            cleanText(item)
+        )
+        .filter(Boolean)
+        .join(", ");
+    }
+
+
+    if (
+      typeof value ===
+      "object"
+    ) {
+
+      return (
+        value.es ||
+        value.ES ||
+        value.value ||
+        value.text ||
+        value.title ||
         ""
       )
+        .toString()
+        .trim();
+    }
 
+
+    return String(value)
       .replace(
         /\s+/g,
         " "
       )
-
       .trim();
-
   }
 
+
+  /* ----------------------------------------------------------
+     SET TEXT
+     ---------------------------------------------------------- */
 
   function setText(
     id,
@@ -1978,155 +1590,60 @@
         id
       );
 
-
-    if (element) {
-      element.textContent =
-        value || "";
+    if (!element) {
+      return;
     }
 
+
+    element.textContent =
+      value || "";
   }
 
 
-  /* ---------------------------------------------------------
-     ESCAPADO
-     --------------------------------------------------------- */
-
-  function escapeHtml(
-    value
-  ) {
-
-    return String(
-      value
-    )
-
-      .replace(
-        /&/g,
-        "&amp;"
-      )
-
-      .replace(
-        /</g,
-        "&lt;"
-      )
-
-      .replace(
-        />/g,
-        "&gt;"
-      )
-
-      .replace(
-        /"/g,
-        "&quot;"
-      )
-
-      .replace(
-        /'/g,
-        "&#039;"
-      );
-
-  }
-
-
-  /* ---------------------------------------------------------
+  /* ----------------------------------------------------------
      ERROR
-     --------------------------------------------------------- */
+     ---------------------------------------------------------- */
 
   function showError(
     message
   ) {
 
-    const page =
+    const loading =
       document.getElementById(
-        "project-page"
+        "visor-loading"
+      );
+
+    const error =
+      document.getElementById(
+        "visor-error"
       );
 
 
-    if (!page) {
-      return;
+    if (loading) {
+      loading.style.display = "none";
     }
 
 
-    page.innerHTML =
-      `
-        <section class="project-error">
-          <div class="section-container">
-            ${escapeHtml(message)}
-          </div>
-        </section>
-      `;
+    if (error) {
 
+      error.hidden =
+        false;
+
+
+      const paragraph =
+        error.querySelector(
+          "p"
+        );
+
+
+      if (paragraph) {
+
+        paragraph.textContent =
+          message ||
+          "No ha sido posible cargar el proyecto.";
+      }
+    }
   }
 
-
-  /* ---------------------------------------------------------
-     PROTECCIÓN DE IMÁGENES
-     --------------------------------------------------------- */
-
-  function applyImageProtection() {
-
-    const images =
-      document.querySelectorAll(
-        ".protected-image"
-      );
-
-
-    images.forEach(
-      (image) => {
-
-        image.draggable =
-          false;
-
-
-        image.setAttribute(
-          "draggable",
-          "false"
-        );
-
-
-        image.addEventListener(
-          "dragstart",
-          (event) => {
-
-            event.preventDefault();
-
-          }
-        );
-
-
-        image.addEventListener(
-          "contextmenu",
-          (event) => {
-
-            event.preventDefault();
-
-          }
-        );
-
-      }
-    );
-
-
-    const media =
-      document.querySelectorAll(
-        ".protected-media"
-      );
-
-
-    media.forEach(
-      (element) => {
-
-        element.addEventListener(
-          "contextmenu",
-          (event) => {
-
-            event.preventDefault();
-
-          }
-        );
-
-      }
-    );
-
-  }
 
 })();
