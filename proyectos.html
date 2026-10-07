@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Baal Studio — Proyectos de documentación, análisis y representación digital del patrimonio cultural.">
+  <meta name="theme-color" content="#111111">
+  <title>Proyectos — Baal Studio</title>
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./proyectos.css">
+</head>
+<body>
+  <header class="main-header proyectos-header" id="main-header">
+    <div class="header-inner">
+      <a href="./index.html" class="header-logo-link" aria-label="Baal Studio — Inicio">
+        <img id="site-logo" class="header-logo protected-image" src="" alt="Baal Studio" width="180" height="40" draggable="false">
+      </a>
+      <nav class="desktop-nav" aria-label="Navegación principal">
+        <a href="./index.html" class="nav-link"><span>Inicio</span><span class="nav-link-en">Home</span></a>
+        <a href="./proyectos.html" class="nav-link active" aria-current="page"><span>Proyectos</span><span class="nav-link-en">Projects</span></a>
+        <a href="./about.html" class="nav-link"><span>Sobre mí</span><span class="nav-link-en">About</span></a>
+        <a href="./contact.html" class="nav-link"><span>Contacto</span><span class="nav-link-en">Contact</span></a>
+      </nav>
+      <button class="mobile-menu-button" id="mobile-menu-button" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+      <nav aria-label="Navegación móvil">
+        <a href="./index.html"><span>Inicio</span><small>Home</small></a>
+        <a href="./proyectos.html" aria-current="page"><span>Proyectos</span><small>Projects</small></a>
+        <a href="./about.html"><span>Sobre mí</span><small>About</small></a>
+        <a href="./contact.html"><span>Contacto</span><small>Contact</small></a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="projects-page-header">
+      <div class="section-container projects-header-inner">
+        <div class="projects-header-title">
+          <p class="section-kicker">Proyectos</p>
+          <p class="section-kicker-en">Projects</p>
+          <div class="section-rule"></div>
+        </div>
+        <div class="projects-header-intro">
+          <p class="projects-intro-es">Una selección de trabajos de documentación, análisis y representación digital del patrimonio cultural.</p>
+          <p class="projects-intro-en">A selection of projects focused on the documentation, analysis and digital representation of cultural heritage.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="projects-list-section" aria-label="Listado de proyectos">
+      <div class="section-container" id="projects-grid">
+        <div id="projects-loading" class="projects-loading" aria-live="polite">
+          <span class="projects-loading-label">Cargando proyectos</span>
+          <span class="projects-loading-en">Loading projects</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="projects-empty-state" id="projects-empty-state" aria-hidden="true">
+      <div class="section-container">
+        <p class="projects-empty-title">No hay proyectos disponibles.</p>
+        <p class="projects-empty-en">No projects available.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="main-footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-services">
+          <p>Documentación del Patrimonio · Planimetrías · Mapeados · Levantamiento y Modelado 3D · Reconstrucción Virtual · Fotografía con Drone</p>
+          <p class="footer-services-en">Heritage Documentation · Mapping · 3D Survey · Virtual reconstruction · Drone Photography</p>
+        </div>
+        <div class="footer-nav-column">
+          <a href="./index.html">Inicio · Home</a>
+          <a href="./proyectos.html">Proyectos · Projects</a>
+          <a href="./about.html">Sobre mí · About</a>
+          <a href="./contact.html">Contacto · Contact</a>
+        </div>
+      </div>
+      <div class="footer-identity">
+        <div class="footer-logos">
+          <img id="footer-logo-baal" class="footer-secondary-logo protected-image" src="" alt="Baal Studio" draggable="false">
+          <img id="footer-logo-lns" class="footer-secondary-logo protected-image" src="" alt="LNS" draggable="false">
+        </div>
+        <a href="https://linktr.ee/baalstudio" target="_blank" rel="noopener noreferrer" aria-label="Baal Studio — Redes sociales">
+          <img id="footer-qr" class="footer-qr protected-image" src="" alt="Redes sociales de Baal Studio" width="100" height="100" draggable="false">
+        </a>
+        <a href="https://linktr.ee/baalstudio" class="footer-social-link" target="_blank" rel="noopener noreferrer">RRSS</a>
+      </div>
+      <div class="footer-bottom">
+        <p>© Juan Jesús Lupiáñez Moreno · Baal Studio · Todos los derechos reservados · All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="./script.js"></script>
+  <script src="./proyectos.js"></script>
+</body>
+</html>
