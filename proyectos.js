@@ -1,47 +1,44 @@
-/* ============================================================
-   BAAL STUDIO
-   PROYECTOS.JS
-   LISTADO DINÁMICO DE PROYECTOS
-   ============================================================ */
+/* =========================================================
+   BAAL STUDIO — PROYECTOS
+   proyectos.js
+   ========================================================= */
 
 (() => {
-
   "use strict";
 
-  /* ----------------------------------------------------------
+  /* ---------------------------------------------------------
      PROTECCIÓN CONTRA DOBLE CARGA
-     ---------------------------------------------------------- */
+     --------------------------------------------------------- */
 
-  if (window.__BAAL_PROYECTOS_JS_LOADED__) {
+  if (window.__BAAL_PROYECTOS_LOADED__) {
+    console.warn("[Baal Studio] proyectos.js ya estaba cargado.");
     return;
   }
 
-  window.__BAAL_PROYECTOS_JS_LOADED__ = true;
+  window.__BAAL_PROYECTOS_LOADED__ = true;
 
 
-  /* ----------------------------------------------------------
+  /* ---------------------------------------------------------
      CONFIGURACIÓN
-     ---------------------------------------------------------- */
-
-  const SUPABASE_URL =
-    "https://hlyzyeatnbulyfiiwvsq.supabase.co";
+     --------------------------------------------------------- */
 
   const PROJECTS_FUNCTION =
-    `${SUPABASE_URL}/functions/v1/list-projects`;
+    "https://hlyzyeatnbulyfiiwvsq.supabase.co/functions/v1/list-projects";
 
 
-  /* ----------------------------------------------------------
+  /* ---------------------------------------------------------
      INICIO
-     ---------------------------------------------------------- */
+     --------------------------------------------------------- */
 
-  document.addEventListener("DOMContentLoaded", () => {
-    loadProjectsPage();
-  });
+  document.addEventListener(
+    "DOMContentLoaded",
+    loadProjectsPage
+  );
 
 
-  /* ----------------------------------------------------------
-     CARGAR PROYECTOS
-     ---------------------------------------------------------- */
+  /* ---------------------------------------------------------
+     CARGA PRINCIPAL
+     --------------------------------------------------------- */
 
   async function loadProjectsPage() {
 
@@ -51,8 +48,9 @@
     const loading =
       document.getElementById("projects-loading");
 
-    const empty =
+    const emptyState =
       document.getElementById("projects-empty-state");
+
 
     if (!grid) {
       console.error(
@@ -61,104 +59,95 @@
       return;
     }
 
+
     try {
 
-      console.log(
-        "[Baal Studio] Consultando list-projects..."
-      );
+      if (loading) {
+        loading.style.display = "block";
+      }
+
+      if (emptyState) {
+        emptyState.style.display = "none";
+      }
+
 
       const response =
-        await fetch(PROJECTS_FUNCTION, {
-          method: "GET",
-          cache: "no-store"
-        });
+        await fetch(
+          PROJECTS_FUNCTION,
+          {
+            method: "GET",
+            headers: {
+              "Accept": "application/json"
+            },
+            cache: "no-store"
+          }
+        );
 
-      console.log(
-        "[Baal Studio] list-projects HTTP:",
-        response.status
-      );
 
       if (!response.ok) {
         throw new Error(
-          `HTTP ${response.status}`
+          `list-projects respondió con HTTP ${response.status}`
         );
       }
+
 
       const data =
         await response.json();
 
+
       console.log(
-        "[Baal Studio] Respuesta completa:",
+        "[Baal Studio] Respuesta de list-projects:",
         data
       );
+
 
       const projects =
         normalizeProjectsResponse(data);
 
-      if (!projects.length) {
+
+      const orderedProjects =
+        sortProjects(projects);
+
+
+      grid.innerHTML = "";
+
+
+      if (!orderedProjects.length) {
 
         if (loading) {
           loading.style.display = "none";
         }
 
-        if (empty) {
-          empty.classList.add("visible");
+        if (emptyState) {
+          emptyState.style.display = "block";
         }
-
-        console.warn(
-          "[Baal Studio] No se encontraron proyectos."
-        );
 
         return;
       }
 
-      const normalizedProjects =
-        projects
-          .map(normalizeProject)
-          .filter(Boolean)
-          .sort(sortProjects);
 
-      console.log(
-        "[Baal Studio] Proyectos normalizados:",
-        normalizedProjects
-      );
-
-      grid.innerHTML = "";
-
-      normalizedProjects.forEach(
-        (project, index) => {
+      orderedProjects.forEach(
+        (project) => {
 
           const card =
-            createProjectCard(
-              project,
-              index
-            );
+            createProjectCard(project);
 
           grid.appendChild(card);
+
         }
       );
+
 
       if (loading) {
         loading.style.display = "none";
       }
 
-      if (empty) {
-        empty.classList.remove("visible");
-      }
 
-      /*
-       * Aplicamos la protección existente de Baal Studio
-       * si script.js la proporciona.
-       */
-      if (
-        typeof window.applyProtectionToImages ===
-        "function"
-      ) {
-        window.applyProtectionToImages(grid);
-      }
+      applyImageProtection();
+
 
       console.log(
-        `[Baal Studio] ${normalizedProjects.length} proyectos cargados correctamente.`
+        `[Baal Studio] ${orderedProjects.length} proyectos cargados.`
       );
 
     } catch (error) {
@@ -168,20 +157,36 @@
         error
       );
 
+
       if (loading) {
         loading.style.display = "none";
       }
 
-      if (empty) {
-        empty.classList.add("visible");
+
+      if (emptyState) {
+
+        emptyState.style.display = "block";
+
+        const message =
+          emptyState.querySelector(
+            ".projects-empty-message"
+          );
+
+        if (message) {
+          message.textContent =
+            "No ha sido posible cargar los proyectos en este momento.";
+        }
+
       }
+
     }
+
   }
 
 
-  /* ----------------------------------------------------------
+  /* ---------------------------------------------------------
      NORMALIZAR RESPUESTA
-     ---------------------------------------------------------- */
+     --------------------------------------------------------- */
 
   function normalizeProjectsResponse(data) {
 
@@ -189,141 +194,165 @@
       return [];
     }
 
+
+    let projects = [];
+
+
     if (Array.isArray(data)) {
-      return data;
-    }
 
-    if (Array.isArray(data.projects)) {
-      return data.projects;
-    }
+      projects = data;
 
-    if (Array.isArray(data.data)) {
-      return data.data;
-    }
-
-    if (
-      data.data &&
-      Array.isArray(data.data.projects)
+    } else if (
+      Array.isArray(data.projects)
     ) {
-      return data.data.projects;
+
+      projects = data.projects;
+
+    } else if (
+      Array.isArray(data.data)
+    ) {
+
+      projects = data.data;
+
+    } else if (
+      Array.isArray(data.results)
+    ) {
+
+      projects = data.results;
+
+    } else if (
+      data.project &&
+      typeof data.project === "object"
+    ) {
+
+      projects = [data.project];
+
     }
 
-    return [];
+
+    return projects
+      .map(normalizeProject)
+      .filter(Boolean);
+
   }
 
 
-  /* ----------------------------------------------------------
+  /* ---------------------------------------------------------
      NORMALIZAR PROYECTO
-     ---------------------------------------------------------- */
+     --------------------------------------------------------- */
 
   function normalizeProject(project) {
 
-    if (!project || typeof project !== "object") {
+    if (
+      !project ||
+      typeof project !== "object"
+    ) {
       return null;
     }
 
+
     const rawName =
-      String(
-        project.name ||
-        project.folder ||
-        project.project ||
-        project.slug ||
-        ""
-      ).trim();
+      project.name ||
+      project.folder ||
+      project.folderName ||
+      project.projectName ||
+      project.nombre ||
+      "";
+
 
     if (!rawName) {
       return null;
     }
 
 
-    /*
-     * METADATA PROCEDENTE DE list-projects
-     * list-projects debe obtenerla desde proyecto.txt.
-     */
-
-    const metadata =
-      project.metadata &&
-      typeof project.metadata === "object"
-        ? project.metadata
-        : {};
+    let metadata =
+      project.metadata || {};
 
 
-    /* --------------------------------------------------------
-       TÍTULO
-       -------------------------------------------------------- */
+    if (
+      typeof metadata === "string"
+    ) {
 
-    const title =
-      cleanDisplayText(
-        metadata.titulo ||
-        metadata.title ||
-        metadata.nombre ||
-        metadata.name ||
-        project.titulo ||
-        project.title ||
-        project.nombre ||
-        project.title_es ||
+      try {
+        metadata =
+          JSON.parse(metadata);
+      } catch {
+        metadata = {};
+      }
+
+    }
+
+
+    const displayName =
+      extractProjectTitle(
+        project,
+        metadata,
         rawName
       );
 
 
-    /* --------------------------------------------------------
-       CATEGORÍA
-       -------------------------------------------------------- */
+    const englishTitle =
+      extractFirstValue(
+        project,
+        metadata,
+        [
+          "title_en",
+          "titulo_en",
+          "englishTitle",
+          "english_title",
+          "nombre_en",
+          "name_en"
+        ]
+      );
+
 
     const category =
-      cleanDisplayText(
-        metadata.categoria ||
-        metadata.category ||
-        project.categoria ||
-        project.category ||
-        ""
+      extractFirstValue(
+        project,
+        metadata,
+        [
+          "categoria",
+          "categoría",
+          "category",
+          "tipo",
+          "type"
+        ]
       );
 
-
-    /* --------------------------------------------------------
-       TÉCNICAS
-       -------------------------------------------------------- */
 
     const techniques =
-      cleanDisplayText(
-        metadata.tecnicas ||
-        metadata.técnicas ||
-        metadata.techniques ||
-        project.tecnicas ||
-        project.técnicas ||
-        project.techniques ||
-        ""
+      extractFirstValue(
+        project,
+        metadata,
+        [
+          "tecnicas",
+          "técnicas",
+          "techniques",
+          "tecnica",
+          "técnica",
+          "technique"
+        ]
       );
 
-
-    /* --------------------------------------------------------
-       OBJETIVO
-       -------------------------------------------------------- */
 
     const objective =
-      cleanDisplayText(
-        metadata.objetivo ||
-        metadata.objective ||
-        project.objetivo ||
-        project.objective ||
-        ""
+      extractFirstValue(
+        project,
+        metadata,
+        [
+          "objetivo",
+          "objective",
+          "objectives"
+        ]
       );
 
 
-    /* --------------------------------------------------------
-       ORDEN
-       -------------------------------------------------------- */
-
     const order =
-      getProjectOrder(
+      extractProjectOrder(
         project,
         rawName
       );
 
-
-    /* --------------------------------------------------------
-       PORTADA
-       -------------------------------------------------------- */
 
     const cover =
       extractCover(project);
@@ -331,501 +360,187 @@
 
     return {
 
+      ...project,
+
       rawName,
 
-      displayName:
-        removeFolderOrder(rawName),
+      name:
+        rawName,
 
-      title,
+      displayName,
 
-      category,
+      englishTitle:
+        cleanText(englishTitle),
 
-      techniques,
+      category:
+        cleanText(category),
 
-      objective,
+      techniques:
+        cleanText(techniques),
+
+      objective:
+        cleanText(objective),
 
       order,
 
       cover,
 
-      metadata,
-
-      original:
-        project
+      metadata
 
     };
+
   }
 
 
-  /* ----------------------------------------------------------
-     ORDENAR PROYECTOS
-     ---------------------------------------------------------- */
+  /* ---------------------------------------------------------
+     TÍTULO
+     --------------------------------------------------------- */
 
-  function sortProjects(a, b) {
+  function extractProjectTitle(
+    project,
+    metadata,
+    rawName
+  ) {
 
-    const orderA =
-      Number.isFinite(a.order)
-        ? a.order
-        : 999999;
+    const candidates = [
 
-    const orderB =
-      Number.isFinite(b.order)
-        ? b.order
-        : 999999;
+      metadata?.titulo,
 
-    if (orderA !== orderB) {
-      return orderA - orderB;
+      metadata?.title,
+
+      metadata?.nombre,
+
+      metadata?.name,
+
+      project?.titulo,
+
+      project?.title,
+
+      project?.nombre,
+
+      project?.title_es,
+
+      project?.name_es
+
+    ];
+
+
+    for (
+      const candidate
+      of candidates
+    ) {
+
+      if (
+        candidate !== null &&
+        candidate !== undefined &&
+        String(candidate).trim()
+      ) {
+
+        return cleanProjectTitle(
+          candidate
+        );
+
+      }
+
     }
 
-    return String(a.displayName)
-      .localeCompare(
-        String(b.displayName),
-        "es",
-        {
-          sensitivity: "base"
-        }
-      );
+
+    return cleanProjectTitle(
+      rawName
+    );
+
   }
 
 
-  /* ----------------------------------------------------------
-     OBTENER ORDEN
-     ---------------------------------------------------------- */
+  /* ---------------------------------------------------------
+     LIMPIAR TÍTULO
+     --------------------------------------------------------- */
 
-  function getProjectOrder(
+  function cleanProjectTitle(value) {
+
+    return String(value)
+
+      .replace(
+        /\s*\(\d+\)\s*$/,
+        ""
+      )
+
+      .replace(
+        /\s*[.!?]+\s*$/,
+        ""
+      )
+
+      .replace(
+        /\s+/g,
+        " "
+      )
+
+      .trim();
+
+  }
+
+
+  /* ---------------------------------------------------------
+     ORDEN
+     --------------------------------------------------------- */
+
+  function extractProjectOrder(
     project,
     rawName
   ) {
 
     const directValues = [
 
-      project.order,
+      project?.order,
 
-      project.orden,
+      project?.orden,
 
-      project.position,
+      project?.position,
 
-      project.index
+      project?.priority
 
     ];
 
-    for (const value of directValues) {
+
+    for (
+      const value
+      of directValues
+    ) {
 
       const number =
         Number(value);
 
+
       if (
         Number.isFinite(number)
       ) {
+
         return number;
+
       }
+
     }
 
 
-    /*
-     * Si el backend no devuelve order,
-     * lo obtenemos del final del nombre:
-     *
-     * Ejemplo:
-     * Epigrafias arabes de Granada (01)
-     */
-
     const match =
-      rawName.match(
+      String(rawName).match(
         /\((\d+)\)\s*$/
       );
 
+
     if (match) {
-
-      const number =
-        Number(match[1]);
-
-      if (
-        Number.isFinite(number)
-      ) {
-        return number;
-      }
+      return Number(match[1]);
     }
+
 
     return 999999;
+
   }
 
 
-  /* ----------------------------------------------------------
-     CREAR TARJETA
-     ---------------------------------------------------------- */
-
-  function createProjectCard(
-    project,
-    index
-  ) {
-
-    const card =
-      document.createElement("article");
-
-    card.className =
-      "project-page-card";
-
-
-    /*
-     * La tarjeta completa funciona como enlace.
-     */
-
-    card.setAttribute(
-      "role",
-      "link"
-    );
-
-    card.setAttribute(
-      "tabindex",
-      "0"
-    );
-
-
-    /* --------------------------------------------------------
-       MEDIA
-       -------------------------------------------------------- */
-
-    const media =
-      document.createElement("div");
-
-    media.className =
-      "project-page-card-media protected-media";
-
-
-    const image =
-      document.createElement("img");
-
-    image.className =
-      "protected-image";
-
-    image.alt =
-      project.title ||
-      project.displayName ||
-      "Proyecto Baal Studio";
-
-    image.loading =
-      index < 2
-        ? "eager"
-        : "lazy";
-
-    image.decoding =
-      "async";
-
-    image.draggable =
-      false;
-
-
-    if (project.cover) {
-
-      image.src =
-        project.cover;
-
-      image.dataset.source =
-        "supabase-cover";
-
-      image.addEventListener(
-        "load",
-        () => {
-
-          console.log(
-            `[Baal Studio] Cover cargado: ${project.displayName}`,
-            {
-              width: image.naturalWidth,
-              height: image.naturalHeight
-            }
-          );
-        },
-        {
-          once: true
-        }
-      );
-
-      image.addEventListener(
-        "error",
-        () => {
-
-          console.error(
-            `[Baal Studio] Error cargando cover: ${project.displayName}`,
-            image.src
-          );
-        },
-        {
-          once: true
-        }
-      );
-    }
-
-
-    media.appendChild(image);
-
-
-    /* --------------------------------------------------------
-       INFORMACIÓN
-       -------------------------------------------------------- */
-
-    const info =
-      document.createElement("div");
-
-    info.className =
-      "project-page-card-info";
-
-
-    const header =
-      document.createElement("div");
-
-    header.className =
-      "project-page-card-header";
-
-
-    const kicker =
-      document.createElement("p");
-
-    kicker.className =
-      "project-page-card-kicker";
-
-    kicker.textContent =
-      "PROYECTO";
-
-
-    const title =
-      document.createElement("h2");
-
-    title.className =
-      "project-page-card-title";
-
-    title.textContent =
-      project.title ||
-      project.displayName;
-
-
-    header.appendChild(kicker);
-    header.appendChild(title);
-
-
-    /* --------------------------------------------------------
-       METADATOS
-       SOLO LOS CUATRO CAMPOS SOLICITADOS
-       -------------------------------------------------------- */
-
-    const meta =
-      document.createElement("div");
-
-    meta.className =
-      "project-page-card-meta";
-
-
-    addMetadataRow(
-      meta,
-      "Título",
-      project.title
-    );
-
-    addMetadataRow(
-      meta,
-      "Categoría",
-      project.category
-    );
-
-    addMetadataRow(
-      meta,
-      "Técnicas",
-      project.techniques
-    );
-
-    addMetadataRow(
-      meta,
-      "Objetivo",
-      project.objective
-    );
-
-
-    /* --------------------------------------------------------
-       PIE
-       -------------------------------------------------------- */
-
-    const footer =
-      document.createElement("div");
-
-    footer.className =
-      "project-page-card-footer";
-
-
-    const link =
-      document.createElement("a");
-
-    link.className =
-      "project-page-card-link";
-
-    link.href =
-      createViewerUrl(
-        project.rawName
-      );
-
-    link.innerHTML = `
-      <span class="project-page-card-link-main">
-        Ver proyecto
-      </span>
-      <span class="project-page-card-link-en">
-        View project
-      </span>
-    `;
-
-
-    /*
-     * Evita que el click del enlace
-     * dispare también el click general
-     * de la tarjeta.
-     */
-
-    link.addEventListener(
-      "click",
-      event => {
-        event.stopPropagation();
-      }
-    );
-
-
-    footer.appendChild(link);
-
-
-    /* --------------------------------------------------------
-       ENSAMBLA TARJETA
-       -------------------------------------------------------- */
-
-    info.appendChild(header);
-    info.appendChild(meta);
-    info.appendChild(footer);
-
-    card.appendChild(media);
-    card.appendChild(info);
-
-
-    /* --------------------------------------------------------
-       CLICK EN TODA LA TARJETA
-       -------------------------------------------------------- */
-
-    const openViewer =
-      () => {
-
-        window.location.href =
-          createViewerUrl(
-            project.rawName
-          );
-      };
-
-
-    card.addEventListener(
-      "click",
-      event => {
-
-        /*
-         * Si se ha pulsado un enlace,
-         * dejamos que el enlace funcione.
-         */
-
-        if (
-          event.target.closest("a")
-        ) {
-          return;
-        }
-
-        openViewer();
-      }
-    );
-
-
-    card.addEventListener(
-      "keydown",
-      event => {
-
-        if (
-          event.key === "Enter" ||
-          event.key === " "
-        ) {
-
-          event.preventDefault();
-
-          openViewer();
-        }
-      }
-    );
-
-
-    return card;
-  }
-
-
-  /* ----------------------------------------------------------
-     FILA DE METADATO
-     ---------------------------------------------------------- */
-
-  function addMetadataRow(
-    container,
-    label,
-    value
-  ) {
-
-    const row =
-      document.createElement("div");
-
-    row.className =
-      "project-page-card-meta-item";
-
-
-    const labelElement =
-      document.createElement("span");
-
-    labelElement.className =
-      "project-page-card-meta-label";
-
-    labelElement.textContent =
-      label;
-
-
-    const valueElement =
-      document.createElement("span");
-
-    valueElement.className =
-      "project-page-card-meta-value";
-
-    valueElement.textContent =
-      value ||
-      "—";
-
-
-    row.appendChild(
-      labelElement
-    );
-
-    row.appendChild(
-      valueElement
-    );
-
-    container.appendChild(
-      row
-    );
-  }
-
-
-  /* ----------------------------------------------------------
-     URL DEL VISOR
-     ---------------------------------------------------------- */
-
-  function createViewerUrl(
-    projectName
-  ) {
-
-    return (
-      "./visor.html?project=" +
-      encodeURIComponent(projectName)
-    );
-  }
-
-
-  /* ----------------------------------------------------------
-     EXTRAER PORTADA
-     ---------------------------------------------------------- */
+  /* ---------------------------------------------------------
+     PORTADA
+     --------------------------------------------------------- */
 
   function extractCover(project) {
 
@@ -834,9 +549,34 @@
     }
 
 
-    const candidates = [
+    if (
+      project.cover &&
+      typeof project.cover === "object"
+    ) {
 
-      project.cover,
+      const url =
+        extractUrlFromValue(
+          project.cover
+        );
+
+      if (url) {
+        return url;
+      }
+
+    }
+
+
+    if (
+      typeof project.cover === "string" &&
+      isImageUrl(project.cover)
+    ) {
+
+      return project.cover;
+
+    }
+
+
+    const candidates = [
 
       project.coverUrl,
 
@@ -850,13 +590,22 @@
 
       project.thumbnailUrl,
 
-      project.thumbnail_url
+      project.thumbnail_url,
+
+      project.image,
+
+      project.preview,
+
+      project.previewUrl,
+
+      project.preview_url
 
     ];
 
 
     for (
-      const candidate of candidates
+      const candidate
+      of candidates
     ) {
 
       const url =
@@ -864,39 +613,109 @@
           candidate
         );
 
+
       if (
+        url &&
         isImageUrl(url)
       ) {
+
         return url;
+
       }
+
     }
 
 
-    /*
-     * Búsqueda recursiva por si el backend
-     * devuelve la portada dentro de otro objeto.
-     */
-
-    return findImageUrl(
-      project
+    return (
+      findImageUrl(
+        project,
+        new Set()
+      ) || ""
     );
+
   }
 
 
-  /* ----------------------------------------------------------
-     BUSCAR IMAGEN RECURSIVAMENTE
-     ---------------------------------------------------------- */
+  /* ---------------------------------------------------------
+     EXTRAER URL
+     --------------------------------------------------------- */
+
+  function extractUrlFromValue(value) {
+
+    if (!value) {
+      return "";
+    }
+
+
+    if (
+      typeof value === "string"
+    ) {
+
+      return value.trim();
+
+    }
+
+
+    if (
+      typeof value !== "object"
+    ) {
+
+      return "";
+
+    }
+
+
+    const candidates = [
+
+      value.url,
+
+      value.signedUrl,
+
+      value.signed_url,
+
+      value.publicUrl,
+
+      value.public_url,
+
+      value.href,
+
+      value.src
+
+    ];
+
+
+    for (
+      const candidate
+      of candidates
+    ) {
+
+      if (
+        typeof candidate === "string" &&
+        candidate.trim()
+      ) {
+
+        return candidate.trim();
+
+      }
+
+    }
+
+
+    return "";
+
+  }
+
+
+  /* ---------------------------------------------------------
+     BÚSQUEDA RECURSIVA DE IMAGEN
+     --------------------------------------------------------- */
 
   function findImageUrl(
     value,
-    depth = 0
+    visited
   ) {
 
-    if (
-      depth > 5 ||
-      value === null ||
-      value === undefined
-    ) {
+    if (!value) {
       return "";
     }
 
@@ -908,33 +727,99 @@
       return isImageUrl(value)
         ? value
         : "";
+
     }
 
 
     if (
       typeof value !== "object"
     ) {
+
       return "";
+
+    }
+
+
+    if (
+      visited.has(value)
+    ) {
+
+      return "";
+
+    }
+
+
+    visited.add(value);
+
+
+    if (
+      Array.isArray(value)
+    ) {
+
+      for (
+        const item
+        of value
+      ) {
+
+        const result =
+          findImageUrl(
+            item,
+            visited
+          );
+
+
+        if (result) {
+          return result;
+        }
+
+      }
+
+
+      return "";
+
     }
 
 
     const preferredKeys = [
 
-      "url",
-      "signedUrl",
-      "signed_url",
+      "cover",
+
       "coverUrl",
+
       "cover_url",
+
+      "image",
+
       "imageUrl",
+
       "image_url",
+
+      "thumbnail",
+
       "thumbnailUrl",
-      "thumbnail_url"
+
+      "thumbnail_url",
+
+      "preview",
+
+      "previewUrl",
+
+      "preview_url",
+
+      "url",
+
+      "signedUrl",
+
+      "signed_url",
+
+      "src"
 
     ];
 
 
     for (
-      const key of preferredKeys
+      const key
+      of preferredKeys
     ) {
 
       if (
@@ -947,104 +832,63 @@
         const result =
           findImageUrl(
             value[key],
-            depth + 1
+            visited
           );
+
 
         if (result) {
           return result;
         }
+
       }
+
     }
 
 
     for (
-      const key of Object.keys(value)
+      const key
+      of Object.keys(value)
     ) {
+
+      if (
+        preferredKeys.includes(key)
+      ) {
+        continue;
+      }
+
 
       const result =
         findImageUrl(
           value[key],
-          depth + 1
+          visited
         );
+
 
       if (result) {
         return result;
       }
+
     }
 
 
     return "";
+
   }
 
 
-  /* ----------------------------------------------------------
-     EXTRAER URL
-     ---------------------------------------------------------- */
+  /* ---------------------------------------------------------
+     RECONOCER IMAGEN
+     --------------------------------------------------------- */
 
-  function extractUrlFromValue(
-    value
-  ) {
-
-    if (
-      typeof value === "string"
-    ) {
-      return value.trim();
-    }
-
-
-    if (
-      !value ||
-      typeof value !== "object"
-    ) {
-      return "";
-    }
-
-
-    const keys = [
-
-      "url",
-      "signedUrl",
-      "signed_url",
-      "publicUrl",
-      "public_url",
-      "href",
-      "src"
-
-    ];
-
-
-    for (
-      const key of keys
-    ) {
-
-      if (
-        typeof value[key] ===
-        "string" &&
-        value[key].trim()
-      ) {
-
-        return value[key].trim();
-      }
-    }
-
-
-    return "";
-  }
-
-
-  /* ----------------------------------------------------------
-     COMPROBAR IMAGEN
-     ---------------------------------------------------------- */
-
-  function isImageUrl(
-    value
-  ) {
+  function isImageUrl(value) {
 
     if (
       typeof value !== "string" ||
       !value.trim()
     ) {
+
       return false;
+
     }
 
 
@@ -1056,82 +900,691 @@
 
 
     return (
+
       clean.endsWith(".jpg") ||
+
       clean.endsWith(".jpeg") ||
+
       clean.endsWith(".png") ||
+
       clean.endsWith(".webp") ||
+
       clean.endsWith(".avif") ||
-      clean.endsWith(".gif")
+
+      clean.endsWith(".gif") ||
+
+      clean.includes("/storage/")
+
     );
+
   }
 
 
-  /* ----------------------------------------------------------
-     LIMPIAR TEXTO
-     ---------------------------------------------------------- */
+  /* ---------------------------------------------------------
+     EXTRAER CAMPO
+     --------------------------------------------------------- */
 
-  function cleanDisplayText(
-    value
+  function extractFirstValue(
+    project,
+    metadata,
+    keys
   ) {
+
+    for (
+      const key
+      of keys
+    ) {
+
+      if (
+        metadata &&
+        Object.prototype.hasOwnProperty.call(
+          metadata,
+          key
+        )
+      ) {
+
+        const value =
+          metadata[key];
+
+
+        if (
+          value !== null &&
+          value !== undefined
+        ) {
+
+          if (
+            Array.isArray(value)
+          ) {
+
+            const text =
+              value
+                .map(item => cleanText(item))
+                .filter(Boolean)
+                .join(", ");
+
+            if (text) {
+              return text;
+            }
+
+          } else {
+
+            const text =
+              cleanText(value);
+
+            if (text) {
+              return text;
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+
+    for (
+      const key
+      of keys
+    ) {
+
+      if (
+        project &&
+        Object.prototype.hasOwnProperty.call(
+          project,
+          key
+        )
+      ) {
+
+        const value =
+          project[key];
+
+
+        if (
+          value !== null &&
+          value !== undefined
+        ) {
+
+          if (
+            Array.isArray(value)
+          ) {
+
+            const text =
+              value
+                .map(item => cleanText(item))
+                .filter(Boolean)
+                .join(", ");
+
+            if (text) {
+              return text;
+            }
+
+          } else {
+
+            const text =
+              cleanText(value);
+
+            if (text) {
+              return text;
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+
+    return "";
+
+  }
+
+
+  /* ---------------------------------------------------------
+     LIMPIEZA
+     --------------------------------------------------------- */
+
+  function cleanText(value) {
 
     if (
       value === null ||
       value === undefined
     ) {
+
       return "";
-    }
 
-
-    if (
-      Array.isArray(value)
-    ) {
-
-      return value
-        .map(item =>
-          cleanDisplayText(item)
-        )
-        .filter(Boolean)
-        .join(", ");
-    }
-
-
-    if (
-      typeof value === "object"
-    ) {
-
-      return (
-        value.es ||
-        value.ES ||
-        value.value ||
-        value.text ||
-        value.title ||
-        ""
-      )
-        .toString()
-        .trim();
     }
 
 
     return String(value)
       .replace(/\s+/g, " ")
       .trim();
+
   }
 
 
-  /* ----------------------------------------------------------
-     QUITAR ORDEN DEL NOMBRE DE CARPETA
-     ---------------------------------------------------------- */
+  /* ---------------------------------------------------------
+     ORDENACIÓN
+     --------------------------------------------------------- */
 
-  function removeFolderOrder(
-    name
+  function sortProjects(
+    projects
   ) {
 
-    return String(name)
-      .replace(
-        /\s*\(\d+\)\s*$/,
-        ""
-      )
-      .trim();
+    return [...projects].sort(
+      (a, b) => {
+
+        if (
+          a.order !== b.order
+        ) {
+
+          return (
+            a.order -
+            b.order
+          );
+
+        }
+
+
+        return String(
+          a.displayName ||
+          a.name ||
+          ""
+        ).localeCompare(
+          String(
+            b.displayName ||
+            b.name ||
+            ""
+          ),
+          "es",
+          {
+            sensitivity: "base"
+          }
+        );
+
+      }
+    );
+
   }
+
+
+  /* ---------------------------------------------------------
+     CREAR TARJETA
+     --------------------------------------------------------- */
+
+  function createProjectCard(
+    project
+  ) {
+
+    const article =
+      document.createElement(
+        "article"
+      );
+
+
+    article.className =
+      "project-page-card";
+
+
+    article.dataset.projectName =
+      project.rawName;
+
+
+    const projectUrl =
+      createProjectUrl(
+        project
+      );
+
+
+    article.addEventListener(
+      "click",
+      event => {
+
+        if (
+          event.target.closest(
+            "a"
+          )
+        ) {
+
+          return;
+
+        }
+
+
+        window.location.href =
+          projectUrl;
+
+      }
+    );
+
+
+    article.setAttribute(
+      "tabindex",
+      "0"
+    );
+
+
+    article.addEventListener(
+      "keydown",
+      event => {
+
+        if (
+          event.key === "Enter" ||
+          event.key === " "
+        ) {
+
+          event.preventDefault();
+
+          window.location.href =
+            projectUrl;
+
+        }
+
+      }
+    );
+
+
+    /* -------------------------------------------------------
+       PORTADA
+       ------------------------------------------------------- */
+
+    const media =
+      document.createElement(
+        "div"
+      );
+
+
+    media.className =
+      "project-page-card-media protected-media";
+
+
+    const image =
+      document.createElement(
+        "img"
+      );
+
+
+    image.className =
+      "project-page-card-image protected-image";
+
+
+    image.alt =
+      project.displayName ||
+      "Proyecto Baal Studio";
+
+
+    image.loading =
+      "lazy";
+
+
+    image.decoding =
+      "async";
+
+
+    image.draggable =
+      false;
+
+
+    if (project.cover) {
+
+      image.src =
+        project.cover;
+
+    }
+
+
+    media.appendChild(
+      image
+    );
+
+
+    article.appendChild(
+      media
+    );
+
+
+    /* -------------------------------------------------------
+       INFORMACIÓN
+       ------------------------------------------------------- */
+
+    const info =
+      document.createElement(
+        "div"
+      );
+
+
+    info.className =
+      "project-page-card-info";
+
+
+    /* TÍTULO */
+
+    const title =
+      document.createElement(
+        "h2"
+      );
+
+
+    title.className =
+      "project-page-card-title";
+
+
+    title.textContent =
+      project.displayName;
+
+
+    info.appendChild(
+      title
+    );
+
+
+    /* SUBTÍTULO INGLÉS */
+
+    if (
+      project.englishTitle
+    ) {
+
+      const titleEn =
+        document.createElement(
+          "p"
+        );
+
+
+      titleEn.className =
+        "project-page-card-title-en";
+
+
+      titleEn.textContent =
+        project.englishTitle;
+
+
+      info.appendChild(
+        titleEn
+      );
+
+    }
+
+
+    /* METADATA */
+
+    const metadata =
+      document.createElement(
+        "div"
+      );
+
+
+    metadata.className =
+      "project-page-card-meta";
+
+
+    addMetadataRow(
+      metadata,
+      "Categoría",
+      "Category",
+      project.category
+    );
+
+
+    addMetadataRow(
+      metadata,
+      "Técnicas",
+      "Techniques",
+      project.techniques
+    );
+
+
+    addMetadataRow(
+      metadata,
+      "Objetivo",
+      "Objective",
+      project.objective
+    );
+
+
+    info.appendChild(
+      metadata
+    );
+
+
+    /* ENLACE */
+
+    const link =
+      document.createElement(
+        "a"
+      );
+
+
+    link.className =
+      "project-page-card-link";
+
+
+    link.href =
+      projectUrl;
+
+
+    link.innerHTML = `
+      <span class="project-page-card-link-main">
+        Ver proyecto
+      </span>
+      <span class="project-page-card-link-en">
+        View project
+      </span>
+    `;
+
+
+    link.setAttribute(
+      "aria-label",
+      `Ver proyecto ${project.displayName}`
+    );
+
+
+    info.appendChild(
+      link
+    );
+
+
+    article.appendChild(
+      info
+    );
+
+
+    return article;
+
+  }
+
+
+  /* ---------------------------------------------------------
+     FILA DE METADATA
+     --------------------------------------------------------- */
+
+  function addMetadataRow(
+    container,
+    spanish,
+    english,
+    value
+  ) {
+
+    if (!value) {
+      return;
+    }
+
+
+    const row =
+      document.createElement(
+        "div"
+      );
+
+
+    row.className =
+      "project-page-card-meta-row";
+
+
+    const label =
+      document.createElement(
+        "div"
+      );
+
+
+    label.className =
+      "project-page-card-meta-label";
+
+
+    label.innerHTML = `
+      <span>${escapeHtml(spanish)}</span>
+      <small>${escapeHtml(english)}</small>
+    `;
+
+
+    const content =
+      document.createElement(
+        "div"
+      );
+
+
+    content.className =
+      "project-page-card-meta-value";
+
+
+    content.textContent =
+      value;
+
+
+    row.appendChild(
+      label
+    );
+
+
+    row.appendChild(
+      content
+    );
+
+
+    container.appendChild(
+      row
+    );
+
+  }
+
+
+  /* ---------------------------------------------------------
+     URL DEL VISOR
+     --------------------------------------------------------- */
+
+  function createProjectUrl(
+    project
+  ) {
+
+    const rawName =
+      project.rawName ||
+      project.name ||
+      "";
+
+
+    return (
+      "./visor.html?project=" +
+      encodeURIComponent(
+        rawName
+      )
+    );
+
+  }
+
+
+  /* ---------------------------------------------------------
+     ESCAPAR HTML
+     --------------------------------------------------------- */
+
+  function escapeHtml(
+    value
+  ) {
+
+    return String(value)
+
+      .replace(
+        /&/g,
+        "&amp;"
+      )
+
+      .replace(
+        /</g,
+        "&lt;"
+      )
+
+      .replace(
+        />/g,
+        "&gt;"
+      )
+
+      .replace(
+        /"/g,
+        "&quot;"
+      )
+
+      .replace(
+        /'/g,
+        "&#039;"
+      );
+
+  }
+
+
+  /* ---------------------------------------------------------
+     PROTECCIÓN DE IMÁGENES
+     --------------------------------------------------------- */
+
+  function applyImageProtection() {
+
+    document
+      .querySelectorAll(
+        ".protected-image"
+      )
+      .forEach(
+        image => {
+
+          image.draggable =
+            false;
+
+
+          image.addEventListener(
+            "dragstart",
+            event => {
+              event.preventDefault();
+            }
+          );
+
+
+          image.addEventListener(
+            "contextmenu",
+            event => {
+              event.preventDefault();
+            }
+          );
+
+        }
+      );
+
+
+    document
+      .querySelectorAll(
+        ".protected-media"
+      )
+      .forEach(
+        media => {
+
+          media.addEventListener(
+            "contextmenu",
+            event => {
+              event.preventDefault();
+            }
+          );
+
+        }
+      );
+
+  }
+
 
 })();
