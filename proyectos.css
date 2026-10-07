@@ -1,0 +1,947 @@
+/* ============================================================
+   BAAL STUDIO
+   PROYECTOS.CSS
+   ESTILOS ESPECÍFICOS PARA LA PÁGINA "PROYECTOS"
+   ============================================================ */
+
+
+/* ------------------------------------------------------------
+   HEADER
+   ------------------------------------------------------------ */
+
+.proyectos-header {
+  background-color: #111111 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+
+
+/* ------------------------------------------------------------
+   CABECERA DE LA PÁGINA
+   ------------------------------------------------------------ */
+
+.projects-page-header {
+
+  background: #111111;
+
+  color: #ffffff;
+
+  padding: 160px 0 100px;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+}
+
+
+.projects-header-inner {
+
+  display: grid;
+
+  grid-template-columns: minmax(260px, 0.85fr) minmax(300px, 1.15fr);
+
+  gap: 80px;
+
+  align-items: end;
+
+}
+
+
+.projects-header-title {
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-start;
+
+}
+
+
+.projects-page-header .section-kicker {
+
+  margin: 0;
+
+  font-family: var(--font-display);
+
+  font-size: clamp(44px, 4.2vw, 58px);
+
+  font-weight: 500;
+
+  line-height: 0.94;
+
+  letter-spacing: -0.025em;
+
+  color: #ffffff;
+
+}
+
+
+.projects-page-header .section-kicker-en {
+
+  margin: 9px 0 0;
+
+  font-family: var(--font-body);
+
+  font-size: 8px;
+
+  font-weight: 500;
+
+  line-height: 1.3;
+
+  letter-spacing: 0.13em;
+
+  text-transform: uppercase;
+
+  color: rgba(255, 255, 255, 0.42);
+
+}
+
+
+.projects-page-header .section-rule {
+
+  width: 52px;
+
+  height: 2px;
+
+  margin-top: 20px;
+
+  background: var(--accent);
+
+}
+
+
+.projects-header-intro {
+
+  max-width: 620px;
+
+  padding-bottom: 3px;
+
+}
+
+
+.projects-intro-es {
+
+  margin: 0;
+
+  font-family: var(--font-body);
+
+  font-size: 15px;
+
+  font-weight: 300;
+
+  line-height: 1.75;
+
+  color: rgba(255, 255, 255, 0.88);
+
+}
+
+
+.projects-intro-en {
+
+  margin: 9px 0 0;
+
+  font-family: var(--font-body);
+
+  font-size: 10px;
+
+  font-weight: 300;
+
+  line-height: 1.65;
+
+  color: rgba(255, 255, 255, 0.38);
+
+}
+
+
+
+/* ------------------------------------------------------------
+   LISTADO DE PROYECTOS
+   ------------------------------------------------------------ */
+
+.projects-list-section {
+
+  background: var(--bg);
+
+  padding: 110px 0 140px;
+
+}
+
+
+.projects-list-section > .section-container {
+
+  width: 100%;
+
+}
+
+
+
+/* ------------------------------------------------------------
+   ESTADO DE CARGA
+   ------------------------------------------------------------ */
+
+.projects-loading {
+
+  min-height: 300px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-align: center;
+
+}
+
+
+.projects-loading-label {
+
+  font-family: var(--font-display);
+
+  font-size: 30px;
+
+  font-weight: 400;
+
+  line-height: 1;
+
+  color: var(--black);
+
+}
+
+
+.projects-loading-en {
+
+  margin-top: 8px;
+
+  font-family: var(--font-body);
+
+  font-size: 8px;
+
+  font-weight: 500;
+
+  letter-spacing: 0.14em;
+
+  text-transform: uppercase;
+
+  color: var(--gray);
+
+}
+
+
+
+/* ------------------------------------------------------------
+   CONTENEDOR QUE RECIBIRÁ LAS TARJETAS
+   ------------------------------------------------------------ */
+
+#projects-grid {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 80px;
+
+}
+
+
+
+/* ------------------------------------------------------------
+   TARJETA DE PROYECTO
+   ------------------------------------------------------------ */
+
+.project-page-card {
+
+  position: relative;
+
+  display: grid;
+
+  grid-template-columns: minmax(0, 1.6fr) minmax(280px, 0.65fr);
+
+  gap: 0;
+
+  width: 100%;
+
+  min-height: 560px;
+
+  background: #ffffff;
+
+  border: 1px solid var(--light-gray);
+
+  overflow: hidden;
+
+  transition:
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+
+}
+
+
+.project-page-card:hover {
+
+  border-color: rgba(176, 138, 87, 0.65);
+
+  box-shadow:
+    0 18px 50px rgba(0, 0, 0, 0.07);
+
+}
+
+
+
+/* ------------------------------------------------------------
+   IMAGEN DEL PROYECTO
+   ------------------------------------------------------------ */
+
+.project-page-card-media {
+
+  position: relative;
+
+  min-height: 560px;
+
+  background: #dedbd4;
+
+  overflow: hidden;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+}
+
+
+.project-page-card-media img {
+
+  display: block;
+
+  width: 100%;
+
+  height: 100%;
+
+  object-fit: contain;
+
+  object-position: center center;
+
+  transform: scale(0.92);
+
+  opacity: 0.96;
+
+  transition:
+    transform 0.8s cubic-bezier(.2, .65, .2, 1),
+    opacity 0.5s ease;
+
+}
+
+
+.project-page-card:hover
+.project-page-card-media img {
+
+  transform: scale(0.94);
+
+  opacity: 1;
+
+}
+
+
+
+/* ------------------------------------------------------------
+   CAPA DE PROTECCIÓN / INTERACCIÓN
+   ------------------------------------------------------------ */
+
+.project-page-card-media::after {
+
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0.02),
+      transparent 25%,
+      transparent 75%,
+      rgba(0, 0, 0, 0.04)
+    );
+
+  pointer-events: none;
+
+}
+
+
+
+/* ------------------------------------------------------------
+   INFORMACIÓN DEL PROYECTO
+   ------------------------------------------------------------ */
+
+.project-page-card-info {
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: space-between;
+
+  padding: 48px 42px;
+
+  background: #ffffff;
+
+  border-left: 1px solid var(--light-gray);
+
+}
+
+
+.project-page-card-header {
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-start;
+
+}
+
+
+.project-page-card-kicker {
+
+  margin: 0 0 18px;
+
+  font-family: var(--font-body);
+
+  font-size: 8px;
+
+  font-weight: 600;
+
+  line-height: 1.3;
+
+  letter-spacing: 0.16em;
+
+  text-transform: uppercase;
+
+  color: var(--accent);
+
+}
+
+
+.project-page-card-title {
+
+  margin: 0;
+
+  font-family: var(--font-display);
+
+  font-size: clamp(34px, 3vw, 48px);
+
+  font-weight: 400;
+
+  line-height: 0.98;
+
+  letter-spacing: -0.015em;
+
+  color: var(--black);
+
+}
+
+
+.project-page-card-title-en {
+
+  margin: 11px 0 0;
+
+  font-family: var(--font-body);
+
+  font-size: 8px;
+
+  font-weight: 500;
+
+  line-height: 1.35;
+
+  letter-spacing: 0.13em;
+
+  text-transform: uppercase;
+
+  color: var(--gray);
+
+}
+
+
+
+/* ------------------------------------------------------------
+   METADATOS
+   ------------------------------------------------------------ */
+
+.project-page-card-meta {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 14px;
+
+  margin-top: 42px;
+
+}
+
+
+.project-page-card-meta-item {
+
+  display: grid;
+
+  grid-template-columns: 90px minmax(0, 1fr);
+
+  gap: 15px;
+
+  padding-bottom: 13px;
+
+  border-bottom: 1px solid var(--light-gray);
+
+}
+
+
+.project-page-card-meta-label {
+
+  font-family: var(--font-body);
+
+  font-size: 8px;
+
+  font-weight: 600;
+
+  line-height: 1.3;
+
+  letter-spacing: 0.12em;
+
+  text-transform: uppercase;
+
+  color: var(--gray);
+
+}
+
+
+.project-page-card-meta-value {
+
+  font-family: var(--font-body);
+
+  font-size: 11px;
+
+  font-weight: 400;
+
+  line-height: 1.45;
+
+  color: var(--black);
+
+}
+
+
+
+/* ------------------------------------------------------------
+   PIE DE TARJETA
+   ------------------------------------------------------------ */
+
+.project-page-card-footer {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-top: 45px;
+
+  padding-top: 22px;
+
+  border-top: 1px solid var(--light-gray);
+
+}
+
+
+.project-page-card-index {
+
+  font-family: var(--font-body);
+
+  font-size: 9px;
+
+  font-weight: 500;
+
+  letter-spacing: 0.12em;
+
+  color: var(--gray);
+
+}
+
+
+.project-page-card-link {
+
+  display: inline-flex;
+
+  flex-direction: column;
+
+  align-items: flex-end;
+
+  gap: 3px;
+
+  color: var(--black);
+
+  text-decoration: none;
+
+  transition: color 0.25s ease;
+
+}
+
+
+.project-page-card-link-main {
+
+  font-family: var(--font-body);
+
+  font-size: 9px;
+
+  font-weight: 600;
+
+  line-height: 1.2;
+
+  letter-spacing: 0.13em;
+
+  text-transform: uppercase;
+
+}
+
+
+.project-page-card-link-en {
+
+  font-family: var(--font-body);
+
+  font-size: 7px;
+
+  font-weight: 400;
+
+  line-height: 1.2;
+
+  letter-spacing: 0.12em;
+
+  text-transform: uppercase;
+
+  color: var(--gray);
+
+}
+
+
+.project-page-card-link:hover {
+
+  color: var(--accent);
+
+}
+
+
+
+/* ------------------------------------------------------------
+   LÍNEA ENTRE PROYECTOS
+   ------------------------------------------------------------ */
+
+.project-page-card + .project-page-card {
+
+  position: relative;
+
+}
+
+
+.project-page-card + .project-page-card::before {
+
+  content: "";
+
+  position: absolute;
+
+  top: -41px;
+
+  left: 0;
+
+  width: 100%;
+
+  height: 1px;
+
+  background: var(--light-gray);
+
+}
+
+
+
+/* ------------------------------------------------------------
+   ESTADO SIN PROYECTOS
+   ------------------------------------------------------------ */
+
+.projects-empty-state {
+
+  display: none;
+
+  background: var(--bg);
+
+  padding: 120px 0;
+
+}
+
+
+.projects-empty-state.visible {
+
+  display: block;
+
+  text-align: center;
+
+}
+
+
+.projects-empty-title {
+
+  margin: 0;
+
+  font-family: var(--font-display);
+
+  font-size: 34px;
+
+  font-weight: 400;
+
+  color: var(--black);
+
+}
+
+
+.projects-empty-en {
+
+  margin: 8px 0 0;
+
+  font-family: var(--font-body);
+
+  font-size: 8px;
+
+  font-weight: 500;
+
+  letter-spacing: 0.14em;
+
+  text-transform: uppercase;
+
+  color: var(--gray);
+
+}
+
+
+
+/* ------------------------------------------------------------
+   RESPONSIVE — TABLET
+   ------------------------------------------------------------ */
+
+@media (max-width: 1000px) {
+
+  .projects-header-inner {
+
+    grid-template-columns: 1fr;
+
+    gap: 35px;
+
+  }
+
+
+  .projects-header-intro {
+
+    max-width: 700px;
+
+  }
+
+
+  .project-page-card {
+
+    grid-template-columns: minmax(0, 1.4fr) minmax(250px, 0.8fr);
+
+  }
+
+
+  .project-page-card-media {
+
+    min-height: 480px;
+
+  }
+
+
+  .project-page-card-info {
+
+    padding: 38px 30px;
+
+  }
+
+
+  .project-page-card-title {
+
+    font-size: clamp(30px, 4vw, 42px);
+
+  }
+
+}
+
+
+
+/* ------------------------------------------------------------
+   RESPONSIVE — MÓVIL
+   ------------------------------------------------------------ */
+
+@media (max-width: 700px) {
+
+  .projects-page-header {
+
+    padding: 125px 0 70px;
+
+  }
+
+
+  .projects-header-inner {
+
+    gap: 30px;
+
+  }
+
+
+  .projects-page-header .section-kicker {
+
+    font-size: clamp(40px, 13vw, 54px);
+
+  }
+
+
+  .projects-intro-es {
+
+    font-size: 13px;
+
+    line-height: 1.7;
+
+  }
+
+
+  .projects-list-section {
+
+    padding: 70px 0 90px;
+
+  }
+
+
+  #projects-grid {
+
+    gap: 60px;
+
+  }
+
+
+  .project-page-card {
+
+    display: flex;
+
+    flex-direction: column;
+
+    min-height: 0;
+
+  }
+
+
+  .project-page-card-media {
+
+    width: 100%;
+
+    height: 360px;
+
+    min-height: 360px;
+
+  }
+
+
+  .project-page-card-media img {
+
+    transform: scale(0.90);
+
+  }
+
+
+  .project-page-card:hover
+  .project-page-card-media img {
+
+    transform: scale(0.92);
+
+  }
+
+
+  .project-page-card-info {
+
+    border-left: none;
+
+    border-top: 1px solid var(--light-gray);
+
+    padding: 30px 24px 28px;
+
+  }
+
+
+  .project-page-card-title {
+
+    font-size: 34px;
+
+  }
+
+
+  .project-page-card-meta {
+
+    margin-top: 30px;
+
+  }
+
+
+  .project-page-card-footer {
+
+    margin-top: 32px;
+
+  }
+
+
+  .project-page-card + .project-page-card::before {
+
+    top: -31px;
+
+  }
+
+}
+
+
+
+/* ------------------------------------------------------------
+   RESPONSIVE — MÓVILES PEQUEÑOS
+   ------------------------------------------------------------ */
+
+@media (max-width: 420px) {
+
+  .project-page-card-media {
+
+    height: 300px;
+
+    min-height: 300px;
+
+  }
+
+
+  .project-page-card-info {
+
+    padding: 26px 20px 24px;
+
+  }
+
+
+  .project-page-card-title {
+
+    font-size: 30px;
+
+  }
+
+
+  .project-page-card-meta-item {
+
+    grid-template-columns: 75px minmax(0, 1fr);
+
+    gap: 10px;
+
+  }
+
+}
