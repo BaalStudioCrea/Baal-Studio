@@ -17,9 +17,14 @@ const PROJECTS_FUNCTION =
    INICIO
    ------------------------------------------------------------ */
 
-document.addEventListener("DOMContentLoaded", () => {
-  loadProjectsPage();
-});
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    loadProjectsPage();
+
+  }
+);
 
 
 /* ------------------------------------------------------------
@@ -27,92 +32,270 @@ document.addEventListener("DOMContentLoaded", () => {
    ------------------------------------------------------------ */
 
 async function loadProjectsPage() {
-  const container = document.getElementById("projects-grid");
-  const loading = document.getElementById("projects-loading");
-  const emptyState = document.getElementById("projects-empty-state");
+
+  const container =
+    document.getElementById(
+      "projects-grid"
+    );
+
+  const loading =
+    document.getElementById(
+      "projects-loading"
+    );
+
+  const emptyState =
+    document.getElementById(
+      "projects-empty-state"
+    );
+
 
   if (!container) {
-    console.error("[Baal Studio] No existe #projects-grid.");
+
+    console.error(
+      "[Baal Studio] No existe #projects-grid."
+    );
+
     return;
+
   }
 
+
   try {
-    console.log("[Baal Studio] Consultando list-projects...");
 
-    const response = await fetch(PROJECTS_FUNCTION, {
-      method: "GET",
-      headers: {
-        "Accept": "application/json"
-      },
-      cache: "no-store"
-    });
+    console.log(
+      "[Baal Studio] Consultando list-projects..."
+    );
 
-    console.log("[Baal Studio] list-projects HTTP:", response.status);
+
+    const response =
+      await fetch(
+        PROJECTS_FUNCTION,
+        {
+          method: "GET",
+          headers: {
+            "Accept": "application/json"
+          },
+          cache: "no-store"
+        }
+      );
+
+
+    console.log(
+      "[Baal Studio] list-projects HTTP:",
+      response.status
+    );
+
 
     if (!response.ok) {
-      throw new Error(`list-projects respondió ${response.status}`);
+
+      throw new Error(
+        `list-projects respondió ${response.status}`
+      );
+
     }
 
-    const result = await response.json();
-    console.log("[Baal Studio] Respuesta completa de list-projects:", result);
 
-    const projects = normalizeProjectsResponse(result);
-    console.log("[Baal Studio] Proyectos normalizados:", projects);
+    const result =
+      await response.json();
+
+
+    console.log(
+      "[Baal Studio] Respuesta completa de list-projects:",
+      result
+    );
+
+
+    const projects =
+      normalizeProjectsResponse(
+        result
+      );
+
+
+    console.log(
+      "[Baal Studio] Proyectos normalizados:",
+      projects
+    );
+
 
     if (!projects.length) {
-      if (loading) loading.style.display = "none";
-      if (emptyState) {
-        emptyState.classList.add("visible");
-        emptyState.setAttribute("aria-hidden", "false");
+
+      if (loading) {
+
+        loading.style.display =
+          "none";
+
       }
+
+
+      if (emptyState) {
+
+        emptyState.classList.add(
+          "visible"
+        );
+
+        emptyState.setAttribute(
+          "aria-hidden",
+          "false"
+        );
+
+      }
+
       return;
+
     }
 
-    /* Ordenar proyectos */
-    projects.sort((a, b) => {
-      const orderA = Number(a.order ?? 999);
-      const orderB = Number(b.order ?? 999);
-      return orderA - orderB;
-    });
+
+    /* --------------------------------------------------------
+       ORDEN
+
+       list-projects ya devuelve order, pero volvemos a ordenar
+       aquí para asegurarnos de que la página respeta siempre
+       el número final de la carpeta:
+
+       Proyecto (01)
+       Proyecto (02)
+       Proyecto (03)
+       ...
+       -------------------------------------------------------- */
+
+    projects.sort(
+      (a, b) => {
+
+        const orderA =
+          Number(a.order ?? 999);
+
+        const orderB =
+          Number(b.order ?? 999);
+
+        return orderA - orderB;
+
+      }
+    );
+
 
     console.log(
       "[Baal Studio] Orden final:",
-      projects.map(project => ({
-        order: project.order,
-        name: project.name,
-        title: project.displayName
-      }))
+      projects.map(
+        project => ({
+          order: project.order,
+          name: project.name,
+          title: project.displayName
+        })
+      )
     );
 
-    /* Limpiar contenedor y actualizar loader */
+
+    /* --------------------------------------------------------
+       LIMPIAR CONTENEDOR
+       -------------------------------------------------------- */
+
     container.innerHTML = "";
-    if (loading) loading.style.display = "none";
+
+
+    if (loading) {
+
+      loading.style.display =
+        "none";
+
+    }
+
+
     if (emptyState) {
-      emptyState.classList.remove("visible");
-      emptyState.setAttribute("aria-hidden", "true");
+
+      emptyState.classList.remove(
+        "visible"
+      );
+
+      emptyState.setAttribute(
+        "aria-hidden",
+        "true"
+      );
+
     }
 
-    /* Crear tarjetas */
-    projects.forEach((project, index) => {
-      const card = createProjectCard(project, index);
-      if (card) container.appendChild(card);
-    });
 
-    console.log(`[Baal Studio] ${projects.length} proyectos cargados correctamente.`);
+    /* --------------------------------------------------------
+       CREAR TARJETAS
+       -------------------------------------------------------- */
 
-    if (typeof applyProtectionToImages === "function") {
+    projects.forEach(
+      (project, index) => {
+
+        const card =
+          createProjectCard(
+            project,
+            index
+          );
+
+
+        if (card) {
+
+          container.appendChild(
+            card
+          );
+
+        }
+
+      }
+    );
+
+
+    console.log(
+      `[Baal Studio] ${projects.length} proyectos cargados correctamente.`
+    );
+
+
+    /*
+       Protección de imágenes.
+
+       Si script.js ya ha cargado la función global,
+       la utilizamos.
+
+       No dependemos de ella para que los proyectos
+       funcionen.
+    */
+
+    if (
+      typeof applyProtectionToImages ===
+      "function"
+    ) {
+
       applyProtectionToImages();
+
     }
+
 
   } catch (error) {
-    console.error("[Baal Studio] Error cargando proyectos:", error);
 
-    if (loading) loading.style.display = "none";
-    if (emptyState) {
-      emptyState.classList.add("visible");
-      emptyState.setAttribute("aria-hidden", "false");
+    console.error(
+      "[Baal Studio] Error cargando proyectos:",
+      error
+    );
+
+
+    if (loading) {
+
+      loading.style.display =
+        "none";
+
     }
+
+
+    if (emptyState) {
+
+      emptyState.classList.add(
+        "visible"
+      );
+
+      emptyState.setAttribute(
+        "aria-hidden",
+        "false"
+      );
+
+    }
+
   }
+
 }
 
 
@@ -120,22 +303,66 @@ async function loadProjectsPage() {
    NORMALIZAR RESPUESTA DE SUPABASE
    ------------------------------------------------------------ */
 
-function normalizeProjectsResponse(result) {
-  if (!result) return [];
+function normalizeProjectsResponse(
+  result
+) {
+
+  if (!result) {
+
+    return [];
+
+  }
+
 
   let projects = [];
 
-  if (Array.isArray(result)) {
-    projects = result;
-  } else if (Array.isArray(result.projects)) {
-    projects = result.projects;
-  } else if (Array.isArray(result.data)) {
-    projects = result.data;
-  } else if (Array.isArray(result.results)) {
-    projects = result.results;
+
+  /*
+     La función puede devolver directamente
+     un array o un objeto con projects/data/results.
+  */
+
+  if (
+    Array.isArray(result)
+  ) {
+
+    projects =
+      result;
+
+  } else if (
+    Array.isArray(result.projects)
+  ) {
+
+    projects =
+      result.projects;
+
+  } else if (
+    Array.isArray(result.data)
+  ) {
+
+    projects =
+      result.data;
+
+  } else if (
+    Array.isArray(result.results)
+  ) {
+
+    projects =
+      result.results;
+
   }
 
-  return projects.map(normalizeProject).filter(Boolean);
+
+  return projects
+
+    .map(
+      normalizeProject
+    )
+
+    .filter(
+      Boolean
+    );
+
 }
 
 
@@ -143,8 +370,28 @@ function normalizeProjectsResponse(result) {
    NORMALIZAR PROYECTO
    ------------------------------------------------------------ */
 
-function normalizeProject(project) {
-  if (!project || typeof project !== "object") return null;
+function normalizeProject(
+  project
+) {
+
+  if (
+    !project ||
+    typeof project !== "object"
+  ) {
+
+    return null;
+
+  }
+
+
+  /* ----------------------------------------------------------
+     NOMBRE ORIGINAL
+
+     Es el nombre real de la carpeta en Supabase.
+
+     Ejemplo:
+     Epigrafias arabes de Granada (01)
+     ---------------------------------------------------------- */
 
   const rawName =
     project.name ||
@@ -154,16 +401,59 @@ function normalizeProject(project) {
     project.projectName ||
     "";
 
-  let metadata = project?.metadata || null;
 
-  if (typeof metadata === "string") {
+  /* ----------------------------------------------------------
+     METADATA
+
+     list-projects puede devolver metadata como objeto
+     o como JSON en forma de string.
+     ---------------------------------------------------------- */
+
+  let metadata =
+    project?.metadata ||
+    null;
+
+
+  if (
+    typeof metadata ===
+    "string"
+  ) {
+
     try {
-      metadata = JSON.parse(metadata);
+
+      metadata =
+        JSON.parse(
+          metadata
+        );
+
     } catch (error) {
-      console.warn("[Baal Studio] No se pudo interpretar metadata:", error);
-      metadata = null;
+
+      console.warn(
+        "[Baal Studio] No se pudo interpretar metadata:",
+        error
+      );
+
+      metadata =
+        null;
+
     }
+
   }
+
+
+  /* ----------------------------------------------------------
+     TÍTULO
+
+     Preferencia:
+
+     1. project.title
+     2. metadata.title
+     3. metadata.titulo
+     4. metadata.nombre
+     5. metadata.name
+     6. metadataTitle
+     7. nombre de carpeta sin (01)
+     ---------------------------------------------------------- */
 
   const metadataTitle =
     project?.title ||
@@ -175,31 +465,124 @@ function normalizeProject(project) {
     project?.metadata_title ||
     "";
 
-  const fallbackName = String(rawName).replace(/\s*\(\d+\)\s*$/i, "").trim();
-  const displayName = String(metadataTitle || fallbackName).replace(/\s*[.!?]+\s*$/, "").trim();
 
-  const order = project.order ?? project.orden ?? project.position ?? extractOrderFromName(rawName);
-  const cover = extractCover(project);
+  const fallbackName =
+    String(
+      rawName
+    )
+      .replace(
+        /\s*\(\d+\)\s*$/i,
+        ""
+      )
+      .trim();
 
-  const location = metadata?.location || metadata?.localizacion || project.location || project.localizacion || "";
-  const year = metadata?.year || metadata?.ano || metadata?.año || project.year || project.año || "";
 
-  const rawCategory = metadata?.category || metadata?.categoria || project.category || project.categoria || "";
-  const category = Array.isArray(rawCategory)
-    ? rawCategory.slice(0, 2).join(", ")
-    : String(rawCategory);
+  const displayName =
+    String(
+      metadataTitle ||
+      fallbackName
+    )
+      .replace(
+        /\s*[.!?]+\s*$/,
+        ""
+      )
+      .trim();
+
+
+  /* ----------------------------------------------------------
+     ORDEN
+     ---------------------------------------------------------- */
+
+  const order =
+    project.order ??
+    project.orden ??
+    project.position ??
+    extractOrderFromName(
+      rawName
+    );
+
+
+  /* ----------------------------------------------------------
+     COVER
+     ---------------------------------------------------------- */
+
+  const cover =
+    extractCover(
+      project
+    );
+
+
+  /* ----------------------------------------------------------
+     CATEGORÍA
+     ---------------------------------------------------------- */
+
+  const rawCategory =
+    metadata?.category ||
+    metadata?.categoria ||
+    project.category ||
+    project.categoria ||
+    "";
+
+
+  const category =
+    Array.isArray(
+      rawCategory
+    )
+      ? rawCategory
+          .slice(0, 2)
+          .join(", ")
+      : String(
+          rawCategory
+        );
+
+
+  /* ----------------------------------------------------------
+     TÉCNICAS
+     ---------------------------------------------------------- */
+
+  const techniques =
+    metadata?.techniques ||
+    metadata?.tecnicas ||
+    project.techniques ||
+    project.tecnicas ||
+    "";
+
+
+  /* ----------------------------------------------------------
+     OBJETIVO
+     ---------------------------------------------------------- */
+
+  const objective =
+    metadata?.objective ||
+    metadata?.objetivo ||
+    project.objective ||
+    project.objetivo ||
+    "";
+
 
   return {
+
     ...project,
+
     metadata,
-    name: rawName,
+
+    name:
+      rawName,
+
     displayName,
+
     order,
+
     cover,
-    location,
-    year,
-    category
+
+    category,
+
+    techniques,
+
+    objective
+
   };
+
 }
 
 
@@ -207,9 +590,29 @@ function normalizeProject(project) {
    EXTRAER ORDEN DEL NOMBRE DE CARPETA
    ------------------------------------------------------------ */
 
-function extractOrderFromName(name) {
-  const match = String(name || "").match(/\((\d+)\)\s*$/);
-  return match ? Number(match[1]) : 999;
+function extractOrderFromName(
+  name
+) {
+
+  const match =
+    String(
+      name || ""
+    ).match(
+      /\((\d+)\)\s*$/
+    );
+
+
+  if (!match) {
+
+    return 999;
+
+  }
+
+
+  return Number(
+    match[1]
+  );
+
 }
 
 
@@ -217,20 +620,78 @@ function extractOrderFromName(name) {
    EXTRAER COVER
    ------------------------------------------------------------ */
 
-function extractCover(project) {
+function extractCover(
+  project
+) {
+
   const directCandidates = [
-    project?.cover, project?.coverUrl, project?.cover_url, project?.coverURL,
-    project?.image, project?.imageUrl, project?.image_url,
-    project?.thumbnail, project?.thumbnailUrl, project?.thumbnail_url,
-    project?.portada, project?.portadaUrl, project?.portada_url
+
+    project?.cover,
+
+    project?.coverUrl,
+
+    project?.cover_url,
+
+    project?.coverURL,
+
+    project?.image,
+
+    project?.imageUrl,
+
+    project?.image_url,
+
+    project?.thumbnail,
+
+    project?.thumbnailUrl,
+
+    project?.thumbnail_url,
+
+    project?.portada,
+
+    project?.portadaUrl,
+
+    project?.portada_url
+
   ];
 
-  for (const candidate of directCandidates) {
-    const url = extractUrlFromValue(candidate);
-    if (isImageUrl(url)) return url;
+
+  for (
+    const candidate
+    of directCandidates
+  ) {
+
+    const url =
+      extractUrlFromValue(
+        candidate
+      );
+
+
+    if (
+      isImageUrl(
+        url
+      )
+    ) {
+
+      return url;
+
+    }
+
   }
 
-  return findImageUrl(project) || "";
+
+  /*
+     Si no encontramos el cover directamente,
+     buscamos recursivamente dentro del objeto.
+  */
+
+  const recursiveUrl =
+    findImageUrl(
+      project
+    );
+
+
+  return recursiveUrl || "";
+
 }
 
 
@@ -238,22 +699,65 @@ function extractCover(project) {
    EXTRAER URL DE UN VALOR
    ------------------------------------------------------------ */
 
-function extractUrlFromValue(value) {
-  if (typeof value === "string") return value.trim();
-  if (!value || typeof value !== "object") return "";
+function extractUrlFromValue(
+  value
+) {
 
-  const possibleKeys = [
-    "url", "signedUrl", "signed_url", "publicUrl", "public_url",
-    "downloadUrl", "download_url", "src", "href"
-  ];
+  if (
+    typeof value ===
+    "string"
+  ) {
 
-  for (const key of possibleKeys) {
-    if (typeof value[key] === "string" && value[key].trim()) {
-      return value[key].trim();
-    }
+    return value.trim();
+
   }
 
+
+  if (
+    !value ||
+    typeof value !== "object"
+  ) {
+
+    return "";
+
+  }
+
+
+  const possibleKeys = [
+
+    "url",
+    "signedUrl",
+    "signed_url",
+    "publicUrl",
+    "public_url",
+    "downloadUrl",
+    "download_url",
+    "src",
+    "href"
+
+  ];
+
+
+  for (
+    const key
+    of possibleKeys
+  ) {
+
+    if (
+      typeof value[key] ===
+      "string" &&
+      value[key].trim()
+    ) {
+
+      return value[key].trim();
+
+    }
+
+  }
+
+
   return "";
+
 }
 
 
@@ -261,17 +765,56 @@ function extractUrlFromValue(value) {
    COMPROBAR SI UNA URL ES UNA IMAGEN
    ------------------------------------------------------------ */
 
-function isImageUrl(url) {
-  if (typeof url !== "string" || !url) return false;
-  const cleanUrl = url.split("?")[0].split("#")[0].toLowerCase();
+function isImageUrl(
+  url
+) {
+
+  if (
+    typeof url !==
+    "string" ||
+    !url
+  ) {
+
+    return false;
+
+  }
+
+
+  const cleanUrl =
+    url
+      .split("?")[0]
+      .split("#")[0]
+      .toLowerCase();
+
+
   return (
-    cleanUrl.endsWith(".jpg") ||
-    cleanUrl.endsWith(".jpeg") ||
-    cleanUrl.endsWith(".png") ||
-    cleanUrl.endsWith(".webp") ||
-    cleanUrl.endsWith(".avif") ||
-    cleanUrl.endsWith(".gif")
+
+    cleanUrl.endsWith(
+      ".jpg"
+    ) ||
+
+    cleanUrl.endsWith(
+      ".jpeg"
+    ) ||
+
+    cleanUrl.endsWith(
+      ".png"
+    ) ||
+
+    cleanUrl.endsWith(
+      ".webp"
+    ) ||
+
+    cleanUrl.endsWith(
+      ".avif"
+    ) ||
+
+    cleanUrl.endsWith(
+      ".gif"
+    )
+
   );
+
 }
 
 
@@ -279,41 +822,179 @@ function isImageUrl(url) {
    BÚSQUEDA RECURSIVA DE IMAGEN
    ------------------------------------------------------------ */
 
-function findImageUrl(value, depth = 0) {
-  if (depth > 6 || !value) return "";
+function findImageUrl(
+  value,
+  depth = 0
+) {
 
-  const direct = extractUrlFromValue(value);
-  if (isImageUrl(direct)) return direct;
+  /*
+     Evitamos recorrer objetos indefinidamente.
+  */
 
-  if (Array.isArray(value)) {
-    for (const item of value) {
-      const found = findImageUrl(item, depth + 1);
-      if (found) return found;
-    }
+  if (
+    depth > 6 ||
+    !value
+  ) {
+
     return "";
+
   }
 
-  if (typeof value !== "object") return "";
+
+  const direct =
+    extractUrlFromValue(
+      value
+    );
+
+
+  if (
+    isImageUrl(
+      direct
+    )
+  ) {
+
+    return direct;
+
+  }
+
+
+  if (
+    Array.isArray(
+      value
+    )
+  ) {
+
+    for (
+      const item
+      of value
+    ) {
+
+      const found =
+        findImageUrl(
+          item,
+          depth + 1
+        );
+
+
+      if (
+        found
+      ) {
+
+        return found;
+
+      }
+
+    }
+
+    return "";
+
+  }
+
+
+  if (
+    typeof value !==
+    "object"
+  ) {
+
+    return "";
+
+  }
+
+
+  /*
+     Priorizamos nombres que suelen contener
+     la portada.
+  */
 
   const priorityKeys = [
-    "cover", "coverUrl", "cover_url", "image", "imageUrl", "image_url",
-    "thumbnail", "thumbnailUrl", "thumbnail_url", "portada", "portadaUrl", "portada_url"
+
+    "cover",
+    "coverUrl",
+    "cover_url",
+    "image",
+    "imageUrl",
+    "image_url",
+    "thumbnail",
+    "thumbnailUrl",
+    "thumbnail_url",
+    "portada",
+    "portadaUrl",
+    "portada_url"
+
   ];
 
-  for (const key of priorityKeys) {
-    if (key in value) {
-      const found = findImageUrl(value[key], depth + 1);
-      if (found) return found;
+
+  for (
+    const key
+    of priorityKeys
+  ) {
+
+    if (
+      key in value
+    ) {
+
+      const found =
+        findImageUrl(
+          value[key],
+          depth + 1
+        );
+
+
+      if (
+        found
+      ) {
+
+        return found;
+
+      }
+
     }
+
   }
 
-  for (const key of Object.keys(value)) {
-    if (priorityKeys.includes(key)) continue;
-    const found = findImageUrl(value[key], depth + 1);
-    if (found) return found;
+
+  /*
+     Después buscamos en el resto de propiedades.
+  */
+
+  for (
+    const key
+    of Object.keys(
+      value
+    )
+  ) {
+
+    if (
+      priorityKeys.includes(
+        key
+      )
+    ) {
+
+      continue;
+
+    }
+
+
+    const found =
+      findImageUrl(
+        value[key],
+        depth + 1
+      );
+
+
+    if (
+      found
+    ) {
+
+      return found;
+
+    }
+
   }
+
 
   return "";
+
 }
 
 
@@ -321,61 +1002,206 @@ function findImageUrl(value, depth = 0) {
    CREAR TARJETA DE PROYECTO
    ------------------------------------------------------------ */
 
-function createProjectCard(project, index) {
-  if (!project) return null;
+function createProjectCard(
+  project,
+  index
+) {
 
-  const card = document.createElement("article");
-  card.className = "project-page-card";
+  if (
+    !project
+  ) {
 
-  /* MEDIA */
-  const media = document.createElement("div");
-  media.className = "project-page-card-media protected-media";
+    return null;
 
-  const image = document.createElement("img");
-  image.className = "protected-image";
-  image.alt = `${project.displayName || "Proyecto"} — Baal Studio`;
-  image.loading = index === 0 ? "eager" : "lazy";
-  image.decoding = "async";
-  image.draggable = false;
+  }
 
-  if (project.cover) {
-    image.src = project.cover;
-    console.log(`[Baal Studio] Cover asignado: ${project.displayName}`, project.cover);
+
+  const card =
+    document.createElement(
+      "article"
+    );
+
+
+  card.className =
+    "project-page-card";
+
+
+  /*
+     ----------------------------------------------------------
+     MEDIA
+     ----------------------------------------------------------
+  */
+
+  const media =
+    document.createElement(
+      "div"
+    );
+
+
+  media.className =
+    "project-page-card-media protected-media";
+
+
+  const image =
+    document.createElement(
+      "img"
+    );
+
+
+  image.className =
+    "protected-image";
+
+
+  image.alt =
+    `${project.displayName || "Proyecto"} — Baal Studio`;
+
+
+  image.loading =
+    index === 0
+      ? "eager"
+      : "lazy";
+
+
+  image.decoding =
+    "async";
+
+
+  image.draggable =
+    false;
+
+
+  if (
+    project.cover
+  ) {
+
+    image.src =
+      project.cover;
+
+
+    console.log(
+      `[Baal Studio] Cover asignado: ${project.displayName}`,
+      project.cover
+    );
+
   } else {
-    console.warn(`[Baal Studio] El proyecto no tiene cover: ${project.displayName}`);
+
+    console.warn(
+      `[Baal Studio] El proyecto no tiene cover: ${project.displayName}`
+    );
+
   }
 
-  image.addEventListener("load", () => {
-    console.log(`[Baal Studio] Cover cargado: ${project.displayName}`, {
-      width: image.naturalWidth,
-      height: image.naturalHeight
-    });
-  });
 
-  image.addEventListener("error", () => {
-    console.error(`[Baal Studio] ERROR cargando cover: ${project.displayName}`, image.src);
-  });
+  image.addEventListener(
+    "load",
+    () => {
 
-  media.appendChild(image);
+      console.log(
+        `[Baal Studio] Cover cargado: ${project.displayName}`,
+        {
+          width:
+            image.naturalWidth,
 
-  /* INFORMACIÓN */
-  const info = document.createElement("div");
-  info.className = "project-page-card-info";
+          height:
+            image.naturalHeight
+        }
+      );
 
-  const header = document.createElement("div");
-  header.className = "project-page-card-header";
+    }
+  );
 
-  if (project.category) {
-    const kicker = document.createElement("p");
-    kicker.className = "project-page-card-kicker";
-    kicker.textContent = project.category;
-    header.appendChild(kicker);
-  }
 
-  const title = document.createElement("h2");
-  title.className = "project-page-card-title";
-  title.textContent = project.displayName || "Proyecto";
-  header.appendChild(title);
+  image.addEventListener(
+    "error",
+    () => {
+
+      console.error(
+        `[Baal Studio] ERROR cargando cover: ${project.displayName}`,
+        image.src
+      );
+
+    }
+  );
+
+
+  media.appendChild(
+    image
+  );
+
+
+  /*
+     ----------------------------------------------------------
+     INFORMACIÓN
+     ----------------------------------------------------------
+  */
+
+  const info =
+    document.createElement(
+      "div"
+    );
+
+
+  info.className =
+    "project-page-card-info";
+
+
+  const header =
+    document.createElement(
+      "div"
+    );
+
+
+  header.className =
+    "project-page-card-header";
+
+
+  /*
+     KICKER FIJO DE SELECCIÓN
+  */
+
+  const kicker =
+    document.createElement(
+      "p"
+    );
+
+  kicker.className =
+    "project-page-card-kicker";
+
+  kicker.textContent =
+    "Selección de proyectos";
+
+  header.appendChild(
+    kicker
+  );
+
+
+  /*
+     TÍTULO
+  */
+
+  const title =
+    document.createElement(
+      "h2"
+    );
+
+
+  title.className =
+    "project-page-card-title";
+
+
+  title.textContent =
+    project.displayName ||
+    "Proyecto";
+
+
+  header.appendChild(
+    title
+  );
+
+
+  /*
+     TÍTULO INGLÉS
+  */
 
   const englishTitle =
     project?.metadata?.title_en ||
@@ -386,49 +1212,173 @@ function createProjectCard(project, index) {
     project?.titulo_en ||
     "";
 
-  if (englishTitle) {
-    const titleEn = document.createElement("p");
-    titleEn.className = "project-page-card-title-en";
-    titleEn.textContent = englishTitle;
-    header.appendChild(titleEn);
+
+  if (
+    englishTitle
+  ) {
+
+    const titleEn =
+      document.createElement(
+        "p"
+      );
+
+
+    titleEn.className =
+      "project-page-card-title-en";
+
+
+    titleEn.textContent =
+      englishTitle;
+
+
+    header.appendChild(
+      titleEn
+    );
+
   }
 
-  info.appendChild(header);
 
-  /* METADATOS */
-  const meta = document.createElement("div");
-  meta.className = "project-page-card-meta";
+  info.appendChild(
+    header
+  );
 
-  addMetadataRow(meta, "Ubicación", project.location);
-  addMetadataRow(meta, "Año", project.year);
-  addMetadataRow(meta, "Categoría", project.category);
 
-  info.appendChild(meta);
+  /*
+     ----------------------------------------------------------
+     METADATOS
+     ----------------------------------------------------------
+  */
 
-  /* FOOTER TARJETA */
-  const footer = document.createElement("div");
-  footer.className = "project-page-card-footer";
+  const meta =
+    document.createElement(
+      "div"
+    );
 
-  const projectIndex = document.createElement("span");
-  projectIndex.className = "project-page-card-index";
-  projectIndex.textContent = String(project.order || index + 1).padStart(2, "0");
-  footer.appendChild(projectIndex);
 
-  const link = document.createElement("a");
-  link.className = "project-page-card-link";
-  link.href = createProjectUrl(project);
+  meta.className =
+    "project-page-card-meta";
+
+
+  addMetadataRow(
+    meta,
+    "Categoría",
+    project.category
+  );
+
+
+  addMetadataRow(
+    meta,
+    "Técnicas",
+    project.techniques
+  );
+
+
+  addMetadataRow(
+    meta,
+    "Objetivo",
+    project.objective
+  );
+
+
+  info.appendChild(
+    meta
+  );
+
+
+  /*
+     ----------------------------------------------------------
+     FOOTER DE TARJETA
+     ----------------------------------------------------------
+  */
+
+  const footer =
+    document.createElement(
+      "div"
+    );
+
+
+  footer.className =
+    "project-page-card-footer";
+
+
+  const projectIndex =
+    document.createElement(
+      "span"
+    );
+
+
+  projectIndex.className =
+    "project-page-card-index";
+
+
+  projectIndex.textContent =
+    String(
+      project.order || index + 1
+    ).padStart(
+      2,
+      "0"
+    );
+
+
+  footer.appendChild(
+    projectIndex
+  );
+
+
+  const link =
+    document.createElement(
+      "a"
+    );
+
+
+  link.className =
+    "project-page-card-link";
+
+
+  link.href =
+    createProjectUrl(
+      project
+    );
+
+
   link.innerHTML = `
-    <span class="project-page-card-link-main">Ver proyecto</span>
-    <span class="project-page-card-link-en">View project</span>
+    <span class="project-page-card-link-main">
+      Ver proyecto
+    </span>
+    <span class="project-page-card-link-en">
+      View project
+    </span>
   `;
-  footer.appendChild(link);
 
-  info.appendChild(footer);
 
-  card.appendChild(media);
-  card.appendChild(info);
+  footer.appendChild(
+    link
+  );
+
+
+  info.appendChild(
+    footer
+  );
+
+
+  /*
+     ----------------------------------------------------------
+     MONTAR TARJETA
+     ----------------------------------------------------------
+  */
+
+  card.appendChild(
+    media
+  );
+
+
+  card.appendChild(
+    info
+  );
+
 
   return card;
+
 }
 
 
@@ -436,25 +1386,77 @@ function createProjectCard(project, index) {
    AÑADIR FILA DE METADATO
    ------------------------------------------------------------ */
 
-function addMetadataRow(container, label, value) {
-  if (value === undefined || value === null || String(value).trim() === "") {
+function addMetadataRow(
+  container,
+  label,
+  value
+) {
+
+  if (
+    value ===
+    undefined ||
+    value ===
+    null ||
+    String(value).trim() === ""
+  ) {
+
     return;
+
   }
 
-  const row = document.createElement("div");
-  row.className = "project-page-card-meta-item";
 
-  const labelElement = document.createElement("span");
-  labelElement.className = "project-page-card-meta-label";
-  labelElement.textContent = label;
+  const row =
+    document.createElement(
+      "div"
+    );
 
-  const valueElement = document.createElement("span");
-  valueElement.className = "project-page-card-meta-value";
-  valueElement.textContent = value;
 
-  row.appendChild(labelElement);
-  row.appendChild(valueElement);
-  container.appendChild(row);
+  row.className =
+    "project-page-card-meta-item";
+
+
+  const labelElement =
+    document.createElement(
+      "span"
+    );
+
+
+  labelElement.className =
+    "project-page-card-meta-label";
+
+
+  labelElement.textContent =
+    label;
+
+
+  const valueElement =
+    document.createElement(
+      "span"
+    );
+
+
+  valueElement.className =
+    "project-page-card-meta-value";
+
+
+  valueElement.textContent =
+    value;
+
+
+  row.appendChild(
+    labelElement
+  );
+
+
+  row.appendChild(
+    valueElement
+  );
+
+
+  container.appendChild(
+    row
+  );
+
 }
 
 
@@ -462,8 +1464,27 @@ function addMetadataRow(container, label, value) {
    URL DEL PROYECTO
    ------------------------------------------------------------ */
 
-function createProjectUrl(project) {
-  const projectName = project?.name || project?.displayName || "";
-  if (!projectName) return "#";
-  return `./proyecto.html?project=${encodeURIComponent(projectName)}`;
+function createProjectUrl(
+  project
+) {
+
+  const projectName =
+    project?.name ||
+    project?.displayName ||
+    "";
+
+
+  if (
+    !projectName
+  ) {
+
+    return "#";
+
+  }
+
+
+  return (
+    `./proyecto.html?project=${encodeURIComponent(projectName)}`
+  );
+
 }
