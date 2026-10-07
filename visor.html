@@ -10,17 +10,12 @@
     content="width=device-width, initial-scale=1.0"
   >
 
+  <title>Baal Studio — Proyecto</title>
+
   <meta
     name="description"
-    content="Baal Studio — Proyecto de documentación, análisis y representación digital del patrimonio cultural."
+    content="Proyecto de documentación y visualización del patrimonio cultural — Baal Studio"
   >
-
-  <meta
-    name="theme-color"
-    content="#111111"
-  >
-
-  <title>Proyecto — Baal Studio</title>
 
   <link
     rel="stylesheet"
@@ -29,20 +24,21 @@
 
   <link
     rel="stylesheet"
-    href="./proyecto.css"
+    href="./visor.css"
   >
 
 </head>
 
 
-<body>
+<body class="visor-page">
+
 
   <!-- ======================================================
        HEADER
        ====================================================== -->
 
   <header
-    class="main-header proyecto-header"
+    class="main-header visor-header"
     id="main-header"
   >
 
@@ -50,20 +46,15 @@
 
       <a
         href="./index.html"
-        class="header-logo-link"
+        class="header-logo"
         aria-label="Baal Studio — Inicio"
       >
-
         <img
-          id="site-logo"
-          class="header-logo protected-image"
           src=""
           alt="Baal Studio"
-          width="180"
-          height="40"
+          class="header-logo-image"
           draggable="false"
         >
-
       </a>
 
 
@@ -72,51 +63,34 @@
         aria-label="Navegación principal"
       >
 
-        <a
-          href="./index.html"
-          class="nav-link"
-        >
+        <a href="./index.html">
           <span>Inicio</span>
-          <span class="nav-link-en">Home</span>
         </a>
-
 
         <a
           href="./proyectos.html"
-          class="nav-link active"
+          class="active"
         >
           <span>Proyectos</span>
-          <span class="nav-link-en">Projects</span>
         </a>
 
-
-        <a
-          href="./about.html"
-          class="nav-link"
-        >
+        <a href="./about.html">
           <span>Sobre mí</span>
-          <span class="nav-link-en">About</span>
         </a>
 
-
-        <a
-          href="./contact.html"
-          class="nav-link"
-        >
+        <a href="./contact.html">
           <span>Contacto</span>
-          <span class="nav-link-en">Contact</span>
         </a>
 
       </nav>
 
 
       <button
-        class="mobile-menu-button"
-        id="mobile-menu-button"
+        class="mobile-menu-toggle"
+        id="mobile-menu-toggle"
         type="button"
         aria-label="Abrir menú"
         aria-expanded="false"
-        aria-controls="mobile-menu"
       >
 
         <span></span>
@@ -131,35 +105,23 @@
     <div
       class="mobile-menu"
       id="mobile-menu"
-      aria-hidden="true"
     >
 
-      <nav aria-label="Navegación móvil">
+      <a href="./index.html">
+        Inicio
+      </a>
 
-        <a href="./index.html">
-          <span>Inicio</span>
-          <small>Home</small>
-        </a>
+      <a href="./proyectos.html">
+        Proyectos
+      </a>
 
-        <a
-          href="./proyectos.html"
-          aria-current="page"
-        >
-          <span>Proyectos</span>
-          <small>Projects</small>
-        </a>
+      <a href="./about.html">
+        Sobre mí
+      </a>
 
-        <a href="./about.html">
-          <span>Sobre mí</span>
-          <small>About</small>
-        </a>
-
-        <a href="./contact.html">
-          <span>Contacto</span>
-          <small>Contact</small>
-        </a>
-
-      </nav>
+      <a href="./contact.html">
+        Contacto
+      </a>
 
     </div>
 
@@ -167,187 +129,247 @@
 
 
   <!-- ======================================================
-       CONTENIDO
+       CONTENIDO DEL PROYECTO
        ====================================================== -->
 
-  <main id="project-page">
+  <main id="project-viewer">
+
+    <!-- Estado inicial -->
 
     <section
-      class="project-detail-hero"
-      id="project-hero"
+      class="visor-loading"
+      id="visor-loading"
     >
 
-      <div class="section-container">
+      <div class="visor-loading-title">
+        Cargando proyecto
+      </div>
 
-        <a
-          href="./proyectos.html"
-          class="project-back-link"
-        >
-          ← Volver a proyectos
-          <span>Back to projects</span>
-        </a>
+      <div class="visor-loading-en">
+        Loading project
+      </div>
 
-
-        <div
-          class="project-hero-grid"
-          id="project-hero-content"
-        >
-
-          <div class="project-hero-text">
-
-            <p
-              class="project-detail-kicker"
-              id="project-category"
-            >
-              Proyecto
-            </p>
+    </section>
 
 
-            <h1
-              id="project-title"
-              class="project-detail-title"
-            >
-              Cargando proyecto
-            </h1>
+    <!-- Contenido dinámico -->
 
+    <section
+      class="visor-project"
+      id="visor-project"
+      hidden
+    >
 
-            <p
-              id="project-title-en"
-              class="project-detail-title-en"
-            >
-              Project
-            </p>
+      <!-- --------------------------------------------------
+           CABECERA
+           -------------------------------------------------- -->
 
+      <section class="visor-project-header">
 
-            <div
-              class="project-detail-rule"
-            ></div>
+        <div class="section-container">
 
+          <div class="visor-project-header-inner">
 
-            <div
-              class="project-hero-meta"
-              id="project-hero-meta"
-            ></div>
+            <div>
+
+              <p
+                class="visor-kicker"
+                id="visor-kicker"
+              >
+                PROYECTO
+              </p>
+
+              <h1
+                class="visor-title"
+                id="visor-title"
+              >
+              </h1>
+
+              <p
+                class="visor-title-en"
+                id="visor-title-en"
+              >
+              </p>
+
+              <div class="visor-rule"></div>
+
+            </div>
 
           </div>
 
+        </div>
+
+      </section>
+
+
+      <!-- --------------------------------------------------
+           INFORMACIÓN
+           -------------------------------------------------- -->
+
+      <section class="visor-information-section">
+
+        <div class="section-container">
+
+          <div class="visor-information-grid">
+
+
+            <!-- DATOS -->
+
+            <div class="visor-data">
+
+              <div
+                class="visor-data-row"
+                data-field="categoria"
+              >
+
+                <span class="visor-data-label">
+                  Categoría
+                </span>
+
+                <span
+                  class="visor-data-value"
+                  id="visor-category"
+                >
+                </span>
+
+              </div>
+
+
+              <div
+                class="visor-data-row"
+                data-field="tecnicas"
+              >
+
+                <span class="visor-data-label">
+                  Técnicas
+                </span>
+
+                <span
+                  class="visor-data-value"
+                  id="visor-techniques"
+                >
+                </span>
+
+              </div>
+
+
+              <div
+                class="visor-data-row"
+                data-field="objetivo"
+              >
+
+                <span class="visor-data-label">
+                  Objetivo
+                </span>
+
+                <span
+                  class="visor-data-value"
+                  id="visor-objective"
+                >
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <!-- DESCRIPCIÓN -->
+
+            <div class="visor-description">
+
+              <p
+                class="visor-description-label"
+              >
+                Descripción
+              </p>
+
+              <div
+                class="visor-description-content"
+                id="visor-description"
+              >
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- --------------------------------------------------
+           RECURSOS
+           -------------------------------------------------- -->
+
+      <section
+        class="visor-resources-section"
+        id="visor-resources-section"
+      >
+
+        <div class="section-container">
 
           <div
-            class="project-hero-cover protected-media"
+            class="visor-resources"
+            id="visor-resources"
+          >
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- --------------------------------------------------
+           BOTÓN VOLVER
+           -------------------------------------------------- -->
+
+      <section class="visor-back-section">
+
+        <div class="section-container">
+
+          <a
+            href="./proyectos.html"
+            class="visor-back-link"
           >
 
-            <img
-              id="project-cover"
-              class="protected-image"
-              src=""
-              alt=""
-              draggable="false"
-            >
+            <span>
+              ← Volver a proyectos
+            </span>
 
-          </div>
+            <span>
+              Back to projects
+            </span>
 
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ====================================================
-         INFORMACIÓN
-         ==================================================== -->
-
-    <section
-      class="project-information-section"
-      id="project-information-section"
-    >
-
-      <div class="section-container">
-
-        <div class="project-information-grid">
-
-          <div class="project-information-heading">
-
-            <p class="section-kicker">
-              Información
-            </p>
-
-            <p class="section-kicker-en">
-              Information
-            </p>
-
-            <div class="section-rule"></div>
-
-          </div>
-
-
-          <div
-            class="project-information-content"
-            id="project-information-content"
-          ></div>
+          </a>
 
         </div>
 
-      </div>
+      </section>
 
     </section>
 
 
-    <!-- ====================================================
-         CONTENIDO VISUAL
-         ==================================================== -->
+    <!-- Error -->
 
     <section
-      class="project-content-section"
-      id="project-content-section"
-    >
-
-      <div
-        class="section-container"
-        id="project-content"
-      ></div>
-
-    </section>
-
-
-    <!-- ====================================================
-         RECURSOS EXTERNOS
-         ==================================================== -->
-
-    <section
-      class="project-resources-section"
-      id="project-resources-section"
+      class="visor-error"
+      id="visor-error"
+      hidden
     >
 
       <div class="section-container">
 
-        <div
-          class="project-resources"
-          id="project-resources"
-        ></div>
+        <h1>
+          Proyecto no disponible
+        </h1>
 
-      </div>
+        <p>
+          No ha sido posible cargar la información de este proyecto.
+        </p>
 
-    </section>
-
-
-    <!-- ====================================================
-         NAVEGACIÓN ENTRE PROYECTOS
-         ==================================================== -->
-
-    <section
-      class="project-navigation-section"
-      id="project-navigation-section"
-    >
-
-      <div class="section-container">
-
-        <a
-          href="./proyectos.html"
-          class="project-all-link"
-        >
-          <span>Todos los proyectos</span>
-          <small>All projects</small>
+        <a href="./proyectos.html">
+          Volver a proyectos
         </a>
 
       </div>
@@ -361,122 +383,88 @@
        FOOTER
        ====================================================== -->
 
-  <footer class="main-footer">
+  <footer class="site-footer">
 
-    <div class="footer-container">
+    <div class="footer-inner">
 
-      <div class="footer-top">
+      <div class="footer-brand">
 
-        <div class="footer-services">
-
-          <p>
-            Documentación del Patrimonio · Planimetrías ·
-            Mapeados · Levantamiento y Modelado 3D ·
-            Reconstrucción Virtual · Fotografía con Drone
-          </p>
-
-          <p class="footer-services-en">
-            Heritage Documentation · Mapping · 3D Survey ·
-            Virtual reconstruction · Drone Photography
-          </p>
-
-        </div>
-
-
-        <div class="footer-nav-column">
-
-          <a href="./index.html">
-            Inicio · Home
-          </a>
-
-          <a href="./proyectos.html">
-            Proyectos · Projects
-          </a>
-
-          <a href="./about.html">
-            Sobre mí · About
-          </a>
-
-          <a href="./contact.html">
-            Contacto · Contact
-          </a>
-
-        </div>
-
-      </div>
-
-
-      <div class="footer-identity">
-
-        <div class="footer-logos">
-
-          <img
-            id="footer-logo-baal"
-            class="footer-secondary-logo protected-image"
-            src=""
-            alt="Baal Studio"
-            draggable="false"
-          >
-
-          <img
-            id="footer-logo-lns"
-            class="footer-secondary-logo protected-image"
-            src=""
-            alt="LNS"
-            draggable="false"
-          >
-
-        </div>
-
-
-        <a
-          href="https://linktr.ee/baalstudio"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Baal Studio — Redes sociales"
+        <img
+          src=""
+          alt="Baal Studio"
+          class="footer-logo-baal"
+          draggable="false"
         >
-
-          <img
-            id="footer-qr"
-            class="footer-qr protected-image"
-            src=""
-            alt="Redes sociales de Baal Studio"
-            width="100"
-            height="100"
-            draggable="false"
-          >
-
-        </a>
-
-
-        <a
-          href="https://linktr.ee/baalstudio"
-          class="footer-social-link"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          RRSS
-        </a>
-
-      </div>
-
-
-      <div class="footer-bottom">
 
         <p>
-          © Juan Jesús Lupiáñez Moreno · Baal Studio ·
-          Todos los derechos reservados · All rights reserved.
+          Documentación del patrimonio,
+          visualización arquitectónica y
+          reconstrucción virtual.
         </p>
 
       </div>
+
+
+      <div class="footer-nav">
+
+        <a href="./index.html">
+          Inicio
+        </a>
+
+        <a href="./proyectos.html">
+          Proyectos
+        </a>
+
+        <a href="./about.html">
+          Sobre mí
+        </a>
+
+        <a href="./contact.html">
+          Contacto
+        </a>
+
+      </div>
+
+
+      <div class="footer-logos">
+
+        <img
+          src=""
+          alt=""
+          class="footer-secondary-logo"
+          draggable="false"
+        >
+
+        <img
+          src=""
+          alt=""
+          class="footer-qr"
+          draggable="false"
+        >
+
+      </div>
+
+    </div>
+
+
+    <div class="footer-bottom">
+
+      <span>
+        © Baal Studio
+      </span>
 
     </div>
 
   </footer>
 
 
+  <!-- ======================================================
+       SCRIPTS
+       ====================================================== -->
+
   <script src="./script.js"></script>
-  <script src="./proyecto.js"></script>
+
+  <script src="./visor.js"></script>
 
 </body>
 
