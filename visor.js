@@ -34,7 +34,7 @@
 
   async function initViewer() {
 
-    const requestedProject =
+    const projectName =
       getProjectParameter();
 
 
@@ -52,27 +52,11 @@
 
     console.log(
       "[Baal Studio] Parámetro recibido:",
-      requestedProject
+      projectName
     );
 
 
-    if (!content) {
-
-      console.error(
-        "[Baal Studio] No existe #project-viewer-content en visor.html"
-      );
-
-      showState(
-        state,
-        "No se ha encontrado el contenedor del proyecto."
-      );
-
-      return;
-
-    }
-
-
-    if (!requestedProject) {
+    if (!projectName) {
 
       showState(
         state,
@@ -88,21 +72,21 @@
 
       const project =
         await loadProject(
-          requestedProject
+          projectName
         );
 
 
       if (!project) {
 
         throw new Error(
-          `No se encontró el proyecto solicitado: ${requestedProject}`
+          `No se encontró el proyecto solicitado: ${projectName}`
         );
 
       }
 
 
       console.log(
-        "[Baal Studio] Proyecto seleccionado:",
+        "[Baal Studio] Proyecto seleccionado para renderizar:",
         project
       );
 
@@ -114,7 +98,9 @@
 
 
       if (state) {
+
         state.remove();
+
       }
 
 
@@ -151,32 +137,23 @@
       );
 
 
-    const value =
+    return String(
+
       params.get("project") ||
+
       params.get("proyecto") ||
+
       params.get("folder") ||
-      "";
 
+      ""
 
-    try {
-
-      return decodeURIComponent(
-        value
-      ).trim();
-
-    } catch (_) {
-
-      return String(
-        value
-      ).trim();
-
-    }
+    ).trim();
 
   }
 
 
   /* =========================================================
-     CARGAR PROYECTOS
+     CARGAR PROYECTOS DESDE get-projects
      ========================================================= */
 
   async function loadProject(
@@ -188,9 +165,12 @@
         PROJECTS_FUNCTION,
         {
           method: "GET",
+
           headers: {
-            "Accept": "application/json"
+            "Accept":
+              "application/json"
           },
+
           cache: "no-store"
         }
       );
@@ -233,53 +213,16 @@
     );
 
 
-    if (!projects.length) {
-
-      throw new Error(
-        "get-projects no devolvió ningún proyecto reconocible."
-      );
-
-    }
-
-
-    const project =
-      findRequestedProject(
-        projects,
-        requestedName
-      );
-
-
-    if (project) {
-
-      return project;
-
-    }
-
-
-    /*
-       Si no encontramos coincidencia exacta,
-       mostramos información útil en consola.
-    */
-
-    console.error(
-      "[Baal Studio] No se encontró coincidencia.",
-      {
-        solicitado: requestedName,
-        disponibles: projects.map(
-          item =>
-            getRawProjectName(item)
-        )
-      }
+    return findRequestedProject(
+      projects,
+      requestedName
     );
-
-
-    return null;
 
   }
 
 
   /* =========================================================
-     NORMALIZAR RESPUESTA DE SUPABASE
+     NORMALIZAR RESPUESTA
      ========================================================= */
 
   function normalizeProjectsResponse(
@@ -291,14 +234,14 @@
     }
 
 
-    /*
-       Caso habitual:
+    if (
+      Array.isArray(data)
+    ) {
 
-       {
-         success: true,
-         projects: [...]
-       }
-    */
+      return data;
+
+    }
+
 
     if (
       Array.isArray(
@@ -306,74 +249,21 @@
       )
     ) {
 
-      return data.projects
-        .filter(isObject);
+      return data.projects;
 
     }
 
-
-    /*
-       Respuesta directamente como array.
-    */
 
     if (
-      Array.isArray(data)
+      Array.isArray(
+        data.data
+      )
     ) {
 
-      return data
-        .filter(isObject);
+      return data.data;
 
     }
 
-
-    /*
-       Algunas funciones pueden devolver:
-
-       {
-         data: {
-           projects: [...]
-         }
-       }
-    */
-
-    if (
-      data.data &&
-      typeof data.data === "object"
-    ) {
-
-      if (
-        Array.isArray(
-          data.data.projects
-        )
-      ) {
-
-        return data.data.projects
-          .filter(isObject);
-
-      }
-
-
-      if (
-        Array.isArray(
-          data.data
-        )
-      ) {
-
-        return data.data
-          .filter(isObject);
-
-      }
-
-    }
-
-
-    /*
-       Respuesta:
-
-       {
-         results: [...]
-       }
-    */
 
     if (
       Array.isArray(
@@ -381,19 +271,15 @@
       )
     ) {
 
-      return data.results
-        .filter(isObject);
+      return data.results;
 
     }
 
 
-    /*
-       Respuesta de un solo proyecto.
-    */
-
     if (
       data.project &&
-      isObject(data.project)
+      typeof data.project ===
+        "object"
     ) {
 
       return [
@@ -417,125 +303,219 @@
     requestedName
   ) {
 
+    if (
+      !Array.isArray(projects) ||
+      !projects.length
+    ) {
+
+      return null;
+
+    }
+
+
     const requested =
-      String(
-        requestedName || ""
-      ).trim();
+      decodeURIComponentSafe(
+        requestedName
+      );
 
 
-    const requestedKey =
+    const requestedNormalized =
       normalizeKey(
         requested
       );
 
 
-    /*
-       1. COINCIDENCIA EXACTA CON NOMBRE DE CARPETA
-    */
-
-    let project =
-      projects.find(
-        item => {
-
-          const rawName =
-            getRawProjectName(
-              item
-            );
+    console.log(
+      "[Baal Studio] Clave normalizada solicitada:",
+      requestedNormalized
+    );
 
 
-          return (
-            rawName ===
+    /* -------------------------------------------------------
+       1. COINCIDENCIA DIRECTA / NORMALIZADA
+       ------------------------------------------------------- */
+
+    for (
+      const project
+      of projects
+    ) {
+
+      const candidates =
+        getProjectIdentityCandidates(
+          project
+        );
+
+
+      console.log(
+        "[Baal Studio] Identificadores detectados:",
+        candidates
+      );
+
+
+      const exactMatch =
+        candidates.some(
+          candidate =>
+            candidate.raw ===
             requested
-          );
-
-        }
-      );
+        );
 
 
-    if (project) {
+      if (exactMatch) {
 
-      return project;
-
-    }
-
-
-    /*
-       2. COINCIDENCIA NORMALIZADA CON NOMBRE DE CARPETA
-    */
-
-    project =
-      projects.find(
-        item => {
-
-          const rawName =
-            getRawProjectName(
-              item
-            );
+        console.log(
+          "[Baal Studio] Coincidencia exacta encontrada."
+        );
 
 
-          return (
-            normalizeKey(
-              rawName
-            ) ===
-            requestedKey
-          );
+        return project;
 
-        }
-      );
+      }
 
 
-    if (project) {
+      const normalizedMatch =
+        candidates.some(
+          candidate =>
+            candidate.normalized ===
+            requestedNormalized
+        );
 
-      return project;
+
+      if (normalizedMatch) {
+
+        console.log(
+          "[Baal Studio] Coincidencia normalizada encontrada."
+        );
+
+
+        return project;
+
+      }
 
     }
 
 
-    /*
-       3. COINCIDENCIA POR TÍTULO
+    /* -------------------------------------------------------
+       2. COINCIDENCIA POR TÍTULO
+       ------------------------------------------------------- */
 
-       Esto es solo un respaldo.
-       El título NO se utilizará como identificador
-       principal del proyecto.
-    */
+    for (
+      const project
+      of projects
+    ) {
 
-    project =
-      projects.find(
-        item => {
+      const metadata =
+        project?.metadata &&
+        typeof project.metadata ===
+          "object"
+          ? project.metadata
+          : {};
 
-          const metadata =
-            getMetadata(
-              item
+
+      const possibleTitles = [
+
+        metadata.titulo,
+
+        metadata.title,
+
+        metadata.nombre,
+
+        metadata.name,
+
+        project?.titulo,
+
+        project?.title,
+
+        project?.nombre,
+
+        project?.name
+
+      ];
+
+
+      const titleMatch =
+        possibleTitles.some(
+          value => {
+
+            if (
+              !hasValue(value)
+            ) {
+
+              return false;
+
+            }
+
+
+            return (
+              normalizeKey(
+                value
+              ) ===
+              requestedNormalized
             );
 
-
-          const title =
-            getFirstValue(
-              metadata,
-              [
-                "title",
-                "titulo",
-                "nombre"
-              ]
-            );
+          }
+        );
 
 
-          return (
-            normalizeKey(
-              title
-            ) ===
-            requestedKey
-          );
+      if (titleMatch) {
 
-        }
+        console.log(
+          "[Baal Studio] Coincidencia encontrada por título."
+        );
+
+
+        return project;
+
+      }
+
+    }
+
+
+    /* -------------------------------------------------------
+       3. SI SOLO EXISTE UN PROYECTO
+       -------------------------------------------------------
+
+       Este es un respaldo importante.
+
+       La función get-projects actualmente puede devolver
+       únicamente el proyecto disponible. Si solo existe
+       un objeto, no tiene sentido descartarlo simplemente
+       porque la estructura interna no exponga el nombre
+       de carpeta en uno de los campos esperados.
+       ------------------------------------------------------- */
+
+    if (
+      projects.length === 1
+    ) {
+
+      console.warn(
+        "[Baal Studio] No se encontró coincidencia explícita, pero get-projects solo ha devuelto un proyecto. Se utilizará ese proyecto."
       );
 
 
-    if (project) {
-
-      return project;
+      return projects[0];
 
     }
+
+
+    /* -------------------------------------------------------
+       4. NO ENCONTRADO
+       ------------------------------------------------------- */
+
+    console.error(
+      "[Baal Studio] No se encontró coincidencia.",
+      {
+        solicitado:
+          requested,
+
+        disponibles:
+          projects.map(
+            project =>
+              getProjectIdentityCandidates(
+                project
+              )
+          )
+      }
+    );
 
 
     return null;
@@ -544,101 +524,331 @@
 
 
   /* =========================================================
-     NOMBRE REAL DE CARPETA
+     IDENTIFICADORES POSIBLES DEL PROYECTO
      ========================================================= */
 
-  function getRawProjectName(
+  function getProjectIdentityCandidates(
     project
   ) {
 
+    const candidates =
+      [];
+
+
     if (
       !project ||
-      typeof project !== "object"
+      typeof project !==
+        "object"
     ) {
 
-      return "";
+      return candidates;
 
     }
 
 
-    return String(
+    /*
+     * Campos habituales de identificación.
+     */
 
-      project.name ||
+    const directKeys = [
 
-      project.folder ||
+      "name",
 
-      project.folderName ||
+      "folder",
 
-      project.projectName ||
+      "folderName",
 
-      project.project ||
+      "projectName",
 
-      ""
+      "project_name",
 
-    ).trim();
+      "project",
+
+      "slug",
+
+      "path",
+
+      "folderPath",
+
+      "folder_path",
+
+      "storagePath",
+
+      "storage_path",
+
+      "prefix",
+
+      "directory",
+
+      "dirname"
+
+    ];
+
+
+    directKeys.forEach(
+      key => {
+
+        if (
+          hasValue(
+            project[key]
+          )
+        ) {
+
+          addIdentityCandidate(
+            candidates,
+            project[key]
+          );
+
+        }
+
+      }
+    );
+
+
+    /*
+     * Algunos backends pueden guardar la información
+     * dentro de un objeto "project".
+     */
+
+    if (
+      project.project &&
+      typeof project.project ===
+        "object"
+    ) {
+
+      directKeys.forEach(
+        key => {
+
+          if (
+            hasValue(
+              project.project[key]
+            )
+          ) {
+
+            addIdentityCandidate(
+              candidates,
+              project.project[key]
+            );
+
+          }
+
+        }
+      );
+
+    }
+
+
+    /*
+     * Información de Supabase Storage.
+     */
+
+    if (
+      project.storage &&
+      typeof project.storage ===
+        "object"
+    ) {
+
+      directKeys.forEach(
+        key => {
+
+          if (
+            hasValue(
+              project.storage[key]
+            )
+          ) {
+
+            addIdentityCandidate(
+              candidates,
+              project.storage[key]
+            );
+
+          }
+
+        }
+      );
+
+    }
+
+
+    /*
+     * Si tenemos rutas completas, también intentamos
+     * extraer el último directorio.
+     */
+
+    const currentCandidates =
+      [...candidates];
+
+
+    currentCandidates.forEach(
+      candidate => {
+
+        const raw =
+          candidate.raw;
+
+
+        if (
+          raw.includes("/")
+        ) {
+
+          const parts =
+            raw
+              .split("/")
+              .filter(Boolean);
+
+
+          if (
+            parts.length
+          ) {
+
+            addIdentityCandidate(
+              candidates,
+              parts[
+                parts.length - 1
+              ]
+            );
+
+          }
+
+        }
+
+      }
+    );
+
+
+    return candidates;
 
   }
 
 
-  /* =========================================================
-     METADATA
-     ========================================================= */
-
-  function getMetadata(
-    project
+  function addIdentityCandidate(
+    candidates,
+    value
   ) {
 
     if (
-      !project ||
-      typeof project !== "object"
+      value === null ||
+      value === undefined
     ) {
 
-      return {};
+      return;
 
     }
-
-
-    let metadata =
-      project.metadata;
 
 
     /*
-       Si por alguna razón metadata llega
-       serializada como JSON.
-    */
+     * Si el valor es un objeto, no lo convertimos
+     * directamente a "[object Object]".
+     */
 
     if (
-      typeof metadata === "string"
+      typeof value ===
+        "object"
     ) {
 
-      try {
-
-        metadata =
-          JSON.parse(
-            metadata
-          );
-
-      } catch (_) {
-
-        metadata = {};
-
-      }
+      return;
 
     }
 
 
-    if (
-      metadata &&
-      typeof metadata === "object" &&
-      !Array.isArray(metadata)
-    ) {
+    const raw =
+      String(
+        value
+      ).trim();
 
-      return metadata;
 
+    if (!raw) {
+      return;
     }
 
 
-    return {};
+    const normalized =
+      normalizeKey(
+        raw
+      );
+
+
+    if (!normalized) {
+      return;
+    }
+
+
+    const exists =
+      candidates.some(
+        candidate =>
+          candidate.raw ===
+          raw
+      );
+
+
+    if (!exists) {
+
+      candidates.push({
+        raw,
+        normalized
+      });
+
+    }
+
+  }
+
+
+  function decodeURIComponentSafe(
+    value
+  ) {
+
+    try {
+
+      return decodeURIComponent(
+        value
+      );
+
+    } catch (_) {
+
+      return value;
+
+    }
+
+  }
+
+
+  function normalizeKey(
+    value
+  ) {
+
+    return String(
+      value || ""
+    )
+
+      .normalize("NFD")
+
+      .replace(
+        /[\u0300-\u036f]/g,
+        ""
+      )
+
+      /*
+       * Elimina el identificador de orden final:
+       * (01), (02), (03), etc.
+       */
+
+      .replace(
+        /\s*\(\d+\)\s*$/,
+        ""
+      )
+
+      .replace(
+        /\s*[.!?]+\s*$/,
+        ""
+      )
+
+      .replace(
+        /\s+/g,
+        " "
+      )
+
+      .trim()
+
+      .toLowerCase();
 
   }
 
@@ -652,70 +862,76 @@
     container
   ) {
 
-    /*
-       Limpiamos cualquier contenido previo.
-       Esto evita que el nombre de la carpeta
-       procedente del HTML quede duplicado.
-    */
+    if (!container) {
 
-    container.innerHTML = "";
+      throw new Error(
+        "No existe #project-viewer-content en visor.html"
+      );
+
+    }
 
 
     const metadata =
-      getMetadata(
-        project
-      );
+      project?.metadata &&
+      typeof project.metadata ===
+        "object"
+        ? project.metadata
+        : {};
 
-
-    /*
-       IMPORTANTE:
-
-       El nombre de la carpeta NO es el título.
-
-       El título visible procede de metadata.
-    */
 
     const title =
       cleanTitle(
-        getFirstValue(
-          metadata,
-          [
-            "title",
-            "titulo",
-            "nombre"
-          ]
-        )
+
+        metadata.titulo ||
+
+        metadata.title ||
+
+        metadata.nombre ||
+
+        project.titulo ||
+
+        project.title ||
+
+        project.nombre ||
+
+        project.name ||
+
+        "Proyecto"
+
       );
-
-
-    const finalTitle =
-      title ||
-      "Proyecto";
 
 
     const englishTitle =
       cleanText(
-        getFirstValue(
-          metadata,
-          [
-            "title_en",
-            "titulo_en",
-            "nombre_en",
-            "englishTitle",
-            "english_title"
-          ]
-        )
+
+        metadata.titulo_en ||
+
+        metadata.title_en ||
+
+        metadata.nombre_en ||
+
+        metadata.englishTitle ||
+
+        metadata.english_title ||
+
+        project.titulo_en ||
+
+        project.title_en ||
+
+        ""
+
       );
 
 
     const category =
       cleanText(
-        getFirstValue(
+        firstValue(
           metadata,
+          project,
           [
-            "category",
             "categoria",
             "categoría",
+            "category",
             "tipo",
             "type"
           ]
@@ -725,12 +941,13 @@
 
     const techniques =
       cleanText(
-        getFirstValue(
+        firstValue(
           metadata,
+          project,
           [
-            "techniques",
             "tecnicas",
             "técnicas",
+            "techniques",
             "technique"
           ]
         )
@@ -739,11 +956,12 @@
 
     const objective =
       cleanText(
-        getFirstValue(
+        firstValue(
           metadata,
+          project,
           [
-            "objective",
-            "objetivo"
+            "objetivo",
+            "objective"
           ]
         )
       );
@@ -751,12 +969,13 @@
 
     const location =
       cleanText(
-        getFirstValue(
+        firstValue(
           metadata,
+          project,
           [
-            "location",
             "localizacion",
             "localización",
+            "location",
             "ubicacion",
             "ubicación",
             "place"
@@ -767,12 +986,13 @@
 
     const year =
       cleanText(
-        getFirstValue(
+        firstValue(
           metadata,
+          project,
           [
-            "year",
             "año",
             "ano",
+            "year",
             "fecha"
           ]
         )
@@ -781,46 +1001,33 @@
 
     const description =
       normalizeDescription(
-        getFirstValue(
+        firstValue(
           metadata,
+          project,
           [
-            "description",
             "descripcion",
-            "descripción"
+            "descripción",
+            "description"
           ]
         )
       );
 
 
     document.title =
-      `${finalTitle} — Baal Studio`;
+      `${title} — Baal Studio`;
 
 
-    console.log(
-      "[Baal Studio] Título visible:",
-      finalTitle
-    );
-
-
-    console.log(
-      "[Baal Studio] Metadata:",
-      metadata
-    );
-
-
-    /*
-       ========================================================
+    /* -------------------------------------------------------
        CABECERA DEL PROYECTO
-       ========================================================
-    */
+       ------------------------------------------------------- */
 
-    const intro =
+    const header =
       document.createElement(
         "section"
       );
 
 
-    intro.className =
+    header.className =
       "project-viewer-intro";
 
 
@@ -855,7 +1062,7 @@
 
 
     heading.textContent =
-      finalTitle;
+      title;
 
 
     titleBlock.appendChild(
@@ -863,7 +1070,9 @@
     );
 
 
-    if (englishTitle) {
+    if (
+      englishTitle
+    ) {
 
       const headingEn =
         document.createElement(
@@ -891,24 +1100,22 @@
     );
 
 
-    /*
-       ========================================================
+    /* -------------------------------------------------------
        RESUMEN
-       ========================================================
-    */
+       ------------------------------------------------------- */
 
-    const summary =
+    const meta =
       document.createElement(
         "div"
       );
 
 
-    summary.className =
+    meta.className =
       "project-viewer-summary";
 
 
     appendSummary(
-      summary,
+      meta,
       "Categoría",
       "Category",
       category
@@ -916,7 +1123,7 @@
 
 
     appendSummary(
-      summary,
+      meta,
       "Técnicas",
       "Techniques",
       techniques
@@ -924,7 +1131,7 @@
 
 
     appendSummary(
-      summary,
+      meta,
       "Objetivo",
       "Objective",
       objective
@@ -932,7 +1139,7 @@
 
 
     appendSummary(
-      summary,
+      meta,
       "Ubicación",
       "Location",
       location
@@ -940,7 +1147,7 @@
 
 
     appendSummary(
-      summary,
+      meta,
       "Año",
       "Year",
       year
@@ -948,25 +1155,23 @@
 
 
     introInner.appendChild(
-      summary
+      meta
     );
 
 
-    intro.appendChild(
+    header.appendChild(
       introInner
     );
 
 
     container.appendChild(
-      intro
+      header
     );
 
 
-    /*
-       ========================================================
+    /* -------------------------------------------------------
        CUERPO
-       ========================================================
-    */
+       ------------------------------------------------------- */
 
     const body =
       document.createElement(
@@ -978,11 +1183,9 @@
       "project-viewer-body";
 
 
-    /*
-       ========================================================
+    /* -------------------------------------------------------
        DESCRIPCIÓN
-       ========================================================
-    */
+       ------------------------------------------------------- */
 
     if (
       description.length
@@ -1006,25 +1209,26 @@
       );
 
 
-      description.forEach(
-        paragraph => {
+      for (
+        const paragraph
+        of description
+      ) {
 
-          const p =
-            document.createElement(
-              "p"
-            );
-
-
-          p.textContent =
-            paragraph;
-
-
-          descriptionSection.appendChild(
-            p
+        const p =
+          document.createElement(
+            "p"
           );
 
-        }
-      );
+
+        p.textContent =
+          paragraph;
+
+
+        descriptionSection.appendChild(
+          p
+        );
+
+      }
 
 
       body.appendChild(
@@ -1034,11 +1238,9 @@
     }
 
 
-    /*
-       ========================================================
-       BLOQUES DEL PROYECTO
-       ========================================================
-    */
+    /* -------------------------------------------------------
+       BLOQUES
+       ------------------------------------------------------- */
 
     const blocks =
       collectBlocks(
@@ -1047,8 +1249,7 @@
 
 
     console.log(
-      "[Baal Studio] Bloques encontrados:",
-      blocks.length,
+      "[Baal Studio] Bloques detectados:",
       blocks
     );
 
@@ -1096,12 +1297,16 @@
           );
 
 
+          const after =
+            resources.children.length;
+
+
           if (
-            resources.children.length >
-            before
+            after > before
           ) {
 
-            renderedResources++;
+            renderedResources +=
+              after - before;
 
           }
 
@@ -1111,38 +1316,29 @@
     }
 
 
-    /*
-       ========================================================
+    /* -------------------------------------------------------
        RECURSOS DIRECTOS
-       ========================================================
-    */
+       ------------------------------------------------------- */
 
     const articles =
       extractUrls(
-        project.articles
+        project.articles ||
+        metadata.articles
       );
 
 
     const sketchfab =
       extractUrls(
-        project.sketchfab
+        project.sketchfab ||
+        metadata.sketchfab
       );
 
 
     const video =
       extractFirstUrl(
-        project.video
+        project.video ||
+        metadata.video
       );
-
-
-    console.log(
-      "[Baal Studio] Recursos directos:",
-      {
-        articles,
-        sketchfab,
-        video
-      }
-    );
 
 
     const hasVideoBlock =
@@ -1160,9 +1356,16 @@
         block =>
           isBlockType(
             block,
-            ["sketchfab", "3d"]
+            [
+              "sketchfab",
+              "3d"
+            ]
           )
       );
+
+
+    let directResourcesRendered =
+      false;
 
 
     if (
@@ -1170,6 +1373,11 @@
       sketchfab.length ||
       video
     ) {
+
+      /*
+       * Solo creamos la etiqueta Recursos si realmente
+       * hay algo que mostrar.
+       */
 
       resources.appendChild(
         createSectionLabel(
@@ -1190,7 +1398,9 @@
           )
         );
 
-        renderedResources++;
+
+        directResourcesRendered =
+          true;
 
       }
 
@@ -1214,10 +1424,12 @@
               )
             );
 
-            renderedResources++;
-
           }
         );
+
+
+        directResourcesRendered =
+          true;
 
       }
 
@@ -1240,24 +1452,25 @@
               )
             );
 
-            renderedResources++;
-
           }
         );
+
+
+        directResourcesRendered =
+          true;
 
       }
 
     }
 
 
-    /*
-       ========================================================
+    /* -------------------------------------------------------
        AÑADIR RECURSOS AL CUERPO
-       ========================================================
-    */
+       ------------------------------------------------------- */
 
     if (
-      renderedResources > 0
+      renderedResources > 0 ||
+      directResourcesRendered
     ) {
 
       body.appendChild(
@@ -1292,11 +1505,9 @@
     );
 
 
-    /*
-       ========================================================
+    /* -------------------------------------------------------
        VOLVER
-       ========================================================
-    */
+       ------------------------------------------------------- */
 
     const back =
       document.createElement(
@@ -1328,7 +1539,117 @@
 
 
   /* =========================================================
-     OBTENER BLOQUES
+     RESUMEN
+     ========================================================= */
+
+  function appendSummary(
+    container,
+    spanish,
+    english,
+    value
+  ) {
+
+    if (!value) {
+      return;
+    }
+
+
+    const item =
+      document.createElement(
+        "div"
+      );
+
+
+    item.className =
+      "project-viewer-summary-item";
+
+
+    const label =
+      document.createElement(
+        "div"
+      );
+
+
+    label.className =
+      "project-viewer-summary-label";
+
+
+    label.innerHTML =
+      `${escapeHtml(spanish)}
+       <span>
+         ${escapeHtml(english)}
+       </span>`;
+
+
+    const valueElement =
+      document.createElement(
+        "div"
+      );
+
+
+    valueElement.className =
+      "project-viewer-summary-value";
+
+
+    valueElement.textContent =
+      value;
+
+
+    item.appendChild(
+      label
+    );
+
+
+    item.appendChild(
+      valueElement
+    );
+
+
+    container.appendChild(
+      item
+    );
+
+  }
+
+
+  /* =========================================================
+     ETIQUETAS
+     ========================================================= */
+
+  function createSectionLabel(
+    spanish,
+    english
+  ) {
+
+    const wrapper =
+      document.createElement(
+        "div"
+      );
+
+
+    wrapper.className =
+      "project-viewer-section-label";
+
+
+    wrapper.innerHTML =
+      `
+        <span>
+          ${escapeHtml(spanish)}
+        </span>
+
+        <small>
+          ${escapeHtml(english)}
+        </small>
+      `;
+
+
+    return wrapper;
+
+  }
+
+
+  /* =========================================================
+     BLOQUES
      ========================================================= */
 
   function collectBlocks(
@@ -1338,12 +1659,6 @@
     const result =
       [];
 
-
-    /*
-       Estructura conocida de get-projects:
-
-       project.blocks
-    */
 
     if (
       Array.isArray(
@@ -1358,12 +1673,7 @@
     }
 
 
-    /*
-       Estructuras alternativas
-    */
-
     if (
-      !result.length &&
       Array.isArray(
         project?.contentBlocks
       )
@@ -1377,7 +1687,6 @@
 
 
     if (
-      !result.length &&
       Array.isArray(
         project?.resources
       )
@@ -1390,55 +1699,6 @@
     }
 
 
-    /*
-       Si existe una propiedad content
-       con bloques.
-    */
-
-    if (
-      !result.length &&
-      Array.isArray(
-        project?.content
-      )
-    ) {
-
-      result.push(
-        ...project.content
-      );
-
-    }
-
-
-    /*
-       Si content es un objeto con blocks.
-    */
-
-    if (
-      !result.length &&
-      project?.content &&
-      typeof project.content === "object"
-    ) {
-
-      if (
-        Array.isArray(
-          project.content.blocks
-        )
-      ) {
-
-        result.push(
-          ...project.content.blocks
-        );
-
-      }
-
-    }
-
-
-    /*
-       Si no existen bloques pero hay imágenes
-       directamente en el proyecto.
-    */
-
     if (
       !result.length &&
       Array.isArray(
@@ -1448,8 +1708,11 @@
 
       result.push(
         {
-          type: "gallery",
-          images: project.images
+          type:
+            "gallery",
+
+          images:
+            project.images
         }
       );
 
@@ -1463,9 +1726,38 @@
   }
 
 
-  /* =========================================================
-     RENDERIZAR BLOQUE
-     ========================================================= */
+  function isBlockType(
+    block,
+    types
+  ) {
+
+    if (
+      !block ||
+      typeof block !==
+        "object"
+    ) {
+
+      return false;
+
+    }
+
+
+    const type =
+      String(
+        block.type ||
+        block.kind ||
+        ""
+      )
+        .trim()
+        .toLowerCase();
+
+
+    return types.includes(
+      type
+    );
+
+  }
+
 
   function renderBlock(
     block,
@@ -1475,7 +1767,8 @@
 
     if (
       !block ||
-      typeof block !== "object"
+      typeof block !==
+        "object"
     ) {
 
       return;
@@ -1487,7 +1780,8 @@
       String(
         block.type ||
         block.kind ||
-        block.blockType ||
+        block.contentType ||
+        block.resourceType ||
         ""
       )
         .trim()
@@ -1495,25 +1789,23 @@
 
 
     console.log(
-      `[Baal Studio] Renderizando bloque ${index + 1}:`,
-      type,
-      block
+      "[Baal Studio] Renderizando bloque:",
+      {
+        index,
+        type,
+        block
+      }
     );
 
 
-    /*
-       ========================================================
+    /* -------------------------------------------------------
        IMAGEN
-       ========================================================
-    */
+       ------------------------------------------------------- */
 
     if (
-      [
-        "image",
-        "photo",
-        "fotografia",
-        "fotografía"
-      ].includes(type)
+      type === "image" ||
+      type === "photo" ||
+      type === "fotografia"
     ) {
 
       const url =
@@ -1522,8 +1814,7 @@
           block.signedUrl ||
           block.signed_url ||
           block.src ||
-          block.image ||
-          block.value
+          block.image
         );
 
 
@@ -1548,19 +1839,14 @@
     }
 
 
-    /*
-       ========================================================
+    /* -------------------------------------------------------
        GALERÍA
-       ========================================================
-    */
+       ------------------------------------------------------- */
 
     if (
-      [
-        "images",
-        "gallery",
-        "galeria",
-        "galería"
-      ].includes(type)
+      type === "images" ||
+      type === "gallery" ||
+      type === "galeria"
     ) {
 
       const images =
@@ -1568,9 +1854,11 @@
           block.images
         )
           ? block.images
-          : Array.isArray(block.items)
-            ? block.items
-            : [];
+          : Array.isArray(
+              block.items
+            )
+              ? block.items
+              : [];
 
 
       const urls =
@@ -1600,18 +1888,14 @@
     }
 
 
-    /*
-       ========================================================
+    /* -------------------------------------------------------
        PDF
-       ========================================================
-    */
+       ------------------------------------------------------- */
 
     if (
-      [
-        "pdf",
-        "document",
-        "documento"
-      ].includes(type)
+      type === "pdf" ||
+      type === "document" ||
+      type === "documento"
     ) {
 
       const url =
@@ -1631,6 +1915,7 @@
             url,
             block.file ||
             block.title ||
+            block.name ||
             "Documento"
           )
         );
@@ -1643,11 +1928,9 @@
     }
 
 
-    /*
-       ========================================================
+    /* -------------------------------------------------------
        VÍDEO
-       ========================================================
-    */
+       ------------------------------------------------------- */
 
     if (
       type === "video"
@@ -1657,8 +1940,9 @@
         extractFirstUrl(
           block.value ||
           block.url ||
-          block.src ||
-          block.href
+          block.signedUrl ||
+          block.signed_url ||
+          block.src
         );
 
 
@@ -1678,19 +1962,15 @@
     }
 
 
-    /*
-       ========================================================
+    /* -------------------------------------------------------
        SKETCHFAB / 3D
-       ========================================================
-    */
+       ------------------------------------------------------- */
 
     if (
-      [
-        "sketchfab",
-        "3d",
-        "modelo3d",
-        "modelo_3d"
-      ].includes(type)
+      type === "sketchfab" ||
+      type === "3d" ||
+      type === "model" ||
+      type === "modelo"
     ) {
 
       const urls =
@@ -1698,7 +1978,7 @@
           block.urls ||
           block.url ||
           block.value ||
-          block.models
+          block.href
         );
 
 
@@ -1725,19 +2005,15 @@
     }
 
 
-    /*
-       ========================================================
+    /* -------------------------------------------------------
        TEXTO
-       ========================================================
-    */
+       ------------------------------------------------------- */
 
     if (
-      [
-        "text",
-        "texto",
-        "paragraph",
-        "article"
-      ].includes(type)
+      type === "text" ||
+      type === "texto" ||
+      type === "paragraph" ||
+      type === "article"
     ) {
 
       const text =
@@ -1790,119 +2066,17 @@
 
       }
 
-    }
 
-  }
-
-
-  /* =========================================================
-     RESUMEN
-     ========================================================= */
-
-  function appendSummary(
-    container,
-    spanish,
-    english,
-    value
-  ) {
-
-    if (!value) {
       return;
+
     }
 
 
-    const item =
-      document.createElement(
-        "div"
-      );
-
-
-    item.className =
-      "project-viewer-summary-item";
-
-
-    const label =
-      document.createElement(
-        "div"
-      );
-
-
-    label.className =
-      "project-viewer-summary-label";
-
-
-    label.innerHTML =
-      `
-        ${escapeHtml(spanish)}
-        <span>
-          ${escapeHtml(english)}
-        </span>
-      `;
-
-
-    const valueElement =
-      document.createElement(
-        "div"
-      );
-
-
-    valueElement.className =
-      "project-viewer-summary-value";
-
-
-    valueElement.textContent =
-      value;
-
-
-    item.appendChild(
-      label
+    console.warn(
+      "[Baal Studio] Tipo de bloque no reconocido:",
+      type,
+      block
     );
-
-
-    item.appendChild(
-      valueElement
-    );
-
-
-    container.appendChild(
-      item
-    );
-
-  }
-
-
-  /* =========================================================
-     ETIQUETA DE SECCIÓN
-     ========================================================= */
-
-  function createSectionLabel(
-    spanish,
-    english
-  ) {
-
-    const wrapper =
-      document.createElement(
-        "div"
-      );
-
-
-    wrapper.className =
-      "project-viewer-section-label";
-
-
-    wrapper.innerHTML =
-      `
-        <span>
-          ${escapeHtml(spanish)}
-        </span>
-
-        <small>
-          ${escapeHtml(english)}
-        </small>
-      `;
-
-
-    return wrapper;
 
   }
 
@@ -2024,23 +2198,17 @@
           sourceItems?.[index];
 
 
-        let caption =
-          "";
+        const caption =
+          typeof source ===
+            "object"
 
+            ? source.reference ||
+              source.file ||
+              source.caption ||
+              source.title ||
+              ""
 
-        if (
-          source &&
-          typeof source === "object"
-        ) {
-
-          caption =
-            source.reference ||
-            source.file ||
-            source.caption ||
-            source.title ||
-            "";
-
-        }
+            : "";
 
 
         gallery.appendChild(
@@ -2386,20 +2554,34 @@
 
 
   /* =========================================================
-     OBTENER PRIMER VALOR
+     CAMPOS
      ========================================================= */
 
-  function getFirstValue(
-    object,
+  function firstValue(
+    metadata,
+    project,
     keys
   ) {
 
-    if (
-      !object ||
-      typeof object !== "object"
+    for (
+      const key
+      of keys
     ) {
 
-      return "";
+      if (
+        metadata &&
+        Object.prototype.hasOwnProperty.call(
+          metadata,
+          key
+        ) &&
+        hasValue(
+          metadata[key]
+        )
+      ) {
+
+        return metadata[key];
+
+      }
 
     }
 
@@ -2410,25 +2592,17 @@
     ) {
 
       if (
+        project &&
         Object.prototype.hasOwnProperty.call(
-          object,
+          project,
           key
+        ) &&
+        hasValue(
+          project[key]
         )
       ) {
 
-        const value =
-          object[key];
-
-
-        if (
-          hasValue(
-            value
-          )
-        ) {
-
-          return value;
-
-        }
+        return project[key];
 
       }
 
@@ -2439,10 +2613,6 @@
 
   }
 
-
-  /* =========================================================
-     VALOR EXISTENTE
-     ========================================================= */
 
   function hasValue(
     value
@@ -2507,9 +2677,11 @@
 
 
     return String(value)
+
       .split(
         /\n\s*\n/
       )
+
       .map(
         text =>
           text
@@ -2519,14 +2691,11 @@
             )
             .trim()
       )
+
       .filter(Boolean);
 
   }
 
-
-  /* =========================================================
-     LIMPIAR TEXTO
-     ========================================================= */
 
   function cleanText(
     value
@@ -2537,9 +2706,7 @@
     ) {
 
       return value
-        .map(
-          cleanText
-        )
+        .map(cleanText)
         .filter(Boolean)
         .join(" ");
 
@@ -2566,10 +2733,6 @@
   }
 
 
-  /* =========================================================
-     LIMPIAR TÍTULO
-     ========================================================= */
-
   function cleanTitle(
     value
   ) {
@@ -2577,45 +2740,18 @@
     return cleanText(
       value
     )
+
       .replace(
         /\s*\(\d+\)\s*$/,
         ""
       )
+
       .replace(
         /\s*[.!?]+\s*$/,
         ""
       )
+
       .trim();
-
-  }
-
-
-  /* =========================================================
-     NORMALIZAR CLAVE
-     ========================================================= */
-
-  function normalizeKey(
-    value
-  ) {
-
-    return String(
-      value || ""
-    )
-      .normalize("NFD")
-      .replace(
-        /[\u0300-\u036f]/g,
-        ""
-      )
-      .replace(
-        /\s*\(\d+\)\s*$/,
-        ""
-      )
-      .replace(
-        /\s+/g,
-        " "
-      )
-      .trim()
-      .toLowerCase();
 
   }
 
@@ -2632,31 +2768,16 @@
       Array.isArray(value)
     ) {
 
-      for (
-        const item
-        of value
-      ) {
-
-        const url =
-          extractFirstUrl(
-            item
-          );
-
-
-        if (url) {
-          return url;
-        }
-
-      }
-
-
-      return "";
+      return extractFirstUrl(
+        value[0]
+      );
 
     }
 
 
     if (
-      typeof value === "string"
+      typeof value ===
+      "string"
     ) {
 
       return value.trim();
@@ -2666,7 +2787,8 @@
 
     if (
       !value ||
-      typeof value !== "object"
+      typeof value !==
+        "object"
     ) {
 
       return "";
@@ -2701,7 +2823,8 @@
     ) {
 
       if (
-        typeof value[key] === "string" &&
+        typeof value[key] ===
+          "string" &&
         value[key].trim()
       ) {
 
@@ -2722,7 +2845,9 @@
   ) {
 
     if (!value) {
+
       return [];
+
     }
 
 
@@ -2732,10 +2857,7 @@
 
       return value
         .flatMap(
-          item =>
-            extractUrls(
-              item
-            )
+          extractUrls
         )
         .filter(Boolean);
 
@@ -2743,7 +2865,8 @@
 
 
     if (
-      typeof value === "string"
+      typeof value ===
+      "string"
     ) {
 
       return value.trim()
@@ -2762,60 +2885,6 @@
     return url
       ? [url]
       : [];
-
-  }
-
-
-  /* =========================================================
-     TIPO DE BLOQUE
-     ========================================================= */
-
-  function isBlockType(
-    block,
-    types
-  ) {
-
-    if (
-      !block ||
-      typeof block !== "object"
-    ) {
-
-      return false;
-
-    }
-
-
-    const type =
-      String(
-        block.type ||
-        block.kind ||
-        block.blockType ||
-        ""
-      )
-        .trim()
-        .toLowerCase();
-
-
-    return types.includes(
-      type
-    );
-
-  }
-
-
-  /* =========================================================
-     OBJETO
-     ========================================================= */
-
-  function isObject(
-    value
-  ) {
-
-    return (
-      value !== null &&
-      typeof value === "object" &&
-      !Array.isArray(value)
-    );
 
   }
 
@@ -2843,11 +2912,6 @@
     if (strong) {
 
       strong.textContent =
-        message;
-
-    } else {
-
-      element.textContent =
         message;
 
     }
@@ -2923,7 +2987,8 @@
         event => {
 
           if (
-            event.target === modal ||
+            event.target ===
+              modal ||
             event.target.classList.contains(
               "project-lightbox-inner"
             )
@@ -2949,17 +3014,19 @@
     }
 
 
-    const image =
-      modal.querySelector(
+    modal
+      .querySelector(
         "img"
-      );
-
-
-    image.src =
+      )
+      .src =
       url;
 
 
-    image.alt =
+    modal
+      .querySelector(
+        "img"
+      )
+      .alt =
       caption || "";
 
 
@@ -3012,7 +3079,7 @@
 
 
   /* =========================================================
-     PROTECCIÓN DE IMÁGENES
+     PROTECCIÓN
      ========================================================= */
 
   function applyImageProtection() {
@@ -3026,20 +3093,6 @@
 
           image.draggable =
             false;
-
-
-          if (
-            image.dataset.protected ===
-            "true"
-          ) {
-
-            return;
-
-          }
-
-
-          image.dataset.protected =
-            "true";
 
 
           image.addEventListener(
@@ -3070,7 +3123,7 @@
   ) {
 
     return String(
-      value || ""
+      value ?? ""
     )
       .replace(
         /&/g,
