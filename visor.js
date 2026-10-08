@@ -34,7 +34,7 @@
 
   async function initViewer() {
 
-    const projectName =
+    const requestedProject =
       getProjectParameter();
 
 
@@ -50,7 +50,29 @@
       );
 
 
-    if (!projectName) {
+    console.log(
+      "[Baal Studio] Parámetro recibido:",
+      requestedProject
+    );
+
+
+    if (!content) {
+
+      console.error(
+        "[Baal Studio] No existe #project-viewer-content en visor.html"
+      );
+
+      showState(
+        state,
+        "No se ha encontrado el contenedor del proyecto."
+      );
+
+      return;
+
+    }
+
+
+    if (!requestedProject) {
 
       showState(
         state,
@@ -66,17 +88,23 @@
 
       const project =
         await loadProject(
-          projectName
+          requestedProject
         );
 
 
       if (!project) {
 
         throw new Error(
-          `No se encontró el proyecto solicitado: ${projectName}`
+          `No se encontró el proyecto solicitado: ${requestedProject}`
         );
 
       }
+
+
+      console.log(
+        "[Baal Studio] Proyecto seleccionado:",
+        project
+      );
 
 
       renderProject(
@@ -86,9 +114,7 @@
 
 
       if (state) {
-
         state.remove();
-
       }
 
 
@@ -125,23 +151,32 @@
       );
 
 
-    return String(
-
+    const value =
       params.get("project") ||
-
       params.get("proyecto") ||
-
       params.get("folder") ||
+      "";
 
-      ""
 
-    ).trim();
+    try {
+
+      return decodeURIComponent(
+        value
+      ).trim();
+
+    } catch (_) {
+
+      return String(
+        value
+      ).trim();
+
+    }
 
   }
 
 
   /* =========================================================
-     CARGAR PROYECTOS DESDE get-projects
+     CARGAR PROYECTOS
      ========================================================= */
 
   async function loadProject(
@@ -153,12 +188,9 @@
         PROJECTS_FUNCTION,
         {
           method: "GET",
-
           headers: {
-            "Accept":
-              "application/json"
+            "Accept": "application/json"
           },
-
           cache: "no-store"
         }
       );
@@ -177,6 +209,12 @@
       await response.json();
 
 
+    console.log(
+      "[Baal Studio] Respuesta completa de get-projects:",
+      data
+    );
+
+
     const projects =
       normalizeProjectsResponse(
         data
@@ -184,7 +222,7 @@
 
 
     console.log(
-      "[Baal Studio] Proyectos recibidos por el visor:",
+      "[Baal Studio] Proyectos normalizados:",
       projects
     );
 
@@ -195,16 +233,53 @@
     );
 
 
-    return findRequestedProject(
-      projects,
-      requestedName
+    if (!projects.length) {
+
+      throw new Error(
+        "get-projects no devolvió ningún proyecto reconocible."
+      );
+
+    }
+
+
+    const project =
+      findRequestedProject(
+        projects,
+        requestedName
+      );
+
+
+    if (project) {
+
+      return project;
+
+    }
+
+
+    /*
+       Si no encontramos coincidencia exacta,
+       mostramos información útil en consola.
+    */
+
+    console.error(
+      "[Baal Studio] No se encontró coincidencia.",
+      {
+        solicitado: requestedName,
+        disponibles: projects.map(
+          item =>
+            getRawProjectName(item)
+        )
+      }
     );
+
+
+    return null;
 
   }
 
 
   /* =========================================================
-     NORMALIZAR RESPUESTA
+     NORMALIZAR RESPUESTA DE SUPABASE
      ========================================================= */
 
   function normalizeProjectsResponse(
@@ -216,14 +291,14 @@
     }
 
 
-    if (
-      Array.isArray(data)
-    ) {
+    /*
+       Caso habitual:
 
-      return data;
-
-    }
-
+       {
+         success: true,
+         projects: [...]
+       }
+    */
 
     if (
       Array.isArray(
@@ -231,21 +306,74 @@
       )
     ) {
 
-      return data.projects;
+      return data.projects
+        .filter(isObject);
 
     }
 
+
+    /*
+       Respuesta directamente como array.
+    */
 
     if (
-      Array.isArray(
-        data.data
-      )
+      Array.isArray(data)
     ) {
 
-      return data.data;
+      return data
+        .filter(isObject);
 
     }
 
+
+    /*
+       Algunas funciones pueden devolver:
+
+       {
+         data: {
+           projects: [...]
+         }
+       }
+    */
+
+    if (
+      data.data &&
+      typeof data.data === "object"
+    ) {
+
+      if (
+        Array.isArray(
+          data.data.projects
+        )
+      ) {
+
+        return data.data.projects
+          .filter(isObject);
+
+      }
+
+
+      if (
+        Array.isArray(
+          data.data
+        )
+      ) {
+
+        return data.data
+          .filter(isObject);
+
+      }
+
+    }
+
+
+    /*
+       Respuesta:
+
+       {
+         results: [...]
+       }
+    */
 
     if (
       Array.isArray(
@@ -253,15 +381,19 @@
       )
     ) {
 
-      return data.results;
+      return data.results
+        .filter(isObject);
 
     }
 
 
+    /*
+       Respuesta de un solo proyecto.
+    */
+
     if (
       data.project &&
-      typeof data.project ===
-        "object"
+      isObject(data.project)
     ) {
 
       return [
@@ -286,33 +418,33 @@
   ) {
 
     const requested =
-      decodeURIComponentSafe(
-        requestedName
-      );
+      String(
+        requestedName || ""
+      ).trim();
 
 
-    const requestedNormalized =
+    const requestedKey =
       normalizeKey(
         requested
       );
 
 
-    /* Coincidencia exacta */
+    /*
+       1. COINCIDENCIA EXACTA CON NOMBRE DE CARPETA
+    */
 
     let project =
       projects.find(
         item => {
 
-          const name =
-            item?.name ||
-            item?.folder ||
-            item?.folderName ||
-            item?.projectName ||
-            "";
+          const rawName =
+            getRawProjectName(
+              item
+            );
 
 
           return (
-            String(name) ===
+            rawName ===
             requested
           );
 
@@ -327,25 +459,25 @@
     }
 
 
-    /* Coincidencia normalizada */
+    /*
+       2. COINCIDENCIA NORMALIZADA CON NOMBRE DE CARPETA
+    */
 
     project =
       projects.find(
         item => {
 
-          const name =
-            item?.name ||
-            item?.folder ||
-            item?.folderName ||
-            item?.projectName ||
-            "";
+          const rawName =
+            getRawProjectName(
+              item
+            );
 
 
           return (
             normalizeKey(
-              name
+              rawName
             ) ===
-            requestedNormalized
+            requestedKey
           );
 
         }
@@ -359,93 +491,154 @@
     }
 
 
-    /* Último recurso:
-       buscar por título */
+    /*
+       3. COINCIDENCIA POR TÍTULO
+
+       Esto es solo un respaldo.
+       El título NO se utilizará como identificador
+       principal del proyecto.
+    */
 
     project =
       projects.find(
         item => {
 
           const metadata =
-            item?.metadata &&
-            typeof item.metadata ===
-              "object"
-              ? item.metadata
-              : {};
+            getMetadata(
+              item
+            );
 
 
           const title =
-            metadata.titulo ||
-            metadata.title ||
-            metadata.nombre ||
-            item?.titulo ||
-            item?.title ||
-            "";
+            getFirstValue(
+              metadata,
+              [
+                "title",
+                "titulo",
+                "nombre"
+              ]
+            );
 
 
           return (
             normalizeKey(
               title
             ) ===
-            requestedNormalized
+            requestedKey
           );
 
         }
       );
 
 
-    return project || null;
+    if (project) {
 
-  }
-
-
-  function decodeURIComponentSafe(
-    value
-  ) {
-
-    try {
-
-      return decodeURIComponent(
-        value
-      );
-
-    } catch (_) {
-
-      return value;
+      return project;
 
     }
 
+
+    return null;
+
   }
 
 
-  function normalizeKey(
-    value
+  /* =========================================================
+     NOMBRE REAL DE CARPETA
+     ========================================================= */
+
+  function getRawProjectName(
+    project
   ) {
 
+    if (
+      !project ||
+      typeof project !== "object"
+    ) {
+
+      return "";
+
+    }
+
+
     return String(
-      value || ""
-    )
 
-      .normalize("NFD")
+      project.name ||
 
-      .replace(
-        /[\u0300-\u036f]/g,
-        ""
-      )
+      project.folder ||
 
-      .replace(
-        /\s*\(\d+\)\s*$/,
-        ""
-      )
+      project.folderName ||
 
-      .replace(
-        /\s+/g,
-        " "
-      )
+      project.projectName ||
 
-      .trim()
+      project.project ||
 
-      .toLowerCase();
+      ""
+
+    ).trim();
+
+  }
+
+
+  /* =========================================================
+     METADATA
+     ========================================================= */
+
+  function getMetadata(
+    project
+  ) {
+
+    if (
+      !project ||
+      typeof project !== "object"
+    ) {
+
+      return {};
+
+    }
+
+
+    let metadata =
+      project.metadata;
+
+
+    /*
+       Si por alguna razón metadata llega
+       serializada como JSON.
+    */
+
+    if (
+      typeof metadata === "string"
+    ) {
+
+      try {
+
+        metadata =
+          JSON.parse(
+            metadata
+          );
+
+      } catch (_) {
+
+        metadata = {};
+
+      }
+
+    }
+
+
+    if (
+      metadata &&
+      typeof metadata === "object" &&
+      !Array.isArray(metadata)
+    ) {
+
+      return metadata;
+
+    }
+
+
+    return {};
 
   }
 
@@ -459,65 +652,70 @@
     container
   ) {
 
-    const metadata =
-      project?.metadata &&
-      typeof project.metadata ===
-        "object"
-        ? project.metadata
-        : {};
+    /*
+       Limpiamos cualquier contenido previo.
+       Esto evita que el nombre de la carpeta
+       procedente del HTML quede duplicado.
+    */
 
+    container.innerHTML = "";
+
+
+    const metadata =
+      getMetadata(
+        project
+      );
+
+
+    /*
+       IMPORTANTE:
+
+       El nombre de la carpeta NO es el título.
+
+       El título visible procede de metadata.
+    */
 
     const title =
       cleanTitle(
-
-        metadata.titulo ||
-
-        metadata.title ||
-
-        metadata.nombre ||
-
-        project.titulo ||
-
-        project.title ||
-
-        project.name ||
-
-        "Proyecto"
-
+        getFirstValue(
+          metadata,
+          [
+            "title",
+            "titulo",
+            "nombre"
+          ]
+        )
       );
+
+
+    const finalTitle =
+      title ||
+      "Proyecto";
 
 
     const englishTitle =
       cleanText(
-
-        metadata.titulo_en ||
-
-        metadata.title_en ||
-
-        metadata.nombre_en ||
-
-        metadata.englishTitle ||
-
-        metadata.english_title ||
-
-        project.titulo_en ||
-
-        project.title_en ||
-
-        ""
-
+        getFirstValue(
+          metadata,
+          [
+            "title_en",
+            "titulo_en",
+            "nombre_en",
+            "englishTitle",
+            "english_title"
+          ]
+        )
       );
 
 
     const category =
       cleanText(
-        firstValue(
+        getFirstValue(
           metadata,
-          project,
           [
+            "category",
             "categoria",
             "categoría",
-            "category",
             "tipo",
             "type"
           ]
@@ -527,13 +725,12 @@
 
     const techniques =
       cleanText(
-        firstValue(
+        getFirstValue(
           metadata,
-          project,
           [
+            "techniques",
             "tecnicas",
             "técnicas",
-            "techniques",
             "technique"
           ]
         )
@@ -542,12 +739,11 @@
 
     const objective =
       cleanText(
-        firstValue(
+        getFirstValue(
           metadata,
-          project,
           [
-            "objetivo",
-            "objective"
+            "objective",
+            "objetivo"
           ]
         )
       );
@@ -555,13 +751,12 @@
 
     const location =
       cleanText(
-        firstValue(
+        getFirstValue(
           metadata,
-          project,
           [
+            "location",
             "localizacion",
             "localización",
-            "location",
             "ubicacion",
             "ubicación",
             "place"
@@ -572,13 +767,12 @@
 
     const year =
       cleanText(
-        firstValue(
+        getFirstValue(
           metadata,
-          project,
           [
+            "year",
             "año",
             "ano",
-            "year",
             "fecha"
           ]
         )
@@ -587,33 +781,46 @@
 
     const description =
       normalizeDescription(
-        firstValue(
+        getFirstValue(
           metadata,
-          project,
           [
+            "description",
             "descripcion",
-            "descripción",
-            "description"
+            "descripción"
           ]
         )
       );
 
 
     document.title =
-      `${title} — Baal Studio`;
+      `${finalTitle} — Baal Studio`;
 
 
-    /* -------------------------------------------------------
-       CABECERA
-       ------------------------------------------------------- */
+    console.log(
+      "[Baal Studio] Título visible:",
+      finalTitle
+    );
 
-    const header =
+
+    console.log(
+      "[Baal Studio] Metadata:",
+      metadata
+    );
+
+
+    /*
+       ========================================================
+       CABECERA DEL PROYECTO
+       ========================================================
+    */
+
+    const intro =
       document.createElement(
         "section"
       );
 
 
-    header.className =
+    intro.className =
       "project-viewer-intro";
 
 
@@ -648,7 +855,7 @@
 
 
     heading.textContent =
-      title;
+      finalTitle;
 
 
     titleBlock.appendChild(
@@ -656,9 +863,7 @@
     );
 
 
-    if (
-      englishTitle
-    ) {
+    if (englishTitle) {
 
       const headingEn =
         document.createElement(
@@ -686,22 +891,24 @@
     );
 
 
-    /* -------------------------------------------------------
+    /*
+       ========================================================
        RESUMEN
-       ------------------------------------------------------- */
+       ========================================================
+    */
 
-    const meta =
+    const summary =
       document.createElement(
         "div"
       );
 
 
-    meta.className =
+    summary.className =
       "project-viewer-summary";
 
 
     appendSummary(
-      meta,
+      summary,
       "Categoría",
       "Category",
       category
@@ -709,7 +916,7 @@
 
 
     appendSummary(
-      meta,
+      summary,
       "Técnicas",
       "Techniques",
       techniques
@@ -717,7 +924,7 @@
 
 
     appendSummary(
-      meta,
+      summary,
       "Objetivo",
       "Objective",
       objective
@@ -725,7 +932,7 @@
 
 
     appendSummary(
-      meta,
+      summary,
       "Ubicación",
       "Location",
       location
@@ -733,7 +940,7 @@
 
 
     appendSummary(
-      meta,
+      summary,
       "Año",
       "Year",
       year
@@ -741,23 +948,25 @@
 
 
     introInner.appendChild(
-      meta
+      summary
     );
 
 
-    header.appendChild(
+    intro.appendChild(
       introInner
     );
 
 
     container.appendChild(
-      header
+      intro
     );
 
 
-    /* -------------------------------------------------------
+    /*
+       ========================================================
        CUERPO
-       ------------------------------------------------------- */
+       ========================================================
+    */
 
     const body =
       document.createElement(
@@ -769,9 +978,11 @@
       "project-viewer-body";
 
 
-    /* -------------------------------------------------------
+    /*
+       ========================================================
        DESCRIPCIÓN
-       ------------------------------------------------------- */
+       ========================================================
+    */
 
     if (
       description.length
@@ -795,26 +1006,25 @@
       );
 
 
-      for (
-        const paragraph
-        of description
-      ) {
+      description.forEach(
+        paragraph => {
 
-        const p =
-          document.createElement(
-            "p"
+          const p =
+            document.createElement(
+              "p"
+            );
+
+
+          p.textContent =
+            paragraph;
+
+
+          descriptionSection.appendChild(
+            p
           );
 
-
-        p.textContent =
-          paragraph;
-
-
-        descriptionSection.appendChild(
-          p
-        );
-
-      }
+        }
+      );
 
 
       body.appendChild(
@@ -824,14 +1034,23 @@
     }
 
 
-    /* -------------------------------------------------------
-       BLOQUES
-       ------------------------------------------------------- */
+    /*
+       ========================================================
+       BLOQUES DEL PROYECTO
+       ========================================================
+    */
 
     const blocks =
       collectBlocks(
         project
       );
+
+
+    console.log(
+      "[Baal Studio] Bloques encontrados:",
+      blocks.length,
+      blocks
+    );
 
 
     const resources =
@@ -842,6 +1061,10 @@
 
     resources.className =
       "project-viewer-resources";
+
+
+    let renderedResources =
+      0;
 
 
     if (
@@ -862,11 +1085,25 @@
           index
         ) => {
 
+          const before =
+            resources.children.length;
+
+
           renderBlock(
             block,
             resources,
             index
           );
+
+
+          if (
+            resources.children.length >
+            before
+          ) {
+
+            renderedResources++;
+
+          }
 
         }
       );
@@ -874,29 +1111,38 @@
     }
 
 
-    /* -------------------------------------------------------
+    /*
+       ========================================================
        RECURSOS DIRECTOS
-       ------------------------------------------------------- */
+       ========================================================
+    */
 
     const articles =
       extractUrls(
-        project.articles ||
-        metadata.articles
+        project.articles
       );
 
 
     const sketchfab =
       extractUrls(
-        project.sketchfab ||
-        metadata.sketchfab
+        project.sketchfab
       );
 
 
     const video =
       extractFirstUrl(
-        project.video ||
-        metadata.video
+        project.video
       );
+
+
+    console.log(
+      "[Baal Studio] Recursos directos:",
+      {
+        articles,
+        sketchfab,
+        video
+      }
+    );
 
 
     const hasVideoBlock =
@@ -914,10 +1160,7 @@
         block =>
           isBlockType(
             block,
-            [
-              "sketchfab",
-              "3d"
-            ]
+            ["sketchfab", "3d"]
           )
       );
 
@@ -947,6 +1190,8 @@
           )
         );
 
+        renderedResources++;
+
       }
 
 
@@ -968,6 +1213,8 @@
                 url
               )
             );
+
+            renderedResources++;
 
           }
         );
@@ -993,6 +1240,8 @@
               )
             );
 
+            renderedResources++;
+
           }
         );
 
@@ -1001,13 +1250,14 @@
     }
 
 
-    /* -------------------------------------------------------
-       SI REALMENTE NO HAY NADA
-       ------------------------------------------------------- */
+    /*
+       ========================================================
+       AÑADIR RECURSOS AL CUERPO
+       ========================================================
+    */
 
     if (
-      resources.children.length >
-      1
+      renderedResources > 0
     ) {
 
       body.appendChild(
@@ -1042,9 +1292,11 @@
     );
 
 
-    /* -------------------------------------------------------
+    /*
+       ========================================================
        VOLVER
-       ------------------------------------------------------- */
+       ========================================================
+    */
 
     const back =
       document.createElement(
@@ -1076,117 +1328,7 @@
 
 
   /* =========================================================
-     RESUMEN
-     ========================================================= */
-
-  function appendSummary(
-    container,
-    spanish,
-    english,
-    value
-  ) {
-
-    if (!value) {
-      return;
-    }
-
-
-    const item =
-      document.createElement(
-        "div"
-      );
-
-
-    item.className =
-      "project-viewer-summary-item";
-
-
-    const label =
-      document.createElement(
-        "div"
-      );
-
-
-    label.className =
-      "project-viewer-summary-label";
-
-
-    label.innerHTML =
-      `${escapeHtml(spanish)}
-       <span>
-         ${escapeHtml(english)}
-       </span>`;
-
-
-    const valueElement =
-      document.createElement(
-        "div"
-      );
-
-
-    valueElement.className =
-      "project-viewer-summary-value";
-
-
-    valueElement.textContent =
-      value;
-
-
-    item.appendChild(
-      label
-    );
-
-
-    item.appendChild(
-      valueElement
-    );
-
-
-    container.appendChild(
-      item
-    );
-
-  }
-
-
-  /* =========================================================
-     ETIQUETAS
-     ========================================================= */
-
-  function createSectionLabel(
-    spanish,
-    english
-  ) {
-
-    const wrapper =
-      document.createElement(
-        "div"
-      );
-
-
-    wrapper.className =
-      "project-viewer-section-label";
-
-
-    wrapper.innerHTML =
-      `
-        <span>
-          ${escapeHtml(spanish)}
-        </span>
-
-        <small>
-          ${escapeHtml(english)}
-        </small>
-      `;
-
-
-    return wrapper;
-
-  }
-
-
-  /* =========================================================
-     BLOQUES
+     OBTENER BLOQUES
      ========================================================= */
 
   function collectBlocks(
@@ -1196,6 +1338,12 @@
     const result =
       [];
 
+
+    /*
+       Estructura conocida de get-projects:
+
+       project.blocks
+    */
 
     if (
       Array.isArray(
@@ -1210,7 +1358,12 @@
     }
 
 
+    /*
+       Estructuras alternativas
+    */
+
     if (
+      !result.length &&
       Array.isArray(
         project?.contentBlocks
       )
@@ -1224,6 +1377,7 @@
 
 
     if (
+      !result.length &&
       Array.isArray(
         project?.resources
       )
@@ -1236,6 +1390,55 @@
     }
 
 
+    /*
+       Si existe una propiedad content
+       con bloques.
+    */
+
+    if (
+      !result.length &&
+      Array.isArray(
+        project?.content
+      )
+    ) {
+
+      result.push(
+        ...project.content
+      );
+
+    }
+
+
+    /*
+       Si content es un objeto con blocks.
+    */
+
+    if (
+      !result.length &&
+      project?.content &&
+      typeof project.content === "object"
+    ) {
+
+      if (
+        Array.isArray(
+          project.content.blocks
+        )
+      ) {
+
+        result.push(
+          ...project.content.blocks
+        );
+
+      }
+
+    }
+
+
+    /*
+       Si no existen bloques pero hay imágenes
+       directamente en el proyecto.
+    */
+
     if (
       !result.length &&
       Array.isArray(
@@ -1245,11 +1448,8 @@
 
       result.push(
         {
-          type:
-            "gallery",
-
-          images:
-            project.images
+          type: "gallery",
+          images: project.images
         }
       );
 
@@ -1263,36 +1463,9 @@
   }
 
 
-  function isBlockType(
-    block,
-    types
-  ) {
-
-    if (
-      !block ||
-      typeof block !==
-        "object"
-    ) {
-
-      return false;
-
-    }
-
-
-    const type =
-      String(
-        block.type ||
-        block.kind ||
-        ""
-      ).toLowerCase();
-
-
-    return types.includes(
-      type
-    );
-
-  }
-
+  /* =========================================================
+     RENDERIZAR BLOQUE
+     ========================================================= */
 
   function renderBlock(
     block,
@@ -1302,8 +1475,7 @@
 
     if (
       !block ||
-      typeof block !==
-        "object"
+      typeof block !== "object"
     ) {
 
       return;
@@ -1315,24 +1487,43 @@
       String(
         block.type ||
         block.kind ||
+        block.blockType ||
         ""
-      ).toLowerCase();
+      )
+        .trim()
+        .toLowerCase();
 
 
-    /* IMAGEN */
+    console.log(
+      `[Baal Studio] Renderizando bloque ${index + 1}:`,
+      type,
+      block
+    );
+
+
+    /*
+       ========================================================
+       IMAGEN
+       ========================================================
+    */
 
     if (
-      type === "image" ||
-      type === "photo" ||
-      type === "fotografia"
+      [
+        "image",
+        "photo",
+        "fotografia",
+        "fotografía"
+      ].includes(type)
     ) {
 
       const url =
         extractFirstUrl(
           block.url ||
           block.signedUrl ||
+          block.signed_url ||
           block.src ||
-          block.image
+          block.image ||
+          block.value
         );
 
 
@@ -1343,6 +1534,7 @@
             url,
             block.file ||
             block.caption ||
+            block.title ||
             "",
             index
           )
@@ -1356,12 +1548,19 @@
     }
 
 
-    /* GALERÍA */
+    /*
+       ========================================================
+       GALERÍA
+       ========================================================
+    */
 
     if (
-      type === "images" ||
-      type === "gallery" ||
-      type === "galeria"
+      [
+        "images",
+        "gallery",
+        "galeria",
+        "galería"
+      ].includes(type)
     ) {
 
       const images =
@@ -1369,7 +1568,9 @@
           block.images
         )
           ? block.images
-          : [];
+          : Array.isArray(block.items)
+            ? block.items
+            : [];
 
 
       const urls =
@@ -1399,19 +1600,27 @@
     }
 
 
-    /* PDF */
+    /*
+       ========================================================
+       PDF
+       ========================================================
+    */
 
     if (
-      type === "pdf" ||
-      type === "document" ||
-      type === "documento"
+      [
+        "pdf",
+        "document",
+        "documento"
+      ].includes(type)
     ) {
 
       const url =
         extractFirstUrl(
           block.url ||
           block.signedUrl ||
-          block.href
+          block.signed_url ||
+          block.href ||
+          block.src
         );
 
 
@@ -1434,7 +1643,11 @@
     }
 
 
-    /* VÍDEO */
+    /*
+       ========================================================
+       VÍDEO
+       ========================================================
+    */
 
     if (
       type === "video"
@@ -1444,7 +1657,8 @@
         extractFirstUrl(
           block.value ||
           block.url ||
-          block.src
+          block.src ||
+          block.href
         );
 
 
@@ -1464,18 +1678,27 @@
     }
 
 
-    /* SKETCHFAB */
+    /*
+       ========================================================
+       SKETCHFAB / 3D
+       ========================================================
+    */
 
     if (
-      type === "sketchfab" ||
-      type === "3d"
+      [
+        "sketchfab",
+        "3d",
+        "modelo3d",
+        "modelo_3d"
+      ].includes(type)
     ) {
 
       const urls =
         extractUrls(
           block.urls ||
           block.url ||
-          block.value
+          block.value ||
+          block.models
         );
 
 
@@ -1502,13 +1725,19 @@
     }
 
 
-    /* TEXTO */
+    /*
+       ========================================================
+       TEXTO
+       ========================================================
+    */
 
     if (
-      type === "text" ||
-      type === "texto" ||
-      type === "paragraph" ||
-      type === "article"
+      [
+        "text",
+        "texto",
+        "paragraph",
+        "article"
+      ].includes(type)
     ) {
 
       const text =
@@ -1562,6 +1791,118 @@
       }
 
     }
+
+  }
+
+
+  /* =========================================================
+     RESUMEN
+     ========================================================= */
+
+  function appendSummary(
+    container,
+    spanish,
+    english,
+    value
+  ) {
+
+    if (!value) {
+      return;
+    }
+
+
+    const item =
+      document.createElement(
+        "div"
+      );
+
+
+    item.className =
+      "project-viewer-summary-item";
+
+
+    const label =
+      document.createElement(
+        "div"
+      );
+
+
+    label.className =
+      "project-viewer-summary-label";
+
+
+    label.innerHTML =
+      `
+        ${escapeHtml(spanish)}
+        <span>
+          ${escapeHtml(english)}
+        </span>
+      `;
+
+
+    const valueElement =
+      document.createElement(
+        "div"
+      );
+
+
+    valueElement.className =
+      "project-viewer-summary-value";
+
+
+    valueElement.textContent =
+      value;
+
+
+    item.appendChild(
+      label
+    );
+
+
+    item.appendChild(
+      valueElement
+    );
+
+
+    container.appendChild(
+      item
+    );
+
+  }
+
+
+  /* =========================================================
+     ETIQUETA DE SECCIÓN
+     ========================================================= */
+
+  function createSectionLabel(
+    spanish,
+    english
+  ) {
+
+    const wrapper =
+      document.createElement(
+        "div"
+      );
+
+
+    wrapper.className =
+      "project-viewer-section-label";
+
+
+    wrapper.innerHTML =
+      `
+        <span>
+          ${escapeHtml(spanish)}
+        </span>
+
+        <small>
+          ${escapeHtml(english)}
+        </small>
+      `;
+
+
+    return wrapper;
 
   }
 
@@ -1683,16 +2024,23 @@
           sourceItems?.[index];
 
 
-        const caption =
-          typeof source ===
-            "object"
+        let caption =
+          "";
 
-            ? source.reference ||
-              source.file ||
-              source.caption ||
-              ""
 
-            : "";
+        if (
+          source &&
+          typeof source === "object"
+        ) {
+
+          caption =
+            source.reference ||
+            source.file ||
+            source.caption ||
+            source.title ||
+            "";
+
+        }
 
 
         gallery.appendChild(
@@ -2038,34 +2386,20 @@
 
 
   /* =========================================================
-     CAMPOS
+     OBTENER PRIMER VALOR
      ========================================================= */
 
-  function firstValue(
-    metadata,
-    project,
+  function getFirstValue(
+    object,
     keys
   ) {
 
-    for (
-      const key
-      of keys
+    if (
+      !object ||
+      typeof object !== "object"
     ) {
 
-      if (
-        metadata &&
-        Object.prototype.hasOwnProperty.call(
-          metadata,
-          key
-        ) &&
-        hasValue(
-          metadata[key]
-        )
-      ) {
-
-        return metadata[key];
-
-      }
+      return "";
 
     }
 
@@ -2076,17 +2410,25 @@
     ) {
 
       if (
-        project &&
         Object.prototype.hasOwnProperty.call(
-          project,
+          object,
           key
-        ) &&
-        hasValue(
-          project[key]
         )
       ) {
 
-        return project[key];
+        const value =
+          object[key];
+
+
+        if (
+          hasValue(
+            value
+          )
+        ) {
+
+          return value;
+
+        }
 
       }
 
@@ -2097,6 +2439,10 @@
 
   }
 
+
+  /* =========================================================
+     VALOR EXISTENTE
+     ========================================================= */
 
   function hasValue(
     value
@@ -2161,11 +2507,9 @@
 
 
     return String(value)
-
       .split(
         /\n\s*\n/
       )
-
       .map(
         text =>
           text
@@ -2175,11 +2519,14 @@
             )
             .trim()
       )
-
       .filter(Boolean);
 
   }
 
+
+  /* =========================================================
+     LIMPIAR TEXTO
+     ========================================================= */
 
   function cleanText(
     value
@@ -2190,7 +2537,9 @@
     ) {
 
       return value
-        .map(cleanText)
+        .map(
+          cleanText
+        )
         .filter(Boolean)
         .join(" ");
 
@@ -2217,6 +2566,10 @@
   }
 
 
+  /* =========================================================
+     LIMPIAR TÍTULO
+     ========================================================= */
+
   function cleanTitle(
     value
   ) {
@@ -2224,18 +2577,45 @@
     return cleanText(
       value
     )
-
       .replace(
         /\s*\(\d+\)\s*$/,
         ""
       )
-
       .replace(
         /\s*[.!?]+\s*$/,
         ""
       )
-
       .trim();
+
+  }
+
+
+  /* =========================================================
+     NORMALIZAR CLAVE
+     ========================================================= */
+
+  function normalizeKey(
+    value
+  ) {
+
+    return String(
+      value || ""
+    )
+      .normalize("NFD")
+      .replace(
+        /[\u0300-\u036f]/g,
+        ""
+      )
+      .replace(
+        /\s*\(\d+\)\s*$/,
+        ""
+      )
+      .replace(
+        /\s+/g,
+        " "
+      )
+      .trim()
+      .toLowerCase();
 
   }
 
@@ -2252,16 +2632,31 @@
       Array.isArray(value)
     ) {
 
-      return extractFirstUrl(
-        value[0]
-      );
+      for (
+        const item
+        of value
+      ) {
+
+        const url =
+          extractFirstUrl(
+            item
+          );
+
+
+        if (url) {
+          return url;
+        }
+
+      }
+
+
+      return "";
 
     }
 
 
     if (
-      typeof value ===
-      "string"
+      typeof value === "string"
     ) {
 
       return value.trim();
@@ -2271,8 +2666,7 @@
 
     if (
       !value ||
-      typeof value !==
-        "object"
+      typeof value !== "object"
     ) {
 
       return "";
@@ -2307,8 +2701,7 @@
     ) {
 
       if (
-        typeof value[key] ===
-          "string" &&
+        typeof value[key] === "string" &&
         value[key].trim()
       ) {
 
@@ -2329,9 +2722,7 @@
   ) {
 
     if (!value) {
-
       return [];
-
     }
 
 
@@ -2341,7 +2732,10 @@
 
       return value
         .flatMap(
-          extractUrls
+          item =>
+            extractUrls(
+              item
+            )
         )
         .filter(Boolean);
 
@@ -2349,8 +2743,7 @@
 
 
     if (
-      typeof value ===
-      "string"
+      typeof value === "string"
     ) {
 
       return value.trim()
@@ -2369,6 +2762,60 @@
     return url
       ? [url]
       : [];
+
+  }
+
+
+  /* =========================================================
+     TIPO DE BLOQUE
+     ========================================================= */
+
+  function isBlockType(
+    block,
+    types
+  ) {
+
+    if (
+      !block ||
+      typeof block !== "object"
+    ) {
+
+      return false;
+
+    }
+
+
+    const type =
+      String(
+        block.type ||
+        block.kind ||
+        block.blockType ||
+        ""
+      )
+        .trim()
+        .toLowerCase();
+
+
+    return types.includes(
+      type
+    );
+
+  }
+
+
+  /* =========================================================
+     OBJETO
+     ========================================================= */
+
+  function isObject(
+    value
+  ) {
+
+    return (
+      value !== null &&
+      typeof value === "object" &&
+      !Array.isArray(value)
+    );
 
   }
 
@@ -2396,6 +2843,11 @@
     if (strong) {
 
       strong.textContent =
+        message;
+
+    } else {
+
+      element.textContent =
         message;
 
     }
@@ -2471,8 +2923,7 @@
         event => {
 
           if (
-            event.target ===
-              modal ||
+            event.target === modal ||
             event.target.classList.contains(
               "project-lightbox-inner"
             )
@@ -2498,19 +2949,17 @@
     }
 
 
-    modal
-      .querySelector(
+    const image =
+      modal.querySelector(
         "img"
-      )
-      .src =
+      );
+
+
+    image.src =
       url;
 
 
-    modal
-      .querySelector(
-        "img"
-      )
-      .alt =
+    image.alt =
       caption || "";
 
 
@@ -2530,6 +2979,9 @@
     document.body.classList.add(
       "lightbox-open"
     );
+
+
+    applyImageProtection();
 
   }
 
@@ -2560,7 +3012,7 @@
 
 
   /* =========================================================
-     PROTECCIÓN
+     PROTECCIÓN DE IMÁGENES
      ========================================================= */
 
   function applyImageProtection() {
@@ -2574,6 +3026,20 @@
 
           image.draggable =
             false;
+
+
+          if (
+            image.dataset.protected ===
+            "true"
+          ) {
+
+            return;
+
+          }
+
+
+          image.dataset.protected =
+            "true";
 
 
           image.addEventListener(
@@ -2590,6 +3056,41 @@
           );
 
         }
+      );
+
+  }
+
+
+  /* =========================================================
+     ESCAPE HTML
+     ========================================================= */
+
+  function escapeHtml(
+    value
+  ) {
+
+    return String(
+      value || ""
+    )
+      .replace(
+        /&/g,
+        "&amp;"
+      )
+      .replace(
+        /</g,
+        "&lt;"
+      )
+      .replace(
+        />/g,
+        "&gt;"
+      )
+      .replace(
+        /"/g,
+        "&quot;"
+      )
+      .replace(
+        /'/g,
+        "&#039;"
       );
 
   }
