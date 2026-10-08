@@ -6,999 +6,402 @@
   background: var(--bg);
 }
 
-
 .project-viewer-main {
   min-height: 60vh;
 }
 
-
 /* ------------------------------------------------------------
    ESTADO DE CARGA
    ------------------------------------------------------------ */
-
 .project-viewer-state {
-
   min-height: 55vh;
-
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
-  padding:
-    150px 24px;
-
+  padding: 150px 24px;
   text-align: center;
-
 }
-
 
 .project-viewer-state strong {
-
   display: block;
-
   font-family: var(--font-title);
-
   font-size: 32px;
-
   font-weight: 400;
-
   color: var(--black);
-
 }
-
 
 /* ------------------------------------------------------------
    CABECERA DEL PROYECTO
    ------------------------------------------------------------ */
-
 .project-viewer-intro {
-
   background: #111111;
-
   color: #ffffff;
-
-  padding:
-    155px 0 90px;
-
+  padding: 155px 0 90px;
 }
-
 
 .project-viewer-intro-inner {
-
-  width:
-    min(
-      1120px,
-      calc(100% - 48px)
-    );
-
+  width: min(1120px, calc(100% - 48px));
   margin: 0 auto;
-
   display: grid;
-
-  grid-template-columns:
-    minmax(0, 1.15fr)
-    minmax(300px, 0.85fr);
-
+  grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
   gap: 80px;
-
   align-items: end;
-
 }
-
 
 .project-viewer-title-block {
-
   min-width: 0;
-
 }
-
 
 .project-viewer-title {
-
   margin: 0;
-
   font-family: var(--font-title);
-
-  font-size:
-    clamp(
-      48px,
-      6vw,
-      82px
-    );
-
+  font-size: clamp(48px, 6vw, 82px);
   font-weight: 300;
-
   line-height: 0.92;
-
   letter-spacing: -0.035em;
-
   color: #ffffff;
-
 }
-
 
 .project-viewer-title-en {
-
   margin: 12px 0 0;
-
   font-family: var(--font-body);
-
   font-size: 8px;
-
   font-weight: 500;
-
   line-height: 1.35;
-
   letter-spacing: 0.15em;
-
   text-transform: uppercase;
-
-  color:
-    rgba(
-      255,
-      255,
-      255,
-      0.42
-    );
-
+  color: rgba(255, 255, 255, 0.42);
 }
-
 
 /* ------------------------------------------------------------
    RESUMEN
    ------------------------------------------------------------ */
-
 .project-viewer-summary {
-
-  border-top:
-    1px solid
-    rgba(
-      255,
-      255,
-      255,
-      0.18
-    );
-
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
 }
-
 
 .project-viewer-summary-item {
-
   display: grid;
-
-  grid-template-columns:
-    82px minmax(0, 1fr);
-
+  grid-template-columns: 82px minmax(0, 1fr);
   gap: 18px;
-
   padding: 12px 0;
-
-  border-bottom:
-    1px solid
-    rgba(
-      255,
-      255,
-      255,
-      0.12
-    );
-
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
-
 
 .project-viewer-summary-label {
-
   font-family: var(--font-body);
-
   font-size: 7px;
-
   font-weight: 600;
-
   line-height: 1.25;
-
   letter-spacing: 0.11em;
-
   text-transform: uppercase;
-
-  color:
-    rgba(
-      255,
-      255,
-      255,
-      0.46
-    );
-
+  color: rgba(255, 255, 255, 0.46);
 }
-
-
-.project-viewer-summary-label span {
-
-  display: block;
-
-  margin-top: 3px;
-
-  font-size: 5.5px;
-
-  font-weight: 400;
-
-  letter-spacing: 0.10em;
-
-  color:
-    rgba(
-      255,
-      255,
-      255,
-      0.26
-    );
-
-}
-
 
 .project-viewer-summary-value {
-
   font-family: var(--font-body);
-
   font-size: 10px;
-
   font-weight: 300;
-
   line-height: 1.5;
-
-  color:
-    rgba(
-      255,
-      255,
-      255,
-      0.88
-    );
-
+  color: rgba(255, 255, 255, 0.88);
 }
-
 
 /* ------------------------------------------------------------
-   CUERPO
+   CUERPO Y SECCIONES
    ------------------------------------------------------------ */
-
 .project-viewer-body {
-
-  width:
-    min(
-      1120px,
-      calc(100% - 48px)
-    );
-
+  width: min(1120px, calc(100% - 48px));
   margin: 0 auto;
-
-  padding:
-    95px 0 120px;
-
+  padding: 95px 0 120px;
 }
 
+.project-viewer-content {
+  display: flex;
+  flex-direction: column;
+  gap: 80px; /* Separación amplia entre bloques multimedia */
+}
 
 /* ------------------------------------------------------------
    DESCRIPCIÓN
    ------------------------------------------------------------ */
-
 .project-viewer-description {
-
   display: grid;
-
-  grid-template-columns:
-    minmax(220px, 0.55fr)
-    minmax(0, 1.45fr);
-
+  grid-template-columns: minmax(220px, 0.55fr) minmax(0, 1.45fr);
   column-gap: 80px;
-
   row-gap: 16px;
-
   padding-bottom: 80px;
-
-  border-bottom:
-    1px solid
-    var(--light-gray);
-
+  border-bottom: 1px solid var(--light-gray);
 }
-
 
 .project-viewer-section-label {
-
-  grid-column: 1 / -1;
-
   display: flex;
-
   flex-direction: column;
-
   align-items: flex-start;
-
-  margin-bottom: 18px;
-
 }
-
 
 .project-viewer-section-label span {
-
   font-family: var(--font-title);
-
   font-size: 34px;
-
   font-weight: 400;
-
   line-height: 1;
-
   color: var(--black);
-
 }
 
-
-.project-viewer-section-label small {
-
-  margin-top: 6px;
-
-  font-family: var(--font-body);
-
-  font-size: 7px;
-
-  font-weight: 500;
-
-  line-height: 1.2;
-
-  letter-spacing: 0.14em;
-
-  text-transform: uppercase;
-
-  color: var(--gray);
-
-}
-
-
-.project-viewer-description p,
-.project-viewer-text-block p {
-
-  grid-column: 2;
-
-  margin:
-    0 0 18px;
-
+.project-viewer-description p {
+  margin: 0 0 18px;
   max-width: 760px;
-
   font-family: var(--font-body);
-
   font-size: 14px;
-
   font-weight: 300;
-
   line-height: 1.8;
-
   color: #292929;
-
 }
-
 
 /* ------------------------------------------------------------
-   DOCUMENTACIÓN
+   BLOQUES MULTIMEDIA GLOBALES
    ------------------------------------------------------------ */
-
-.project-viewer-resources {
-
-  padding-top: 88px;
-
-}
-
-
-.project-viewer-resources >
-.project-viewer-section-label {
-
-  margin-bottom: 40px;
-
-}
-
-
-/* ------------------------------------------------------------
-   IMÁGENES
-   ------------------------------------------------------------ */
-
-.project-viewer-image-block {
-
-  margin:
-    0 0 70px;
-
-}
-
-
-.project-viewer-image-block img {
-
-  display: block;
-
+.project-block {
   width: 100%;
-
-  max-height: 780px;
-
-  object-fit: contain;
-
-  object-position: center;
-
-  background: #e7e4de;
-
-  cursor: zoom-in;
-
 }
-
-
-.project-viewer-image-block figcaption {
-
-  margin-top: 9px;
-
+.project-block-caption {
+  margin-top: 15px;
   font-family: var(--font-body);
-
-  font-size: 7px;
-
-  line-height: 1.45;
-
-  letter-spacing: 0.05em;
-
+  font-size: 11px;
   color: var(--gray);
-
-}
-
-
-/* ------------------------------------------------------------
-   GALERÍAS
-   ------------------------------------------------------------ */
-
-.project-viewer-gallery {
-
-  display: grid;
-
-  grid-template-columns:
-    repeat(
-      2,
-      minmax(0, 1fr)
-    );
-
-  gap: 24px;
-
-  margin-bottom: 70px;
-
-}
-
-
-.project-viewer-gallery
-.project-viewer-image-block {
-
-  margin: 0;
-
-}
-
-
-.project-viewer-gallery
-.project-viewer-image-block img {
-
-  width: 100%;
-
-  height: 390px;
-
-}
-
-
-/* ------------------------------------------------------------
-   PDF / VÍDEO
-   ------------------------------------------------------------ */
-
-.project-viewer-pdf-block,
-.project-viewer-video-block {
-
-  margin:
-    0 0 70px;
-
-}
-
-
-.project-viewer-resource-heading {
-
-  margin-bottom: 12px;
-
-  font-family: var(--font-title);
-
-  font-size: 26px;
-
-  font-weight: 400;
-
-  color: var(--black);
-
-}
-
-
-.project-viewer-pdf-block iframe {
-
-  display: block;
-
-  width: 100%;
-
-  height: 720px;
-
-  border:
-    1px solid
-    var(--light-gray);
-
-  background: #ffffff;
-
-}
-
-
-.project-viewer-pdf-block > a {
-
-  display: inline-block;
-
-  margin-top: 10px;
-
-  font-family: var(--font-body);
-
-  font-size: 8px;
-
-  letter-spacing: 0.12em;
-
-  text-transform: uppercase;
-
-  color: var(--black);
-
-}
-
-
-.project-viewer-video-block iframe {
-
-  display: block;
-
-  width: 100%;
-
-  aspect-ratio: 16 / 9;
-
-  border: 0;
-
-  background: #000000;
-
-}
-
-
-/* ------------------------------------------------------------
-   RECURSOS EXTERNOS
-   ------------------------------------------------------------ */
-
-.project-viewer-external-resource {
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: space-between;
-
-  gap: 30px;
-
-  padding:
-    21px 0;
-
-  border-top:
-    1px solid
-    var(--light-gray);
-
-}
-
-
-.project-viewer-external-resource >
-div {
-
-  display: flex;
-
-  flex-direction: column;
-
-}
-
-
-.project-viewer-external-resource strong {
-
-  font-family: var(--font-body);
-
-  font-size: 9px;
-
-  font-weight: 600;
-
-  letter-spacing: 0.11em;
-
-  text-transform: uppercase;
-
-  color: var(--black);
-
-}
-
-
-.project-viewer-external-resource small {
-
-  margin-top: 4px;
-
-  font-family: var(--font-body);
-
-  font-size: 6px;
-
-  font-weight: 400;
-
-  letter-spacing: 0.12em;
-
-  text-transform: uppercase;
-
-  color: var(--gray);
-
-}
-
-
-.project-viewer-external-resource a {
-
-  flex:
-    0 0 auto;
-
-  font-family: var(--font-body);
-
-  font-size: 8px;
-
-  font-weight: 600;
-
-  letter-spacing: 0.12em;
-
-  text-transform: uppercase;
-
-  text-decoration: none;
-
-  color: var(--black);
-
-}
-
-
-.project-viewer-external-resource a:hover {
-
-  color: var(--accent);
-
-}
-
-
-/* ------------------------------------------------------------
-   SIN RECURSOS
-   ------------------------------------------------------------ */
-
-.project-viewer-no-resources {
-
-  margin:
-    70px 0 0;
-
-  padding-top: 25px;
-
-  border-top:
-    1px solid
-    var(--light-gray);
-
-  font-family: var(--font-body);
-
-  font-size: 10px;
-
-  color: var(--gray);
-
-}
-
-
-/* ------------------------------------------------------------
-   VOLVER
-   ------------------------------------------------------------ */
-
-.project-viewer-back-wrap {
-
-  margin-top: 100px;
-
-  padding-top: 28px;
-
-  border-top:
-    1px solid
-    var(--light-gray);
-
-}
-
-
-.project-viewer-back {
-
-  display: inline-flex;
-
-  align-items: baseline;
-
-  gap: 9px;
-
-  text-decoration: none;
-
-  color: var(--black);
-
-}
-
-
-.project-viewer-back > span:first-child {
-
-  font-size: 18px;
-
-}
-
-
-.project-viewer-back >
-span:nth-child(2) {
-
-  font-family: var(--font-body);
-
-  font-size: 8px;
-
-  font-weight: 600;
-
-  letter-spacing: 0.12em;
-
-  text-transform: uppercase;
-
-}
-
-
-.project-viewer-back small {
-
-  font-family: var(--font-body);
-
-  font-size: 6px;
-
-  letter-spacing: 0.12em;
-
-  text-transform: uppercase;
-
-  color: var(--gray);
-
-}
-
-
-/* ------------------------------------------------------------
-   LIGHTBOX
-   ------------------------------------------------------------ */
-
-.project-lightbox {
-
-  position: fixed;
-
-  inset: 0;
-
-  z-index: 9999;
-
-  display: none;
-
-  align-items: center;
-
-  justify-content: center;
-
-  padding: 35px;
-
-  background:
-    rgba(
-      17,
-      17,
-      17,
-      0.94
-    );
-
-}
-
-
-.project-lightbox.is-open {
-
-  display: flex;
-
-}
-
-
-.project-lightbox-inner {
-
-  max-width: 94vw;
-
-  max-height: 92vh;
-
-  display: flex;
-
-  flex-direction: column;
-
-  align-items: center;
-
-  gap: 10px;
-
-}
-
-
-.project-lightbox-inner img {
-
-  display: block;
-
-  max-width: 94vw;
-
-  max-height: 84vh;
-
-  width: auto;
-
-  height: auto;
-
-  object-fit: contain;
-
-}
-
-
-.project-lightbox-inner p {
-
-  margin: 0;
-
-  max-width: 900px;
-
-  font-family: var(--font-body);
-
-  font-size: 8px;
-
-  line-height: 1.4;
-
-  color:
-    rgba(
-      255,
-      255,
-      255,
-      0.58
-    );
-
   text-align: center;
-
+  font-weight: 300;
 }
 
-
-.project-lightbox-close {
-
-  position: absolute;
-
-  top: 22px;
-
-  right: 28px;
-
-  width: 38px;
-
-  height: 38px;
-
-  border: 0;
-
-  background: transparent;
-
-  color: #ffffff;
-
-  font-size: 32px;
-
-  font-weight: 200;
-
-  cursor: pointer;
-
+/* --- 1. IMAGEN SUELTA --- */
+.project-image-frame {
+  display: flex;
+  justify-content: center;
+  background: #fcfcfc;
+  border-radius: 8px;
+}
+.project-image-frame img {
+  display: block;
+  width: 100%;
+  max-height: 80vh; /* Límite vital para que no reviente el monitor */
+  object-fit: contain;
+  object-position: center;
+  cursor: zoom-in;
 }
 
-
-body.lightbox-open {
-
+/* --- 2. CARRUSEL --- */
+.project-carousel {
+  position: relative;
+  width: 100%;
+  background: #0a0a0a;
+  border-radius: 8px;
   overflow: hidden;
-
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.project-carousel-stage {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+/* OCULTA POR DEFECTO LAS IMÁGENES DEL CARRUSEL */
+.project-carousel-image {
+  display: none; 
+  width: 100%;
+  max-height: 75vh;
+  object-fit: contain;
+  cursor: zoom-in;
+}
+/* SOLO MUESTRA LA ACTIVA */
+.project-carousel-image.is-active {
+  display: block;
+}
+/* Botones del carrusel */
+.project-carousel-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.4);
+  color: #ffffff;
+  border: none;
+  font-size: 20px;
+  padding: 12px 18px;
+  cursor: pointer;
+  z-index: 10;
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+.project-carousel-button:hover { background: rgba(0, 0, 0, 0.8); }
+.project-carousel-prev { left: 15px; }
+.project-carousel-next { right: 15px; }
+.project-carousel-counter {
+  text-align: center;
+  margin-top: 15px;
+  font-family: var(--font-body);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--gray);
 }
 
+/* --- 3. COMPARADOR --- */
+.project-comparator {
+  display: grid;
+  grid-template-columns: 1fr 2px 1fr;
+  gap: 10px;
+  align-items: center;
+  background: #f4f4f4;
+  padding: 10px;
+  border-radius: 8px;
+}
+.project-comparator-divider {
+  background: #ddd;
+  height: 100%;
+  width: 2px;
+}
+.project-comparator-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 4px;
+  cursor: zoom-in;
+}
+
+/* --- 4. EVOLUCIÓN --- */
+.project-evolution {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+}
+.project-evolution-item {
+  margin: 0;
+  text-align: center;
+}
+.project-evolution-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  cursor: zoom-in;
+}
+.project-evolution-item figcaption {
+  margin-top: 10px;
+  font-family: var(--font-body);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--gray);
+}
+
+/* --- 5. VIDEO & SKETCHFAB --- */
+.project-video-frame,
+.project-sketchfab-frame {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* Ratio estricto 16:9 */
+  height: 0;
+  background: #000;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.project-video-frame iframe,
+.project-video-frame video,
+.project-sketchfab-frame iframe {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  border: 0;
+}
+.project-sketchfab-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 30px;
+}
+
+/* --- 6. PDF --- */
+.project-pdf-frame {
+  width: 100%;
+  height: 85vh; /* Ocupa buena parte de la pantalla sin desbordar */
+  min-height: 600px;
+  border: 1px solid var(--light-gray);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+}
+.project-pdf-frame iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+/* ------------------------------------------------------------
+   LIGHTBOX / MODAL ZOOM
+   ------------------------------------------------------------ */
+.project-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 35px;
+  background: rgba(17, 17, 17, 0.94);
+}
+.project-lightbox.is-open { display: flex; }
+.project-lightbox-inner {
+  max-width: 94vw;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.project-lightbox-inner img {
+  display: block;
+  max-width: 94vw;
+  max-height: 84vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+.project-lightbox-close {
+  position: absolute;
+  top: 22px;
+  right: 28px;
+  width: 38px;
+  height: 38px;
+  border: 0;
+  background: transparent;
+  color: #ffffff;
+  font-size: 42px;
+  font-weight: 200;
+  cursor: pointer;
+}
+body.lightbox-open { overflow: hidden; }
 
 /* ------------------------------------------------------------
    RESPONSIVE
    ------------------------------------------------------------ */
-
 @media (max-width: 900px) {
-
   .project-viewer-intro-inner {
-
     grid-template-columns: 1fr;
-
     gap: 55px;
-
   }
-
-
   .project-viewer-description {
-
     grid-template-columns: 1fr;
-
   }
-
-
-  .project-viewer-description p,
-  .project-viewer-text-block p {
-
-    grid-column: 1;
-
-  }
-
 }
 
-
 @media (max-width: 700px) {
-
-  .project-viewer-intro {
-
-    padding:
-      125px 0 65px;
-
-  }
-
-
+  .project-viewer-intro { padding: 125px 0 65px; }
   .project-viewer-intro-inner,
   .project-viewer-body {
-
-    width:
-      min(
-        calc(100% - 40px),
-        1120px
-      );
-
+    width: min(calc(100% - 40px), 1120px);
   }
-
-
   .project-viewer-title {
-
-    font-size:
-      clamp(
-        43px,
-        12vw,
-        64px
-      );
-
+    font-size: clamp(43px, 12vw, 64px);
   }
-
-
-  .project-viewer-body {
-
-    padding:
-      70px 0 90px;
-
-  }
-
-
-  .project-viewer-section-label span {
-
-    font-size: 30px;
-
-  }
-
-
-  .project-viewer-gallery {
-
-    grid-template-columns: 1fr;
-
-    gap: 30px;
-
-  }
-
-
-  .project-viewer-gallery
-  .project-viewer-image-block img {
-
-    height: auto;
-
-    max-height: 600px;
-
-  }
-
-
-  .project-viewer-pdf-block iframe {
-
-    height: 560px;
-
-  }
-
-
-  .project-viewer-external-resource {
-
-    align-items: flex-start;
-
-    flex-direction: column;
-
-    gap: 14px;
-
-  }
-
+  .project-viewer-body { padding: 70px 0 90px; }
+  .project-viewer-section-label span { font-size: 30px; }
+  .project-pdf-frame { height: 60vh; min-height: 450px; }
+  .project-comparator { grid-template-columns: 1fr; }
+  .project-comparator-divider { height: 2px; width: 100%; }
 }
