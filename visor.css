@@ -1,9 +1,13 @@
 /* ============================================================
-   BAAL STUDIO — VISOR DE PROYECTO
+   BAAL STUDIO — VISOR DE PROYECTO (ESTILOS UNIFICADOS)
+   Basado en la línea gráfica de about.css
    ============================================================ */
 
 .project-viewer-page {
-  background: var(--bg);
+  background: var(--bg, #f4f3ef);
+  color: var(--black, #111111);
+  -webkit-user-select: none;
+  user-select: none; /* Protección básica contra selección */
 }
 
 .project-viewer-main {
@@ -11,11 +15,12 @@
 }
 
 /* ------------------------------------------------------------
-   ESTADO DE CARGA
+   1. ESTADO DE CARGA
    ------------------------------------------------------------ */
 .project-viewer-state {
   min-height: 55vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 150px 24px;
@@ -25,383 +30,691 @@
 .project-viewer-state strong {
   display: block;
   font-family: var(--font-title);
-  font-size: 32px;
-  font-weight: 400;
-  color: var(--black);
+  font-size: 28px;
+  font-weight: 300;
+  color: var(--black, #111111);
+}
+
+.project-viewer-state p {
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gray, #777777);
+  margin-top: 8px;
 }
 
 /* ------------------------------------------------------------
-   CABECERA DEL PROYECTO
+   2. CABECERA DEL PROYECTO (OPTIMIZADA Y EQUILIBRADA)
    ------------------------------------------------------------ */
 .project-viewer-intro {
   background: #111111;
   color: #ffffff;
-  padding: 155px 0 90px;
+  padding: 160px 0 80px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .project-viewer-intro-inner {
-  width: min(1120px, calc(100% - 48px));
+  width: min(1180px, calc(100% - 48px));
   margin: 0 auto;
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
-  gap: 80px;
-  align-items: end;
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+  gap: 50px;
+  align-items: start;
 }
 
+/* Título y Subtítulo Inglés */
 .project-viewer-title-block {
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .project-viewer-title {
   margin: 0;
   font-family: var(--font-title);
-  font-size: clamp(48px, 6vw, 82px);
+  font-size: clamp(32px, 3.8vw, 52px);
   font-weight: 300;
-  line-height: 0.92;
-  letter-spacing: -0.035em;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
   color: #ffffff;
 }
 
 .project-viewer-title-en {
-  margin: 12px 0 0;
+  margin: 4px 0 0;
   font-family: var(--font-body);
-  font-size: 8px;
-  font-weight: 500;
-  line-height: 1.35;
-  letter-spacing: 0.15em;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.42);
+  color: rgba(255, 255, 255, 0.45);
 }
 
-/* ------------------------------------------------------------
-   RESUMEN
-   ------------------------------------------------------------ */
+/* Ficha de Información en la Cabecera */
 .project-viewer-summary {
-  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  background: #181818;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 24px;
+  border-radius: 4px;
 }
 
 .project-viewer-summary-item {
   display: grid;
-  grid-template-columns: 82px minmax(0, 1fr);
-  gap: 18px;
-  padding: 12px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 16px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  align-items: baseline;
+}
+
+.project-viewer-summary-item:last-child {
+  border-bottom: none;
 }
 
 .project-viewer-summary-label {
+  display: flex;
+  flex-direction: column;
+}
+
+.summary-label-es {
   font-family: var(--font-body);
-  font-size: 7px;
+  font-size: 10px;
   font-weight: 600;
-  line-height: 1.25;
-  letter-spacing: 0.11em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.46);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.summary-label-en {
+  font-family: var(--font-body);
+  font-size: 8px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
 }
 
 .project-viewer-summary-value {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 13px;
   font-weight: 300;
   line-height: 1.5;
-  color: rgba(255, 255, 255, 0.88);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 /* ------------------------------------------------------------
-   CUERPO Y SECCIONES
+   3. FRANJAS DE CONTENIDO ALTERNADAS (STRIPES)
    ------------------------------------------------------------ */
 .project-viewer-body {
-  width: min(1120px, calc(100% - 48px));
-  margin: 0 auto;
-  padding: 95px 0 120px;
+  width: 100%;
+  padding: 0;
 }
 
-.project-viewer-content {
+/* Estructura de bloques en franjas */
+.project-section-stripe {
+  width: 100%;
+  padding: 80px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  display: flex;
+  justify-content: center;
+}
+
+.project-section-stripe:nth-child(odd) {
+  background: #ffffff;
+}
+
+.project-section-stripe:nth-child(even) {
+  background: var(--bg, #f4f3ef);
+}
+
+.project-section-inner {
+  width: min(1000px, calc(100% - 48px));
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 80px; /* Separación amplia entre bloques multimedia */
+  align-items: center;
 }
 
 /* ------------------------------------------------------------
-   DESCRIPCIÓN
+   4. SECCIÓN DESCRIPCIÓN (RESPETANDO PÁRRAFOS Y BILINGÜE)
    ------------------------------------------------------------ */
-.project-viewer-description {
-  display: grid;
-  grid-template-columns: minmax(220px, 0.55fr) minmax(0, 1.45fr);
-  column-gap: 80px;
-  row-gap: 16px;
-  padding-bottom: 80px;
-  border-bottom: 1px solid var(--light-gray);
+.project-viewer-description-section {
+  background: #ffffff;
+  padding: 90px 0 70px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
-.project-viewer-section-label {
+.project-viewer-description-inner {
+  width: min(1000px, calc(100% - 48px));
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(200px, 0.4fr) minmax(0, 1.6fr);
+  gap: 50px;
+}
+
+.project-viewer-section-header {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  gap: 4px;
 }
 
-.project-viewer-section-label span {
+.section-kicker {
   font-family: var(--font-title);
-  font-size: 34px;
-  font-weight: 400;
-  line-height: 1;
-  color: var(--black);
+  font-size: 28px;
+  font-weight: 300;
+  color: var(--black, #111111);
+  line-height: 1.1;
 }
 
-.project-viewer-description p {
-  margin: 0 0 18px;
-  max-width: 760px;
+.section-kicker-en {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gray, #777777);
+}
+
+/* Respeto estricto de párrafos y saltos de línea */
+.project-viewer-description-content {
   font-family: var(--font-body);
   font-size: 14px;
   font-weight: 300;
-  line-height: 1.8;
-  color: #292929;
+  line-height: 1.85;
+  color: #222222;
+  white-space: pre-line; /* Mantiene saltos de línea de proyecto.txt */
+}
+
+.project-viewer-description-content p {
+  margin: 0 0 20px;
 }
 
 /* ------------------------------------------------------------
-   BLOQUES MULTIMEDIA GLOBALES
+   5. TARJETAS Y CONTENEDORES MULTIMEDIA (ESTILO ABOUT.CSS)
    ------------------------------------------------------------ */
-.project-block {
+.project-block-card {
   width: 100%;
-}
-.project-block-caption {
-  margin-top: 15px;
-  font-family: var(--font-body);
-  font-size: 11px;
-  color: var(--gray);
-  text-align: center;
-  font-weight: 300;
+  max-width: 900px;
+  background: #181818;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 16px;
+  box-sizing: border-box;
+  margin: 0 auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border-radius: 4px;
 }
 
-/* --- 1. IMAGEN SUELTA --- */
+.project-block-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.project-block-counter {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.project-zoom-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.project-zoom-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #ffffff;
+}
+
+/* Pie de foto/elemento estandarizado */
+.project-block-caption {
+  margin-top: 14px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  font-weight: 300;
+  line-height: 1.5;
+  width: 100%;
+}
+
+.project-block-caption-en {
+  display: block;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.45);
+  margin-top: 2px;
+  letter-spacing: 0.04em;
+}
+
+/* ------------------------------------------------------------
+   6. ELEMENTOS MULTIMEDIA ESPECÍFICOS (CENTRADOS)
+   ------------------------------------------------------------ */
+
+/* --- A. Imagen Suelta --- */
 .project-image-frame {
   display: flex;
+  align-items: center;
   justify-content: center;
-  background: #fcfcfc;
-  border-radius: 8px;
+  width: 100%;
+  background: #111111;
+  overflow: hidden;
 }
+
 .project-image-frame img {
   display: block;
-  width: 100%;
-  max-height: 80vh; /* Límite vital para que no reviente el monitor */
+  max-width: 100%;
+  max-height: 75vh;
   object-fit: contain;
-  object-position: center;
+  margin: 0 auto;
   cursor: zoom-in;
 }
 
-/* --- 2. CARRUSEL --- */
+/* --- B. Carrusel --- */
 .project-carousel {
   position: relative;
   width: 100%;
-  background: #0a0a0a;
-  border-radius: 8px;
-  overflow: hidden;
+  background: #111111;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
+
 .project-carousel-stage {
   width: 100%;
+  height: 65vh;
+  min-height: 380px;
   display: flex;
+  align-items: center;
   justify-content: center;
+  position: relative;
 }
-/* OCULTA POR DEFECTO LAS IMÁGENES DEL CARRUSEL */
+
 .project-carousel-image {
-  display: none; 
-  width: 100%;
-  max-height: 75vh;
+  display: none;
+  max-width: 100%;
+  max-height: 100%;
   object-fit: contain;
   cursor: zoom-in;
+  margin: 0 auto;
 }
-/* SOLO MUESTRA LA ACTIVA */
+
 .project-carousel-image.is-active {
   display: block;
 }
-/* Botones del carrusel */
-.project-carousel-button {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.4);
-  color: #ffffff;
-  border: none;
-  font-size: 20px;
-  padding: 12px 18px;
-  cursor: pointer;
-  z-index: 10;
-  border-radius: 4px;
-  transition: background 0.3s;
-}
-.project-carousel-button:hover { background: rgba(0, 0, 0, 0.8); }
-.project-carousel-prev { left: 15px; }
-.project-carousel-next { right: 15px; }
-.project-carousel-counter {
-  text-align: center;
-  margin-top: 15px;
-  font-family: var(--font-body);
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  color: var(--gray);
+
+.project-carousel-controls {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin-top: 8px;
 }
 
-/* --- 3. COMPARADOR --- */
+.portfolio-nav-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  padding: 6px 20px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.portfolio-nav-btn:hover {
+  background: #ffffff;
+  color: #111111;
+  border-color: #ffffff;
+}
+
+/* --- C. Comparador --- */
 .project-comparator {
   display: grid;
   grid-template-columns: 1fr 2px 1fr;
-  gap: 10px;
+  gap: 12px;
   align-items: center;
-  background: #f4f4f4;
-  padding: 10px;
-  border-radius: 8px;
+  width: 100%;
+  background: #111111;
+  padding: 8px;
+  box-sizing: border-box;
 }
+
 .project-comparator-divider {
-  background: #ddd;
+  background: rgba(255, 255, 255, 0.2);
   height: 100%;
   width: 2px;
 }
+
 .project-comparator-image img {
   width: 100%;
   height: auto;
   display: block;
-  border-radius: 4px;
+  object-fit: contain;
   cursor: zoom-in;
 }
 
-/* --- 4. EVOLUCIÓN --- */
+/* --- D. Evolución --- */
 .project-evolution {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  width: 100%;
+  justify-content: center;
 }
+
 .project-evolution-item {
   margin: 0;
   text-align: center;
+  background: #111111;
+  padding: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
+
 .project-evolution-image img {
   width: 100%;
   height: auto;
-  border-radius: 6px;
+  object-fit: contain;
   cursor: zoom-in;
 }
+
 .project-evolution-item figcaption {
-  margin-top: 10px;
+  margin-top: 8px;
   font-family: var(--font-body);
   font-size: 10px;
-  letter-spacing: 0.1em;
-  color: var(--gray);
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
 }
 
-/* --- 5. VIDEO & SKETCHFAB --- */
-.project-video-frame,
-.project-sketchfab-frame {
-  position: relative;
-  width: 100%;
-  padding-bottom: 56.25%; /* Ratio estricto 16:9 */
-  height: 0;
-  background: #000;
-  border-radius: 8px;
-  overflow: hidden;
-}
-.project-video-frame iframe,
-.project-video-frame video,
-.project-sketchfab-frame iframe {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  border: 0;
-}
+/* --- E. Modelos 3D / Sketchfab --- */
 .project-sketchfab-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  width: 100%;
 }
 
-/* --- 6. PDF --- */
+.project-sketchfab-card {
+  background: #111111;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  position: relative;
+}
+
+.project-sketchfab-preview-box {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.sketchfab-launch-btn {
+  background: transparent;
+  border: 1px solid var(--accent, #a28b6d);
+  color: var(--accent, #a28b6d);
+  padding: 8px 18px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  z-index: 2;
+}
+
+.sketchfab-launch-btn:hover {
+  background: var(--accent, #a28b6d);
+  color: #111111;
+}
+
+.project-sketchfab-frame {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000000;
+  border: 0;
+}
+
+/* --- F. Vídeo y PDF Protegidos --- */
+.project-video-container,
+.project-pdf-container {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.project-video-frame {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* Ratio 16:9 */
+  height: 0;
+  background: #000000;
+  overflow: hidden;
+}
+
+.project-video-frame iframe,
+.project-video-frame video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
 .project-pdf-frame {
   width: 100%;
-  height: 85vh; /* Ocupa buena parte de la pantalla sin desbordar */
-  min-height: 600px;
-  border: 1px solid var(--light-gray);
-  border-radius: 8px;
-  overflow: hidden;
-  background: #fff;
+  height: 80vh;
+  min-height: 550px;
+  background: #ffffff;
+  border: 0;
+  position: relative;
 }
+
 .project-pdf-frame iframe {
   width: 100%;
   height: 100%;
   border: none;
-  display: block;
+}
+
+/* Capa transparente superior para bloquear click derecho y descargas directas */
+.project-protection-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  pointer-events: none; /* Permite interacciones permitidas si se ajusta vía JS */
 }
 
 /* ------------------------------------------------------------
-   LIGHTBOX / MODAL ZOOM
+   7. NAVEGACIÓN INFERIOR DE PROYECTOS ("Ver todos" / "Siguiente")
+   ------------------------------------------------------------ */
+.project-viewer-navigation {
+  background: #111111;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 60px 0;
+}
+
+.project-viewer-navigation-inner {
+  width: min(1000px, calc(100% - 48px));
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.project-nav-link {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-decoration: none;
+  padding: 12px 24px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: #181818;
+  transition: all 0.25s ease;
+}
+
+.project-nav-link:hover {
+  border-color: var(--accent, #a28b6d);
+  background: #222222;
+}
+
+.project-nav-label-es {
+  font-family: var(--font-title);
+  font-size: 16px;
+  color: #ffffff;
+  letter-spacing: 0.05em;
+}
+
+.project-nav-label-en {
+  font-family: var(--font-body);
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.45);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* ------------------------------------------------------------
+   8. LIGHTBOX / MODAL ZOOM (EXACTO A ABOUT.CSS)
    ------------------------------------------------------------ */
 .project-lightbox {
   position: fixed;
   inset: 0;
-  z-index: 9999;
+  z-index: 99999;
   display: none;
   align-items: center;
   justify-content: center;
-  padding: 35px;
-  background: rgba(17, 17, 17, 0.94);
+  padding: 30px;
+  background: rgba(0, 0, 0, 0.95);
+  box-sizing: border-box;
 }
-.project-lightbox.is-open { display: flex; }
+
+.project-lightbox.is-open {
+  display: flex;
+}
+
 .project-lightbox-inner {
-  max-width: 94vw;
-  max-height: 92vh;
+  max-width: 92vw;
+  max-height: 88vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
 }
+
 .project-lightbox-inner img {
   display: block;
-  max-width: 94vw;
+  max-width: 100%;
   max-height: 84vh;
-  width: auto;
-  height: auto;
   object-fit: contain;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
+
 .project-lightbox-close {
   position: absolute;
-  top: 22px;
-  right: 28px;
-  width: 38px;
-  height: 38px;
-  border: 0;
-  background: transparent;
+  top: 25px;
+  right: 30px;
+  background: none;
+  border: none;
   color: #ffffff;
-  font-size: 42px;
-  font-weight: 200;
+  font-size: 38px;
   cursor: pointer;
+  line-height: 1;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+  z-index: 100001;
 }
-body.lightbox-open { overflow: hidden; }
+
+.project-lightbox-close:hover {
+  opacity: 1;
+}
+
+body.lightbox-open {
+  overflow: hidden;
+}
 
 /* ------------------------------------------------------------
-   RESPONSIVE
+   9. RESPONSIVE
    ------------------------------------------------------------ */
 @media (max-width: 900px) {
   .project-viewer-intro-inner {
     grid-template-columns: 1fr;
-    gap: 55px;
+    gap: 35px;
   }
-  .project-viewer-description {
+
+  .project-viewer-description-inner {
     grid-template-columns: 1fr;
+    gap: 25px;
+  }
+
+  .project-carousel-stage {
+    height: 45vh;
+    min-height: 280px;
   }
 }
 
-@media (max-width: 700px) {
-  .project-viewer-intro { padding: 125px 0 65px; }
-  .project-viewer-intro-inner,
-  .project-viewer-body {
-    width: min(calc(100% - 40px), 1120px);
+@media (max-width: 600px) {
+  .project-viewer-intro {
+    padding: 130px 0 50px;
   }
-  .project-viewer-title {
-    font-size: clamp(43px, 12vw, 64px);
+
+  .project-viewer-summary-item {
+    grid-template-columns: 1fr;
+    gap: 4px;
   }
-  .project-viewer-body { padding: 70px 0 90px; }
-  .project-viewer-section-label span { font-size: 30px; }
-  .project-pdf-frame { height: 60vh; min-height: 450px; }
-  .project-comparator { grid-template-columns: 1fr; }
-  .project-comparator-divider { height: 2px; width: 100%; }
+
+  .project-comparator {
+    grid-template-columns: 1fr;
+  }
+
+  .project-comparator-divider {
+    height: 2px;
+    width: 100%;
+  }
+
+  .project-viewer-navigation-inner {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .project-pdf-frame {
+    height: 60vh;
+    min-height: 400px;
+  }
 }
