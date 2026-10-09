@@ -1873,3 +1873,224 @@ select {
   }
 
 }
+
+/* ============================================================
+   SELECTOR DE IDIOMAS PERSONALIZADO — BAAL STUDIO
+   ============================================================ */
+
+.baal-language-selector {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 99999;
+  font-family: var(--font-body, Inter, sans-serif);
+}
+
+/* Mantener el selector por encima del contenido traducido. */
+.baal-language-selector,
+.baal-language-selector * {
+  box-sizing: border-box;
+}
+
+.baal-lang-current {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 130px;
+  padding: 10px 16px;
+
+  background: rgba(24, 24, 24, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 3px;
+
+  color: #ffffff;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.baal-lang-current:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(24, 24, 24, 0.98);
+}
+
+.baal-lang-current:focus-visible,
+.baal-lang-dropdown a:focus-visible {
+  outline: 2px solid #B08A57;
+  outline-offset: 3px;
+}
+
+.baal-lang-current svg {
+  flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.7);
+  transition: transform 0.2s ease;
+}
+
+.baal-language-selector.is-open .baal-lang-current svg {
+  transform: rotate(180deg);
+}
+
+/* ============================================================
+   DESPLEGABLE DE IDIOMAS
+   ============================================================ */
+
+.baal-lang-dropdown {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 0;
+  z-index: 100000;
+
+  display: none;
+  flex-direction: column;
+
+  width: 160px;
+  max-height: min(65vh, 420px);
+  overflow-y: auto;
+
+  padding: 6px 0;
+
+  background: rgba(24, 24, 24, 0.97);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 3px;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(10px);
+}
+
+.baal-language-selector.is-open .baal-lang-dropdown {
+  display: flex;
+}
+
+.baal-lang-dropdown a {
+  display: block;
+  padding: 9px 16px;
+
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.baal-lang-dropdown a:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+/* ============================================================
+   PROTEGER LOS NOMBRES DEL SELECTOR FRENTE A LA TRADUCCIÓN
+   ============================================================ */
+
+.baal-language-selector,
+.baal-language-selector * {
+  translate: no;
+}
+
+/* ============================================================
+   GOOGLE TRANSLATE — OCULTAR ELEMENTOS NATIVOS
+   ============================================================ */
+
+#google_translate_element {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Barra superior de Google Translate. */
+.goog-te-banner-frame,
+iframe.goog-te-banner-frame,
+.goog-te-banner-frame.skiptranslate {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  max-height: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Contenedor superior inyectado por Google. */
+body > .skiptranslate,
+html body > .skiptranslate {
+  display: none !important;
+  visibility: hidden !important;
+  background-color: #181818 !important;
+}
+
+/* Evitar desplazamientos verticales causados por Google. */
+html,
+body {
+  top: 0 !important;
+}
+
+/* Avisos, globos y elementos flotantes. */
+#goog-gt-tt,
+.goog-te-balloon-frame,
+.goog-te-spinner-pos,
+.goog-tooltip,
+.goog-tooltip:hover {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* Evitar fondos añadidos a los textos traducidos. */
+.goog-text-highlight {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* ============================================================
+   INTEGRACIÓN VISUAL DE LOS ELEMENTOS NATIVOS RESTANTES
+   ============================================================ */
+
+.goog-te-gadget,
+.goog-te-gadget span,
+.goog-te-gadget a,
+.goog-te-gadget-simple {
+  background-color: #181818 !important;
+  color: #ffffff !important;
+}
+
+.goog-te-gadget-simple,
+.goog-te-gadget-simple .goog-te-menu-value,
+.goog-te-gadget-simple .goog-te-menu-value span {
+  background: #181818 !important;
+  color: #ffffff !important;
+  border-color: #181818 !important;
+}
+
+
+/* ============================================================
+   BAAL STUDIO — FONDO BAJO EL FOOTER
+   ============================================================ */
+
+/* Evitar que el documento deje una zona beige bajo el footer. */
+html,
+body {
+  background-color: #111111 !important;
+}
+
+/* Mantener el fondo oscuro del footer hasta su borde inferior. */
+footer,
+.site-footer,
+#footer {
+  background-color: #111111 !important;
+}
+
+/* Evitar fondos claros en el contenedor raíz de Google Translate. */
+body > .skiptranslate {
+  background-color: #111111 !important;
+  background-image: none !important;
+}
+
+/* Ocultar el contenedor superior de Google cuando está vacío. */
+body > .skiptranslate:empty {
+  display: none !important;
+}
