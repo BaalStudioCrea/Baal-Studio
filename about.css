@@ -601,63 +601,96 @@
 }
 
 /* ============================================================
-   SELECTOR DE IDIOMAS GLOBAL — BAAL STUDIO
+   SELECTOR DE IDIOMAS PERSONALIZADO — BAAL STUDIO
    ============================================================ */
 
-.language-selector-container {
+.baal-language-selector {
   position: fixed;
   bottom: 24px;
   left: 24px;
   z-index: 99999;
-  background: rgba(24, 24, 24, 0.88);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-family: var(--font-body, Inter, sans-serif);
+}
+
+.baal-lang-current {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: rgba(24, 24, 24, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 3px;
-  padding: 6px 12px;
+  padding: 10px 16px;
+  color: #ffffff;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
   backdrop-filter: blur(8px);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-  transition: border-color 0.2s ease, background 0.2s ease;
+  transition: all 0.2s ease;
+  min-width: 130px;
 }
 
-.language-selector-container:hover {
-  border-color: rgba(255, 255, 255, 0.45);
-  background: rgba(24, 24, 24, 0.95);
+.baal-lang-current:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(24, 24, 24, 0.98);
 }
 
-/* Ocultar elementos innecesarios del widget nativo */
-.goog-te-gadget-icon,
-.goog-te-banner-frame {
+.baal-lang-current svg {
+  transition: transform 0.2s ease;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.baal-language-selector.is-open .baal-lang-current svg {
+  transform: rotate(180deg);
+}
+
+.baal-lang-dropdown {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 0;
+  width: 160px;
+  background: rgba(24, 24, 24, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 3px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+  display: none;
+  flex-direction: column;
+  padding: 6px 0;
+  z-index: 100000;
+}
+
+.baal-language-selector.is-open .baal-lang-dropdown {
+  display: flex;
+}
+
+.baal-lang-dropdown a {
+  padding: 9px 16px;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.baal-lang-dropdown a:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+/* Ocultar definitivamente cualquier elemento nativo molesto de Google Translate */
+.goog-te-banner-frame,
+.goog-te-balloon-frame,
+#goog-gt-tt,
+.goog-te-spinner-pos {
   display: none !important;
+  visibility: hidden !important;
 }
 
 body {
-  top: 0 !important; /* Previene el salto que hace Google Translate en la cabecera */
-}
-
-.goog-te-gadget {
-  font-family: var(--font-body, Inter, sans-serif) !important;
-  font-size: 9px !important;
-  color: rgba(255, 255, 255, 0.6) !important;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-}
-
-.goog-te-gadget-simple {
-  background-color: transparent !important;
-  border: none !important;
-  font-size: 9px !important;
-  padding: 0 !important;
-  cursor: pointer;
-}
-
-.goog-te-gadget-simple .goog-te-menu-value span {
-  color: #ffffff !important;
-  font-family: var(--font-body, Inter, sans-serif) !important;
-  font-size: 9px !important;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.goog-te-gadget-simple .goog-te-menu-value span:nth-child(3),
-.goog-te-gadget-simple .goog-te-menu-value span:nth-child(5) {
-  display: none !important; /* Oculta flechas y barras nativas antiestéticas */
+  top: 0 !important;
+  position: static !important;
 }
