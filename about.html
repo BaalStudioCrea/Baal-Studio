@@ -566,18 +566,71 @@
 
     });
   </script>
-  <!-- Widget Selector de Idiomas — Baal Studio -->
-<div id="google_translate_element" class="language-selector-container"></div>
+  
+<!-- Selector de Idiomas Personalizado — Baal Studio -->
+<div class="baal-language-selector" id="baalLangSelector">
+  <button type="button" class="baal-lang-current" id="baalLangToggle">
+    <span>Español</span>
+    <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+  </button>
+  <div class="baal-lang-dropdown" id="baalLangDropdown">
+    <a href="#" data-lang="es">Español</a>
+    <a href="#" data-lang="de">Deutsch</a>
+    <a href="#" data-lang="ar">العربية</a>
+    <a href="#" data-lang="zh-CN">中文</a>
+    <a href="#" data-lang="fr">Français</a>
+    <a href="#" data-lang="en">English</a>
+    <a href="#" data-lang="it">Italiano</a>
+    <a href="#" data-lang="ja">日本語</a>
+    <a href="#" data-lang="pt">Português</a>
+    <a href="#" data-lang="ru">Русский</a>
+  </div>
+</div>
+
+<!-- Elemento oculto necesario para que el motor de Google funcione en segundo plano -->
+<div id="google_translate_element" style="display:none;"></div>
 
 <script type="text/javascript">
   function googleTranslateElementInit() {
     new google.translate.TranslateElement({
       pageLanguage: 'es',
-      includedLanguages: 'de,ar,zh-CN,fr,en,it,ja,pt,ru',
-      layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+      includedLanguages: 'de,ar,zh-CN,fr,en,it,ja,pt,ru,es',
       autoDisplay: false
     }, 'google_translate_element');
   }
+
+  // Lógica del desplegable personalizado
+  document.addEventListener("DOMContentLoaded", () => {
+    const selector = document.getElementById("baalLangSelector");
+    const toggle = document.getElementById("baalLangToggle");
+    const currentSpan = toggle.querySelector("span");
+    const dropdown = document.getElementById("baalLangDropdown");
+
+    toggle.addEventListener("click", (e) => {
+      e.stopPropagation();
+      selector.classList.toggle("is-open");
+    });
+
+    document.addEventListener("click", () => {
+      selector.classList.remove("is-open");
+    });
+
+    dropdown.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        const targetLang = link.getAttribute("data-lang");
+        currentSpan.textContent = link.textContent;
+        selector.classList.remove("is-open");
+
+        // Dispara la traducción en el select oculto de Google
+        const selectField = document.querySelector(".goog-te-combo");
+        if (selectField) {
+          selectField.value = targetLang;
+          selectField.dispatchEvent(new Event("change"));
+        }
+      });
+    });
+  });
 </script>
 <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
