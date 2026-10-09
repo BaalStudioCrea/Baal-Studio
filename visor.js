@@ -1,23 +1,20 @@
+```javascript
 /* ============================================================
    BAAL STUDIO — VISOR.JS
-   Visor editorial de proyectos
+   Visor de proyectos compatible con la estructura de Supabase
    ============================================================ */
 
-const SUPABASE_URL = "https://hlyzyeatnbulyfiiwvsq.supabase.co";
-const VISOR_FUNCTION = `${SUPABASE_URL}/functions/v1/visor`;
+const SUPABASE_URL =
+  "https://hlyzyeatnbulyfiiwvsq.supabase.co";
 
-const PROTECTED_SELECTOR = [
-  ".protected-image",
-  ".protected-media",
-  ".project-sketchfab-preview",
-  ".project-pdf-frame",
-  ".project-video-frame"
-].join(",");
+const VISOR_FUNCTION =
+  `${SUPABASE_URL}/functions/v1/visor`;
 
 document.addEventListener("DOMContentLoaded", () => {
-  installViewerProtection();
   loadProjectViewer();
+  installViewerProtection();
 });
+
 
 /* ============================================================
    UTILIDADES
@@ -47,21 +44,87 @@ function showMessage(message, type = "loading") {
 
   container.innerHTML = `
     <section class="visor-state visor-state-${escapeHtml(type)}">
-      <p><strong>${escapeHtml(message)}</strong></p>
+      <p>${escapeHtml(message)}</p>
     </section>
   `;
 }
 
-function joinValue(value) {
-  if (Array.isArray(value)) {
-    return value.filter(Boolean).join(" · ");
-  }
-
-  return String(value || "").trim();
+function asArray(value) {
+  return Array.isArray(value) ? value : [];
 }
 
+function getResourceUrl(item) {
+  if (!item) return "";
+
+  if (typeof item === "string") {
+    return item.trim();
+  }
+
+  return String(
+    item.url ||
+    item.resource?.url ||
+    item.signedUrl ||
+    item.signed_url ||
+    ""
+  ).trim();
+}
+
+function getItemName(item, fallback = "") {
+  if (!item || typeof item === "string") return fallback;
+
+  return String(
+    item.reference ||
+    item.name ||
+    item.file ||
+    item.title ||
+    fallback
+  );
+}
+
+function normaliseProjectResponse(result, requestedProject) {
+  /*
+   * Admite las dos respuestas:
+   * { success: true, project: {...} }
+   * { success: true, projects: [...] }
+   */
+
+  if (result?.project && typeof result.project === "object") {
+    return result.project;
+  }
+
+  const projects = asArray(result?.projects);
+
+  if (projects.length) {
+    const requested = requestedProject.toLowerCase();
+
+    return (
+      projects.find(project =>
+        String(project.id || project.name || "")
+          .toLowerCase() === requested
+      ) ||
+      projects.find(project =>
+        String(project.name || "")
+          .toLowerCase() === requested
+      ) ||
+      (projects.length === 1 ? projects[0] : null)
+    );
+  }
+
+  /*
+   * Algunas funciones devuelven el propio proyecto
+   * en la raíz de la respuesta.
+   */
+
+  if (result?.metadata || result?.blocks) {
+    return result;
+  }
+
+  return null;
+}
+
+
 /* ============================================================
-   CARGA DEL PROYECTO
+   CARGA
    ============================================================ */
 
 async function loadProjectViewer() {
@@ -72,7 +135,7 @@ async function loadProjectViewer() {
     return;
   }
 
-  showMessage("Cargando proyecto…", "loading");
+  showMessage("Cargando proyecto…");
 
   try {
     const response = await fetch(
@@ -84,20 +147,51 @@ async function loadProjectViewer() {
       }
     );
 
-    const result = await response.json();
+    const rawResponse = await response.text();
 
-    if (!response.ok || !result.success || !result.project) {
+    let result;
+
+    try {
+      result = JSON.parse(rawResponse);
+    } catch {
       throw new Error(
-        result.error || `La función visor respondió ${response.status}.`
+        `La función visor no ha devuelto JSON válido (HTTP ${response.status}).`
       );
     }
 
-    renderProject(result.project);
+    if (!response.ok) {
+      throw new Error(
+        result?.error ||
+        result?.message ||
+        `Error HTTP ${response.status}.`
+      );
+    }
+
+    const project = normaliseProjectResponse(
+      result,
+      requestedProject
+    );
+
+    if (!project) {
+      console.error("[Baal Studio] Respuesta de Supabase:", result);
+      throw new Error(
+        result?.error ||
+        "La respuesta no contiene el proyecto esperado."
+      );
+    }
+
+    renderProject(project);
+
   } catch (error) {
     console.error("[Baal Studio] Error cargando proyecto:", error);
-    showMessage(`No se pudo cargar el proyecto: ${error.message}`, "error");
+
+    showMessage(
+      `No se pudo cargar el proyecto: ${error.message}`,
+      "error"
+    );
   }
 }
+
 
 /* ============================================================
    RENDER PRINCIPAL
@@ -108,16 +202,20 @@ function renderProject(project) {
   if (!container) return;
 
   const metadata = project.metadata || {};
-  const title = metadata.titulo || project.id || "Proyecto";
-  const blocks = Array.isArray(project.blocks) ? project.blocks : [];
+  const title = metadata.titulo || project.name || project.id || "Proyecto";
+
+  const blocks = asArray(project.blocks);
 
   container.innerHTML = `
-    <article class="project-viewer" data-project-id="${escapeHtml(project.id)}">
+    <article class="project-viewer"
+      data-project-id="${escapeHtml(project.id || project.name || "")}">
+
       ${renderProjectIntro(project)}
+
       ${renderProjectDescription(metadata.descripcion)}
 
       <div class="project-viewer-content">
-        ${renderBlocks(blocks)}
+        ${renderBlocks(blocks, project)}
       </div>
 
       ${renderProjectNavigation(project.navigation)}
@@ -130,8 +228,8 @@ function renderProject(project) {
   initialiseMediaZoom();
   initialiseSketchfab();
   initialiseNavigation();
-  applyProtectedMedia();
 }
+
 
 /* ============================================================
    INTRODUCCIÓN Y METADATOS
@@ -140,19 +238,24 @@ function renderProject(project) {
 function renderProjectIntro(project) {
   const metadata = project.metadata || {};
 
-  const title = metadata.titulo || project.id || "Proyecto";
-  const location = metadata.localizacion || "";
-  const category = joinValue(metadata.categoria);
-  const subcategory = joinValue(metadata.subcategoria);
-  const year = metadata.año || "";
-  const techniques = joinValue(metadata.tecnicas);
-  const objectives = joinValue(metadata.objetivo);
-  const authorship = metadata.autoria || "";
-  const collaboration = metadata.colaboracion || "";
+  const fields = [
+    ["Localización", "Location", metadata.localizacion],
+    ["Categoría", "Category", metadata.categoria],
+    ["Subcategoría", "Subcategory", metadata.subcategoria],
+    ["Año", "Year", metadata.año || metadata.anio],
+    ["Técnicas", "Techniques", metadata.tecnicas],
+    ["Objetivo", "Purpose", metadata.objetivo],
+    ["Autoría", "Authorship", metadata.autoria],
+    ["Colaboración", "Collaboration", metadata.colaboracion]
+  ];
 
-  const articles = Array.isArray(project.articles)
-    ? project.articles
-    : [];
+  const title =
+    metadata.titulo ||
+    project.name ||
+    project.id ||
+    "Proyecto";
+
+  const articles = asArray(project.articles);
 
   return `
     <header class="project-viewer-intro">
@@ -164,14 +267,10 @@ function renderProjectIntro(project) {
         </div>
 
         <div class="project-viewer-summary">
-          ${renderMetadataItem("Localización", "Location", location)}
-          ${renderMetadataItem("Categoría", "Category", category)}
-          ${renderMetadataItem("Subcategoría", "Subcategory", subcategory)}
-          ${renderMetadataItem("Año", "Year", year)}
-          ${renderMetadataItem("Técnicas", "Techniques", techniques)}
-          ${renderMetadataItem("Objetivo", "Purpose", objectives)}
-          ${renderMetadataItem("Autoría", "Authorship", authorship)}
-          ${renderMetadataItem("Colaboración", "Collaboration", collaboration)}
+          ${fields.map(([label, english, value]) =>
+            renderMetadataItem(label, english, value)
+          ).join("")}
+
           ${articles.length ? renderArticles(articles) : ""}
         </div>
 
@@ -181,13 +280,17 @@ function renderProjectIntro(project) {
 }
 
 function renderMetadataItem(label, english, value) {
-  if (!value) return "";
+  if (!value || (Array.isArray(value) && !value.length)) return "";
+
+  const displayValue = Array.isArray(value)
+    ? value.filter(Boolean).join(" · ")
+    : String(value);
 
   return `
     <div class="project-viewer-summary-item">
       <div class="project-viewer-summary-label">${escapeHtml(label)}</div>
       <div class="project-viewer-summary-label-en">${escapeHtml(english)}</div>
-      <div class="project-viewer-summary-value">${escapeHtml(value)}</div>
+      <div class="project-viewer-summary-value">${escapeHtml(displayValue)}</div>
     </div>
   `;
 }
@@ -197,19 +300,31 @@ function renderArticles(articles) {
     <div class="project-viewer-summary-item">
       <div class="project-viewer-summary-label">Artículos</div>
       <div class="project-viewer-summary-label-en">Sources</div>
-
       <div class="project-viewer-summary-value project-viewer-articles">
-        ${articles.map((url, index) => `
-          <a href="${escapeHtml(url)}"
-             target="_blank"
-             rel="noopener noreferrer">
-            Fuente ${index + 1}
-          </a>
-        `).join("")}
+        ${articles.map((article, index) => {
+          const url = typeof article === "string"
+            ? article
+            : article?.url || "";
+
+          const label = typeof article === "object"
+            ? article.title || `Fuente ${index + 1}`
+            : `Fuente ${index + 1}`;
+
+          if (!url) return "";
+
+          return `
+            <a href="${escapeHtml(url)}"
+              target="_blank"
+              rel="noopener noreferrer">
+              ${escapeHtml(label)}
+            </a>
+          `;
+        }).join("")}
       </div>
     </div>
   `;
 }
+
 
 /* ============================================================
    DESCRIPCIÓN
@@ -220,7 +335,7 @@ function renderProjectDescription(description) {
 
   const paragraphs = String(description)
     .split(/\n\s*\n/)
-    .map(paragraph => paragraph.trim())
+    .map(text => text.trim())
     .filter(Boolean);
 
   return `
@@ -231,58 +346,72 @@ function renderProjectDescription(description) {
       </div>
 
       <div class="project-viewer-description-text">
-        ${paragraphs.map(paragraph => `
-          <p>${escapeHtml(paragraph)}</p>
-        `).join("")}
+        ${paragraphs.map(paragraph =>
+          `<p>${escapeHtml(paragraph)}</p>`
+        ).join("")}
       </div>
     </section>
   `;
 }
 
+
 /* ============================================================
-   BLOQUES Y ORDEN EDITORIAL
+   BLOQUES
    ============================================================ */
 
-function renderBlocks(blocks) {
+function renderBlocks(blocks, project) {
   if (!blocks.length) {
     return `
       <section class="project-viewer-empty">
-        <p>No hay contenido visual disponible para este proyecto.</p>
+        <p>No hay bloques visuales disponibles para este proyecto.</p>
       </section>
     `;
   }
 
-  // El orden procede de proyecto.txt y lo establece la función visor.
-  return blocks.map((block, index) => renderBlock(block, index)).join("");
+  /*
+   * Se respeta el orden recibido de Supabase.
+   * No se ordenan los bloques alfabéticamente.
+   */
+
+  return blocks.map((block, index) =>
+    renderBlock(block, index, project)
+  ).join("");
 }
 
-function renderBlock(block, index) {
+function renderBlock(block, index, project) {
   if (!block) return "";
 
-  switch (String(block.type || "").toLowerCase()) {
+  const type = String(block.type || "").toLowerCase();
+
+  switch (type) {
     case "image":
+    case "imagen":
       return renderImageBlock(block, index);
 
     case "carousel":
+    case "carrusel":
       return renderCarouselBlock(block, index);
 
     case "comparator":
+    case "comparador":
       return renderComparatorBlock(block, index);
 
     case "evolution":
+    case "evolucion":
       return renderEvolutionBlock(block, index);
 
     case "sketchfab":
-      return renderSketchfabBlock(block, index);
+      return renderSketchfabBlock(block, index, project);
 
     case "video":
-      return renderVideoBlock(block, index);
+    case "vídeo":
+      return renderVideoBlock(block, index, project);
 
     case "pdf":
       return renderPdfBlock(block, index);
 
     default:
-      console.warn("[Baal Studio] Tipo de bloque no reconocido:", block.type);
+      console.warn("[Baal Studio] Tipo de bloque no reconocido:", type, block);
       return "";
   }
 }
@@ -295,41 +424,61 @@ function renderCaption(text) {
   `;
 }
 
+function renderZoomButton(label = "Ampliar imagen", extraClass = "") {
+  return `
+    <button type="button"
+      class="project-media-zoom ${escapeHtml(extraClass)}"
+      data-zoom-current
+      aria-label="${escapeHtml(label)}"
+      title="${escapeHtml(label)}">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="10.8" cy="10.8" r="6.3"></circle>
+        <path d="M15.5 15.5 21 21"></path>
+        <path d="M10.8 7.5v6.6M7.5 10.8h6.6"></path>
+      </svg>
+    </button>
+  `;
+}
+
+
 /* ============================================================
    IMAGEN INDIVIDUAL
    ============================================================ */
 
 function renderImageBlock(block, index) {
-  const resource = block.resource;
-  if (!resource?.url) return "";
+  const url = getResourceUrl(block);
+
+  if (!url) return "";
+
+  const alt = getItemName(block, "Imagen del proyecto");
 
   return `
     <figure class="project-block project-image-block"
-            data-block-index="${index}">
+      data-block-index="${index}">
 
       <div class="project-single-image protected-media">
         <img class="project-main-image protected-image"
-             src="${escapeHtml(resource.url)}"
-             alt="${escapeHtml(block.reference || resource.name || "Imagen del proyecto")}"
-             loading="lazy"
-             draggable="false">
+          src="${escapeHtml(url)}"
+          alt="${escapeHtml(alt)}"
+          loading="lazy"
+          draggable="false">
 
-        ${renderZoomButton("Ampliar imagen", "project-image-zoom")}
+        ${renderZoomButton()}
       </div>
 
-      ${renderCaption(block.text)}
+      ${renderCaption(block.text || block.caption)}
     </figure>
   `;
 }
+
 
 /* ============================================================
    CARRUSEL
    ============================================================ */
 
 function renderCarouselBlock(block, index) {
-  const images = Array.isArray(block.images)
-    ? block.images.filter(item => item?.url)
-    : [];
+  const images = asArray(block.images)
+    .filter(item => getResourceUrl(item));
 
   if (!images.length) return "";
 
@@ -337,34 +486,33 @@ function renderCarouselBlock(block, index) {
 
   return `
     <section class="project-block project-carousel-block"
-             data-carousel="${carouselId}">
+      data-carousel="${carouselId}">
 
       <div class="portfolio-media-viewer">
 
         <button type="button"
-                class="project-carousel-button project-carousel-prev"
-                data-carousel-action="prev"
-                aria-label="Imagen anterior">‹</button>
+          class="project-carousel-button project-carousel-prev"
+          data-carousel-action="prev"
+          aria-label="Imagen anterior">←</button>
 
         <div class="portfolio-media-stage protected-media">
+
           ${images.map((image, imageIndex) => `
-            <img class="project-carousel-image protected-image ${
-              imageIndex === 0 ? "is-active" : ""
-            }"
-                 src="${escapeHtml(image.url)}"
-                 alt="${escapeHtml(image.name || "Imagen del proyecto")}"
-                 loading="${imageIndex === 0 ? "eager" : "lazy"}"
-                 draggable="false"
-                 data-carousel-index="${imageIndex}">
+            <img class="project-carousel-image protected-image ${imageIndex === 0 ? "is-active" : ""}"
+              src="${escapeHtml(getResourceUrl(image))}"
+              alt="${escapeHtml(getItemName(image, "Imagen del proyecto"))}"
+              loading="${imageIndex === 0 ? "eager" : "lazy"}"
+              draggable="false"
+              data-carousel-index="${imageIndex}">
           `).join("")}
 
-          ${renderZoomButton("Ampliar imagen", "project-carousel-zoom")}
+          ${renderZoomButton()}
         </div>
 
         <button type="button"
-                class="project-carousel-button project-carousel-next"
-                data-carousel-action="next"
-                aria-label="Imagen siguiente">›</button>
+          class="project-carousel-button project-carousel-next"
+          data-carousel-action="next"
+          aria-label="Imagen siguiente">→</button>
       </div>
 
       <div class="project-carousel-counter">
@@ -373,159 +521,214 @@ function renderCarouselBlock(block, index) {
         <span>${String(images.length).padStart(2, "0")}</span>
       </div>
 
-      ${renderCaption(block.text)}
+      ${renderCaption(block.text || block.caption)}
     </section>
   `;
 }
+
 
 /* ============================================================
    COMPARADOR
    ============================================================ */
 
 function renderComparatorBlock(block, index) {
-  const images = Array.isArray(block.images)
-    ? block.images.filter(item => item?.url)
-    : [];
+  const images = asArray(block.images)
+    .filter(item => getResourceUrl(item));
 
   if (images.length < 2) return "";
 
   return `
     <section class="project-block project-comparator-block"
-             data-block-index="${index}">
+      data-block-index="${index}">
 
       <div class="project-comparator">
 
-        ${renderComparatorImage(images[0], "Imagen 1")}
+        ${renderComparatorImage(images[0], "Imagen original")}
 
         <div class="project-comparator-divider" aria-hidden="true"></div>
 
-        ${renderComparatorImage(images[1], "Imagen 2")}
+        ${renderComparatorImage(images[1], "Imagen comparada")}
 
       </div>
 
-      ${renderCaption(block.text)}
+      ${renderCaption(block.text || block.caption)}
     </section>
   `;
 }
 
-function renderComparatorImage(image, fallbackAlt) {
+function renderComparatorImage(image, fallback) {
   return `
     <div class="project-comparator-image protected-media">
       <img class="protected-image"
-           src="${escapeHtml(image.url)}"
-           alt="${escapeHtml(image.name || fallbackAlt)}"
-           draggable="false">
-
-      ${renderZoomButton("Ampliar imagen", "project-comparator-zoom")}
+        src="${escapeHtml(getResourceUrl(image))}"
+        alt="${escapeHtml(getItemName(image, fallback))}"
+        loading="lazy"
+        draggable="false">
+      ${renderZoomButton()}
     </div>
   `;
 }
+
 
 /* ============================================================
    EVOLUCIÓN
    ============================================================ */
 
 function renderEvolutionBlock(block, index) {
-  const images = Array.isArray(block.images)
-    ? block.images.filter(item => item?.url)
-    : [];
+  const images = asArray(block.images)
+    .filter(item => getResourceUrl(item));
 
   if (!images.length) return "";
 
   return `
     <section class="project-block project-evolution-block"
-             data-block-index="${index}">
+      data-block-index="${index}">
 
       <div class="project-evolution">
         ${images.map(image => `
           <figure class="project-evolution-item">
             <div class="project-evolution-image protected-media">
               <img class="protected-image"
-                   src="${escapeHtml(image.url)}"
-                   alt="${escapeHtml(image.name || "Imagen del proceso")}"
-                   loading="lazy"
-                   draggable="false">
-
-              ${renderZoomButton("Ampliar imagen", "project-evolution-zoom")}
+                src="${escapeHtml(getResourceUrl(image))}"
+                alt="${escapeHtml(getItemName(image, "Imagen del proceso"))}"
+                loading="lazy"
+                draggable="false">
+              ${renderZoomButton()}
             </div>
+            ${image.text ? renderCaption(image.text) : ""}
           </figure>
         `).join("")}
       </div>
 
-      ${renderCaption(block.text)}
+      ${renderCaption(block.text || block.caption)}
     </section>
   `;
 }
 
+
 /* ============================================================
    SKETCHFAB
-   Miniatura automática + enlace directo + carga bajo demanda
+   Admite URL corta, URL /embed/ y código iframe.
    ============================================================ */
 
-function renderSketchfabBlock(block, index) {
-  const items = Array.isArray(block.items)
-    ? block.items.filter(item => item?.url)
-    : [];
+function extractSketchfabEmbed(value) {
+  const text = String(value || "").trim();
 
-  if (!items.length) return "";
+  if (!text) return "";
+
+  /*
+   * Si se ha pegado el iframe completo, extraemos el src.
+   */
+
+  const iframeMatch = text.match(
+    /<iframe[^>]+src=["']([^"']+)["']/i
+  );
+
+  if (iframeMatch) {
+    return iframeMatch[1].replace(/&amp;/g, "&");
+  }
+
+  /*
+   * Si ya es una URL de inserción, se usa directamente.
+   */
+
+  if (/sketchfab\.com\/models\/[^/]+\/embed/i.test(text)) {
+    return text;
+  }
+
+  return "";
+}
+
+function normaliseSketchfabItem(item, index) {
+  const value = typeof item === "string"
+    ? item.trim()
+    : String(item?.url || item?.embed || item?.iframe || "").trim();
+
+  const directEmbed = extractSketchfabEmbed(value);
+
+  return {
+    url: directEmbed || value,
+    sourceUrl: value,
+    title: typeof item === "object"
+      ? item.title || item.name || `Modelo 3D ${index + 1}`
+      : `Modelo 3D ${index + 1}`
+  };
+}
+
+function renderSketchfabBlock(block, index, project) {
+  /*
+   * En los datos existentes, el bloque puede ser únicamente
+   * { "type": "sketchfab" } y las URL están en project.sketchfab.
+   */
+
+  const sourceItems = asArray(block.items).length
+    ? block.items
+    : asArray(project.sketchfab);
+
+  const items = sourceItems
+    .map(normaliseSketchfabItem)
+    .filter(item => item.url);
+
+  if (!items.length) {
+    return `
+      <section class="project-block project-sketchfab-block">
+        <p class="project-block-caption">
+          No hay modelos de Sketchfab configurados para este bloque.
+        </p>
+      </section>
+    `;
+  }
 
   return `
     <section class="project-block project-sketchfab-block"
-             data-block-index="${index}">
+      data-block-index="${index}">
 
       <div class="project-sketchfab-grid">
         ${items.map((item, itemIndex) =>
-          renderSketchfabItem(item, itemIndex)
+          renderSketchfabItem(item, index * 100 + itemIndex)
         ).join("")}
       </div>
 
-      ${renderCaption(block.text)}
+      ${renderCaption(block.text || block.caption)}
     </section>
   `;
 }
 
 function renderSketchfabItem(item, index) {
-  const url = String(item.url || "").trim();
-  const title = item.title || `Modelo 3D ${index + 1}`;
-  const thumbnail = item.thumbnail_url || "";
-  const embedUrl = item.embed_url || "";
+  const directEmbed = extractSketchfabEmbed(item.url);
+  const sourceUrl = item.sourceUrl || item.url;
+  const embedUrl = directEmbed || "";
 
   return `
     <article class="project-sketchfab-item"
-             data-sketchfab-url="${escapeHtml(url)}"
-             data-sketchfab-embed="${escapeHtml(embedUrl)}"
-             data-sketchfab-title="${escapeHtml(title)}">
+      data-sketchfab-url="${escapeHtml(sourceUrl)}"
+      data-sketchfab-embed="${escapeHtml(embedUrl)}">
 
       <div class="project-sketchfab-preview protected-media"
-           data-sketchfab-preview>
+        data-sketchfab-preview>
 
-        ${
-          thumbnail
-            ? `<img class="project-sketchfab-thumbnail protected-image"
-                    src="${escapeHtml(thumbnail)}"
-                    alt="${escapeHtml(title)}"
-                    loading="lazy"
-                    draggable="false">`
-            : `<div class="project-sketchfab-placeholder"
-                    aria-label="Previsualización del modelo 3D"></div>`
-        }
+        <div class="project-sketchfab-placeholder"></div>
 
         <div class="project-sketchfab-preview-overlay">
-          <button type="button" class="project-sketchfab-load">
+          <button type="button"
+            class="project-sketchfab-load">
             Cargar modelo 3D
           </button>
           <span>Sketchfab</span>
         </div>
       </div>
 
-      <div class="project-sketchfab-title">${escapeHtml(title)}</div>
+      <div class="project-sketchfab-title">
+        ${escapeHtml(item.title || `Modelo 3D ${index + 1}`)}
+      </div>
 
-      <a class="project-sketchfab-link"
-         href="${escapeHtml(url)}"
-         target="_blank"
-         rel="noopener noreferrer">
-        Abrir en Sketchfab ↗
-      </a>
+      <p class="project-sketchfab-external">
+        <a href="${escapeHtml(sourceUrl)}"
+          target="_blank"
+          rel="noopener noreferrer">
+          Abrir en Sketchfab ↗
+        </a>
+      </p>
     </article>
   `;
 }
@@ -533,41 +736,65 @@ function renderSketchfabItem(item, index) {
 function initialiseSketchfab() {
   document.querySelectorAll(".project-sketchfab-item").forEach(item => {
     const button = item.querySelector(".project-sketchfab-load");
-    if (!button) return;
+    const preview = item.querySelector("[data-sketchfab-preview]");
 
-    // Recuperar la miniatura en segundo plano, sin cargar todavía el modelo 3D.
-    loadSketchfabPreview(item);
+    if (!button || !preview || button.dataset.initialised === "true") {
+      return;
+    }
+
+    button.dataset.initialised = "true";
+
+    /*
+     * Si el proyecto.txt ya proporciona una URL /embed/,
+     * el iframe se carga directamente al pulsar el botón.
+     * Si proporciona una URL corta, intentamos resolverla
+     * mediante el servicio oEmbed de Sketchfab.
+     */
 
     button.addEventListener("click", async () => {
       if (item.classList.contains("is-loaded")) return;
 
-      const preview = item.querySelector("[data-sketchfab-preview]");
-      if (!preview) return;
+      const source = item.dataset.sketchfabUrl || "";
+      let embedUrl = item.dataset.sketchfabEmbed || "";
 
       button.disabled = true;
       button.textContent = "Cargando…";
 
       try {
-        const data = await getSketchfabOembed(item);
-        const embedUrl = item.dataset.sketchfabEmbed || data.embedUrl || "";
+        if (!embedUrl && source) {
+          const response = await fetch(
+            `https://sketchfab.com/oembed?url=${encodeURIComponent(source)}&format=json`
+          );
 
-        if (!embedUrl) {
-          throw new Error("Sketchfab no ha devuelto una dirección de visor válida.");
+          if (!response.ok) {
+            throw new Error(`Sketchfab respondió ${response.status}`);
+          }
+
+          const data = await response.json();
+          embedUrl = extractSketchfabEmbed(data.html || "") ||
+            String(data.html || "").match(/src=["']([^"']+)["']/i)?.[1] ||
+            "";
         }
 
-        const iframe = document.createElement("iframe");
-        iframe.className = "project-sketchfab-iframe";
-        iframe.src = embedUrl;
-        iframe.title = item.dataset.sketchfabTitle || "Modelo 3D";
-        iframe.loading = "eager";
-        iframe.allow = "autoplay; fullscreen; xr-spatial-tracking";
-        iframe.allowFullscreen = true;
-        iframe.referrerPolicy = "strict-origin-when-cross-origin";
+        if (!embedUrl) {
+          throw new Error("No se pudo obtener la URL de inserción.");
+        }
 
-        preview.replaceChildren(iframe);
+        preview.innerHTML = `
+          <iframe class="project-sketchfab-iframe"
+            src="${escapeHtml(embedUrl)}"
+            title="Modelo 3D de Sketchfab"
+            loading="eager"
+            allow="autoplay; fullscreen; xr-spatial-tracking"
+            allowfullscreen>
+          </iframe>
+        `;
+
         item.classList.add("is-loaded");
+
       } catch (error) {
-        console.error("[Baal Studio] Error cargando Sketchfab:", error);
+        console.error("[Baal Studio] Error Sketchfab:", error);
+
         button.disabled = false;
         button.textContent = "Reintentar modelo 3D";
       }
@@ -575,146 +802,11 @@ function initialiseSketchfab() {
   });
 }
 
-async function loadSketchfabPreview(item) {
-  try {
-    const data = await getSketchfabOembed(item);
-    const preview = item.querySelector("[data-sketchfab-preview]");
-
-    if (!preview || item.classList.contains("is-loaded")) return;
-
-    const thumbnailUrl = item.dataset.sketchfabThumbnail || data.thumbnailUrl;
-    if (!thumbnailUrl) return;
-
-    item.dataset.sketchfabThumbnail = thumbnailUrl;
-
-    let image = preview.querySelector(".project-sketchfab-thumbnail");
-
-    if (!image) {
-      image = document.createElement("img");
-      image.className = "project-sketchfab-thumbnail protected-image";
-      image.alt = item.dataset.sketchfabTitle || "Previsualización del modelo 3D";
-      image.loading = "lazy";
-      image.draggable = false;
-
-      const overlay = preview.querySelector(".project-sketchfab-preview-overlay");
-      if (overlay) {
-        preview.insertBefore(image, overlay);
-      } else {
-        preview.prepend(image);
-      }
-    }
-
-    image.src = thumbnailUrl;
-    image.addEventListener("error", () => {
-      // Si la miniatura remota falla, se conserva el espacio de previsualización.
-      image.remove();
-    }, { once: true });
-
-    applyProtectedMedia();
-  } catch (error) {
-    // Si oEmbed falla, el enlace directo sigue visible y funcional.
-    console.warn("[Baal Studio] No se pudo obtener la miniatura de Sketchfab:", error);
-  }
-}
-
-async function getSketchfabOembed(item) {
-  if (item._sketchfabOembedPromise) {
-    return item._sketchfabOembedPromise;
-  }
-
-  item._sketchfabOembedPromise = (async () => {
-    let embedUrl = item.dataset.sketchfabEmbed || "";
-    let thumbnailUrl = item.dataset.sketchfabThumbnail || "";
-    const sourceUrl = item.dataset.sketchfabUrl || "";
-
-    if (embedUrl && thumbnailUrl) {
-      return { embedUrl, thumbnailUrl };
-    }
-
-    if (!sourceUrl) {
-      throw new Error("No se ha encontrado el enlace del modelo.");
-    }
-
-    const endpoint =
-      `https://sketchfab.com/oembed?url=${encodeURIComponent(sourceUrl)}&format=json`;
-
-    const response = await fetch(endpoint, {
-      method: "GET",
-      headers: { Accept: "application/json" }
-    });
-
-    if (!response.ok) {
-      throw new Error(`Sketchfab oEmbed respondió ${response.status}.`);
-    }
-
-    const data = await response.json();
-
-    thumbnailUrl = thumbnailUrl || data.thumbnail_url || "";
-
-    if (!embedUrl && data.html) {
-      const match = String(data.html).match(
-        /<iframe[^>]+src=["']([^"']+)["']/i
-      );
-
-      embedUrl = match ? match[1].replace(/&amp;/g, "&") : "";
-    }
-
-    if (embedUrl) item.dataset.sketchfabEmbed = embedUrl;
-    if (thumbnailUrl) item.dataset.sketchfabThumbnail = thumbnailUrl;
-
-    return { embedUrl, thumbnailUrl };
-  })();
-
-  try {
-    return await item._sketchfabOembedPromise;
-  } catch (error) {
-    // Permite volver a intentarlo al pulsar el botón si falló la primera petición.
-    item._sketchfabOembedPromise = null;
-    throw error;
-  }
-}
 
 /* ============================================================
    VÍDEO
+   Admite URL en el bloque o en project.video.
    ============================================================ */
-
-function renderVideoBlock(block, index) {
-  const resource = block.resource;
-  if (!resource?.url) return "";
-
-  const url = resource.url;
-  const youtubeId = extractYoutubeId(url);
-
-  return `
-    <section class="project-block project-video-block"
-             data-block-index="${index}">
-
-      <div class="project-video-frame protected-media">
-        ${
-          youtubeId
-            ? `
-              <iframe
-                src="https://www.youtube-nocookie.com/embed/${escapeHtml(youtubeId)}?rel=0&playsinline=1"
-                title="Vídeo del proyecto"
-                loading="lazy"
-                referrerpolicy="strict-origin-when-cross-origin"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen>
-              </iframe>
-            `
-            : `
-              <video class="project-video" controls preload="metadata">
-                <source src="${escapeHtml(url)}">
-                Tu navegador no admite la reproducción de vídeo.
-              </video>
-            `
-        }
-      </div>
-
-      ${renderCaption(block.text)}
-    </section>
-  `;
-}
 
 function extractYoutubeId(url) {
   const value = String(url || "");
@@ -731,60 +823,77 @@ function extractYoutubeId(url) {
     if (match) return match[1];
   }
 
-  return null;
+  return "";
 }
+
+function renderVideoBlock(block, index, project) {
+  const url = getResourceUrl(block) || String(project.video || "").trim();
+
+  if (!url) return "";
+
+  const youtubeId = extractYoutubeId(url);
+
+  const videoContent = youtubeId
+    ? `
+      <iframe
+        src="https://www.youtube-nocookie.com/embed/${escapeHtml(youtubeId)}?rel=0&playsinline=1"
+        title="Vídeo del proyecto"
+        loading="lazy"
+        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen>
+      </iframe>
+    `
+    : `
+      <video class="project-video" controls preload="metadata">
+        <source src="${escapeHtml(url)}">
+        Tu navegador no admite la reproducción de vídeo.
+      </video>
+    `;
+
+  return `
+    <section class="project-block project-video-block"
+      data-block-index="${index}">
+
+      <div class="project-video-frame">
+        ${videoContent}
+      </div>
+
+      ${renderCaption(block.text || block.caption)}
+    </section>
+  `;
+}
+
 
 /* ============================================================
    PDF
    ============================================================ */
 
 function renderPdfBlock(block, index) {
-  const resource = block.resource;
-  if (!resource?.url) return "";
+  const url = getResourceUrl(block);
+  if (!url) return "";
 
-  const pdfUrl = `${resource.url}#toolbar=0&navpanes=0&scrollbar=1&view=Fit`;
+  const pdfUrl = `${url}#toolbar=0&navpanes=0&scrollbar=1&view=Fit`;
 
   return `
     <section class="project-block project-pdf-block"
-             data-block-index="${index}">
+      data-block-index="${index}">
 
       <div class="project-pdf-frame protected-media">
         <iframe
           src="${escapeHtml(pdfUrl)}"
-          title="${escapeHtml(block.reference || "Documento PDF")}"
-          loading="lazy"
-          referrerpolicy="strict-origin-when-cross-origin">
+          title="${escapeHtml(getItemName(block, "Documento PDF"))}"
+          loading="lazy">
         </iframe>
       </div>
 
-      ${renderCaption(block.text)}
+      ${renderCaption(block.text || block.caption)}
     </section>
   `;
 }
 
-/* ============================================================
-   BOTÓN DE AMPLIACIÓN
-   ============================================================ */
-
-function renderZoomButton(label, extraClass = "") {
-  return `
-    <button type="button"
-            class="project-media-zoom ${extraClass}"
-            data-zoom-current
-            aria-label="${escapeHtml(label)}"
-            title="${escapeHtml(label)}">
-
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <circle cx="10.8" cy="10.8" r="5.8"></circle>
-        <path d="M15.2 15.2 21 21"></path>
-        <path d="M10.8 8.2v5.2M8.2 10.8h5.2"></path>
-      </svg>
-    </button>
-  `;
-}
 
 /* ============================================================
-   FUNCIONAMIENTO DEL CARRUSEL
+   CARRUSELES Y AMPLIACIÓN
    ============================================================ */
 
 function initialiseCarousels() {
@@ -793,12 +902,9 @@ function initialiseCarousels() {
       carousel.querySelectorAll(".project-carousel-image")
     );
 
-    const prev = carousel.querySelector('[data-carousel-action="prev"]');
-    const next = carousel.querySelector('[data-carousel-action="next"]');
-    const counter = carousel.querySelector("[data-carousel-current"]);
-
     if (!images.length) return;
 
+    const counter = carousel.querySelector("[data-carousel-current]");
     let current = 0;
 
     function update() {
@@ -811,23 +917,21 @@ function initialiseCarousels() {
       }
     }
 
-    prev?.addEventListener("click", () => {
-      current = current <= 0 ? images.length - 1 : current - 1;
-      update();
-    });
+    carousel.querySelectorAll("[data-carousel-action]").forEach(button => {
+      button.addEventListener("click", () => {
+        const action = button.dataset.carouselAction;
 
-    next?.addEventListener("click", () => {
-      current = current >= images.length - 1 ? 0 : current + 1;
-      update();
+        current = action === "prev"
+          ? (current - 1 + images.length) % images.length
+          : (current + 1) % images.length;
+
+        update();
+      });
     });
 
     update();
   });
 }
-
-/* ============================================================
-   AMPLIACIÓN DE IMÁGENES
-   ============================================================ */
 
 function initialiseMediaZoom() {
   document.querySelectorAll("[data-zoom-current]").forEach(button => {
@@ -835,8 +939,8 @@ function initialiseMediaZoom() {
       event.preventDefault();
       event.stopPropagation();
 
-      const container = button.closest(".protected-media");
-      const image = container?.querySelector(
+      const parent = button.closest(".protected-media");
+      const image = parent?.querySelector(
         "img.is-active, img.project-main-image, img.protected-image"
       );
 
@@ -845,8 +949,7 @@ function initialiseMediaZoom() {
   });
 
   document.querySelectorAll(
-    ".project-main-image, .project-carousel-image, " +
-    ".project-comparator-image img, .project-evolution-image img"
+    ".project-main-image, .project-carousel-image, .project-comparator-image img, .project-evolution-image img"
   ).forEach(image => {
     image.addEventListener("click", () => {
       openImageZoom(image.src, image.alt || "");
@@ -864,14 +967,14 @@ function openImageZoom(src, alt) {
 
     modal.innerHTML = `
       <button type="button"
-              class="project-lightbox-close"
-              aria-label="Cerrar">×</button>
+        class="project-lightbox-close"
+        aria-label="Cerrar">×</button>
 
       <div class="project-lightbox-inner protected-media">
         <img class="visor-image-modal-image protected-image"
-             src=""
-             alt=""
-             draggable="false">
+          src=""
+          alt=""
+          draggable="false">
       </div>
     `;
 
@@ -891,8 +994,6 @@ function openImageZoom(src, alt) {
 
   modal.classList.add("is-open");
   document.body.classList.add("lightbox-open");
-
-  applyProtectedMedia();
 }
 
 function closeImageZoom() {
@@ -903,108 +1004,87 @@ function closeImageZoom() {
   document.body.classList.remove("lightbox-open");
 }
 
+
 /* ============================================================
    NAVEGACIÓN ENTRE PROYECTOS
    ============================================================ */
 
-function initialiseNavigation() {
-  document.querySelectorAll("[data-project-navigation]").forEach(link => {
-    link.addEventListener("click", event => {
-      const project = link.dataset.projectNavigation;
-      if (!project) return;
-
-      event.preventDefault();
-      window.location.href =
-        `./visor.html?project=${encodeURIComponent(project)}`;
-    });
-  });
-}
-
 function renderProjectNavigation(navigation) {
-  const previous = navigation?.previous || null;
-  const next = navigation?.next || null;
+  if (!navigation) return "";
+
+  const previous = navigation.previous;
+  const next = navigation.next;
+
+  function navItem(item, direction) {
+    if (!item) return "";
+
+    const id = item.id || item.name || "";
+    const title = item.title || item.titulo || item.name || "Proyecto";
+
+    if (!id) return "";
+
+    return `
+      <div class="project-navigation-side project-navigation-${direction}">
+        <a href="./visor.html?project=${encodeURIComponent(id)}">
+          <span>${direction === "previous" ? "← Anterior" : "Siguiente →"}</span>
+          <strong>${escapeHtml(title)}</strong>
+        </a>
+      </div>
+    `;
+  }
 
   return `
-    <nav class="project-viewer-navigation"
-         aria-label="Navegación entre proyectos">
-
-      <div class="project-navigation-side project-navigation-prev">
-        ${
-          previous
-            ? `
-              <a href="./visor.html?project=${encodeURIComponent(previous.id)}"
-                 data-project-navigation="${escapeHtml(previous.id)}">
-                <span>‹ Anterior</span>
-                <strong>${escapeHtml(previous.title)}</strong>
-              </a>
-            `
-            : ""
-        }
-      </div>
+    <nav class="project-viewer-navigation" aria-label="Navegación de proyectos">
+      ${navItem(previous, "previous")}
 
       <a class="project-navigation-all" href="./proyectos.html">
+        <small>Portfolio</small>
         <span>Todos los proyectos</span>
-        <small>All projects</small>
       </a>
 
-      <div class="project-navigation-side project-navigation-next">
-        ${
-          next
-            ? `
-              <a href="./visor.html?project=${encodeURIComponent(next.id)}"
-                 data-project-navigation="${escapeHtml(next.id)}">
-                <span>Siguiente ›</span>
-                <strong>${escapeHtml(next.title)}</strong>
-              </a>
-            `
-            : ""
-        }
-      </div>
-
+      ${navItem(next, "next")}
     </nav>
   `;
 }
 
-/* ============================================================
-   PROTECCIÓN DISUASORIA DE MEDIOS
-   ============================================================ */
-
-function applyProtectedMedia() {
-  document.querySelectorAll(".protected-image").forEach(image => {
-    image.setAttribute("draggable", "false");
-  });
+function initialiseNavigation() {
+  /*
+   * La navegación utiliza enlaces HTML normales.
+   * No necesita listeners adicionales.
+   */
 }
 
+
+/* ============================================================
+   PROTECCIÓN BÁSICA DE MEDIOS
+   ============================================================ */
+
 function installViewerProtection() {
-  // Impide el menú contextual en los elementos controlados por nuestra página.
-  // No puede interceptar de forma fiable los menús dentro de iframes externos.
   document.addEventListener("contextmenu", event => {
-    if (event.target.closest?.(PROTECTED_SELECTOR)) {
+    if (event.target.closest(
+      ".protected-image, .protected-media, .project-sketchfab-preview, .project-pdf-frame"
+    )) {
       event.preventDefault();
     }
   });
 
   document.addEventListener("dragstart", event => {
-    if (event.target.closest?.(".protected-image, .protected-media")) {
+    if (event.target.matches("img")) {
       event.preventDefault();
     }
   });
 
   document.addEventListener("keydown", event => {
+    const key = event.key.toLowerCase();
+
+    if ((event.ctrlKey || event.metaKey) &&
+        ["s", "u"].includes(key)) {
+      event.preventDefault();
+    }
+
     if (event.key === "Escape") {
       closeImageZoom();
     }
-
-    const viewer = event.target.closest?.(
-      ".project-viewer, .project-lightbox"
-    );
-
-    if (!viewer) return;
-
-    const key = String(event.key).toLowerCase();
-
-    if ((event.ctrlKey || event.metaKey) && ["s", "u"].includes(key)) {
-      event.preventDefault();
-    }
   });
 }
+```
