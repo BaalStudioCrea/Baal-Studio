@@ -785,3 +785,35 @@ body {
   color: #ffffff !important;
   border-color: #181818 !important;
 }
+
+/* ============================================================
+   CORRECCIÓN DE LA FRANJA INFERIOR DE GOOGLE TRANSLATE
+   ============================================================ */
+
+/* Fondo oscuro para los contenedores de traducción inyectados. */
+html body .skiptranslate,
+html body > div.skiptranslate,
+html body div[id^="goog-"],
+html body div[class*="goog-te-gadget"] {
+  background-color: #181818 !important;
+  background-image: none !important;
+  border-color: #181818 !important;
+}
+
+/* Corregir los elementos internos que conservan el fondo claro. */
+html body .skiptranslate *,
+html body div[class*="goog-te-gadget"] * {
+  background-color: #181818 !important;
+  background-image: none !important;
+}
+
+/* Evitar que el fondo beige aparezca en la zona inferior. */
+html,
+body {
+  background-color: inherit;
+}
+
+/* Mantener el selector personalizado por encima de estos elementos. */
+.baal-language-selector {
+  z-index: 99999 !important;
+}
