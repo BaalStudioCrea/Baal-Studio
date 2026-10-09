@@ -617,19 +617,22 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  min-width: 130px;
+  padding: 10px 16px;
+
   background: rgba(24, 24, 24, 0.92);
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 3px;
-  padding: 10px 16px;
+
   color: #ffffff;
   font-size: 10px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+
   cursor: pointer;
   backdrop-filter: blur(8px);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-  transition: all 0.2s ease;
-  min-width: 130px;
+  transition: background 0.2s ease, border-color 0.2s ease;
 }
 
 .baal-lang-current:hover {
@@ -637,29 +640,45 @@
   background: rgba(24, 24, 24, 0.98);
 }
 
+.baal-lang-current:focus-visible,
+.baal-lang-dropdown a:focus-visible {
+  outline: 2px solid #B08A57;
+  outline-offset: 3px;
+}
+
 .baal-lang-current svg {
-  transition: transform 0.2s ease;
+  flex-shrink: 0;
   color: rgba(255, 255, 255, 0.7);
+  transition: transform 0.2s ease;
 }
 
 .baal-language-selector.is-open .baal-lang-current svg {
   transform: rotate(180deg);
 }
 
+/* Desplegable de idiomas */
+
 .baal-lang-dropdown {
   position: absolute;
   bottom: calc(100% + 8px);
   left: 0;
-  width: 160px;
-  background: rgba(24, 24, 24, 0.96);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 3px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(10px);
+  z-index: 100000;
+
   display: none;
   flex-direction: column;
+
+  width: 160px;
+  max-height: min(65vh, 420px);
+  overflow-y: auto;
+
   padding: 6px 0;
-  z-index: 100000;
+
+  background: rgba(24, 24, 24, 0.97);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 3px;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(10px);
 }
 
 .baal-language-selector.is-open .baal-lang-dropdown {
@@ -667,13 +686,16 @@
 }
 
 .baal-lang-dropdown a {
+  display: block;
   padding: 9px 16px;
+
+  color: rgba(255, 255, 255, 0.75);
   font-size: 10px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.75);
   text-decoration: none;
-  transition: all 0.15s ease;
+
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
 .baal-lang-dropdown a:hover {
@@ -681,16 +703,53 @@
   color: #ffffff;
 }
 
-/* Ocultar definitivamente cualquier elemento nativo molesto de Google Translate */
+/* ============================================================
+   GOOGLE TRANSLATE — OCULTAR ELEMENTOS NATIVOS
+   ============================================================ */
+
+/* Motor de traducción invisible: solo se muestra el selector Baal. */
+#google_translate_element {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Barra superior que Google añade a la página. */
 .goog-te-banner-frame,
-.goog-te-balloon-frame,
-#goog-gt-tt,
-.goog-te-spinner-pos {
+iframe.goog-te-banner-frame,
+.goog-te-banner-frame.skiptranslate {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  max-height: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Contenedor superior inyectado por Google Translate. */
+body > .skiptranslate {
   display: none !important;
   visibility: hidden !important;
 }
 
+/* Evitar el desplazamiento vertical que provoca Google. */
+html,
 body {
   top: 0 !important;
-  position: static !important;
+}
+
+/* Ocultar avisos, globos y elementos flotantes de Google. */
+#goog-gt-tt,
+.goog-te-balloon-frame,
+.goog-te-spinner-pos,
+.goog-tooltip,
+.goog-tooltip:hover {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* Evitar que Google añada un fondo a los textos traducidos. */
+.goog-text-highlight {
+  background-color: transparent !important;
+  box-shadow: none !important;
 }
