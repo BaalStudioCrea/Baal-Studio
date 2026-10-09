@@ -612,6 +612,12 @@
   font-family: var(--font-body, Inter, sans-serif);
 }
 
+/* Mantener el selector por encima del contenido traducido. */
+.baal-language-selector,
+.baal-language-selector * {
+  box-sizing: border-box;
+}
+
 .baal-lang-current {
   display: flex;
   align-items: center;
@@ -786,34 +792,31 @@ body {
   border-color: #181818 !important;
 }
 
+
 /* ============================================================
-   CORRECCIÓN DE LA FRANJA INFERIOR DE GOOGLE TRANSLATE
+   BAAL STUDIO — FONDO BAJO EL FOOTER
    ============================================================ */
 
-/* Fondo oscuro para los contenedores de traducción inyectados. */
-html body .skiptranslate,
-html body > div.skiptranslate,
-html body div[id^="goog-"],
-html body div[class*="goog-te-gadget"] {
-  background-color: #181818 !important;
-  background-image: none !important;
-  border-color: #181818 !important;
-}
-
-/* Corregir los elementos internos que conservan el fondo claro. */
-html body .skiptranslate *,
-html body div[class*="goog-te-gadget"] * {
-  background-color: #181818 !important;
-  background-image: none !important;
-}
-
-/* Evitar que el fondo beige aparezca en la zona inferior. */
+/* Evitar que el documento deje una zona beige bajo el footer. */
 html,
 body {
-  background-color: inherit;
+  background-color: #111111 !important;
 }
 
-/* Mantener el selector personalizado por encima de estos elementos. */
-.baal-language-selector {
-  z-index: 99999 !important;
+/* Mantener el fondo oscuro del footer hasta su borde inferior. */
+footer,
+.site-footer,
+#footer {
+  background-color: #111111 !important;
+}
+
+/* Evitar fondos claros en el contenedor raíz de Google Translate. */
+body > .skiptranslate {
+  background-color: #111111 !important;
+  background-image: none !important;
+}
+
+/* Ocultar el contenedor superior de Google cuando está vacío. */
+body > .skiptranslate:empty {
+  display: none !important;
 }
