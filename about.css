@@ -656,7 +656,9 @@
   transform: rotate(180deg);
 }
 
-/* Desplegable de idiomas */
+/* ============================================================
+   DESPLEGABLE DE IDIOMAS
+   ============================================================ */
 
 .baal-lang-dropdown {
   position: absolute;
@@ -704,10 +706,18 @@
 }
 
 /* ============================================================
+   PROTEGER LOS NOMBRES DEL SELECTOR FRENTE A LA TRADUCCIÓN
+   ============================================================ */
+
+.baal-language-selector,
+.baal-language-selector * {
+  translate: no;
+}
+
+/* ============================================================
    GOOGLE TRANSLATE — OCULTAR ELEMENTOS NATIVOS
    ============================================================ */
 
-/* Motor de traducción invisible: solo se muestra el selector Baal. */
 #google_translate_element {
   display: none !important;
   width: 0 !important;
@@ -715,7 +725,7 @@
   overflow: hidden !important;
 }
 
-/* Barra superior que Google añade a la página. */
+/* Barra superior de Google Translate. */
 .goog-te-banner-frame,
 iframe.goog-te-banner-frame,
 .goog-te-banner-frame.skiptranslate {
@@ -726,19 +736,21 @@ iframe.goog-te-banner-frame,
   pointer-events: none !important;
 }
 
-/* Contenedor superior inyectado por Google Translate. */
-body > .skiptranslate {
+/* Contenedor superior inyectado por Google. */
+body > .skiptranslate,
+html body > .skiptranslate {
   display: none !important;
   visibility: hidden !important;
+  background-color: #181818 !important;
 }
 
-/* Evitar el desplazamiento vertical que provoca Google. */
+/* Evitar desplazamientos verticales causados por Google. */
 html,
 body {
   top: 0 !important;
 }
 
-/* Ocultar avisos, globos y elementos flotantes de Google. */
+/* Avisos, globos y elementos flotantes. */
 #goog-gt-tt,
 .goog-te-balloon-frame,
 .goog-te-spinner-pos,
@@ -748,8 +760,28 @@ body {
   visibility: hidden !important;
 }
 
-/* Evitar que Google añada un fondo a los textos traducidos. */
+/* Evitar fondos añadidos a los textos traducidos. */
 .goog-text-highlight {
   background-color: transparent !important;
   box-shadow: none !important;
+}
+
+/* ============================================================
+   INTEGRACIÓN VISUAL DE LOS ELEMENTOS NATIVOS RESTANTES
+   ============================================================ */
+
+.goog-te-gadget,
+.goog-te-gadget span,
+.goog-te-gadget a,
+.goog-te-gadget-simple {
+  background-color: #181818 !important;
+  color: #ffffff !important;
+}
+
+.goog-te-gadget-simple,
+.goog-te-gadget-simple .goog-te-menu-value,
+.goog-te-gadget-simple .goog-te-menu-value span {
+  background: #181818 !important;
+  color: #ffffff !important;
+  border-color: #181818 !important;
 }
