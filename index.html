@@ -672,6 +672,284 @@
 
   <script src="./script.js"></script>
 
+  <!-- SELECTOR DE IDIOMAS PERSONALIZADO — BAAL STUDIO -->
+<div
+  class="baal-language-selector notranslate"
+  id="baalLangSelector"
+  translate="no"
+>
+  <button
+    type="button"
+    class="baal-lang-current"
+    id="baalLangToggle"
+    aria-expanded="false"
+    aria-controls="baalLangDropdown"
+    aria-label="Seleccionar idioma"
+  >
+    <span id="baalLangCurrentText">Español</span>
+
+    <svg
+      width="10"
+      height="6"
+      viewBox="0 0 10 6"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M1 1L5 5L9 1"
+        stroke="currentColor"
+        stroke-width="1.2"
+        stroke-linecap="round"
+      />
+    </svg>
+  </button>
+
+  <div
+    class="baal-lang-dropdown"
+    id="baalLangDropdown"
+    aria-label="Idiomas disponibles"
+  >
+    <a href="#" data-lang="es">Español</a>
+    <a href="#" data-lang="de">Deutsch</a>
+    <a href="#" data-lang="ar">العربية</a>
+    <a href="#" data-lang="zh-CN">中文</a>
+    <a href="#" data-lang="fr">Français</a>
+    <a href="#" data-lang="en">English</a>
+    <a href="#" data-lang="it">Italiano</a>
+    <a href="#" data-lang="ja">日本語</a>
+    <a href="#" data-lang="pt">Português</a>
+    <a href="#" data-lang="ru">Русский</a>
+  </div>
+</div>
+
+<!-- Google Translate: motor de traducción oculto -->
+<div id="google_translate_element" aria-hidden="true"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  const LANGUAGES = {
+    es: "Español",
+    de: "Deutsch",
+    ar: "العربية",
+    "zh-CN": "中文",
+    fr: "Français",
+    en: "English",
+    it: "Italiano",
+    ja: "日本語",
+    pt: "Português",
+    ru: "Русский"
+  };
+
+  function initBaalLanguageSelector() {
+    const selector = document.getElementById("baalLangSelector");
+    const toggle = document.getElementById("baalLangToggle");
+    const currentText = document.getElementById("baalLangCurrentText");
+    const dropdown = document.getElementById("baalLangDropdown");
+
+    if (!selector || !toggle || !currentText || !dropdown) {
+      return;
+    }
+
+    let savedLanguage = "es";
+
+    try {
+      savedLanguage =
+        localStorage.getItem("baalSelectedLanguage") || "es";
+    } catch (error) {
+      savedLanguage = "es";
+    }
+
+    currentText.textContent = LANGUAGES[savedLanguage] || "Español";
+
+    function closeDropdown() {
+      selector.classList.remove("is-open");
+      toggle.setAttribute("aria-expanded", "false");
+    }
+
+    toggle.addEventListener("click", function (event) {
+      event.stopPropagation();
+
+      const isOpen = selector.classList.toggle("is-open");
+      toggle.setAttribute("aria-expanded", String(isOpen));
+    });
+
+    document.addEventListener("click", function (event) {
+      if (!selector.contains(event.target)) {
+        closeDropdown();
+      }
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") {
+        closeDropdown();
+      }
+    });
+
+    dropdown.querySelectorAll("a[data-lang]").forEach(function (link) {
+      link.addEventListener("click", function (event) {
+        event.preventDefault();
+
+        const targetLanguage = link.getAttribute("data-lang");
+
+        if (!LANGUAGES[targetLanguage]) {
+          return;
+        }
+
+        closeDropdown();
+
+        // Restaurar el idioma original sin recargar toda la página.
+if (targetLanguage === "es") {
+  try {
+    localStorage.removeItem("baalSelectedLanguage");
+  } catch (error) {
+    // Continuar aunque el almacenamiento no esté disponible.
+  }
+
+  currentText.textContent = "Español";
+
+  const googleSelect = document.querySelector(".goog-te-combo");
+
+  if (googleSelect) {
+    googleSelect.value = "es";
+    googleSelect.dispatchEvent(
+      new Event("change", { bubbles: true })
+    );
+  } else {
+    // Si el motor no está disponible, restaurar mediante recarga.
+    clearGoogleTranslateCookie();
+    window.location.reload();
+  }
+
+  return;
+}
+
+
+          clearGoogleTranslateCookie();
+          window.location.reload();
+          return;
+        }
+
+        // Actualizar el idioma mostrado en el botón.
+        currentText.textContent = LANGUAGES[targetLanguage];
+
+        try {
+          localStorage.setItem("baalSelectedLanguage", targetLanguage);
+        } catch (error) {
+          // La traducción puede funcionar sin almacenamiento local.
+        }
+
+        const googleSelect = document.querySelector(".goog-te-combo");
+
+        if (googleSelect) {
+          googleSelect.value = targetLanguage;
+          googleSelect.dispatchEvent(
+            new Event("change", { bubbles: true })
+          );
+        } else {
+          loadGoogleTranslate(function () {
+            const select = document.querySelector(".goog-te-combo");
+
+            if (select) {
+              select.value = targetLanguage;
+              select.dispatchEvent(
+                new Event("change", { bubbles: true })
+              );
+            }
+          });
+        }
+      });
+    });
+  }
+
+  function clearGoogleTranslateCookie() {
+    const expired =
+      "expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
+    const hostname = window.location.hostname;
+
+    document.cookie = "googtrans=; " + expired;
+    document.cookie =
+      "googtrans=; " + expired + " domain=" + hostname + ";";
+
+    if (hostname.indexOf(".") !== -1) {
+      document.cookie =
+        "googtrans=; " + expired + " domain=." + hostname + ";";
+    }
+  }
+
+  function loadGoogleTranslate(callback) {
+    if (document.querySelector(".goog-te-combo")) {
+      if (callback) callback();
+      return;
+    }
+
+    if (window.baalGoogleTranslateLoading) {
+      const waitForGoogle = function () {
+        if (document.querySelector(".goog-te-combo")) {
+          if (callback) callback();
+        } else {
+          window.setTimeout(waitForGoogle, 150);
+        }
+      };
+
+      waitForGoogle();
+      return;
+    }
+
+    window.baalGoogleTranslateLoading = true;
+
+    window.googleTranslateElementInit = function () {
+      new google.translate.TranslateElement(
+        {
+          pageLanguage: "es",
+          includedLanguages: "de,ar,zh-CN,fr,en,it,ja,pt,ru,es",
+          autoDisplay: false
+        },
+        "google_translate_element"
+      );
+
+      const waitForGoogle = function () {
+        const select = document.querySelector(".goog-te-combo");
+
+        if (select) {
+          window.baalGoogleTranslateLoading = false;
+
+          if (callback) callback();
+        } else {
+          window.setTimeout(waitForGoogle, 150);
+        }
+      };
+
+      waitForGoogle();
+    };
+
+    const script = document.createElement("script");
+
+    script.src =
+      "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+    script.async = true;
+
+    script.onerror = function () {
+      window.baalGoogleTranslateLoading = false;
+    };
+
+    document.head.appendChild(script);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener(
+      "DOMContentLoaded",
+      initBaalLanguageSelector
+    );
+  } else {
+    initBaalLanguageSelector();
+  }
+
+  loadGoogleTranslate();
+})();
+</script>
+
 </body>
 
 </html>
