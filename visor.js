@@ -15,7 +15,8 @@ const PROTECTED_SELECTOR = [
   ".project-sketchfab-preview",
   ".project-pdf-frame",
   ".project-video-frame",
-  ".project-protection-overlay"
+  ".project-protection-overlay",
+  ".project-youtube-overlay"
 ].join(",");
 
 
@@ -243,6 +244,8 @@ function renderProject(project) {
   initialiseMediaZoom();
 
   initialiseSketchfab();
+
+  initialiseYoutubeVideos();
 
   initialiseNavigation();
 
@@ -1040,30 +1043,56 @@ function renderEvolutionBlock(
 
 
 /* ============================================================
-   EXTRAER ID DE SKETCHFAB
+   PARSEAR SKETCHFAB (SOPORTA HTML EMBED COMPLETO, URLS O IDS)
    ============================================================ */
 
-function extractSketchfabId(url) {
+function parseSketchfabData(rawInput) {
 
-  const str = String(url || "").trim();
+  const str = String(rawInput || "").trim();
 
-  // Coincidencia con /models/ID o /3d-models/Nombre-ID
-  const m1 = str.match(
-    /sketchfab\.com\/(?:models|3d-models)\/(?:[a-zA-Z0-9-]+-)?([a-fA-F0-9]{32}|[a-zA-Z0-9]+)/i
-  );
-
-  if (m1) {
-    return m1[1];
+  if (!str) {
+    return { embedUrl: "", webUrl: "", title: "" };
   }
 
-  // Coincidencia con skfb.ly/ID
-  const m2 = str.match(/skfb\.ly\/([a-zA-Z0-9]+)/i);
+  let sourceUrl = str;
+  const iframeMatch = str.match(/src=["']([^"']+)["']/i);
 
-  if (m2) {
-    return m2[1];
+  if (iframeMatch) {
+    sourceUrl = iframeMatch[1];
   }
 
-  return null;
+  let title = "";
+  const titleMatch = str.match(/title=["']([^"']+)["']/i);
+
+  if (titleMatch) {
+    title = titleMatch[1];
+  }
+
+  let id = "";
+  const hexMatch = sourceUrl.match(/([a-fA-F0-9]{32})/);
+
+  if (hexMatch) {
+    id = hexMatch[1];
+  } else {
+    const altMatch = sourceUrl.match(/(?:models|3d-models|skfb\.ly)\/(?:[a-zA-Z0-9-]+-)?([a-zA-Z0-9]+)/i);
+
+    if (altMatch) {
+      id = altMatch[1];
+    }
+  }
+
+  let embedUrl = "";
+  let webUrl = "";
+
+  if (id) {
+    embedUrl = `https://sketchfab.com/models/${id}/embed?autostart=1&ui_controls=1&ui_infos=0`;
+    webUrl = `https://sketchfab.com/3d-models/${id}`;
+  } else if (sourceUrl.startsWith("http")) {
+    embedUrl = sourceUrl;
+    webUrl = sourceUrl;
+  }
+
+  return { embedUrl, webUrl, title };
 }
 
 
@@ -1124,16 +1153,24 @@ function renderSketchfabItem(
   index
 ) {
 
-  const url = item.url || "";
-  const sketchfabId = extractSketchfabId(url);
-  const title = item.title || `Modelo 3D ${index + 1}`;
+  const rawUrl = item.url || "";
+
+  const {
+    embedUrl,
+    webUrl,
+    title: extractedTitle
+  } = parseSketchfabData(rawUrl);
+
+  const title =
+    extractedTitle ||
+    item.title ||
+    `Modelo 3D ${String(index + 1).padStart(2, "0")}`;
 
   return `
 
     <article
       class="project-sketchfab-item"
-      data-sketchfab-url="${escapeHtml(url)}"
-      data-sketchfab-id="${escapeHtml(sketchfabId || "")}"
+      data-sketchfab-embed="${escapeHtml(embedUrl)}"
     >
 
       <div
@@ -1171,10 +1208,10 @@ function renderSketchfabItem(
         </div>
 
         ${
-          url
+          webUrl
             ? `
               <a
-                href="${escapeHtml(url)}"
+                href="${escapeHtml(webUrl)}"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="project-sketchfab-link"
@@ -1194,7 +1231,7 @@ function renderSketchfabItem(
 
 
 /* ============================================================
-   VÍDEO
+   VÍDEO CON PROTECCIÓN Y BOTÓN FLOTANTE
    ============================================================ */
 
 function renderVideoBlock(
@@ -1224,9 +1261,8 @@ function renderVideoBlock(
 
       <div
         class="project-video-frame protected-media"
+        data-youtube-container
       >
-
-        <div class="project-protection-overlay"></div>
 
         ${
           youtubeId
@@ -1234,14 +1270,65 @@ function renderVideoBlock(
             ? `
 
               <iframe
+                class="project-youtube-iframe"
                 src="https://www.youtube.com/embed/${escapeHtml(
                   youtubeId
-                )}"
+                )}?enablejsapi=1&rel=0&modestbranding=1"
                 title="Vídeo del proyecto"
                 loading="lazy"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowfullscreen
               ></iframe>
+
+              <div class="project-youtube-overlay">
+
+                <button
+                  type="button"
+                  class="project-youtube-play-btn"
+                  aria-label="Reproducir / Pausar vídeo"
+                  data-yt-control="toggle"
+                >
+
+                  <svg
+                    class="icon-play"
+                    viewBox="0 0 24 24"
+                    width="32"
+                    height="32"
+                    fill="currentColor"
+                  >
+                    <polygon points="5,3 19,12 5,21"></polygon>
+                  </svg>
+
+                  <svg
+                    class="icon-pause"
+                    viewBox="0 0 24 24"
+                    width="32"
+                    height="32"
+                    fill="currentColor"
+                    style="display:none;"
+                  >
+                    <rect x="6" y="4" width="4" height="16"></rect>
+                    <rect x="14" y="4" width="4" height="16"></rect>
+                  </svg>
+
+                </button>
+
+              </div>
+
+              <div class="project-youtube-topbar">
+
+                <a
+                  href="https://www.youtube.com/watch?v=${escapeHtml(
+                    youtubeId
+                  )}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="project-youtube-link"
+                >
+                  Ver en YouTube ↗
+                </a>
+
+              </div>
 
             `
 
@@ -1313,7 +1400,121 @@ function extractYoutubeId(url) {
 
 
 /* ============================================================
-   PDF
+   CONTROL DE VÍDEOS DE YOUTUBE VÍA API
+   ============================================================ */
+
+function initialiseYoutubeVideos() {
+
+  document
+    .querySelectorAll(
+      "[data-youtube-container]"
+    )
+    .forEach(
+      (container) => {
+
+        const iframe =
+          container.querySelector(
+            ".project-youtube-iframe"
+          );
+
+        const playBtn =
+          container.querySelector(
+            '[data-yt-control="toggle"]'
+          );
+
+        const overlay =
+          container.querySelector(
+            ".project-youtube-overlay"
+          );
+
+        if (!iframe || !playBtn) {
+          return;
+        }
+
+        let isPlaying = false;
+
+        playBtn.addEventListener(
+          "click",
+          () => {
+
+            const iconPlay =
+              playBtn.querySelector(
+                ".icon-play"
+              );
+
+            const iconPause =
+              playBtn.querySelector(
+                ".icon-pause"
+              );
+
+            if (!isPlaying) {
+
+              iframe.contentWindow.postMessage(
+                '{"event":"command","func":"playVideo","args":""}',
+                "*"
+              );
+
+              isPlaying = true;
+
+              container.classList.add(
+                "is-playing"
+              );
+
+              if (iconPlay)
+                iconPlay.style.display =
+                  "none";
+
+              if (iconPause)
+                iconPause.style.display =
+                  "block";
+
+            } else {
+
+              iframe.contentWindow.postMessage(
+                '{"event":"command","func":"pauseVideo","args":""}',
+                "*"
+              );
+
+              isPlaying = false;
+
+              container.classList.remove(
+                "is-playing"
+              );
+
+              if (iconPlay)
+                iconPlay.style.display =
+                  "block";
+
+              if (iconPause)
+                iconPause.style.display =
+                  "none";
+
+            }
+          }
+        );
+
+        overlay?.addEventListener(
+          "click",
+          (event) => {
+
+            if (
+              event.target === overlay
+            ) {
+
+              playBtn.click();
+
+            }
+
+          }
+        );
+
+      }
+    );
+}
+
+
+/* ============================================================
+   PDF (MANTENIDO PARA RECURSOS LEGACY)
    ============================================================ */
 
 function renderPdfBlock(
@@ -1700,7 +1901,7 @@ function initialiseSketchfab() {
 
         button.addEventListener(
           "click",
-          async () => {
+          () => {
 
             if (
               item.classList.contains(
@@ -1715,98 +1916,41 @@ function initialiseSketchfab() {
                 "[data-sketchfab-preview]"
               );
 
-            const source =
-              item.dataset.sketchfabUrl ||
+            const embedUrl =
+              item.dataset.sketchfabEmbed ||
               "";
 
-            const sketchfabId =
-              item.dataset.sketchfabId ||
-              "";
+            if (!embedUrl) {
+              console.error(
+                "[Baal Studio] No se encontró una URL de embed válida para este modelo."
+              );
+              return;
+            }
 
             button.disabled = true;
 
             button.textContent =
               "Cargando…";
 
-            try {
+            preview.innerHTML = `
 
-              let embedUrl = "";
+              <iframe
+                class="project-sketchfab-iframe"
+                src="${escapeHtml(
+                  embedUrl
+                )}"
+                title="Modelo 3D Sketchfab"
+                loading="eager"
+                allow="autoplay; fullscreen; xr-spatial-tracking"
+                allowfullscreen
+              ></iframe>
 
-              if (sketchfabId) {
+            `;
 
-                embedUrl =
-                  `https://sketchfab.com/models/${encodeURIComponent(
-                    sketchfabId
-                  )}/embed?autostart=1&ui_controls=1&ui_infos=0`;
+            item.classList.add(
+              "is-loaded"
+            );
 
-              } else if (source) {
-
-                const response =
-                  await fetch(
-                    `https://sketchfab.com/oembed?url=${encodeURIComponent(
-                      source
-                    )}&format=json`
-                  );
-
-                if (response.ok) {
-
-                  const data =
-                    await response.json();
-
-                  const html =
-                    String(
-                      data?.html || ""
-                    );
-
-                  const match =
-                    html.match(
-                      /<iframe[^>]+src=["']([^"']+)["']/i
-                    );
-
-                  embedUrl =
-                    match?.[1] || "";
-                }
-              }
-
-              if (!embedUrl) {
-
-                throw new Error(
-                  "No se pudo resolver el visor 3D."
-                );
-              }
-
-              preview.innerHTML = `
-
-                <iframe
-                  class="project-sketchfab-iframe"
-                  src="${escapeHtml(
-                    embedUrl
-                  )}"
-                  title="Modelo 3D Sketchfab"
-                  loading="eager"
-                  allow="autoplay; fullscreen; xr-spatial-tracking"
-                  allowfullscreen
-                ></iframe>
-
-              `;
-
-              item.classList.add(
-                "is-loaded"
-              );
-
-            } catch (error) {
-
-              console.error(
-                "[Baal Studio] Error cargando Sketchfab:",
-                error
-              );
-
-              button.disabled =
-                false;
-
-              button.textContent =
-                "Cargar modelo 3D";
-            }
           }
         );
       }
