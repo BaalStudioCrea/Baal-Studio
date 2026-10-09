@@ -1826,7 +1826,8 @@ function openImageZoom(
       (event) => {
 
         if (
-          event.target === modal
+          event.target === modal ||
+          event.target.classList.contains("project-lightbox-inner")
         ) {
 
           closeImageZoom();
@@ -1843,6 +1844,26 @@ function openImageZoom(
 
   image.src = src;
   image.alt = alt;
+
+  image.classList.remove("is-zoomed");
+
+  if (!image.dataset.zoomBound) {
+
+    image.addEventListener(
+      "click",
+      (event) => {
+
+        event.stopPropagation();
+
+        image.classList.toggle(
+          "is-zoomed"
+        );
+
+      }
+    );
+
+    image.dataset.zoomBound = "true";
+  }
 
   modal.classList.add(
     "is-open"
@@ -1865,6 +1886,15 @@ function closeImageZoom() {
 
   if (!modal) {
     return;
+  }
+
+  const image =
+    modal.querySelector(
+      ".visor-image-modal-image"
+    );
+
+  if (image) {
+    image.classList.remove("is-zoomed");
   }
 
   modal.classList.remove(
@@ -2035,8 +2065,12 @@ function renderProjectNavigation(
               >
 
                 <span>
-                  ← Anterior
+                  ← Proyecto anterior
                 </span>
+
+                <small>
+                  Previous project
+                </small>
 
                 <strong>
                   ${escapeHtml(
@@ -2089,8 +2123,12 @@ function renderProjectNavigation(
               >
 
                 <span>
-                  Siguiente →
+                  Proyecto siguiente →
                 </span>
+
+                <small>
+                  Next project
+                </small>
 
                 <strong>
                   ${escapeHtml(
