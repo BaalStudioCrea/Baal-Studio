@@ -370,7 +370,8 @@
   <script src="./script.js"></script>
   <script src="./proyectos.js"></script>
 
-  <!-- SELECTOR DE IDIOMAS PERSONALIZADO — BAAL STUDIO -->
+  
+<!-- SELECTOR DE IDIOMAS PERSONALIZADO — BAAL STUDIO -->
 <div
   class="baal-language-selector notranslate"
   id="baalLangSelector"
@@ -385,28 +386,12 @@
     aria-label="Seleccionar idioma"
   >
     <span id="baalLangCurrentText">Español</span>
-
-    <svg
-      width="10"
-      height="6"
-      viewBox="0 0 10 6"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M1 1L5 5L9 1"
-        stroke="currentColor"
-        stroke-width="1.2"
-        stroke-linecap="round"
-      />
+    <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+      <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
     </svg>
   </button>
 
-  <div
-    class="baal-lang-dropdown"
-    id="baalLangDropdown"
-    aria-label="Idiomas disponibles"
-  >
+  <div class="baal-lang-dropdown" id="baalLangDropdown" aria-label="Idiomas disponibles">
     <a href="#" data-lang="es">Español</a>
     <a href="#" data-lang="de">Deutsch</a>
     <a href="#" data-lang="ar">العربية</a>
@@ -420,7 +405,7 @@
   </div>
 </div>
 
-<!-- Google Translate: motor de traducción oculto -->
+<!-- Motor de traducción de Google -->
 <div id="google_translate_element" aria-hidden="true"></div>
 
 <script>
@@ -453,8 +438,7 @@
     let savedLanguage = "es";
 
     try {
-      savedLanguage =
-        localStorage.getItem("baalSelectedLanguage") || "es";
+      savedLanguage = localStorage.getItem("baalSelectedLanguage") || "es";
     } catch (error) {
       savedLanguage = "es";
     }
@@ -468,7 +452,6 @@
 
     toggle.addEventListener("click", function (event) {
       event.stopPropagation();
-
       const isOpen = selector.classList.toggle("is-open");
       toggle.setAttribute("aria-expanded", String(isOpen));
     });
@@ -497,39 +480,31 @@
 
         closeDropdown();
 
-        // Restaurar el idioma original sin recargar toda la página.
-if (targetLanguage === "es") {
-  try {
-    localStorage.removeItem("baalSelectedLanguage");
-  } catch (error) {
-    // Continuar aunque el almacenamiento no esté disponible.
-  }
+        // Volver al idioma original sin recargar si Google está disponible.
+        if (targetLanguage === "es") {
+          try {
+            localStorage.removeItem("baalSelectedLanguage");
+          } catch (error) {
+            // Continuar sin almacenamiento local.
+          }
 
-  currentText.textContent = "Español";
+          currentText.textContent = "Español";
 
-  const googleSelect = document.querySelector(".goog-te-combo");
+          const googleSelect = document.querySelector(".goog-te-combo");
 
-  if (googleSelect) {
-    googleSelect.value = "es";
-    googleSelect.dispatchEvent(
-      new Event("change", { bubbles: true })
-    );
-  } else {
-    // Si el motor no está disponible, restaurar mediante recarga.
-    clearGoogleTranslateCookie();
-    window.location.reload();
-  }
+          if (googleSelect) {
+            googleSelect.value = "es";
+            googleSelect.dispatchEvent(
+              new Event("change", { bubbles: true })
+            );
+          } else {
+            clearGoogleTranslateCookie();
+            window.location.reload();
+          }
 
-  return;
-}
-
-
-          clearGoogleTranslateCookie();
-          window.location.reload();
           return;
         }
 
-        // Actualizar el idioma mostrado en el botón.
         currentText.textContent = LANGUAGES[targetLanguage];
 
         try {
@@ -562,8 +537,7 @@ if (targetLanguage === "es") {
   }
 
   function clearGoogleTranslateCookie() {
-    const expired =
-      "expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
+    const expired = "expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
     const hostname = window.location.hostname;
 
     document.cookie = "googtrans=; " + expired;
@@ -584,7 +558,9 @@ if (targetLanguage === "es") {
 
     if (window.baalGoogleTranslateLoading) {
       const waitForGoogle = function () {
-        if (document.querySelector(".goog-te-combo")) {
+        const select = document.querySelector(".goog-te-combo");
+
+        if (select) {
           if (callback) callback();
         } else {
           window.setTimeout(waitForGoogle, 150);
@@ -612,7 +588,6 @@ if (targetLanguage === "es") {
 
         if (select) {
           window.baalGoogleTranslateLoading = false;
-
           if (callback) callback();
         } else {
           window.setTimeout(waitForGoogle, 150);
@@ -623,7 +598,6 @@ if (targetLanguage === "es") {
     };
 
     const script = document.createElement("script");
-
     script.src =
       "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
     script.async = true;
@@ -636,10 +610,7 @@ if (targetLanguage === "es") {
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener(
-      "DOMContentLoaded",
-      initBaalLanguageSelector
-    );
+    document.addEventListener("DOMContentLoaded", initBaalLanguageSelector);
   } else {
     initBaalLanguageSelector();
   }
@@ -647,6 +618,6 @@ if (targetLanguage === "es") {
   loadGoogleTranslate();
 })();
 </script>
-
+  
 </body>
 </html>
