@@ -696,18 +696,31 @@
 
         closeDropdown();
 
-        // Restaurar el idioma original de la página.
-        if (targetLanguage === "es") {
-          try {
-            localStorage.removeItem("baalSelectedLanguage");
-          } catch (error) {
-            // Continuar aunque el almacenamiento no esté disponible.
-          }
+        // Restaurar el idioma original sin recargar toda la página.
+if (targetLanguage === "es") {
+  try {
+    localStorage.removeItem("baalSelectedLanguage");
+  } catch (error) {
+    // Continuar aunque el almacenamiento no esté disponible.
+  }
 
-          clearGoogleTranslateCookie();
-          window.location.reload();
-          return;
-        }
+  currentText.textContent = "Español";
+
+  const googleSelect = document.querySelector(".goog-te-combo");
+
+  if (googleSelect) {
+    googleSelect.value = "es";
+    googleSelect.dispatchEvent(
+      new Event("change", { bubbles: true })
+    );
+  } else {
+    // Si el motor no está disponible, restaurar mediante recarga.
+    clearGoogleTranslateCookie();
+    window.location.reload();
+  }
+
+  return;
+}
 
         // Actualizar el idioma mostrado en el botón.
         currentText.textContent = LANGUAGES[targetLanguage];
