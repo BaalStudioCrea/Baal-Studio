@@ -568,8 +568,13 @@
   </script>
   
 
+
 <!-- SELECTOR DE IDIOMAS PERSONALIZADO — BAAL STUDIO -->
-<div class="baal-language-selector" id="baalLangSelector">
+<div
+  class="baal-language-selector notranslate"
+  id="baalLangSelector"
+  translate="no"
+>
   <button
     type="button"
     class="baal-lang-current"
@@ -644,11 +649,11 @@
       return;
     }
 
-    // Recuperar el idioma elegido al navegar entre apartados.
     let savedLanguage = "es";
 
     try {
-      savedLanguage = localStorage.getItem("baalSelectedLanguage") || "es";
+      savedLanguage =
+        localStorage.getItem("baalSelectedLanguage") || "es";
     } catch (error) {
       savedLanguage = "es";
     }
@@ -691,12 +696,12 @@
 
         closeDropdown();
 
-        // ESPAÑOL: regresar a la página original sin traducción.
+        // Restaurar el idioma original de la página.
         if (targetLanguage === "es") {
           try {
             localStorage.removeItem("baalSelectedLanguage");
           } catch (error) {
-            // La restauración no depende de localStorage.
+            // Continuar aunque el almacenamiento no esté disponible.
           }
 
           clearGoogleTranslateCookie();
@@ -704,34 +709,31 @@
           return;
         }
 
-        // Actualizar el nombre del idioma seleccionado.
+        // Actualizar el idioma mostrado en el botón.
         currentText.textContent = LANGUAGES[targetLanguage];
 
         try {
           localStorage.setItem("baalSelectedLanguage", targetLanguage);
         } catch (error) {
-          // El selector seguirá funcionando aunque no haya almacenamiento.
+          // La traducción puede funcionar sin almacenamiento local.
         }
 
-        // Activar la traducción mediante el selector de Google.
         const googleSelect = document.querySelector(".goog-te-combo");
 
         if (googleSelect) {
           googleSelect.value = targetLanguage;
-          googleSelect.dispatchEvent(new Event("change", {
-            bubbles: true
-          }));
+          googleSelect.dispatchEvent(
+            new Event("change", { bubbles: true })
+          );
         } else {
-          // Si el motor aún no está disponible, cargarlo de nuevo
-          // conservando la página y el idioma seleccionado.
           loadGoogleTranslate(function () {
             const select = document.querySelector(".goog-te-combo");
 
             if (select) {
               select.value = targetLanguage;
-              select.dispatchEvent(new Event("change", {
-                bubbles: true
-              }));
+              select.dispatchEvent(
+                new Event("change", { bubbles: true })
+              );
             }
           });
         }
@@ -740,16 +742,14 @@
   }
 
   function clearGoogleTranslateCookie() {
-    const expired = "expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
+    const expired =
+      "expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
     const hostname = window.location.hostname;
 
-    // Eliminar la cookie en el dominio actual.
     document.cookie = "googtrans=; " + expired;
-
     document.cookie =
       "googtrans=; " + expired + " domain=" + hostname + ";";
 
-    // Intentar eliminar también la variante de dominio con punto inicial.
     if (hostname.indexOf(".") !== -1) {
       document.cookie =
         "googtrans=; " + expired + " domain=." + hostname + ";";
@@ -762,7 +762,6 @@
       return;
     }
 
-    // Evitar insertar el script más de una vez.
     if (window.baalGoogleTranslateLoading) {
       const waitForGoogle = function () {
         if (document.querySelector(".goog-te-combo")) {
@@ -779,17 +778,21 @@
     window.baalGoogleTranslateLoading = true;
 
     window.googleTranslateElementInit = function () {
-      new google.translate.TranslateElement({
-        pageLanguage: "es",
-        includedLanguages: "de,ar,zh-CN,fr,en,it,ja,pt,ru,es",
-        autoDisplay: false
-      }, "google_translate_element");
+      new google.translate.TranslateElement(
+        {
+          pageLanguage: "es",
+          includedLanguages: "de,ar,zh-CN,fr,en,it,ja,pt,ru,es",
+          autoDisplay: false
+        },
+        "google_translate_element"
+      );
 
       const waitForGoogle = function () {
         const select = document.querySelector(".goog-te-combo");
 
         if (select) {
           window.baalGoogleTranslateLoading = false;
+
           if (callback) callback();
         } else {
           window.setTimeout(waitForGoogle, 150);
@@ -800,9 +803,11 @@
     };
 
     const script = document.createElement("script");
+
     script.src =
       "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
     script.async = true;
+
     script.onerror = function () {
       window.baalGoogleTranslateLoading = false;
     };
@@ -810,15 +815,16 @@
     document.head.appendChild(script);
   }
 
-  // Inicializar el selector y el motor de traducción.
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initBaalLanguageSelector);
+    document.addEventListener(
+      "DOMContentLoaded",
+      initBaalLanguageSelector
+    );
   } else {
     initBaalLanguageSelector();
   }
 
   loadGoogleTranslate();
-
 })();
 </script>
 </body>
