@@ -1848,3 +1848,113 @@ body > .skiptranslate:empty {
   .project-lightbox-prev { left: calc(50% - 60px); }
   .project-lightbox-next { right: calc(50% - 60px); }
 }
+
+/* Visor ampliado: geometría estable para zoom, arrastre y tacto */
+.project-lightbox {
+  overflow: hidden !important;
+  isolation: isolate;
+}
+
+.project-lightbox-inner {
+  position: absolute !important;
+  inset: 34px !important;
+  display: block !important;
+  width: auto !important;
+  height: auto !important;
+  overflow: hidden !important;
+  touch-action: none !important;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: auto;
+}
+
+.visor-image-modal-image {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  display: block !important;
+  margin: 0 !important;
+  max-width: none !important;
+  max-height: none !important;
+  object-fit: fill !important;
+  transform-origin: 0 0 !important;
+  transition: none !important;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  -webkit-user-drag: none;
+  user-select: none;
+  cursor: grab;
+  touch-action: none !important;
+}
+
+.visor-image-modal-image.is-zoomed {
+  width: auto !important;
+  max-width: none !important;
+  max-height: none !important;
+}
+
+.project-lightbox-close,
+.project-lightbox-nav {
+  z-index: 100020 !important;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.project-lightbox-nav {
+  position: absolute;
+  top: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 58px;
+  padding: 0;
+  transform: translateY(-50%);
+  border: 1px solid rgba(255,255,255,.4);
+  border-radius: 5px;
+  background: rgba(15,15,15,.78);
+  color: #fff;
+  font-family: Arial, sans-serif;
+  font-size: 42px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.project-lightbox-prev {
+  left: 10px;
+}
+
+.project-lightbox-next {
+  right: 10px;
+}
+
+.project-lightbox-nav[hidden] {
+  display: none !important;
+}
+
+@media (max-width: 700px) {
+  .project-lightbox {
+    padding: 0 !important;
+  }
+
+  .project-lightbox-inner {
+    inset: 58px 8px 68px !important;
+  }
+
+  .project-lightbox-nav {
+    top: auto;
+    bottom: 8px;
+    width: 54px;
+    height: 46px;
+    transform: none;
+    font-size: 36px;
+  }
+
+  .project-lightbox-prev {
+    left: calc(50% - 62px);
+  }
+
+  .project-lightbox-next {
+    right: calc(50% - 62px);
+  }
+}
