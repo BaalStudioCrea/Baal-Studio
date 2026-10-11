@@ -8,16 +8,12 @@
   <meta name="theme-color" content="#111111">
   <title>Sobre mí — Baal Studio</title>
 
-  <!-- CARGAMOS EL CSS PRINCIPAL Y EL CSS ESPECÍFICO DE ABOUT -->
   <link rel="stylesheet" href="./style.css">
   <link rel="stylesheet" href="./about.css">
 </head>
 
 <body>
 
-  <!-- =====================================================
-       HEADER
-       ===================================================== -->
   <header class="main-header about-header" id="main-header">
     <div class="header-inner">
       <a href="./index.html" class="header-logo-link" aria-label="Baal Studio — Inicio">
@@ -61,20 +57,16 @@
   </header>
 
   <main>
-    <!-- =====================================================
-         SOBRE MÍ / HERO ENCABEZADO
-         ===================================================== -->
     <section class="about-page-hero">
       <div class="section-container about-home-layout">
 
-        <!-- COLUMNA IZQUIERDA: VISOR DE PORTAFOLIO -->
         <div class="about-home-heading portfolio-column-wrapper">
           <div class="portfolio-viewer-card">
 
             <div class="portfolio-viewer-top">
               <span id="portfolio-counter" class="portfolio-counter">00 / 00</span>
               <button type="button" class="portfolio-zoom-btn" id="portfolio-zoom-btn" aria-label="Ampliar lámina">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                   <circle cx="11" cy="11" r="8"></circle>
                   <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                   <line x1="11" y1="8" x2="11" y2="14"></line>
@@ -93,12 +85,10 @@
             </div>
           </div>
 
-          <!-- SUBTÍTULO CENTRADO BAJO EL VISOR -->
           <div class="portfolio-subtitle-container">
             <span class="portfolio-main-title-label">PORTAFOLIO</span>
             <span class="portfolio-main-title-en">PORTFOLIO</span>
 
-            <!-- DESPLEGABLE DE ARTÍCULOS -->
             <div class="articles-dropdown-container">
               <button type="button" class="articles-toggle-btn" id="articles-toggle-btn" aria-expanded="false">
                 <span class="toggle-btn-text">
@@ -107,16 +97,15 @@
                 </span>
                 <span class="dropdown-arrow">&#9662;</span>
               </button>
+
               <div class="articles-dropdown-content" id="articles-dropdown-content">
                 <a href="https://zenodo.org/records/18230586" target="_blank" rel="noopener noreferrer">Zenodo Record 18230586</a>
                 <a href="https://www.ugr.es/~arqueologyterritorio/PDF22/9-Lupianez.pdf" target="_blank" rel="noopener noreferrer">Revista Arqueología y Territorio (UGR)</a>
-                <!-- Deja este espacio para añadir más artículos usando la etiqueta <a> en el futuro -->
               </div>
             </div>
           </div>
         </div>
 
-        <!-- COLUMNA DERECHA: TEXTO Y DATOS -->
         <div class="about-home-content about-hero-content">
           <p class="section-kicker">Especialista en Documentación del Patrimonio</p>
           <p class="section-kicker-en">Heritage Documentation Specialist</p>
@@ -171,9 +160,6 @@
       </div>
     </section>
 
-    <!-- =====================================================
-         FORMACIÓN / BACKGROUND
-         ===================================================== -->
     <section class="about-background-section">
       <div class="section-container about-home-layout">
         <div class="about-home-heading">
@@ -186,10 +172,14 @@
           <div class="bilingual-copy">
             <p>La formación académica proporciona la doble base de una práctica que une la precisión técnica con la comprensión del patrimonio.</p>
             <p class="english-copy">Academic formation provides the dual foundation for a practice that bridges technical precision with heritage understanding.</p>
+
             <div class="copy-separator"></div>
+
             <p>El trabajo en diferentes ámbitos ha establecido el rigor metodológico que define el enfoque del estudio. La colaboración posterior con la Universidad de Granada amplió la práctica a contextos patrimoniales internacionales.</p>
             <p class="english-copy">Work across various fields established the methodological rigor that defines the study's approach. Subsequent collaboration with the University of Granada extended this practice to international heritage contexts.</p>
+
             <div class="copy-separator"></div>
+
             <p>El estudio opera como práctica independiente, colaborando con equipos de conservación, arqueología y agencias de gestión del patrimonio en proyectos que requieren los más altos estándares de documentación digital, así como investigaciones universitarias.</p>
             <p class="english-copy">The studio operates as an independent practice, collaborating with conservation teams, archaeological teams, and heritage management agencies on projects requiring the highest standards of digital documentation.</p>
           </div>
@@ -197,9 +187,6 @@
       </div>
     </section>
 
-    <!-- =====================================================
-         HERRAMIENTAS Y SOFTWARE
-         ===================================================== -->
     <section class="tools-section">
       <div class="section-container about-home-layout">
         <div class="about-home-heading">
@@ -263,9 +250,6 @@
     </section>
   </main>
 
-  <!-- =====================================================
-       FOOTER
-       ===================================================== -->
   <footer class="main-footer">
     <div class="footer-container">
       <div class="footer-top">
@@ -273,6 +257,7 @@
           <p>Documentación del Patrimonio · Planimetrías · Mapeados · Levantamiento y Modelado 3D · Reconstrucción Virtual · Fotografía con Drone</p>
           <p class="footer-services-en">Heritage Documentation · Mapping · 3D Survey · Virtual reconstruction · Drone Photography</p>
         </div>
+
         <div class="footer-nav-column">
           <a href="./index.html">Inicio · Home</a>
           <a href="./proyectos.html">Proyectos · Projects</a>
@@ -280,53 +265,45 @@
           <a href="./contact.html">Contacto · Contact</a>
         </div>
       </div>
+
       <div class="footer-identity">
         <div class="footer-logos">
           <img id="footer-logo-baal" class="footer-secondary-logo protected-image" src="./NEWBaal_Logo_White.png" alt="Baal Studio" draggable="false">
           <img id="footer-logo-lns" class="footer-secondary-logo protected-image" src="" alt="LNS" draggable="false">
         </div>
+
         <a href="https://linktr.ee/baalstudio" target="_blank" rel="noopener noreferrer" aria-label="Baal Studio — Redes sociales">
           <img id="footer-qr" class="footer-qr protected-image" src="" alt="Redes sociales de Baal Studio" width="100" height="100" draggable="false">
         </a>
+
         <a href="https://linktr.ee/baalstudio" class="footer-social-link" target="_blank" rel="noopener noreferrer">RRSS</a>
       </div>
+
       <div class="footer-bottom">
         <p>© Juan Jesús Lupiáñez Moreno · Baal Studio · Todos los derechos reservados · All rights reserved.</p>
       </div>
     </div>
   </footer>
 
-
-  <!-- =====================================================
-       MODAL DE AMPLIACIÓN (ZOOM) CON CONTROLES
-       ===================================================== -->
   <div id="portfolio-modal" class="portfolio-modal" aria-hidden="true">
-
     <button id="portfolio-modal-close" class="portfolio-modal-close" aria-label="Cerrar">&times;</button>
-
-    <!-- Flechas de navegación del modal -->
     <button id="portfolio-modal-prev" class="portfolio-modal-nav left" aria-label="Anterior">&larr;</button>
     <button id="portfolio-modal-next" class="portfolio-modal-nav right" aria-label="Siguiente">&rarr;</button>
 
     <div class="portfolio-modal-content-box" id="portfolio-modal-content-box">
       <img id="portfolio-modal-img" src="" alt="Lámina ampliada" draggable="false">
     </div>
-
   </div>
 
   <script src="./script.js"></script>
 
-  <!-- =====================================================
-       VISOR DINÁMICO DEL PORTAFOLIO Y LÓGICA DE ZOOM
-       ===================================================== -->
   <script>
     document.addEventListener("DOMContentLoaded", async () => {
-
       const PORTFOLIO_FUNCTION = "https://hlyzyeatnbulyfiiwvsq.supabase.co/functions/v1/get-portfolio";
+
       let portfolioFiles = [];
       let currentIndex = 0;
 
-      // Elementos
       const imgEl = document.getElementById("portfolio-current-img");
       const counterEl = document.getElementById("portfolio-counter");
       const prevBtn = document.getElementById("portfolio-prev-btn");
@@ -335,30 +312,56 @@
 
       const modalEl = document.getElementById("portfolio-modal");
       const modalImgEl = document.getElementById("portfolio-modal-img");
-
-      // Evita que una transición CSS retrase la posición real durante el zoom con rueda.
-      modalImgEl.style.transformOrigin = "0 0";
-      modalImgEl.style.transition = "none";
-
       const modalCloseBtn = document.getElementById("portfolio-modal-close");
       const modalPrevBtn = document.getElementById("portfolio-modal-prev");
       const modalNextBtn = document.getElementById("portfolio-modal-next");
+      const modalBox = document.getElementById("portfolio-modal-content-box");
 
-      // Variables para el zoom con rueda y paneo.
+      modalEl.style.overflow = "hidden";
+      modalEl.style.isolation = "isolate";
+
+      modalBox.style.position = "absolute";
+      modalBox.style.inset = "0";
+      modalBox.style.width = "100%";
+      modalBox.style.height = "100%";
+      modalBox.style.maxWidth = "none";
+      modalBox.style.maxHeight = "none";
+      modalBox.style.overflow = "hidden";
+      modalBox.style.display = "block";
+
+      modalImgEl.style.position = "absolute";
+      modalImgEl.style.left = "0";
+      modalImgEl.style.top = "0";
+      modalImgEl.style.maxWidth = "none";
+      modalImgEl.style.maxHeight = "none";
+      modalImgEl.style.width = "auto";
+      modalImgEl.style.height = "auto";
+      modalImgEl.style.margin = "0";
+      modalImgEl.style.transformOrigin = "0 0";
+      modalImgEl.style.transition = "none";
+      modalImgEl.style.willChange = "transform";
+      modalImgEl.style.backfaceVisibility = "hidden";
+      modalImgEl.style.zIndex = "1";
+
+      let fitScale = 1;
       let scale = 1;
       let pointX = 0;
       let pointY = 0;
       let startX = 0;
       let startY = 0;
       let isPanning = false;
+      let pointerMoved = false;
+      let pointerStartX = 0;
+      let pointerStartY = 0;
+      let suppressClickUntil = 0;
 
-      // Lógica desplegable de artículos.
       const articlesToggle = document.getElementById("articles-toggle-btn");
       const articlesDropdown = document.getElementById("articles-dropdown-content");
 
       if (articlesToggle && articlesDropdown) {
         articlesToggle.addEventListener("click", () => {
           articlesDropdown.classList.toggle("active");
+
           const arrow = articlesToggle.querySelector(".dropdown-arrow");
 
           if (articlesDropdown.classList.contains("active")) {
@@ -369,7 +372,6 @@
         });
       }
 
-      // Cargar portafolio.
       async function loadPortfolio() {
         try {
           const response = await fetch(PORTFOLIO_FUNCTION, {
@@ -378,7 +380,9 @@
             cache: "no-store"
           });
 
-          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+          }
 
           const result = await response.json();
 
@@ -390,7 +394,7 @@
             return [];
           }
 
-          const validFiles = result.files
+          return result.files
             .filter(file =>
               file &&
               typeof file.name === "string" &&
@@ -404,8 +408,6 @@
                 { numeric: true, sensitivity: "base" }
               )
             );
-
-          return validFiles;
         } catch (error) {
           console.error("[Baal Studio] Error:", error);
           return [];
@@ -428,7 +430,6 @@
         if (!portfolioFiles.length) return;
 
         currentIndex = (index + portfolioFiles.length) % portfolioFiles.length;
-
         const file = portfolioFiles[currentIndex];
 
         if (file?.url) {
@@ -438,16 +439,52 @@
         }
       }
 
-      // Actualizar la imagen del modal sin cerrarlo.
+      function setTransform() {
+        modalImgEl.style.transform =
+          `translate3d(${pointX}px, ${pointY}px, 0) scale(${scale})`;
+      }
+
+      function fitModalImage() {
+        const naturalWidth = modalImgEl.naturalWidth;
+        const naturalHeight = modalImgEl.naturalHeight;
+
+        if (!naturalWidth || !naturalHeight) return;
+
+        const availableWidth = Math.max(100, window.innerWidth - 100);
+        const availableHeight = Math.max(100, window.innerHeight - 100);
+
+        fitScale = Math.min(
+          availableWidth / naturalWidth,
+          availableHeight / naturalHeight,
+          1
+        );
+
+        scale = fitScale;
+
+        modalImgEl.style.width = `${naturalWidth}px`;
+        modalImgEl.style.height = `${naturalHeight}px`;
+
+        pointX = (modalBox.clientWidth - naturalWidth * scale) / 2;
+        pointY = (modalBox.clientHeight - naturalHeight * scale) / 2;
+
+        setTransform();
+      }
+
+      modalImgEl.addEventListener("load", fitModalImage);
+
       function syncModalImage() {
-        if (modalEl.classList.contains("active") && portfolioFiles.length) {
-          modalImgEl.src = portfolioFiles[currentIndex].url;
-          modalImgEl.alt = portfolioFiles[currentIndex].name;
-          resetZoom();
+        if (!modalEl.classList.contains("active") || !portfolioFiles.length) {
+          return;
+        }
+
+        modalImgEl.alt = portfolioFiles[currentIndex].name;
+        modalImgEl.src = portfolioFiles[currentIndex].url;
+
+        if (modalImgEl.complete && modalImgEl.naturalWidth) {
+          fitModalImage();
         }
       }
 
-      // Carga inicial.
       portfolioFiles = await loadPortfolio();
 
       if (portfolioFiles.length > 0) {
@@ -456,51 +493,38 @@
         counterEl.textContent = "00 / 00";
       }
 
-      // Navegación básica.
       prevBtn.addEventListener("click", () => showSheet(currentIndex - 1));
       nextBtn.addEventListener("click", () => showSheet(currentIndex + 1));
 
-      // Navegación dentro del modal.
-      modalPrevBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        showSheet(currentIndex - 1);
-        syncModalImage();
-      });
-
-      modalNextBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        showSheet(currentIndex + 1);
-        syncModalImage();
-      });
-
-      /* ------------------------------------------------------
-         LÓGICA DE ZOOM Y ARRASTRE (PAN & ZOOM)
-         ------------------------------------------------------ */
-
-      const setTransform = () => {
-        modalImgEl.style.transform =
-          `translate(${pointX}px, ${pointY}px) scale(${scale})`;
-      };
-
       const resetZoom = () => {
-        scale = 1;
-        pointX = 0;
-        pointY = 0;
+        if (modalImgEl.complete && modalImgEl.naturalWidth) {
+          fitModalImage();
+        } else {
+          scale = 1;
+          pointX = 0;
+          pointY = 0;
+          setTransform();
+        }
+
         isPanning = false;
-        setTransform();
+        pointerMoved = false;
         modalImgEl.classList.remove("grabbing");
       };
 
       const openZoom = () => {
         if (!imgEl.src || !portfolioFiles.length) return;
 
-        modalImgEl.src = imgEl.src;
         modalImgEl.alt = imgEl.alt;
-
         modalEl.classList.add("active");
         modalEl.setAttribute("aria-hidden", "false");
 
-        resetZoom();
+        if (modalImgEl.src !== imgEl.src) {
+          modalImgEl.src = imgEl.src;
+        }
+
+        if (modalImgEl.complete && modalImgEl.naturalWidth) {
+          fitModalImage();
+        }
       };
 
       zoomBtn.addEventListener("click", openZoom);
@@ -514,158 +538,168 @@
 
       modalCloseBtn.addEventListener("click", closeZoom);
 
-      // Cerrar pulsando fuera de la imagen.
       modalEl.addEventListener("click", (event) => {
-        if (
-          event.target === modalEl ||
-          event.target.id === "portfolio-modal-content-box"
-        ) {
+        if (event.target === modalEl) {
           closeZoom();
         }
       });
 
       document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape" && modalEl.classList.contains("active")) {
+        if (!modalEl.classList.contains("active")) return;
+
+        if (event.key === "Escape") {
           closeZoom();
         }
 
-        // Soporte para flechas del teclado en el modal.
-        if (event.key === "ArrowLeft" && modalEl.classList.contains("active")) {
+        if (event.key === "ArrowLeft") {
+          event.preventDefault();
           showSheet(currentIndex - 1);
           syncModalImage();
         }
 
-        if (event.key === "ArrowRight" && modalEl.classList.contains("active")) {
+        if (event.key === "ArrowRight") {
+          event.preventDefault();
           showSheet(currentIndex + 1);
           syncModalImage();
         }
       });
 
-      // Zoom con rueda: mantiene el punto situado bajo el cursor.
-      // transform-origin: 0 0 permite calcular la posición de forma estable.
-      modalImgEl.addEventListener("wheel", (e) => {
-        e.preventDefault();
+      modalPrevBtn.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        showSheet(currentIndex - 1);
+        syncModalImage();
+      });
 
-        if (!modalEl.classList.contains("active")) return;
+      modalNextBtn.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        showSheet(currentIndex + 1);
+        syncModalImage();
+      });
 
-        const rect = modalImgEl.getBoundingClientRect();
+      modalImgEl.addEventListener("wheel", (event) => {
+        event.preventDefault();
+
+        if (!modalEl.classList.contains("active") || !modalImgEl.naturalWidth) {
+          return;
+        }
+
         const oldScale = scale;
-
-        // Zoom progresivo para evitar saltos bruscos entre eventos de rueda.
-        const factor = Math.exp(-e.deltaY * 0.0015);
-        const nextScale = Math.max(1, Math.min(15, oldScale * factor));
+        const nextScale = Math.max(
+          fitScale,
+          Math.min(
+            fitScale * 15,
+            oldScale * Math.exp(-event.deltaY * 0.0015)
+          )
+        );
 
         if (Math.abs(nextScale - oldScale) < 0.0001) return;
 
-        if (nextScale <= 1) {
-          scale = 1;
-          pointX = 0;
-          pointY = 0;
-        } else {
-          // Recuperar el origen sin transformar para anclar el zoom bajo el cursor.
-          const baseLeft = rect.left - pointX;
-          const baseTop = rect.top - pointY;
-
-          const localX = (e.clientX - rect.left) / oldScale;
-          const localY = (e.clientY - rect.top) / oldScale;
-
-          scale = nextScale;
-
-          pointX = e.clientX - baseLeft - localX * scale;
-          pointY = e.clientY - baseTop - localY * scale;
+        if (nextScale <= fitScale + 0.0001) {
+          fitModalImage();
+          return;
         }
+
+        const rect = modalImgEl.getBoundingClientRect();
+        const baseLeft = rect.left - pointX;
+        const baseTop = rect.top - pointY;
+        const localX = (event.clientX - rect.left) / oldScale;
+        const localY = (event.clientY - rect.top) / oldScale;
+
+        scale = nextScale;
+        pointX = event.clientX - baseLeft - localX * scale;
+        pointY = event.clientY - baseTop - localY * scale;
 
         setTransform();
       }, { passive: false });
 
-      // Paneo con ratón.
-      modalImgEl.addEventListener("mousedown", (e) => {
-        e.preventDefault();
+      modalImgEl.addEventListener("mousedown", (event) => {
+        if (event.button !== 0 || scale <= fitScale + 0.0001) return;
 
-        if (scale > 1) {
-          isPanning = true;
-          startX = e.clientX - pointX;
-          startY = e.clientY - pointY;
-          modalImgEl.classList.add("grabbing");
-        }
+        event.preventDefault();
+
+        isPanning = true;
+        pointerMoved = false;
+        pointerStartX = event.clientX;
+        pointerStartY = event.clientY;
+        startX = event.clientX - pointX;
+        startY = event.clientY - pointY;
+
+        modalImgEl.classList.add("grabbing");
       });
 
-      window.addEventListener("mousemove", (e) => {
+      window.addEventListener("mousemove", (event) => {
         if (!isPanning) return;
 
-        pointX = e.clientX - startX;
-        pointY = e.clientY - startY;
+        if (
+          Math.abs(event.clientX - pointerStartX) > 3 ||
+          Math.abs(event.clientY - pointerStartY) > 3
+        ) {
+          pointerMoved = true;
+        }
+
+        pointX = event.clientX - startX;
+        pointY = event.clientY - startY;
 
         setTransform();
       });
 
       window.addEventListener("mouseup", () => {
+        if (isPanning && pointerMoved) {
+          suppressClickUntil = Date.now() + 350;
+        }
+
         isPanning = false;
         modalImgEl.classList.remove("grabbing");
       });
 
-      // Paneo táctil para móviles y tabletas.
-      modalImgEl.addEventListener("touchstart", (e) => {
-        if (scale > 1 && e.touches.length === 1) {
-          isPanning = true;
-          startX = e.touches[0].clientX - pointX;
-          startY = e.touches[0].clientY - pointY;
+      modalImgEl.addEventListener("click", (event) => {
+        if (Date.now() < suppressClickUntil) {
+          event.preventDefault();
+          event.stopPropagation();
         }
-      });
+      }, true);
 
-      window.addEventListener("touchmove", (e) => {
-        if (!isPanning || e.touches.length !== 1) return;
+      modalImgEl.addEventListener("touchstart", (event) => {
+        if (scale > fitScale + 0.0001 && event.touches.length === 1) {
+          isPanning = true;
+          startX = event.touches[0].clientX - pointX;
+          startY = event.touches[0].clientY - pointY;
+        }
+      }, { passive: true });
 
-        pointX = e.touches[0].clientX - startX;
-        pointY = e.touches[0].clientY - startY;
+      window.addEventListener("touchmove", (event) => {
+        if (!isPanning || event.touches.length !== 1) return;
+
+        pointX = event.touches[0].clientX - startX;
+        pointY = event.touches[0].clientY - startY;
 
         setTransform();
-      }, { passive: false });
+      }, { passive: true });
 
       window.addEventListener("touchend", () => {
         isPanning = false;
+      }, { passive: true });
+
+      window.addEventListener("resize", () => {
+        if (modalEl.classList.contains("active")) {
+          resetZoom();
+        }
       });
     });
   </script>
 
-
-  <!-- SELECTOR DE IDIOMAS PERSONALIZADO — BAAL STUDIO -->
-  <div
-    class="baal-language-selector notranslate"
-    id="baalLangSelector"
-    translate="no"
-  >
-    <button
-      type="button"
-      class="baal-lang-current"
-      id="baalLangToggle"
-      aria-expanded="false"
-      aria-controls="baalLangDropdown"
-      aria-label="Seleccionar idioma"
-    >
+  <div class="baal-language-selector notranslate" id="baalLangSelector" translate="no">
+    <button type="button" class="baal-lang-current" id="baalLangToggle" aria-expanded="false" aria-controls="baalLangDropdown" aria-label="Seleccionar idioma">
       <span id="baalLangCurrentText">Español</span>
 
-      <svg
-        width="10"
-        height="6"
-        viewBox="0 0 10 6"
-        fill="none"
-        aria-hidden="true"
-      >
-        <path
-          d="M1 1L5 5L9 1"
-          stroke="currentColor"
-          stroke-width="1.2"
-          stroke-linecap="round"
-        />
+      <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+        <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
       </svg>
     </button>
 
-    <div
-      class="baal-lang-dropdown"
-      id="baalLangDropdown"
-      aria-label="Idiomas disponibles"
-    >
+    <div class="baal-lang-dropdown" id="baalLangDropdown" aria-label="Idiomas disponibles">
       <a href="#" data-lang="es">Español</a>
       <a href="#" data-lang="de">Deutsch</a>
       <a href="#" data-lang="ar">العربية</a>
@@ -679,226 +713,199 @@
     </div>
   </div>
 
-  <!-- Google Translate: motor de traducción oculto -->
   <div id="google_translate_element" aria-hidden="true"></div>
 
   <script>
-  (function () {
-    "use strict";
+    (function () {
+      "use strict";
 
-    const LANGUAGES = {
-      es: "Español",
-      de: "Deutsch",
-      ar: "العربية",
-      "zh-CN": "中文",
-      fr: "Français",
-      en: "English",
-      it: "Italiano",
-      ja: "日本語",
-      pt: "Português",
-      ru: "Русский"
-    };
+      const LANGUAGES = {
+        es: "Español",
+        de: "Deutsch",
+        ar: "العربية",
+        "zh-CN": "中文",
+        fr: "Français",
+        en: "English",
+        it: "Italiano",
+        ja: "日本語",
+        pt: "Português",
+        ru: "Русский"
+      };
 
-    function initBaalLanguageSelector() {
-      const selector = document.getElementById("baalLangSelector");
-      const toggle = document.getElementById("baalLangToggle");
-      const currentText = document.getElementById("baalLangCurrentText");
-      const dropdown = document.getElementById("baalLangDropdown");
+      function initBaalLanguageSelector() {
+        const selector = document.getElementById("baalLangSelector");
+        const toggle = document.getElementById("baalLangToggle");
+        const currentText = document.getElementById("baalLangCurrentText");
+        const dropdown = document.getElementById("baalLangDropdown");
 
-      if (!selector || !toggle || !currentText || !dropdown) {
-        return;
-      }
+        if (!selector || !toggle || !currentText || !dropdown) return;
 
-      let savedLanguage = "es";
+        let savedLanguage = "es";
 
-      try {
-        savedLanguage =
-          localStorage.getItem("baalSelectedLanguage") || "es";
-      } catch (error) {
-        savedLanguage = "es";
-      }
-
-      currentText.textContent = LANGUAGES[savedLanguage] || "Español";
-
-      function closeDropdown() {
-        selector.classList.remove("is-open");
-        toggle.setAttribute("aria-expanded", "false");
-      }
-
-      toggle.addEventListener("click", function (event) {
-        event.stopPropagation();
-
-        const isOpen = selector.classList.toggle("is-open");
-        toggle.setAttribute("aria-expanded", String(isOpen));
-      });
-
-      document.addEventListener("click", function (event) {
-        if (!selector.contains(event.target)) {
-          closeDropdown();
+        try {
+          savedLanguage = localStorage.getItem("baalSelectedLanguage") || "es";
+        } catch (error) {
+          savedLanguage = "es";
         }
-      });
 
-      document.addEventListener("keydown", function (event) {
-        if (event.key === "Escape") {
-          closeDropdown();
+        currentText.textContent = LANGUAGES[savedLanguage] || "Español";
+
+        function closeDropdown() {
+          selector.classList.remove("is-open");
+          toggle.setAttribute("aria-expanded", "false");
         }
-      });
 
-      dropdown.querySelectorAll("a[data-lang]").forEach(function (link) {
-        link.addEventListener("click", function (event) {
-          event.preventDefault();
+        toggle.addEventListener("click", function (event) {
+          event.stopPropagation();
 
-          const targetLanguage = link.getAttribute("data-lang");
+          const isOpen = selector.classList.toggle("is-open");
+          toggle.setAttribute("aria-expanded", String(isOpen));
+        });
 
-          if (!LANGUAGES[targetLanguage]) {
-            return;
+        document.addEventListener("click", function (event) {
+          if (!selector.contains(event.target)) {
+            closeDropdown();
           }
+        });
 
-          closeDropdown();
+        document.addEventListener("keydown", function (event) {
+          if (event.key === "Escape") closeDropdown();
+        });
 
-          // Restaurar el idioma original sin recargar toda la página.
-          if (targetLanguage === "es") {
-            try {
-              localStorage.removeItem("baalSelectedLanguage");
-            } catch (error) {
-              // Continuar aunque el almacenamiento no esté disponible.
+        dropdown.querySelectorAll("a[data-lang]").forEach(function (link) {
+          link.addEventListener("click", function (event) {
+            event.preventDefault();
+
+            const targetLanguage = link.getAttribute("data-lang");
+            if (!LANGUAGES[targetLanguage]) return;
+
+            closeDropdown();
+
+            if (targetLanguage === "es") {
+              try {
+                localStorage.removeItem("baalSelectedLanguage");
+              } catch (error) {
+                // El idioma original se puede restaurar sin almacenamiento.
+              }
+
+              currentText.textContent = "Español";
+
+              const googleSelect = document.querySelector(".goog-te-combo");
+
+              if (googleSelect) {
+                googleSelect.value = "es";
+                googleSelect.dispatchEvent(new Event("change", { bubbles: true }));
+              } else {
+                clearGoogleTranslateCookie();
+                window.location.reload();
+              }
+
+              return;
             }
 
-            currentText.textContent = "Español";
+            currentText.textContent = LANGUAGES[targetLanguage];
+
+            try {
+              localStorage.setItem("baalSelectedLanguage", targetLanguage);
+            } catch (error) {
+              // La traducción puede funcionar sin almacenamiento local.
+            }
 
             const googleSelect = document.querySelector(".goog-te-combo");
 
             if (googleSelect) {
-              googleSelect.value = "es";
-              googleSelect.dispatchEvent(
-                new Event("change", { bubbles: true })
-              );
+              googleSelect.value = targetLanguage;
+              googleSelect.dispatchEvent(new Event("change", { bubbles: true }));
             } else {
-              // Si el motor no está disponible, restaurar mediante recarga.
-              clearGoogleTranslateCookie();
-              window.location.reload();
+              loadGoogleTranslate(function () {
+                const select = document.querySelector(".goog-te-combo");
+
+                if (select) {
+                  select.value = targetLanguage;
+                  select.dispatchEvent(new Event("change", { bubbles: true }));
+                }
+              });
             }
-
-            return;
-          }
-
-          // Actualizar el idioma mostrado en el botón.
-          currentText.textContent = LANGUAGES[targetLanguage];
-
-          try {
-            localStorage.setItem("baalSelectedLanguage", targetLanguage);
-          } catch (error) {
-            // La traducción puede funcionar sin almacenamiento local.
-          }
-
-          const googleSelect = document.querySelector(".goog-te-combo");
-
-          if (googleSelect) {
-            googleSelect.value = targetLanguage;
-            googleSelect.dispatchEvent(
-              new Event("change", { bubbles: true })
-            );
-          } else {
-            loadGoogleTranslate(function () {
-              const select = document.querySelector(".goog-te-combo");
-
-              if (select) {
-                select.value = targetLanguage;
-                select.dispatchEvent(
-                  new Event("change", { bubbles: true })
-                );
-              }
-            });
-          }
+          });
         });
-      });
-    }
-
-    function clearGoogleTranslateCookie() {
-      const expired =
-        "expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
-      const hostname = window.location.hostname;
-
-      document.cookie = "googtrans=; " + expired;
-      document.cookie =
-        "googtrans=; " + expired + " domain=" + hostname + ";";
-
-      if (hostname.indexOf(".") !== -1) {
-        document.cookie =
-          "googtrans=; " + expired + " domain=." + hostname + ";";
-      }
-    }
-
-    function loadGoogleTranslate(callback) {
-      if (document.querySelector(".goog-te-combo")) {
-        if (callback) callback();
-        return;
       }
 
-      if (window.baalGoogleTranslateLoading) {
-        const waitForGoogle = function () {
-          if (document.querySelector(".goog-te-combo")) {
-            if (callback) callback();
-          } else {
-            window.setTimeout(waitForGoogle, 150);
-          }
+      function clearGoogleTranslateCookie() {
+        const expired = "expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
+        const hostname = window.location.hostname;
+
+        document.cookie = "googtrans=; " + expired;
+        document.cookie = "googtrans=; " + expired + " domain=" + hostname + ";";
+
+        if (hostname.indexOf(".") !== -1) {
+          document.cookie = "googtrans=; " + expired + " domain=." + hostname + ";";
+        }
+      }
+
+      function loadGoogleTranslate(callback) {
+        if (document.querySelector(".goog-te-combo")) {
+          if (callback) callback();
+          return;
+        }
+
+        if (window.baalGoogleTranslateLoading) {
+          const waitForGoogle = function () {
+            if (document.querySelector(".goog-te-combo")) {
+              if (callback) callback();
+            } else {
+              window.setTimeout(waitForGoogle, 150);
+            }
+          };
+
+          waitForGoogle();
+          return;
+        }
+
+        window.baalGoogleTranslateLoading = true;
+
+        window.googleTranslateElementInit = function () {
+          new google.translate.TranslateElement(
+            {
+              pageLanguage: "es",
+              includedLanguages: "de,ar,zh-CN,fr,en,it,ja,pt,ru,es",
+              autoDisplay: false
+            },
+            "google_translate_element"
+          );
+
+          const waitForGoogle = function () {
+            const select = document.querySelector(".goog-te-combo");
+
+            if (select) {
+              window.baalGoogleTranslateLoading = false;
+              if (callback) callback();
+            } else {
+              window.setTimeout(waitForGoogle, 150);
+            }
+          };
+
+          waitForGoogle();
         };
 
-        waitForGoogle();
-        return;
-      }
+        const script = document.createElement("script");
+        script.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+        script.async = true;
 
-      window.baalGoogleTranslateLoading = true;
-
-      window.googleTranslateElementInit = function () {
-        new google.translate.TranslateElement(
-          {
-            pageLanguage: "es",
-            includedLanguages: "de,ar,zh-CN,fr,en,it,ja,pt,ru,es",
-            autoDisplay: false
-          },
-          "google_translate_element"
-        );
-
-        const waitForGoogle = function () {
-          const select = document.querySelector(".goog-te-combo");
-
-          if (select) {
-            window.baalGoogleTranslateLoading = false;
-
-            if (callback) callback();
-          } else {
-            window.setTimeout(waitForGoogle, 150);
-          }
+        script.onerror = function () {
+          window.baalGoogleTranslateLoading = false;
         };
 
-        waitForGoogle();
-      };
+        document.head.appendChild(script);
+      }
 
-      const script = document.createElement("script");
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initBaalLanguageSelector);
+      } else {
+        initBaalLanguageSelector();
+      }
 
-      script.src =
-        "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-      script.async = true;
-
-      script.onerror = function () {
-        window.baalGoogleTranslateLoading = false;
-      };
-
-      document.head.appendChild(script);
-    }
-
-    if (document.readyState === "loading") {
-      document.addEventListener(
-        "DOMContentLoaded",
-        initBaalLanguageSelector
-      );
-    } else {
-      initBaalLanguageSelector();
-    }
-
-    loadGoogleTranslate();
-  })();
+      loadGoogleTranslate();
+    })();
   </script>
 </body>
 </html>
