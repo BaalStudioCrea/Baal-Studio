@@ -27,11 +27,8 @@ const PROTECTED_SELECTOR = [
 document.addEventListener(
   "DOMContentLoaded",
   () => {
-
     loadProjectViewer();
-
     installViewerProtection();
-
   }
 );
 
@@ -41,11 +38,8 @@ document.addEventListener(
    ============================================================ */
 
 function getProjectParameter() {
-
   const params =
-    new URLSearchParams(
-      window.location.search
-    );
+    new URLSearchParams(window.location.search);
 
   return (
     params.get("project") ||
@@ -59,7 +53,6 @@ function getProjectParameter() {
    ============================================================ */
 
 function escapeHtml(value) {
-
   return String(value ?? "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -74,7 +67,6 @@ function escapeHtml(value) {
    ============================================================ */
 
 function getViewerContainer() {
-
   return document.getElementById(
     "project-viewer-content"
   );
@@ -89,9 +81,7 @@ function showMessage(
   message,
   type = "loading"
 ) {
-
-  const container =
-    getViewerContainer();
+  const container = getViewerContainer();
 
   if (!container) {
     return;
@@ -114,17 +104,14 @@ function showMessage(
    ============================================================ */
 
 async function loadProjectViewer() {
-
   const requestedProject =
     getProjectParameter();
 
   if (!requestedProject) {
-
     showMessage(
       "No se ha especificado ningún proyecto.",
       "error"
     );
-
     return;
   }
 
@@ -134,43 +121,35 @@ async function loadProjectViewer() {
   );
 
   try {
+    const response = await fetch(
+      `${VISOR_FUNCTION}?project=${encodeURIComponent(
+        requestedProject
+      )}`,
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json"
+        },
+        cache: "no-store"
+      }
+    );
 
-    const response =
-      await fetch(
-        `${VISOR_FUNCTION}?project=${encodeURIComponent(
-          requestedProject
-        )}`,
-        {
-          method: "GET",
-          headers: {
-            Accept:
-              "application/json"
-          },
-          cache: "no-store"
-        }
-      );
-
-    const result =
-      await response.json();
+    const result = await response.json();
 
     if (
       !response.ok ||
       !result.success ||
       !result.project
     ) {
-
       throw new Error(
         result.error ||
         `La función visor respondió ${response.status}.`
       );
     }
 
-    renderProject(
-      result.project
-    );
+    renderProject(result.project);
 
   } catch (error) {
-
     console.error(
       "[Baal Studio] Error cargando proyecto:",
       error
@@ -189,9 +168,7 @@ async function loadProjectViewer() {
    ============================================================ */
 
 function renderProject(project) {
-
-  const container =
-    getViewerContainer();
+  const container = getViewerContainer();
 
   if (!container) {
     return;
@@ -211,12 +188,10 @@ function renderProject(project) {
       : [];
 
   container.innerHTML = `
-
     <article
       class="project-viewer"
       data-project-id="${escapeHtml(project.id)}"
     >
-
       ${renderProjectIntro(project)}
 
       ${renderProjectDescription(
@@ -224,15 +199,12 @@ function renderProject(project) {
       )}
 
       <div class="project-viewer-content">
-
         ${renderBlocks(blocks)}
-
       </div>
 
       ${renderProjectNavigation(
         project.navigation
       )}
-
     </article>
   `;
 
@@ -240,15 +212,10 @@ function renderProject(project) {
     `${title} — Baal Studio`;
 
   initialiseCarousels();
-
   initialiseMediaZoom();
-
   initialiseSketchfab();
-
   initialiseYoutubeVideos();
-
   initialiseNavigation();
-
   applyProtectedMedia();
 }
 
@@ -258,7 +225,6 @@ function renderProject(project) {
    ============================================================ */
 
 function renderProjectIntro(project) {
-
   const metadata =
     project.metadata || {};
 
@@ -268,14 +234,10 @@ function renderProjectIntro(project) {
     "Proyecto";
 
   const category =
-    joinValue(
-      metadata.categoria
-    );
+    joinValue(metadata.categoria);
 
   const subcategory =
-    joinValue(
-      metadata.subcategoria
-    );
+    joinValue(metadata.subcategoria);
 
   const location =
     metadata.localizacion || "";
@@ -284,14 +246,10 @@ function renderProjectIntro(project) {
     metadata.año || "";
 
   const techniques =
-    joinValue(
-      metadata.tecnicas
-    );
+    joinValue(metadata.tecnicas);
 
   const objectives =
-    joinValue(
-      metadata.objetivo
-    );
+    joinValue(metadata.objetivo);
 
   const authorship =
     metadata.autoria || "";
@@ -305,13 +263,9 @@ function renderProjectIntro(project) {
       : [];
 
   return `
-
     <header class="project-viewer-intro">
-
       <div class="project-viewer-intro-inner">
-
         <div class="project-viewer-title-block">
-
           <p class="project-viewer-title-en">
             Project
           </p>
@@ -319,12 +273,9 @@ function renderProjectIntro(project) {
           <h1 class="project-viewer-title">
             ${escapeHtml(title)}
           </h1>
-
         </div>
 
-
         <div class="project-viewer-summary">
-
           ${renderMetadataItem(
             "Localización",
             "Location",
@@ -378,28 +329,21 @@ function renderProjectIntro(project) {
               ? renderArticles(articles)
               : ""
           }
-
         </div>
-
       </div>
-
     </header>
   `;
 }
 
 
 function joinValue(value) {
-
   if (Array.isArray(value)) {
-
     return value
       .filter(Boolean)
       .join(" · ");
   }
 
-  return String(
-    value || ""
-  ).trim();
+  return String(value || "").trim();
 }
 
 
@@ -408,15 +352,12 @@ function renderMetadataItem(
   english,
   value
 ) {
-
   if (!value) {
     return "";
   }
 
   return `
-
     <div class="project-viewer-summary-item">
-
       <div class="project-viewer-summary-label">
         ${escapeHtml(label)}
       </div>
@@ -428,19 +369,14 @@ function renderMetadataItem(
       <div class="project-viewer-summary-value">
         ${escapeHtml(value)}
       </div>
-
     </div>
-
   `;
 }
 
 
 function renderArticles(articles) {
-
   return `
-
     <div class="project-viewer-summary-item">
-
       <div class="project-viewer-summary-label">
         Artículos
       </div>
@@ -450,11 +386,9 @@ function renderArticles(articles) {
       </div>
 
       <div class="project-viewer-summary-value project-viewer-articles">
-
         ${articles
           .map(
             (url, index) => `
-
               <a
                 href="${escapeHtml(url)}"
                 target="_blank"
@@ -462,15 +396,11 @@ function renderArticles(articles) {
               >
                 Fuente ${index + 1}
               </a>
-
             `
           )
           .join("")}
-
       </div>
-
     </div>
-
   `;
 }
 
@@ -479,10 +409,7 @@ function renderArticles(articles) {
    DESCRIPCIÓN
    ============================================================ */
 
-function renderProjectDescription(
-  description
-) {
-
+function renderProjectDescription(description) {
   if (!description) {
     return "";
   }
@@ -490,54 +417,30 @@ function renderProjectDescription(
   const paragraphs =
     String(description)
       .split(/\n\s*\n/)
-      .map(
-        (paragraph) =>
-          paragraph.trim()
-      )
+      .map((paragraph) => paragraph.trim())
       .filter(Boolean);
 
   return `
-
-    <section
-      class="project-viewer-description"
-    >
-
-      <div
-        class="project-viewer-description-heading"
-      >
-
-        <div
-          class="project-viewer-description-title"
-        >
+    <section class="project-viewer-description">
+      <div class="project-viewer-description-heading">
+        <div class="project-viewer-description-title">
           Descripción
         </div>
 
-        <div
-          class="project-viewer-description-en"
-        >
+        <div class="project-viewer-description-en">
           Project description
         </div>
-
       </div>
 
-
-      <div
-        class="project-viewer-description-text"
-      >
-
+      <div class="project-viewer-description-text">
         ${paragraphs
           .map(
             (paragraph) =>
-              `<p>${escapeHtml(
-                paragraph
-              )}</p>`
+              `<p>${escapeHtml(paragraph)}</p>`
           )
           .join("")}
-
       </div>
-
     </section>
-
   `;
 }
 
@@ -547,51 +450,42 @@ function renderProjectDescription(
    ============================================================ */
 
 function renderBlocks(blocks) {
-
   if (!blocks.length) {
-
     return `
-
       <section class="project-viewer-empty">
-
         <p>
           No hay contenido visual disponible
           para este proyecto.
         </p>
-
       </section>
-
     `;
   }
 
   let validBlockCount = 0;
 
   return blocks
-    .map(
-      (block, index) => {
+    .map((block, index) => {
+      const blockHtml =
+        renderBlock(block, index);
 
-        const blockHtml = renderBlock(block, index);
-
-        if (!blockHtml) {
-          return "";
-        }
-
-        validBlockCount++;
-
-        // Alterna entre franja oscura (#181818) y beige (#e9e5dc)
-        const stripeClass =
-          validBlockCount % 2 === 1
-            ? "stripe-dark"
-            : "stripe-warm";
-
-        return `
-          <div class="project-block-stripe ${stripeClass}">
-            ${blockHtml}
-          </div>
-        `;
-
+      if (!blockHtml) {
+        return "";
       }
-    )
+
+      validBlockCount++;
+
+      // Alterna entre franja oscura y beige.
+      const stripeClass =
+        validBlockCount % 2 === 1
+          ? "stripe-dark"
+          : "stripe-warm";
+
+      return `
+        <div class="project-block-stripe ${stripeClass}">
+          ${blockHtml}
+        </div>
+      `;
+    })
     .join("");
 }
 
@@ -600,58 +494,33 @@ function renderBlock(
   block,
   index
 ) {
-
   if (!block) {
     return "";
   }
 
   switch (
-    String(
-      block.type || ""
-    ).toLowerCase()
+    String(block.type || "").toLowerCase()
   ) {
-
     case "image":
-      return renderImageBlock(
-        block,
-        index
-      );
+      return renderImageBlock(block, index);
 
     case "carousel":
-      return renderCarouselBlock(
-        block,
-        index
-      );
+      return renderCarouselBlock(block, index);
 
     case "comparator":
-      return renderComparatorBlock(
-        block,
-        index
-      );
+      return renderComparatorBlock(block, index);
 
     case "evolution":
-      return renderEvolutionBlock(
-        block,
-        index
-      );
+      return renderEvolutionBlock(block, index);
 
     case "sketchfab":
-      return renderSketchfabBlock(
-        block,
-        index
-      );
+      return renderSketchfabBlock(block, index);
 
     case "video":
-      return renderVideoBlock(
-        block,
-        index
-      );
+      return renderVideoBlock(block, index);
 
     case "pdf":
-      return renderPdfBlock(
-        block,
-        index
-      );
+      return renderPdfBlock(block, index);
 
     default:
       return "";
@@ -664,17 +533,14 @@ function renderBlock(
    ============================================================ */
 
 function renderCaption(text) {
-
   if (!text) {
     return "";
   }
 
   return `
-
     <p class="project-block-caption">
       ${escapeHtml(text)}
     </p>
-
   `;
 }
 
@@ -687,25 +553,18 @@ function renderImageBlock(
   block,
   index
 ) {
-
-  const resource =
-    block.resource;
+  const resource = block.resource;
 
   if (!resource?.url) {
     return "";
   }
 
   return `
-
     <figure
       class="project-block project-image-block"
       data-block-index="${index}"
     >
-
-      <div
-        class="project-single-image protected-media"
-      >
-
+      <div class="project-single-image protected-media">
         <img
           class="project-main-image protected-image"
           src="${escapeHtml(resource.url)}"
@@ -722,15 +581,10 @@ function renderImageBlock(
           "Ampliar imagen",
           "project-image-zoom"
         )}
-
       </div>
 
-      ${renderCaption(
-        block.text
-      )}
-
+      ${renderCaption(block.text)}
     </figure>
-
   `;
 }
 
@@ -743,12 +597,9 @@ function renderCarouselBlock(
   block,
   index
 ) {
-
   const images =
     Array.isArray(block.images)
-      ? block.images.filter(
-          (item) => item?.url
-        )
+      ? block.images.filter((item) => item?.url)
       : [];
 
   if (!images.length) {
@@ -759,16 +610,11 @@ function renderCarouselBlock(
     `project-carousel-${index}`;
 
   return `
-
     <section
       class="project-block project-carousel-block"
       data-carousel="${carouselId}"
     >
-
-      <div
-        class="portfolio-media-viewer"
-      >
-
+      <div class="portfolio-media-viewer">
         <button
           type="button"
           class="project-carousel-button project-carousel-prev"
@@ -780,49 +626,31 @@ function renderCarouselBlock(
           </svg>
         </button>
 
-
-        <div
-          class="portfolio-media-stage protected-media"
-        >
-
+        <div class="portfolio-media-stage protected-media">
           ${images
             .map(
               (image, imageIndex) => `
-
                 <img
                   class="project-carousel-image protected-image ${
-                    imageIndex === 0
-                      ? "is-active"
-                      : ""
+                    imageIndex === 0 ? "is-active" : ""
                   }"
-                  src="${escapeHtml(
-                    image.url
-                  )}"
+                  src="${escapeHtml(image.url)}"
                   alt="${escapeHtml(
-                    image.name ||
-                    "Imagen del proyecto"
+                    image.name || "Imagen del proyecto"
                   )}"
-                  loading="${
-                    imageIndex === 0
-                      ? "eager"
-                      : "lazy"
-                  }"
+                  loading="${imageIndex === 0 ? "eager" : "lazy"}"
                   draggable="false"
                   data-carousel-index="${imageIndex}"
                 >
-
               `
             )
             .join("")}
-
 
           ${renderZoomButton(
             "Ampliar imagen",
             "project-carousel-zoom"
           )}
-
         </div>
-
 
         <button
           type="button"
@@ -834,35 +662,16 @@ function renderCarouselBlock(
             <path d="M9 18l6-6-6-6"/>
           </svg>
         </button>
-
       </div>
 
-
-      <div
-        class="project-carousel-counter"
-      >
-
-        <span data-carousel-current>
-          01
-        </span>
-
+      <div class="project-carousel-counter">
+        <span data-carousel-current>01</span>
         /
-
-        <span>
-          ${String(
-            images.length
-          ).padStart(2, "0")}
-        </span>
-
+        <span>${String(images.length).padStart(2, "0")}</span>
       </div>
 
-
-      ${renderCaption(
-        block.text
-      )}
-
+      ${renderCaption(block.text)}
     </section>
-
   `;
 }
 
@@ -875,12 +684,9 @@ function renderComparatorBlock(
   block,
   index
 ) {
-
   const images =
     Array.isArray(block.images)
-      ? block.images.filter(
-          (item) => item?.url
-        )
+      ? block.images.filter((item) => item?.url)
       : [];
 
   if (images.length < 2) {
@@ -888,27 +694,16 @@ function renderComparatorBlock(
   }
 
   return `
-
     <section
       class="project-block project-comparator-block"
       data-block-index="${index}"
     >
-
       <div class="project-comparator">
-
-        <div
-          class="project-comparator-image protected-media"
-        >
-
+        <div class="project-comparator-image protected-media">
           <img
             class="protected-image"
-            src="${escapeHtml(
-              images[0].url
-            )}"
-            alt="${escapeHtml(
-              images[0].name ||
-              "Imagen 1"
-            )}"
+            src="${escapeHtml(images[0].url)}"
+            alt="${escapeHtml(images[0].name || "Imagen 1")}"
             draggable="false"
           >
 
@@ -916,29 +711,18 @@ function renderComparatorBlock(
             "Ampliar imagen",
             "project-comparator-zoom"
           )}
-
         </div>
-
 
         <div
           class="project-comparator-divider"
           aria-hidden="true"
         ></div>
 
-
-        <div
-          class="project-comparator-image protected-media"
-        >
-
+        <div class="project-comparator-image protected-media">
           <img
             class="protected-image"
-            src="${escapeHtml(
-              images[1].url
-            )}"
-            alt="${escapeHtml(
-              images[1].name ||
-              "Imagen 2"
-            )}"
+            src="${escapeHtml(images[1].url)}"
+            alt="${escapeHtml(images[1].name || "Imagen 2")}"
             draggable="false"
           >
 
@@ -946,18 +730,11 @@ function renderComparatorBlock(
             "Ampliar imagen",
             "project-comparator-zoom"
           )}
-
         </div>
-
       </div>
 
-
-      ${renderCaption(
-        block.text
-      )}
-
+      ${renderCaption(block.text)}
     </section>
-
   `;
 }
 
@@ -970,12 +747,9 @@ function renderEvolutionBlock(
   block,
   index
 ) {
-
   const images =
     Array.isArray(block.images)
-      ? block.images.filter(
-          (item) => item?.url
-        )
+      ? block.images.filter((item) => item?.url)
       : [];
 
   if (!images.length) {
@@ -983,34 +757,21 @@ function renderEvolutionBlock(
   }
 
   return `
-
     <section
       class="project-block project-evolution-block"
       data-block-index="${index}"
     >
-
       <div class="project-evolution">
-
         ${images
           .map(
             (image) => `
-
-              <figure
-                class="project-evolution-item"
-              >
-
-                <div
-                  class="project-evolution-image protected-media"
-                >
-
+              <figure class="project-evolution-item">
+                <div class="project-evolution-image protected-media">
                   <img
                     class="protected-image"
-                    src="${escapeHtml(
-                      image.url
-                    )}"
+                    src="${escapeHtml(image.url)}"
                     alt="${escapeHtml(
-                      image.name ||
-                      "Imagen del proceso"
+                      image.name || "Imagen del proceso"
                     )}"
                     loading="lazy"
                     draggable="false"
@@ -1020,61 +781,60 @@ function renderEvolutionBlock(
                     "Ampliar imagen",
                     "project-evolution-zoom"
                   )}
-
                 </div>
-
               </figure>
-
             `
           )
           .join("")}
-
       </div>
 
-
-      ${renderCaption(
-        block.text
-      )}
-
+      ${renderCaption(block.text)}
     </section>
-
   `;
 }
 
 
 /* ============================================================
-   PARSEAR SKETCHFAB (SOPORTA HTML EMBED COMPLETO, URLS O IDS)
+   PARSEAR SKETCHFAB (HTML EMBED, URLS O IDS)
    ============================================================ */
 
 function parseSketchfabData(rawInput) {
-
   const str = String(rawInput || "").trim();
 
   if (!str) {
-    return { embedUrl: "", webUrl: "", title: "" };
+    return {
+      embedUrl: "",
+      webUrl: "",
+      title: ""
+    };
   }
 
   let sourceUrl = str;
-  const iframeMatch = str.match(/src=["']([^"']+)["']/i);
+  const iframeMatch =
+    str.match(/src=["']([^"']+)["']/i);
 
   if (iframeMatch) {
     sourceUrl = iframeMatch[1];
   }
 
   let title = "";
-  const titleMatch = str.match(/title=["']([^"']+)["']/i);
+  const titleMatch =
+    str.match(/title=["']([^"']+)["']/i);
 
   if (titleMatch) {
     title = titleMatch[1];
   }
 
   let id = "";
-  const hexMatch = sourceUrl.match(/([a-fA-F0-9]{32})/);
+  const hexMatch =
+    sourceUrl.match(/([a-fA-F0-9]{32})/);
 
   if (hexMatch) {
     id = hexMatch[1];
   } else {
-    const altMatch = sourceUrl.match(/(?:models|3d-models|skfb\.ly)\/(?:[a-zA-Z0-9-]+-)?([a-zA-Z0-9]+)/i);
+    const altMatch = sourceUrl.match(
+      /(?:models|3d-models|skfb\.ly)\/(?:[a-zA-Z0-9-]+-)?([a-zA-Z0-9]+)/i
+    );
 
     if (altMatch) {
       id = altMatch[1];
@@ -1085,14 +845,21 @@ function parseSketchfabData(rawInput) {
   let webUrl = "";
 
   if (id) {
-    embedUrl = `https://sketchfab.com/models/${id}/embed?autostart=1&ui_controls=1&ui_infos=0`;
-    webUrl = `https://sketchfab.com/3d-models/${id}`;
+    embedUrl =
+      `https://sketchfab.com/models/${id}/embed?autostart=1&ui_controls=1&ui_infos=0`;
+
+    webUrl =
+      `https://sketchfab.com/3d-models/${id}`;
   } else if (sourceUrl.startsWith("http")) {
     embedUrl = sourceUrl;
     webUrl = sourceUrl;
   }
 
-  return { embedUrl, webUrl, title };
+  return {
+    embedUrl,
+    webUrl,
+    title
+  };
 }
 
 
@@ -1104,12 +871,9 @@ function renderSketchfabBlock(
   block,
   index
 ) {
-
   const items =
     Array.isArray(block.items)
-      ? block.items.filter(
-          (item) => item?.url
-        )
+      ? block.items.filter((item) => item?.url)
       : [];
 
   if (!items.length) {
@@ -1117,33 +881,21 @@ function renderSketchfabBlock(
   }
 
   return `
-
     <section
       class="project-block project-sketchfab-block"
       data-block-index="${index}"
     >
-
       <div class="project-sketchfab-grid">
-
         ${items
           .map(
             (item, itemIndex) =>
-              renderSketchfabItem(
-                item,
-                itemIndex
-              )
+              renderSketchfabItem(item, itemIndex)
           )
           .join("")}
-
       </div>
 
-
-      ${renderCaption(
-        block.text
-      )}
-
+      ${renderCaption(block.text)}
     </section>
-
   `;
 }
 
@@ -1152,7 +904,6 @@ function renderSketchfabItem(
   item,
   index
 ) {
-
   const rawUrl = item.url || "";
 
   const {
@@ -1167,24 +918,19 @@ function renderSketchfabItem(
     `Modelo 3D ${String(index + 1).padStart(2, "0")}`;
 
   return `
-
     <article
       class="project-sketchfab-item"
       data-sketchfab-embed="${escapeHtml(embedUrl)}"
     >
-
       <div
         class="project-sketchfab-preview protected-media"
         data-sketchfab-preview
       >
-
         <div class="project-sketchfab-placeholder">
           <div class="sketchfab-3d-icon">3D</div>
         </div>
 
-
         <div class="project-sketchfab-preview-overlay">
-
           <button
             type="button"
             class="project-sketchfab-load"
@@ -1192,17 +938,11 @@ function renderSketchfabItem(
             Cargar modelo 3D
           </button>
 
-          <span>
-            Sketchfab
-          </span>
-
+          <span>Sketchfab</span>
         </div>
-
       </div>
 
-
       <div class="project-sketchfab-info">
-
         <div class="project-sketchfab-title">
           ${escapeHtml(title)}
         </div>
@@ -1221,11 +961,8 @@ function renderSketchfabItem(
             `
             : ""
         }
-
       </div>
-
     </article>
-
   `;
 }
 
@@ -1238,37 +975,27 @@ function renderVideoBlock(
   block,
   index
 ) {
-
-  const resource =
-    block.resource;
+  const resource = block.resource;
 
   if (!resource?.url) {
     return "";
   }
 
-  const url =
-    resource.url;
-
-  const youtubeId =
-    extractYoutubeId(url);
+  const url = resource.url;
+  const youtubeId = extractYoutubeId(url);
 
   return `
-
     <section
       class="project-block project-video-block"
       data-block-index="${index}"
     >
-
       <div
         class="project-video-frame protected-media"
         data-youtube-container
       >
-
         ${
           youtubeId
-
             ? `
-
               <iframe
                 class="project-youtube-iframe"
                 src="https://www.youtube.com/embed/${escapeHtml(
@@ -1281,14 +1008,12 @@ function renderVideoBlock(
               ></iframe>
 
               <div class="project-youtube-overlay">
-
                 <button
                   type="button"
                   class="project-youtube-play-btn"
                   aria-label="Reproducir / Pausar vídeo"
                   data-yt-control="toggle"
                 >
-
                   <svg
                     class="icon-play"
                     viewBox="0 0 24 24"
@@ -1310,13 +1035,10 @@ function renderVideoBlock(
                     <rect x="6" y="4" width="4" height="16"></rect>
                     <rect x="14" y="4" width="4" height="16"></rect>
                   </svg>
-
                 </button>
-
               </div>
 
               <div class="project-youtube-topbar">
-
                 <a
                   href="https://www.youtube.com/watch?v=${escapeHtml(
                     youtubeId
@@ -1327,68 +1049,41 @@ function renderVideoBlock(
                 >
                   Ver en YouTube ↗
                 </a>
-
               </div>
-
             `
-
             : `
-
               <video
                 class="project-video"
                 controls
                 controlsList="nodownload"
                 preload="metadata"
               >
-
-                <source
-                  src="${escapeHtml(
-                    url
-                  )}"
-                >
+                <source src="${escapeHtml(url)}">
 
                 Tu navegador no admite
                 la reproducción de vídeo.
-
               </video>
-
             `
         }
-
       </div>
 
-
-      ${renderCaption(
-        block.text
-      )}
-
+      ${renderCaption(block.text)}
     </section>
-
   `;
 }
 
 
 function extractYoutubeId(url) {
-
-  const value =
-    String(url || "");
+  const value = String(url || "");
 
   const patterns = [
-
     /youtu\.be\/([^?&/]+)/i,
-
     /youtube\.com\/watch\?v=([^?&/]+)/i,
-
     /youtube\.com\/embed\/([^?&/]+)/i
-
   ];
 
-  for (
-    const pattern of patterns
-  ) {
-
-    const match =
-      value.match(pattern);
+  for (const pattern of patterns) {
+    const match = value.match(pattern);
 
     if (match) {
       return match[1];
@@ -1404,112 +1099,79 @@ function extractYoutubeId(url) {
    ============================================================ */
 
 function initialiseYoutubeVideos() {
-
   document
-    .querySelectorAll(
-      "[data-youtube-container]"
-    )
-    .forEach(
-      (container) => {
-
-        const iframe =
-          container.querySelector(
-            ".project-youtube-iframe"
-          );
-
-        const playBtn =
-          container.querySelector(
-            '[data-yt-control="toggle"]'
-          );
-
-        const overlay =
-          container.querySelector(
-            ".project-youtube-overlay"
-          );
-
-        if (!iframe || !playBtn) {
-          return;
-        }
-
-        let isPlaying = false;
-
-        playBtn.addEventListener(
-          "click",
-          () => {
-
-            const iconPlay =
-              playBtn.querySelector(
-                ".icon-play"
-              );
-
-            const iconPause =
-              playBtn.querySelector(
-                ".icon-pause"
-              );
-
-            if (!isPlaying) {
-
-              iframe.contentWindow.postMessage(
-                '{"event":"command","func":"playVideo","args":""}',
-                "*"
-              );
-
-              isPlaying = true;
-
-              container.classList.add(
-                "is-playing"
-              );
-
-              if (iconPlay)
-                iconPlay.style.display =
-                  "none";
-
-              if (iconPause)
-                iconPause.style.display =
-                  "block";
-
-            } else {
-
-              iframe.contentWindow.postMessage(
-                '{"event":"command","func":"pauseVideo","args":""}',
-                "*"
-              );
-
-              isPlaying = false;
-
-              container.classList.remove(
-                "is-playing"
-              );
-
-              if (iconPlay)
-                iconPlay.style.display =
-                  "block";
-
-              if (iconPause)
-                iconPause.style.display =
-                  "none";
-
-            }
-          }
+    .querySelectorAll("[data-youtube-container]")
+    .forEach((container) => {
+      const iframe =
+        container.querySelector(
+          ".project-youtube-iframe"
         );
 
-        overlay?.addEventListener(
-          "click",
-          (event) => {
-
-            if (
-              event.target === overlay
-            ) {
-
-              playBtn.click();
-
-            }
-
-          }
+      const playBtn =
+        container.querySelector(
+          '[data-yt-control="toggle"]'
         );
 
+      const overlay =
+        container.querySelector(
+          ".project-youtube-overlay"
+        );
+
+      if (!iframe || !playBtn) {
+        return;
       }
-    );
+
+      let isPlaying = false;
+
+      playBtn.addEventListener("click", () => {
+        const iconPlay =
+          playBtn.querySelector(".icon-play");
+
+        const iconPause =
+          playBtn.querySelector(".icon-pause");
+
+        if (!isPlaying) {
+          iframe.contentWindow.postMessage(
+            '{"event":"command","func":"playVideo","args":""}',
+            "*"
+          );
+
+          isPlaying = true;
+          container.classList.add("is-playing");
+
+          if (iconPlay) {
+            iconPlay.style.display = "none";
+          }
+
+          if (iconPause) {
+            iconPause.style.display = "block";
+          }
+
+        } else {
+          iframe.contentWindow.postMessage(
+            '{"event":"command","func":"pauseVideo","args":""}',
+            "*"
+          );
+
+          isPlaying = false;
+          container.classList.remove("is-playing");
+
+          if (iconPlay) {
+            iconPlay.style.display = "block";
+          }
+
+          if (iconPause) {
+            iconPause.style.display = "none";
+          }
+        }
+      });
+
+      overlay?.addEventListener("click", (event) => {
+        if (event.target === overlay) {
+          playBtn.click();
+        }
+      });
+    });
 }
 
 
@@ -1521,9 +1183,7 @@ function renderPdfBlock(
   block,
   index
 ) {
-
-  const resource =
-    block.resource;
+  const resource = block.resource;
 
   if (!resource?.url) {
     return "";
@@ -1533,38 +1193,24 @@ function renderPdfBlock(
     `${resource.url}#toolbar=0&navpanes=0&scrollbar=1&view=Fit`;
 
   return `
-
     <section
       class="project-block project-pdf-block"
       data-block-index="${index}"
     >
-
-      <div
-        class="project-pdf-frame protected-media"
-      >
-
+      <div class="project-pdf-frame protected-media">
         <div class="project-protection-overlay"></div>
 
         <iframe
-          src="${escapeHtml(
-            pdfUrl
-          )}"
+          src="${escapeHtml(pdfUrl)}"
           title="${escapeHtml(
-            block.reference ||
-            "Documento PDF"
+            block.reference || "Documento PDF"
           )}"
           loading="lazy"
         ></iframe>
-
       </div>
 
-
-      ${renderCaption(
-        block.text
-      )}
-
+      ${renderCaption(block.text)}
     </section>
-
   `;
 }
 
@@ -1577,45 +1223,29 @@ function renderZoomButton(
   label,
   extraClass = ""
 ) {
-
   return `
-
     <button
       type="button"
       class="project-media-zoom ${extraClass}"
       data-zoom-current
-      aria-label="${escapeHtml(
-        label
-      )}"
-      title="${escapeHtml(
-        label
-      )}"
+      aria-label="${escapeHtml(label)}"
+      title="${escapeHtml(label)}"
     >
-
       <svg
         viewBox="0 0 24 24"
         aria-hidden="true"
         focusable="false"
       >
-
         <circle
           cx="10.8"
           cy="10.8"
           r="5.8"
         ></circle>
 
-        <path
-          d="M15.2 15.2 21 21"
-        ></path>
-
-        <path
-          d="M10.8 8.2v5.2M8.2 10.8h5.2"
-        ></path>
-
+        <path d="M15.2 15.2 21 21"></path>
+        <path d="M10.8 8.2v5.2M8.2 10.8h5.2"></path>
       </svg>
-
     </button>
-
   `;
 }
 
@@ -1625,93 +1255,67 @@ function renderZoomButton(
    ============================================================ */
 
 function initialiseCarousels() {
-
   document
-    .querySelectorAll(
-      "[data-carousel]"
-    )
-    .forEach(
-      (carousel) => {
+    .querySelectorAll("[data-carousel]")
+    .forEach((carousel) => {
+      const images =
+        Array.from(
+          carousel.querySelectorAll(
+            ".project-carousel-image"
+          )
+        );
 
-        const images =
-          Array.from(
-            carousel.querySelectorAll(
-              ".project-carousel-image"
-            )
+      const prev =
+        carousel.querySelector(
+          '[data-carousel-action="prev"]'
+        );
+
+      const next =
+        carousel.querySelector(
+          '[data-carousel-action="next"]'
+        );
+
+      const counter =
+        carousel.querySelector(
+          "[data-carousel-current]"
+        );
+
+      let current = 0;
+
+      function update() {
+        images.forEach((image, index) => {
+          image.classList.toggle(
+            "is-active",
+            index === current
           );
+        });
 
-        const prev =
-          carousel.querySelector(
-            '[data-carousel-action="prev"]'
-          );
-
-        const next =
-          carousel.querySelector(
-            '[data-carousel-action="next"]'
-          );
-
-        const counter =
-          carousel.querySelector(
-            "[data-carousel-current]"
-          );
-
-        let current = 0;
-
-        function update() {
-
-          images.forEach(
-            (image, index) => {
-
-              image.classList.toggle(
-                "is-active",
-                index === current
-              );
-
-            }
-          );
-
-          if (counter) {
-
-            counter.textContent =
-              String(
-                current + 1
-              ).padStart(
-                2,
-                "0"
-              );
-          }
+        if (counter) {
+          counter.textContent =
+            String(current + 1).padStart(2, "0");
         }
+      }
 
-        prev?.addEventListener(
-          "click",
-          () => {
-
-            current =
-              current <= 0
-                ? images.length - 1
-                : current - 1;
-
-            update();
-          }
-        );
-
-        next?.addEventListener(
-          "click",
-          () => {
-
-            current =
-              current >=
-              images.length - 1
-                ? 0
-                : current + 1;
-
-            update();
-          }
-        );
+      prev?.addEventListener("click", () => {
+        current =
+          current <= 0
+            ? images.length - 1
+            : current - 1;
 
         update();
-      }
-    );
+      });
+
+      next?.addEventListener("click", () => {
+        current =
+          current >= images.length - 1
+            ? 0
+            : current + 1;
+
+        update();
+      });
+
+      update();
+    });
 }
 
 
@@ -1720,190 +1324,436 @@ function initialiseCarousels() {
    ============================================================ */
 
 function initialiseMediaZoom() {
-
   document
-    .querySelectorAll(
-      "[data-zoom-current]"
-    )
-    .forEach(
-      (button) => {
+    .querySelectorAll("[data-zoom-current]")
+    .forEach((button) => {
+      button.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
 
-        button.addEventListener(
-          "click",
-          (event) => {
+        const image =
+          button
+            .closest(".protected-media")
+            ?.querySelector(
+              "img.is-active, img.project-main-image, img.protected-image"
+            );
 
-            event.preventDefault();
-            event.stopPropagation();
-
-            const image =
-              button
-                .closest(
-                  ".protected-media"
-                )
-                ?.querySelector(
-                  "img.is-active, img.project-main-image, img.protected-image"
-                );
-
-            if (image) {
-
-              openImageZoom(
-                image.src,
-                image.alt || ""
-              );
-            }
-          }
-        );
-      }
-    );
+        if (image) {
+          openImageZoom(
+            image.src,
+            image.alt || ""
+          );
+        }
+      });
+    });
 }
 
+
+/* ============================================================
+   MODAL DE IMAGEN Y ZOOM
+   ============================================================ */
 
 function openImageZoom(
   src,
   alt
 ) {
-
   let modal =
-    document.getElementById(
-      "visor-image-modal"
-    );
+    document.getElementById("visor-image-modal");
 
   if (!modal) {
-
-    modal =
-      document.createElement(
-        "div"
-      );
-
-    modal.id =
-      "visor-image-modal";
-
-    modal.className =
-      "project-lightbox";
+    modal = document.createElement("div");
+    modal.id = "visor-image-modal";
+    modal.className = "project-lightbox";
 
     modal.innerHTML = `
-
       <button
         type="button"
         class="project-lightbox-close"
         aria-label="Cerrar"
-      >
-        ×
-      </button>
+      >×</button>
 
-      <div
-        class="project-lightbox-inner protected-media"
-      >
-
+      <div class="project-lightbox-inner protected-media">
         <img
           class="visor-image-modal-image protected-image"
           src=""
           alt=""
           draggable="false"
         >
-
       </div>
-
     `;
 
-    document.body.appendChild(
-      modal
-    );
-
+    document.body.appendChild(modal);
 
     modal
-      .querySelector(
-        ".project-lightbox-close"
-      )
-      .addEventListener(
-        "click",
-        closeImageZoom
-      );
+      .querySelector(".project-lightbox-close")
+      .addEventListener("click", closeImageZoom);
 
-
-    modal.addEventListener(
-      "click",
-      (event) => {
-
-        if (
-          event.target === modal ||
-          event.target.classList.contains("project-lightbox-inner")
-        ) {
-
-          closeImageZoom();
-
-        }
+    modal.addEventListener("click", (event) => {
+      if (
+        event.target === modal ||
+        event.target.classList.contains("project-lightbox-inner")
+      ) {
+        closeImageZoom();
       }
-    );
+    });
   }
 
   const image =
-    modal.querySelector(
-      ".visor-image-modal-image"
-    );
+    modal.querySelector(".visor-image-modal-image");
+
+  const inner =
+    modal.querySelector(".project-lightbox-inner");
 
   image.src = src;
-  image.alt = alt;
+  image.alt = alt || "";
 
-  image.classList.remove("is-zoomed");
+  image.style.transformOrigin = "center center";
+  image.style.transition = "transform 0.08s ease-out";
+  image.style.touchAction = "none";
+  image.style.cursor = "zoom-in";
 
-  if (!image.dataset.zoomBound) {
+  inner.style.overflow = "hidden";
+  inner.style.touchAction = "none";
 
-    image.addEventListener(
-      "click",
-      (event) => {
+  if (!image._zoomState) {
+    image._zoomState = {
+      scale: 1,
+      x: 0,
+      y: 0,
+      pointerDown: false,
+      pointerX: 0,
+      pointerY: 0,
+      startX: 0,
+      startY: 0,
+      touchMode: "",
+      pinchStartDistance: 0,
+      pinchStartScale: 1,
+      lastTouchTime: 0
+    };
 
+    const state = image._zoomState;
+
+    const applyTransform = () => {
+      image.style.transform =
+        `translate3d(${state.x}px, ${state.y}px, 0) scale(${state.scale})`;
+
+      image.style.cursor =
+        state.scale > 1 ? "grab" : "zoom-in";
+    };
+
+    const resetTransform = () => {
+      state.scale = 1;
+      state.x = 0;
+      state.y = 0;
+      state.pointerDown = false;
+      state.touchMode = "";
+      state.pinchStartDistance = 0;
+      applyTransform();
+    };
+
+    const getDistance = (touchA, touchB) => {
+      const dx = touchB.clientX - touchA.clientX;
+      const dy = touchB.clientY - touchA.clientY;
+      return Math.hypot(dx, dy);
+    };
+
+    const getMidpoint = (touchA, touchB) => ({
+      x: (touchA.clientX + touchB.clientX) / 2,
+      y: (touchA.clientY + touchB.clientY) / 2
+    });
+
+    const getBaseCenter = () => {
+      const rect = image.getBoundingClientRect();
+
+      return {
+        x: rect.left + rect.width / 2 - state.x,
+        y: rect.top + rect.height / 2 - state.y
+      };
+    };
+
+    const zoomAt = (clientX, clientY, nextScale) => {
+      const oldScale = state.scale;
+      const boundedScale =
+        Math.max(1, Math.min(12, nextScale));
+
+      if (Math.abs(boundedScale - oldScale) < 0.0001) {
+        return;
+      }
+
+      if (boundedScale <= 1) {
+        state.scale = 1;
+        state.x = 0;
+        state.y = 0;
+        applyTransform();
+        return;
+      }
+
+      const rect = image.getBoundingClientRect();
+      const baseCenter = getBaseCenter();
+
+      const localX =
+        (clientX - rect.left) / oldScale;
+
+      const localY =
+        (clientY - rect.top) / oldScale;
+
+      state.scale = boundedScale;
+
+      state.x =
+        clientX -
+        baseCenter.x -
+        (localX - rect.width / (2 * oldScale)) * state.scale;
+
+      state.y =
+        clientY -
+        baseCenter.y -
+        (localY - rect.height / (2 * oldScale)) * state.scale;
+
+      applyTransform();
+    };
+
+    image._resetZoom = resetTransform;
+
+    // Clic: alterna entre tamaño original y ampliación moderada.
+    image.addEventListener("click", (event) => {
+      event.stopPropagation();
+
+      // Evita el clic sintético posterior a un gesto táctil.
+      if (Date.now() - state.lastTouchTime < 450) {
+        return;
+      }
+
+      if (state.scale > 1) {
+        resetTransform();
+        return;
+      }
+
+      zoomAt(
+        event.clientX,
+        event.clientY,
+        2.2
+      );
+    });
+
+    // Zoom progresivo con rueda, anclado al cursor.
+    image.addEventListener("wheel", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      const factor =
+        Math.exp(-event.deltaY * 0.0015);
+
+      zoomAt(
+        event.clientX,
+        event.clientY,
+        state.scale * factor
+      );
+    }, { passive: false });
+
+    // Arrastre con ratón cuando la imagen está ampliada.
+    image.addEventListener("mousedown", (event) => {
+      if (event.button !== 0 || state.scale <= 1) {
+        return;
+      }
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      state.pointerDown = true;
+      state.pointerX = event.clientX;
+      state.pointerY = event.clientY;
+      state.startX = state.x;
+      state.startY = state.y;
+
+      image.style.cursor = "grabbing";
+    });
+
+    window.addEventListener("mousemove", (event) => {
+      if (!state.pointerDown) {
+        return;
+      }
+
+      state.x =
+        state.startX + event.clientX - state.pointerX;
+
+      state.y =
+        state.startY + event.clientY - state.pointerY;
+
+      applyTransform();
+      image.style.cursor = "grabbing";
+    });
+
+    window.addEventListener("mouseup", () => {
+      if (!state.pointerDown) {
+        return;
+      }
+
+      state.pointerDown = false;
+      image.style.cursor =
+        state.scale > 1 ? "grab" : "zoom-in";
+    });
+
+    // En pantallas táctiles: dos dedos amplían; uno desplaza.
+    image.addEventListener("touchstart", (event) => {
+      state.lastTouchTime = Date.now();
+
+      if (event.touches.length === 2) {
+        event.preventDefault();
         event.stopPropagation();
 
-        image.classList.toggle(
-          "is-zoomed"
+        state.touchMode = "pinch";
+
+        state.pinchStartDistance =
+          getDistance(
+            event.touches[0],
+            event.touches[1]
+          );
+
+        state.pinchStartScale = state.scale;
+
+      } else if (
+        event.touches.length === 1 &&
+        state.scale > 1
+      ) {
+        event.preventDefault();
+
+        state.touchMode = "pan";
+        state.pointerX = event.touches[0].clientX;
+        state.pointerY = event.touches[0].clientY;
+        state.startX = state.x;
+        state.startY = state.y;
+
+      } else {
+        state.touchMode = "";
+      }
+    }, { passive: false });
+
+    image.addEventListener("touchmove", (event) => {
+      if (
+        event.touches.length === 2 &&
+        state.touchMode === "pinch"
+      ) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const distance =
+          getDistance(
+            event.touches[0],
+            event.touches[1]
+          );
+
+        if (!state.pinchStartDistance) {
+          return;
+        }
+
+        const midpoint =
+          getMidpoint(
+            event.touches[0],
+            event.touches[1]
+          );
+
+        const nextScale =
+          state.pinchStartScale *
+          (distance / state.pinchStartDistance);
+
+        zoomAt(
+          midpoint.x,
+          midpoint.y,
+          nextScale
         );
 
-      }
-    );
+      } else if (
+        event.touches.length === 1 &&
+        state.touchMode === "pan" &&
+        state.scale > 1
+      ) {
+        event.preventDefault();
 
-    image.dataset.zoomBound = "true";
+        state.x =
+          state.startX +
+          event.touches[0].clientX -
+          state.pointerX;
+
+        state.y =
+          state.startY +
+          event.touches[0].clientY -
+          state.pointerY;
+
+        applyTransform();
+      }
+    }, { passive: false });
+
+    image.addEventListener("touchend", (event) => {
+      state.lastTouchTime = Date.now();
+
+      if (
+        event.touches.length < 2 &&
+        state.touchMode === "pinch"
+      ) {
+        state.touchMode =
+          event.touches.length === 1 &&
+          state.scale > 1
+            ? "pan"
+            : "";
+
+        if (
+          event.touches.length === 1 &&
+          state.scale > 1
+        ) {
+          state.pointerX =
+            event.touches[0].clientX;
+
+          state.pointerY =
+            event.touches[0].clientY;
+
+          state.startX = state.x;
+          state.startY = state.y;
+        }
+
+      } else if (event.touches.length === 0) {
+        state.touchMode = "";
+      }
+    }, { passive: true });
+
+    image.addEventListener("touchcancel", () => {
+      state.touchMode = "";
+      state.lastTouchTime = Date.now();
+    }, { passive: true });
+
+    applyTransform();
   }
 
-  modal.classList.add(
-    "is-open"
-  );
+  if (typeof image._resetZoom === "function") {
+    image._resetZoom();
+  }
 
-  document.body.classList.add(
-    "lightbox-open"
-  );
+  modal.classList.add("is-open");
+  document.body.classList.add("lightbox-open");
 
   applyProtectedMedia();
 }
 
 
 function closeImageZoom() {
-
   const modal =
-    document.getElementById(
-      "visor-image-modal"
-    );
+    document.getElementById("visor-image-modal");
 
   if (!modal) {
     return;
   }
 
   const image =
-    modal.querySelector(
-      ".visor-image-modal-image"
-    );
+    modal.querySelector(".visor-image-modal-image");
 
-  if (image) {
-    image.classList.remove("is-zoomed");
+  if (
+    image &&
+    typeof image._resetZoom === "function"
+  ) {
+    image._resetZoom();
   }
 
-  modal.classList.remove(
-    "is-open"
-  );
-
-  document.body.classList.remove(
-    "lightbox-open"
-  );
+  modal.classList.remove("is-open");
+  document.body.classList.remove("lightbox-open");
 }
 
 
@@ -1912,79 +1762,51 @@ function closeImageZoom() {
    ============================================================ */
 
 function initialiseSketchfab() {
-
   document
-    .querySelectorAll(
-      ".project-sketchfab-item"
-    )
-    .forEach(
-      (item) => {
+    .querySelectorAll(".project-sketchfab-item")
+    .forEach((item) => {
+      const button =
+        item.querySelector(".project-sketchfab-load");
 
-        const button =
-          item.querySelector(
-            ".project-sketchfab-load"
-          );
+      if (!button) {
+        return;
+      }
 
-        if (!button) {
+      button.addEventListener("click", () => {
+        if (item.classList.contains("is-loaded")) {
           return;
         }
 
-        button.addEventListener(
-          "click",
-          () => {
+        const preview =
+          item.querySelector("[data-sketchfab-preview]");
 
-            if (
-              item.classList.contains(
-                "is-loaded"
-              )
-            ) {
-              return;
-            }
+        const embedUrl =
+          item.dataset.sketchfabEmbed || "";
 
-            const preview =
-              item.querySelector(
-                "[data-sketchfab-preview]"
-              );
+        if (!embedUrl) {
+          console.error(
+            "[Baal Studio] No se encontró una URL de embed válida para este modelo."
+          );
+          return;
+        }
 
-            const embedUrl =
-              item.dataset.sketchfabEmbed ||
-              "";
+        button.disabled = true;
+        button.textContent = "Cargando…";
 
-            if (!embedUrl) {
-              console.error(
-                "[Baal Studio] No se encontró una URL de embed válida para este modelo."
-              );
-              return;
-            }
+        preview.innerHTML = `
+          <iframe
+            class="project-sketchfab-iframe"
+            src="${escapeHtml(embedUrl)}"
+            title="Modelo 3D Sketchfab"
+            loading="eager"
+            allow="autoplay; fullscreen; xr-spatial-tracking"
+            allowfullscreen
+          ></iframe>
+        `;
 
-            button.disabled = true;
-
-            button.textContent =
-              "Cargando…";
-
-            preview.innerHTML = `
-
-              <iframe
-                class="project-sketchfab-iframe"
-                src="${escapeHtml(
-                  embedUrl
-                )}"
-                title="Modelo 3D Sketchfab"
-                loading="eager"
-                allow="autoplay; fullscreen; xr-spatial-tracking"
-                allowfullscreen
-              ></iframe>
-
-            `;
-
-            item.classList.add(
-              "is-loaded"
-            );
-
-          }
-        );
-      }
-    );
+        item.classList.add("is-loaded");
+      });
+    });
 }
 
 
@@ -1993,160 +1815,80 @@ function initialiseSketchfab() {
    ============================================================ */
 
 function initialiseNavigation() {
-
   document
-    .querySelectorAll(
-      "[data-project-navigation]"
-    )
-    .forEach(
-      (link) => {
+    .querySelectorAll("[data-project-navigation]")
+    .forEach((link) => {
+      link.addEventListener("click", (event) => {
+        const project =
+          link.dataset.projectNavigation;
 
-        link.addEventListener(
-          "click",
-          (event) => {
+        if (!project) {
+          return;
+        }
 
-            const project =
-              link.dataset
-                .projectNavigation;
+        event.preventDefault();
 
-            if (!project) {
-              return;
-            }
-
-            event.preventDefault();
-
-            window.location.href =
-              `./visor.html?project=${encodeURIComponent(
-                project
-              )}`;
-          }
-        );
-
-      }
-    );
+        window.location.href =
+          `./visor.html?project=${encodeURIComponent(project)}`;
+      });
+    });
 }
 
 
-function renderProjectNavigation(
-  navigation
-) {
-
+function renderProjectNavigation(navigation) {
   const previous =
-    navigation?.previous ||
-    null;
+    navigation?.previous || null;
 
   const next =
-    navigation?.next ||
-    null;
+    navigation?.next || null;
 
   return `
-
     <nav
       class="project-viewer-navigation"
       aria-label="Navegación entre proyectos"
     >
-
-      <div
-        class="project-navigation-side project-navigation-prev"
-      >
-
+      <div class="project-navigation-side project-navigation-prev">
         ${
           previous
-
             ? `
-
               <a
-                href="./visor.html?project=${encodeURIComponent(
-                  previous.id
-                )}"
-                data-project-navigation="${escapeHtml(
-                  previous.id
-                )}"
+                href="./visor.html?project=${encodeURIComponent(previous.id)}"
+                data-project-navigation="${escapeHtml(previous.id)}"
               >
-
-                <span>
-                  ← Proyecto anterior
-                </span>
-
-                <small>
-                  Previous project
-                </small>
-
-                <strong>
-                  ${escapeHtml(
-                    previous.title
-                  )}
-                </strong>
-
+                <span>← Proyecto anterior</span>
+                <small>Previous project</small>
+                <strong>${escapeHtml(previous.title)}</strong>
               </a>
-
             `
-
             : ""
         }
-
       </div>
-
 
       <a
         class="project-navigation-all"
         href="./proyectos.html"
       >
-
-        <span>
-          Todos los proyectos
-        </span>
-
-        <small>
-          All projects
-        </small>
-
+        <span>Todos los proyectos</span>
+        <small>All projects</small>
       </a>
 
-
-      <div
-        class="project-navigation-side project-navigation-next"
-      >
-
+      <div class="project-navigation-side project-navigation-next">
         ${
           next
-
             ? `
-
               <a
-                href="./visor.html?project=${encodeURIComponent(
-                  next.id
-                )}"
-                data-project-navigation="${escapeHtml(
-                  next.id
-                )}"
+                href="./visor.html?project=${encodeURIComponent(next.id)}"
+                data-project-navigation="${escapeHtml(next.id)}"
               >
-
-                <span>
-                  Proyecto siguiente →
-                </span>
-
-                <small>
-                  Next project
-                </small>
-
-                <strong>
-                  ${escapeHtml(
-                    next.title
-                  )}
-                </strong>
-
+                <span>Proyecto siguiente →</span>
+                <small>Next project</small>
+                <strong>${escapeHtml(next.title)}</strong>
               </a>
-
             `
-
             : ""
         }
-
       </div>
-
     </nav>
-
   `;
 }
 
@@ -2156,51 +1898,35 @@ function renderProjectNavigation(
    ============================================================ */
 
 function applyProtectedMedia() {
+  document
+    .querySelectorAll(PROTECTED_SELECTOR)
+    .forEach((element) => {
+      element.addEventListener(
+        "contextmenu",
+        blockContextMenu
+      );
+
+      element.addEventListener(
+        "dragstart",
+        blockEvent
+      );
+    });
 
   document
-    .querySelectorAll(
-      PROTECTED_SELECTOR
-    )
-    .forEach(
-      (element) => {
+    .querySelectorAll(".protected-image")
+    .forEach((image) => {
+      image.setAttribute("draggable", "false");
 
-        element.addEventListener(
-          "contextmenu",
-          blockContextMenu
-        );
+      image.addEventListener(
+        "dragstart",
+        blockEvent
+      );
 
-        element.addEventListener(
-          "dragstart",
-          blockEvent
-        );
-      }
-    );
-
-
-  document
-    .querySelectorAll(
-      ".protected-image"
-    )
-    .forEach(
-      (image) => {
-
-        image.setAttribute(
-          "draggable",
-          "false"
-        );
-
-        image.addEventListener(
-          "dragstart",
-          blockEvent
-        );
-
-        image.addEventListener(
-          "contextmenu",
-          blockContextMenu
-        );
-
-      }
-    );
+      image.addEventListener(
+        "contextmenu",
+        blockContextMenu
+      );
+    });
 }
 
 
@@ -2209,103 +1935,56 @@ function applyProtectedMedia() {
    ============================================================ */
 
 function installViewerProtection() {
-
-  document.addEventListener(
-    "contextmenu",
-    (event) => {
-
-      if (
-        event.target.closest?.(
-          PROTECTED_SELECTOR
-        )
-      ) {
-
-        event.preventDefault();
-
-      }
-
+  document.addEventListener("contextmenu", (event) => {
+    if (event.target.closest?.(PROTECTED_SELECTOR)) {
+      event.preventDefault();
     }
-  );
+  });
 
-
-  document.addEventListener(
-    "dragstart",
-    (event) => {
-
-      if (
-        event.target.closest?.(
-          ".protected-image, .protected-media"
-        )
-      ) {
-
-        event.preventDefault();
-
-      }
-
+  document.addEventListener("dragstart", (event) => {
+    if (
+      event.target.closest?.(
+        ".protected-image, .protected-media"
+      )
+    ) {
+      event.preventDefault();
     }
-  );
+  });
 
+  document.addEventListener("keydown", (event) => {
+    const viewer =
+      event.target.closest?.(
+        ".project-viewer, .project-lightbox"
+      );
 
-  document.addEventListener(
-    "keydown",
-    (event) => {
-
-      const viewer =
-        event.target.closest?.(
-          ".project-viewer, .project-lightbox"
-        );
-
-      if (!viewer) {
-        return;
-      }
-
-      const key =
-        String(
-          event.key
-        ).toLowerCase();
-
-      if (
-        (event.ctrlKey ||
-          event.metaKey) &&
-        ["s", "u"].includes(key)
-      ) {
-
-        event.preventDefault();
-
-      }
-
+    if (!viewer) {
+      return;
     }
-  );
 
+    const key =
+      String(event.key).toLowerCase();
 
-  document.addEventListener(
-    "keydown",
-    (event) => {
-
-      if (
-        event.key === "Escape"
-      ) {
-
-        closeImageZoom();
-
-      }
-
+    if (
+      (event.ctrlKey || event.metaKey) &&
+      ["s", "u"].includes(key)
+    ) {
+      event.preventDefault();
     }
-  );
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeImageZoom();
+    }
+  });
 }
 
 
-function blockContextMenu(
-  event
-) {
-
+function blockContextMenu(event) {
   event.preventDefault();
 }
 
 
-function blockEvent(
-  event
-) {
-
+function blockEvent(event) {
   event.preventDefault();
 }
