@@ -1762,3 +1762,89 @@ body > .skiptranslate {
 body > .skiptranslate:empty {
   display: none !important;
 }
+
+/* ============================================================
+   CORRECCIONES LIGHTBOX: RESOLUCIÓN, FLECHAS Y GESTOS TÁCTILES
+   ============================================================ */
+.project-lightbox {
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.project-lightbox-inner {
+  position: absolute;
+  inset: 34px;
+  width: auto;
+  height: auto;
+  overflow: hidden;
+  touch-action: none;
+  overscroll-behavior: contain;
+}
+
+.visor-image-modal-image {
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin: 0;
+  max-width: none;
+  max-height: none;
+  transition: none !important;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  touch-action: none;
+}
+
+.project-lightbox-close {
+  z-index: 10;
+}
+
+.project-lightbox-nav {
+  position: absolute;
+  top: 50%;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 58px;
+  padding: 0;
+  transform: translateY(-50%);
+  border: 1px solid rgba(255,255,255,.35);
+  border-radius: 4px;
+  background: rgba(20,20,20,.72);
+  color: #fff;
+  font-family: Arial, sans-serif;
+  font-size: 42px;
+  line-height: 1;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.project-lightbox-nav:hover,
+.project-lightbox-nav:focus-visible {
+  background: rgba(255,255,255,.18);
+  outline: none;
+}
+
+.project-lightbox-nav[hidden] {
+  display: none !important;
+}
+
+.project-lightbox-prev { left: 12px; }
+.project-lightbox-next { right: 12px; }
+
+@media (max-width: 700px) {
+  .project-lightbox { padding: 10px; }
+  .project-lightbox-inner { inset: 56px 8px 56px; }
+  .project-lightbox-nav {
+    top: auto;
+    bottom: 8px;
+    width: 54px;
+    height: 42px;
+    transform: none;
+    font-size: 34px;
+  }
+  .project-lightbox-prev { left: calc(50% - 60px); }
+  .project-lightbox-next { right: calc(50% - 60px); }
+}
