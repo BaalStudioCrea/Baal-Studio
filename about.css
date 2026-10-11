@@ -835,3 +835,61 @@ body > .skiptranslate {
 body > .skiptranslate:empty {
   display: none !important;
 }
+
+/* Zoom estable en la página About */
+#portfolio-modal {
+  overflow: hidden !important;
+  touch-action: none;
+}
+
+#portfolio-modal-content-box {
+  position: absolute !important;
+  inset: 60px 70px !important;
+  display: block !important;
+  width: auto !important;
+  height: auto !important;
+  max-width: none !important;
+  max-height: none !important;
+  overflow: hidden !important;
+  touch-action: none !important;
+}
+
+#portfolio-modal-img {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  display: block !important;
+  margin: 0 !important;
+  max-width: none !important;
+  max-height: none !important;
+  object-fit: fill !important;
+  transform-origin: 0 0 !important;
+  transition: none !important;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  user-select: none;
+  -webkit-user-drag: none;
+  touch-action: none !important;
+}
+
+#portfolio-modal-close,
+#portfolio-modal-prev,
+#portfolio-modal-next {
+  z-index: 10011 !important;
+  touch-action: manipulation;
+}
+
+@media (max-width: 700px) {
+  #portfolio-modal-content-box {
+    inset: 58px 8px 70px !important;
+  }
+
+  #portfolio-modal-prev {
+    left: calc(50% - 62px);
+  }
+
+  #portfolio-modal-next {
+    right: calc(50% - 62px);
+  }
+}
