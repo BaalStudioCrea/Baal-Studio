@@ -70,7 +70,7 @@
         <!-- COLUMNA IZQUIERDA: VISOR DE PORTAFOLIO -->
         <div class="about-home-heading portfolio-column-wrapper">
           <div class="portfolio-viewer-card">
-            
+
             <div class="portfolio-viewer-top">
               <span id="portfolio-counter" class="portfolio-counter">00 / 00</span>
               <button type="button" class="portfolio-zoom-btn" id="portfolio-zoom-btn" aria-label="Ampliar lámina">
@@ -97,8 +97,8 @@
           <div class="portfolio-subtitle-container">
             <span class="portfolio-main-title-label">PORTAFOLIO</span>
             <span class="portfolio-main-title-en">PORTFOLIO</span>
-            
-            <!-- NUEVO: DESPLEGABLE DE ARTÍCULOS -->
+
+            <!-- DESPLEGABLE DE ARTÍCULOS -->
             <div class="articles-dropdown-container">
               <button type="button" class="articles-toggle-btn" id="articles-toggle-btn" aria-expanded="false">
                 <span class="toggle-btn-text">
@@ -125,9 +125,9 @@
           <div class="bilingual-copy">
             <p>Con más de 10 años de práctica en la intersección entre tecnología digital y patrimonio cultural, el estudio ha documentado más de 30 casos entre España y Portugal — desde manufactura prehistórica hasta yacimientos arqueológicos completos.</p>
             <p class="english-copy">With over 10 years of practice at the intersection of digital technology and cultural heritage, the studio has documented more than 30 cases across Spain and Portugal — from prehistoric artifacts to entire archaeological sites.</p>
-            
+
             <div class="copy-separator"></div>
-            
+
             <p>Formado en diseño, conservación, restauración y arqueología, la práctica integra una metodología científica rigurosa con herramientas digitales avanzadas para producir documentación que cumple los más altos estándares de conservación, investigación y gestión.</p>
             <p class="english-copy">Trained in design, conservation, restoration, and archaeology, the practice integrates rigorous scientific methodology with advanced digital tools to produce documentation that meets the highest conservation, research, and management standards.</p>
           </div>
@@ -143,7 +143,7 @@
             <div class="expertise-tag">Fotografía con Drone<span>Drone Photography</span></div>
             <div class="expertise-tag">Difusión<span>Diffusion</span></div>
           </div>
-          
+
           <div class="stats-grid">
             <div class="stat-item">
               <strong>10+</strong>
@@ -172,7 +172,7 @@
     </section>
 
     <!-- =====================================================
-         FORMACIÓN / BACKGROUND 
+         FORMACIÓN / BACKGROUND
          ===================================================== -->
     <section class="about-background-section">
       <div class="section-container about-home-layout">
@@ -301,9 +301,9 @@
        MODAL DE AMPLIACIÓN (ZOOM) CON CONTROLES
        ===================================================== -->
   <div id="portfolio-modal" class="portfolio-modal" aria-hidden="true">
-    
+
     <button id="portfolio-modal-close" class="portfolio-modal-close" aria-label="Cerrar">&times;</button>
-    
+
     <!-- Flechas de navegación del modal -->
     <button id="portfolio-modal-prev" class="portfolio-modal-nav left" aria-label="Anterior">&larr;</button>
     <button id="portfolio-modal-next" class="portfolio-modal-nav right" aria-label="Siguiente">&rarr;</button>
@@ -317,7 +317,7 @@
   <script src="./script.js"></script>
 
   <!-- =====================================================
-       VISOR DINÁMICO DEL PORTAFOLIO Y LOGICA DE ZOOM
+       VISOR DINÁMICO DEL PORTAFOLIO Y LÓGICA DE ZOOM
        ===================================================== -->
   <script>
     document.addEventListener("DOMContentLoaded", async () => {
@@ -332,14 +332,19 @@
       const prevBtn = document.getElementById("portfolio-prev-btn");
       const nextBtn = document.getElementById("portfolio-next-btn");
       const zoomBtn = document.getElementById("portfolio-zoom-btn");
-      
+
       const modalEl = document.getElementById("portfolio-modal");
       const modalImgEl = document.getElementById("portfolio-modal-img");
+
+      // Evita que una transición CSS retrase la posición real durante el zoom con rueda.
+      modalImgEl.style.transformOrigin = "0 0";
+      modalImgEl.style.transition = "none";
+
       const modalCloseBtn = document.getElementById("portfolio-modal-close");
       const modalPrevBtn = document.getElementById("portfolio-modal-prev");
       const modalNextBtn = document.getElementById("portfolio-modal-next");
 
-      // Variables para el Zoom con Rueda y Paneo
+      // Variables para el zoom con rueda y paneo.
       let scale = 1;
       let pointX = 0;
       let pointY = 0;
@@ -347,13 +352,15 @@
       let startY = 0;
       let isPanning = false;
 
-      // Lógica Desplegable Artículos
+      // Lógica desplegable de artículos.
       const articlesToggle = document.getElementById("articles-toggle-btn");
       const articlesDropdown = document.getElementById("articles-dropdown-content");
+
       if (articlesToggle && articlesDropdown) {
         articlesToggle.addEventListener("click", () => {
           articlesDropdown.classList.toggle("active");
           const arrow = articlesToggle.querySelector(".dropdown-arrow");
+
           if (articlesDropdown.classList.contains("active")) {
             arrow.style.transform = "rotate(180deg)";
           } else {
@@ -362,7 +369,7 @@
         });
       }
 
-      // Cargar Portafolio
+      // Cargar portafolio.
       async function loadPortfolio() {
         try {
           const response = await fetch(PORTFOLIO_FUNCTION, {
@@ -370,15 +377,34 @@
             headers: { "Accept": "application/json" },
             cache: "no-store"
           });
+
           if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
           const result = await response.json();
-          if (!result?.success) throw new Error(result?.error || "Error get-portfolio");
-          
-          if (!Array.isArray(result.files) || result.files.length === 0) return [];
+
+          if (!result?.success) {
+            throw new Error(result?.error || "Error get-portfolio");
+          }
+
+          if (!Array.isArray(result.files) || result.files.length === 0) {
+            return [];
+          }
+
           const validFiles = result.files
-            .filter(file => file && typeof file.name === "string" && typeof file.url === "string" && file.url.length > 0)
-            .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: "base" }));
-          
+            .filter(file =>
+              file &&
+              typeof file.name === "string" &&
+              typeof file.url === "string" &&
+              file.url.length > 0
+            )
+            .sort((a, b) =>
+              a.name.localeCompare(
+                b.name,
+                undefined,
+                { numeric: true, sensitivity: "base" }
+              )
+            );
+
           return validFiles;
         } catch (error) {
           console.error("[Baal Studio] Error:", error);
@@ -391,16 +417,20 @@
           counterEl.textContent = "00 / 00";
           return;
         }
+
         const total = String(portfolioFiles.length).padStart(2, "0");
         const current = String(currentIndex + 1).padStart(2, "0");
+
         counterEl.textContent = `${current} / ${total}`;
       }
 
       function showSheet(index) {
         if (!portfolioFiles.length) return;
+
         currentIndex = (index + portfolioFiles.length) % portfolioFiles.length;
+
         const file = portfolioFiles[currentIndex];
-        
+
         if (file?.url) {
           imgEl.src = file.url;
           imgEl.alt = `${file.name} — Portfolio Baal Studio`;
@@ -408,33 +438,35 @@
         }
       }
 
-      // Actualizar la imagen del Modal sin cerrarlo
+      // Actualizar la imagen del modal sin cerrarlo.
       function syncModalImage() {
         if (modalEl.classList.contains("active") && portfolioFiles.length) {
           modalImgEl.src = portfolioFiles[currentIndex].url;
           modalImgEl.alt = portfolioFiles[currentIndex].name;
-          resetZoom(); // Resetea el zoom al cambiar de foto
+          resetZoom();
         }
       }
 
-      // Carga Inicial
+      // Carga inicial.
       portfolioFiles = await loadPortfolio();
+
       if (portfolioFiles.length > 0) {
         showSheet(0);
       } else {
         counterEl.textContent = "00 / 00";
       }
 
-      // Navegación Básica
+      // Navegación básica.
       prevBtn.addEventListener("click", () => showSheet(currentIndex - 1));
       nextBtn.addEventListener("click", () => showSheet(currentIndex + 1));
 
-      // Navegación dentro del Modal
+      // Navegación dentro del modal.
       modalPrevBtn.addEventListener("click", (e) => {
         e.stopPropagation();
         showSheet(currentIndex - 1);
         syncModalImage();
       });
+
       modalNextBtn.addEventListener("click", (e) => {
         e.stopPropagation();
         showSheet(currentIndex + 1);
@@ -442,27 +474,32 @@
       });
 
       /* ------------------------------------------------------
-         LÓGICA DE ZOOM Y ARRSTRE (PAN & ZOOM)
+         LÓGICA DE ZOOM Y ARRASTRE (PAN & ZOOM)
          ------------------------------------------------------ */
-      
+
       const setTransform = () => {
-        modalImgEl.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
+        modalImgEl.style.transform =
+          `translate(${pointX}px, ${pointY}px) scale(${scale})`;
       };
 
       const resetZoom = () => {
         scale = 1;
         pointX = 0;
         pointY = 0;
+        isPanning = false;
         setTransform();
-        modalImgEl.classList.remove('grabbing');
+        modalImgEl.classList.remove("grabbing");
       };
 
       const openZoom = () => {
         if (!imgEl.src || !portfolioFiles.length) return;
+
         modalImgEl.src = imgEl.src;
         modalImgEl.alt = imgEl.alt;
+
         modalEl.classList.add("active");
         modalEl.setAttribute("aria-hidden", "false");
+
         resetZoom();
       };
 
@@ -476,54 +513,75 @@
       };
 
       modalCloseBtn.addEventListener("click", closeZoom);
-      
-      // Cerrar pulsando fuera (evitando flechas e imagen)
+
+      // Cerrar pulsando fuera de la imagen.
       modalEl.addEventListener("click", (event) => {
-        if (event.target === modalEl || event.target.id === 'portfolio-modal-content-box') {
+        if (
+          event.target === modalEl ||
+          event.target.id === "portfolio-modal-content-box"
+        ) {
           closeZoom();
         }
       });
-      
+
       document.addEventListener("keydown", (event) => {
         if (event.key === "Escape" && modalEl.classList.contains("active")) {
           closeZoom();
         }
-        // Soporte para flechas del teclado en el modal
+
+        // Soporte para flechas del teclado en el modal.
         if (event.key === "ArrowLeft" && modalEl.classList.contains("active")) {
-          showSheet(currentIndex - 1); syncModalImage();
+          showSheet(currentIndex - 1);
+          syncModalImage();
         }
+
         if (event.key === "ArrowRight" && modalEl.classList.contains("active")) {
-          showSheet(currentIndex + 1); syncModalImage();
+          showSheet(currentIndex + 1);
+          syncModalImage();
         }
       });
 
-      // Evento de Rueda de Ratón para hacer Zoom hacia el puntero
+      // Zoom con rueda: mantiene el punto situado bajo el cursor.
+      // transform-origin: 0 0 permite calcular la posición de forma estable.
       modalImgEl.addEventListener("wheel", (e) => {
         e.preventDefault();
-        
-        let xs = (e.clientX - pointX) / scale;
-        let ys = (e.clientY - pointY) / scale;
-        let delta = e.deltaY || -e.wheelDelta;
-        
-        // Determinar escala
-        scale *= (delta < 0) ? 1.15 : 0.85;
-        // Limitar Zoom
-        scale = Math.max(1, Math.min(scale, 15)); 
 
-        if (scale === 1) {
-          pointX = 0; 
+        if (!modalEl.classList.contains("active")) return;
+
+        const rect = modalImgEl.getBoundingClientRect();
+        const oldScale = scale;
+
+        // Zoom progresivo para evitar saltos bruscos entre eventos de rueda.
+        const factor = Math.exp(-e.deltaY * 0.0015);
+        const nextScale = Math.max(1, Math.min(15, oldScale * factor));
+
+        if (Math.abs(nextScale - oldScale) < 0.0001) return;
+
+        if (nextScale <= 1) {
+          scale = 1;
+          pointX = 0;
           pointY = 0;
         } else {
-          pointX = e.clientX - xs * scale;
-          pointY = e.clientY - ys * scale;
+          // Recuperar el origen sin transformar para anclar el zoom bajo el cursor.
+          const baseLeft = rect.left - pointX;
+          const baseTop = rect.top - pointY;
+
+          const localX = (e.clientX - rect.left) / oldScale;
+          const localY = (e.clientY - rect.top) / oldScale;
+
+          scale = nextScale;
+
+          pointX = e.clientX - baseLeft - localX * scale;
+          pointY = e.clientY - baseTop - localY * scale;
         }
-        
+
         setTransform();
       }, { passive: false });
 
-      // Paneo con Ratón
+      // Paneo con ratón.
       modalImgEl.addEventListener("mousedown", (e) => {
         e.preventDefault();
+
         if (scale > 1) {
           isPanning = true;
           startX = e.clientX - pointX;
@@ -534,8 +592,10 @@
 
       window.addEventListener("mousemove", (e) => {
         if (!isPanning) return;
+
         pointX = e.clientX - startX;
         pointY = e.clientY - startY;
+
         setTransform();
       });
 
@@ -544,7 +604,7 @@
         modalImgEl.classList.remove("grabbing");
       });
 
-      // Paneo Táctil (Móviles / Tablets)
+      // Paneo táctil para móviles y tabletas.
       modalImgEl.addEventListener("touchstart", (e) => {
         if (scale > 1 && e.touches.length === 1) {
           isPanning = true;
@@ -555,290 +615,290 @@
 
       window.addEventListener("touchmove", (e) => {
         if (!isPanning || e.touches.length !== 1) return;
+
         pointX = e.touches[0].clientX - startX;
         pointY = e.touches[0].clientY - startY;
+
         setTransform();
       }, { passive: false });
 
       window.addEventListener("touchend", () => {
         isPanning = false;
       });
-
     });
   </script>
-  
 
 
-<!-- SELECTOR DE IDIOMAS PERSONALIZADO — BAAL STUDIO -->
-<div
-  class="baal-language-selector notranslate"
-  id="baalLangSelector"
-  translate="no"
->
-  <button
-    type="button"
-    class="baal-lang-current"
-    id="baalLangToggle"
-    aria-expanded="false"
-    aria-controls="baalLangDropdown"
-    aria-label="Seleccionar idioma"
-  >
-    <span id="baalLangCurrentText">Español</span>
-
-    <svg
-      width="10"
-      height="6"
-      viewBox="0 0 10 6"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M1 1L5 5L9 1"
-        stroke="currentColor"
-        stroke-width="1.2"
-        stroke-linecap="round"
-      />
-    </svg>
-  </button>
-
+  <!-- SELECTOR DE IDIOMAS PERSONALIZADO — BAAL STUDIO -->
   <div
-    class="baal-lang-dropdown"
-    id="baalLangDropdown"
-    aria-label="Idiomas disponibles"
+    class="baal-language-selector notranslate"
+    id="baalLangSelector"
+    translate="no"
   >
-    <a href="#" data-lang="es">Español</a>
-    <a href="#" data-lang="de">Deutsch</a>
-    <a href="#" data-lang="ar">العربية</a>
-    <a href="#" data-lang="zh-CN">中文</a>
-    <a href="#" data-lang="fr">Français</a>
-    <a href="#" data-lang="en">English</a>
-    <a href="#" data-lang="it">Italiano</a>
-    <a href="#" data-lang="ja">日本語</a>
-    <a href="#" data-lang="pt">Português</a>
-    <a href="#" data-lang="ru">Русский</a>
+    <button
+      type="button"
+      class="baal-lang-current"
+      id="baalLangToggle"
+      aria-expanded="false"
+      aria-controls="baalLangDropdown"
+      aria-label="Seleccionar idioma"
+    >
+      <span id="baalLangCurrentText">Español</span>
+
+      <svg
+        width="10"
+        height="6"
+        viewBox="0 0 10 6"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M1 1L5 5L9 1"
+          stroke="currentColor"
+          stroke-width="1.2"
+          stroke-linecap="round"
+        />
+      </svg>
+    </button>
+
+    <div
+      class="baal-lang-dropdown"
+      id="baalLangDropdown"
+      aria-label="Idiomas disponibles"
+    >
+      <a href="#" data-lang="es">Español</a>
+      <a href="#" data-lang="de">Deutsch</a>
+      <a href="#" data-lang="ar">العربية</a>
+      <a href="#" data-lang="zh-CN">中文</a>
+      <a href="#" data-lang="fr">Français</a>
+      <a href="#" data-lang="en">English</a>
+      <a href="#" data-lang="it">Italiano</a>
+      <a href="#" data-lang="ja">日本語</a>
+      <a href="#" data-lang="pt">Português</a>
+      <a href="#" data-lang="ru">Русский</a>
+    </div>
   </div>
-</div>
 
-<!-- Google Translate: motor de traducción oculto -->
-<div id="google_translate_element" aria-hidden="true"></div>
+  <!-- Google Translate: motor de traducción oculto -->
+  <div id="google_translate_element" aria-hidden="true"></div>
 
-<script>
-(function () {
-  "use strict";
+  <script>
+  (function () {
+    "use strict";
 
-  const LANGUAGES = {
-    es: "Español",
-    de: "Deutsch",
-    ar: "العربية",
-    "zh-CN": "中文",
-    fr: "Français",
-    en: "English",
-    it: "Italiano",
-    ja: "日本語",
-    pt: "Português",
-    ru: "Русский"
-  };
+    const LANGUAGES = {
+      es: "Español",
+      de: "Deutsch",
+      ar: "العربية",
+      "zh-CN": "中文",
+      fr: "Français",
+      en: "English",
+      it: "Italiano",
+      ja: "日本語",
+      pt: "Português",
+      ru: "Русский"
+    };
 
-  function initBaalLanguageSelector() {
-    const selector = document.getElementById("baalLangSelector");
-    const toggle = document.getElementById("baalLangToggle");
-    const currentText = document.getElementById("baalLangCurrentText");
-    const dropdown = document.getElementById("baalLangDropdown");
+    function initBaalLanguageSelector() {
+      const selector = document.getElementById("baalLangSelector");
+      const toggle = document.getElementById("baalLangToggle");
+      const currentText = document.getElementById("baalLangCurrentText");
+      const dropdown = document.getElementById("baalLangDropdown");
 
-    if (!selector || !toggle || !currentText || !dropdown) {
-      return;
-    }
-
-    let savedLanguage = "es";
-
-    try {
-      savedLanguage =
-        localStorage.getItem("baalSelectedLanguage") || "es";
-    } catch (error) {
-      savedLanguage = "es";
-    }
-
-    currentText.textContent = LANGUAGES[savedLanguage] || "Español";
-
-    function closeDropdown() {
-      selector.classList.remove("is-open");
-      toggle.setAttribute("aria-expanded", "false");
-    }
-
-    toggle.addEventListener("click", function (event) {
-      event.stopPropagation();
-
-      const isOpen = selector.classList.toggle("is-open");
-      toggle.setAttribute("aria-expanded", String(isOpen));
-    });
-
-    document.addEventListener("click", function (event) {
-      if (!selector.contains(event.target)) {
-        closeDropdown();
+      if (!selector || !toggle || !currentText || !dropdown) {
+        return;
       }
-    });
 
-    document.addEventListener("keydown", function (event) {
-      if (event.key === "Escape") {
-        closeDropdown();
+      let savedLanguage = "es";
+
+      try {
+        savedLanguage =
+          localStorage.getItem("baalSelectedLanguage") || "es";
+      } catch (error) {
+        savedLanguage = "es";
       }
-    });
 
-    dropdown.querySelectorAll("a[data-lang]").forEach(function (link) {
-      link.addEventListener("click", function (event) {
-        event.preventDefault();
+      currentText.textContent = LANGUAGES[savedLanguage] || "Español";
 
-        const targetLanguage = link.getAttribute("data-lang");
+      function closeDropdown() {
+        selector.classList.remove("is-open");
+        toggle.setAttribute("aria-expanded", "false");
+      }
 
-        if (!LANGUAGES[targetLanguage]) {
-          return;
-        }
+      toggle.addEventListener("click", function (event) {
+        event.stopPropagation();
 
-        closeDropdown();
+        const isOpen = selector.classList.toggle("is-open");
+        toggle.setAttribute("aria-expanded", String(isOpen));
+      });
 
-        // Restaurar el idioma original sin recargar toda la página.
-if (targetLanguage === "es") {
-  try {
-    localStorage.removeItem("baalSelectedLanguage");
-  } catch (error) {
-    // Continuar aunque el almacenamiento no esté disponible.
-  }
-
-  currentText.textContent = "Español";
-
-  const googleSelect = document.querySelector(".goog-te-combo");
-
-  if (googleSelect) {
-    googleSelect.value = "es";
-    googleSelect.dispatchEvent(
-      new Event("change", { bubbles: true })
-    );
-  } else {
-    // Si el motor no está disponible, restaurar mediante recarga.
-    clearGoogleTranslateCookie();
-    window.location.reload();
-  }
-
-  return;
-}
-
-        // Actualizar el idioma mostrado en el botón.
-        currentText.textContent = LANGUAGES[targetLanguage];
-
-        try {
-          localStorage.setItem("baalSelectedLanguage", targetLanguage);
-        } catch (error) {
-          // La traducción puede funcionar sin almacenamiento local.
-        }
-
-        const googleSelect = document.querySelector(".goog-te-combo");
-
-        if (googleSelect) {
-          googleSelect.value = targetLanguage;
-          googleSelect.dispatchEvent(
-            new Event("change", { bubbles: true })
-          );
-        } else {
-          loadGoogleTranslate(function () {
-            const select = document.querySelector(".goog-te-combo");
-
-            if (select) {
-              select.value = targetLanguage;
-              select.dispatchEvent(
-                new Event("change", { bubbles: true })
-              );
-            }
-          });
+      document.addEventListener("click", function (event) {
+        if (!selector.contains(event.target)) {
+          closeDropdown();
         }
       });
-    });
-  }
 
-  function clearGoogleTranslateCookie() {
-    const expired =
-      "expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
-    const hostname = window.location.hostname;
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+          closeDropdown();
+        }
+      });
 
-    document.cookie = "googtrans=; " + expired;
-    document.cookie =
-      "googtrans=; " + expired + " domain=" + hostname + ";";
+      dropdown.querySelectorAll("a[data-lang]").forEach(function (link) {
+        link.addEventListener("click", function (event) {
+          event.preventDefault();
 
-    if (hostname.indexOf(".") !== -1) {
+          const targetLanguage = link.getAttribute("data-lang");
+
+          if (!LANGUAGES[targetLanguage]) {
+            return;
+          }
+
+          closeDropdown();
+
+          // Restaurar el idioma original sin recargar toda la página.
+          if (targetLanguage === "es") {
+            try {
+              localStorage.removeItem("baalSelectedLanguage");
+            } catch (error) {
+              // Continuar aunque el almacenamiento no esté disponible.
+            }
+
+            currentText.textContent = "Español";
+
+            const googleSelect = document.querySelector(".goog-te-combo");
+
+            if (googleSelect) {
+              googleSelect.value = "es";
+              googleSelect.dispatchEvent(
+                new Event("change", { bubbles: true })
+              );
+            } else {
+              // Si el motor no está disponible, restaurar mediante recarga.
+              clearGoogleTranslateCookie();
+              window.location.reload();
+            }
+
+            return;
+          }
+
+          // Actualizar el idioma mostrado en el botón.
+          currentText.textContent = LANGUAGES[targetLanguage];
+
+          try {
+            localStorage.setItem("baalSelectedLanguage", targetLanguage);
+          } catch (error) {
+            // La traducción puede funcionar sin almacenamiento local.
+          }
+
+          const googleSelect = document.querySelector(".goog-te-combo");
+
+          if (googleSelect) {
+            googleSelect.value = targetLanguage;
+            googleSelect.dispatchEvent(
+              new Event("change", { bubbles: true })
+            );
+          } else {
+            loadGoogleTranslate(function () {
+              const select = document.querySelector(".goog-te-combo");
+
+              if (select) {
+                select.value = targetLanguage;
+                select.dispatchEvent(
+                  new Event("change", { bubbles: true })
+                );
+              }
+            });
+          }
+        });
+      });
+    }
+
+    function clearGoogleTranslateCookie() {
+      const expired =
+        "expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
+      const hostname = window.location.hostname;
+
+      document.cookie = "googtrans=; " + expired;
       document.cookie =
-        "googtrans=; " + expired + " domain=." + hostname + ";";
-    }
-  }
+        "googtrans=; " + expired + " domain=" + hostname + ";";
 
-  function loadGoogleTranslate(callback) {
-    if (document.querySelector(".goog-te-combo")) {
-      if (callback) callback();
-      return;
+      if (hostname.indexOf(".") !== -1) {
+        document.cookie =
+          "googtrans=; " + expired + " domain=." + hostname + ";";
+      }
     }
 
-    if (window.baalGoogleTranslateLoading) {
-      const waitForGoogle = function () {
-        if (document.querySelector(".goog-te-combo")) {
-          if (callback) callback();
-        } else {
-          window.setTimeout(waitForGoogle, 150);
-        }
+    function loadGoogleTranslate(callback) {
+      if (document.querySelector(".goog-te-combo")) {
+        if (callback) callback();
+        return;
+      }
+
+      if (window.baalGoogleTranslateLoading) {
+        const waitForGoogle = function () {
+          if (document.querySelector(".goog-te-combo")) {
+            if (callback) callback();
+          } else {
+            window.setTimeout(waitForGoogle, 150);
+          }
+        };
+
+        waitForGoogle();
+        return;
+      }
+
+      window.baalGoogleTranslateLoading = true;
+
+      window.googleTranslateElementInit = function () {
+        new google.translate.TranslateElement(
+          {
+            pageLanguage: "es",
+            includedLanguages: "de,ar,zh-CN,fr,en,it,ja,pt,ru,es",
+            autoDisplay: false
+          },
+          "google_translate_element"
+        );
+
+        const waitForGoogle = function () {
+          const select = document.querySelector(".goog-te-combo");
+
+          if (select) {
+            window.baalGoogleTranslateLoading = false;
+
+            if (callback) callback();
+          } else {
+            window.setTimeout(waitForGoogle, 150);
+          }
+        };
+
+        waitForGoogle();
       };
 
-      waitForGoogle();
-      return;
+      const script = document.createElement("script");
+
+      script.src =
+        "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+      script.async = true;
+
+      script.onerror = function () {
+        window.baalGoogleTranslateLoading = false;
+      };
+
+      document.head.appendChild(script);
     }
 
-    window.baalGoogleTranslateLoading = true;
-
-    window.googleTranslateElementInit = function () {
-      new google.translate.TranslateElement(
-        {
-          pageLanguage: "es",
-          includedLanguages: "de,ar,zh-CN,fr,en,it,ja,pt,ru,es",
-          autoDisplay: false
-        },
-        "google_translate_element"
+    if (document.readyState === "loading") {
+      document.addEventListener(
+        "DOMContentLoaded",
+        initBaalLanguageSelector
       );
+    } else {
+      initBaalLanguageSelector();
+    }
 
-      const waitForGoogle = function () {
-        const select = document.querySelector(".goog-te-combo");
-
-        if (select) {
-          window.baalGoogleTranslateLoading = false;
-
-          if (callback) callback();
-        } else {
-          window.setTimeout(waitForGoogle, 150);
-        }
-      };
-
-      waitForGoogle();
-    };
-
-    const script = document.createElement("script");
-
-    script.src =
-      "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-    script.async = true;
-
-    script.onerror = function () {
-      window.baalGoogleTranslateLoading = false;
-    };
-
-    document.head.appendChild(script);
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener(
-      "DOMContentLoaded",
-      initBaalLanguageSelector
-    );
-  } else {
-    initBaalLanguageSelector();
-  }
-
-  loadGoogleTranslate();
-})();
-</script>
+    loadGoogleTranslate();
+  })();
+  </script>
 </body>
 </html>
