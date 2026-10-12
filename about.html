@@ -427,7 +427,8 @@
         pointX = (box.width - modalImgEl.naturalWidth * scale) / 2;
         pointY = (box.height - modalImgEl.naturalHeight * scale) / 2;
 
-        setTransform();
+        // Se aplica applyTransform() en lugar de setTransform() para alinear correctamente en móvil y PC
+        applyTransform();
       }
 
       function resetZoom() {
@@ -548,7 +549,7 @@
       // Paneo fluido con ratón / touch (Pointer Events)
       modalBox.addEventListener("pointerdown", (event) => {
         if (event.target.closest("button")) return;
-        if (scale <= fitScale + 0.0001) return; // Solo arrastrar si está ampliado
+        if (scale <= fitScale + 0.0001) return;
 
         event.preventDefault();
         isPanning = true;
