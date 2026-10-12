@@ -340,7 +340,7 @@ function renderCarouselBlock(block, index) {
   const carouselId = `project-carousel-${index}`;
 
   return `
-    <section class="project-block project-carousel-block" data-carousel="${carouselId}" data-current-index="0">
+    <section class="project-block project-carousel-block" data-carousel="${carouselId}">
       <div class="portfolio-media-viewer">
         <button
           type="button"
@@ -706,14 +706,11 @@ function initialiseCarousels() {
     const counter = carousel.querySelector("[data-carousel-current]");
 
     let current = 0;
-    carousel.dataset.currentIndex = "0";
 
     function update() {
       images.forEach((image, index) => {
         image.classList.toggle("is-active", index === current);
       });
-
-      carousel.dataset.currentIndex = String(current);
 
       if (counter) {
         counter.textContent = String(current + 1).padStart(2, "0");
@@ -754,8 +751,9 @@ function initialiseMediaZoom() {
 
       if (mediaBlock.classList.contains("project-carousel-block")) {
         allImages = Array.from(mediaBlock.querySelectorAll(".project-carousel-image"));
-        activeIndex = parseInt(mediaBlock.dataset.currentIndex || "0", 10);
-        if (isNaN(activeIndex) || activeIndex < 0) activeIndex = 0;
+        const activeImg = mediaBlock.querySelector(".project-carousel-image.is-active");
+        activeIndex = activeImg ? allImages.indexOf(activeImg) : 0;
+        if (activeIndex === -1) activeIndex = 0;
       } else if (mediaBlock.classList.contains("project-comparator-block")) {
         const comparatorImgs = Array.from(mediaBlock.querySelectorAll(".project-comparator-image img"));
         const clickedCompDiv = button.closest(".project-comparator-image");
