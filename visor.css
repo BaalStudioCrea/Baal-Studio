@@ -284,7 +284,6 @@ body.project-viewer-page {
   background: var(--visor-dark-2);
 }
 
-/* Transición limpia y sin parpadeos para el carrusel */
 .project-carousel-image {
   display: none;
   width: 100%;
