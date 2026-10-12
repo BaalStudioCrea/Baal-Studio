@@ -252,12 +252,13 @@
   top: 0;
   left: 0;
   width: 100vw;
+  height: 100dvh;
   height: 100vh;
   background: rgba(0, 0, 0, 0.95);
   z-index: 9999;
   justify-content: center;
   align-items: center;
-  padding: 30px;
+  padding: 0;
   box-sizing: border-box;
   overflow: hidden;
 }
@@ -267,8 +268,8 @@
 }
 
 .portfolio-modal-content-box {
-  max-width: 90vw;
-  max-height: 88vh;
+  width: 90vw;
+  height: 88vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -293,8 +294,8 @@
 .portfolio-modal-close {
   position: absolute;
   z-index: 10011;
-  top: 25px;
-  right: 30px;
+  top: 15px;
+  right: 20px;
   background: none;
   border: none;
   color: #ffffff;
@@ -696,9 +697,17 @@ footer, .site-footer, #footer {
     gap: 25px 15px;
   }
 
-  /* Ajuste preciso del contenedor modal en móvil para ocupar toda el área sin cortes verticales */
+  /* Contenedor modal adaptado a la altura real del viewport móvil (evita recortes inferiores) */
+  .portfolio-modal {
+    height: 100dvh;
+    height: 100vh;
+  }
+
   #portfolio-modal-content-box {
-    inset: 44px 8px 54px !important;
+    width: calc(100vw - 16px) !important;
+    height: calc(100dvh - 80px) !important;
+    max-width: none !important;
+    max-height: none !important;
   }
 
   /* Posicionamiento correcto de las flechas en los márgenes laterales en móvil */
