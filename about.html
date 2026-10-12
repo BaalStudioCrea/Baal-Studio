@@ -14,6 +14,9 @@
 
 <body>
 
+  <!-- ============================================================
+     1. ENCABEZADO PRINCIPAL (HEADER)
+     ============================================================ -->
   <header class="main-header about-header" id="main-header">
     <div class="header-inner">
       <a href="./index.html" class="header-logo-link" aria-label="Baal Studio — Inicio">
@@ -56,10 +59,14 @@
     </div>
   </header>
 
+  <!-- ============================================================
+     2. SECCIÓN HERO Y PORTAFOLIO PRINCIPAL
+     ============================================================ -->
   <main>
     <section class="about-page-hero">
       <div class="section-container about-home-layout">
 
+        <!-- Columna Izquierda: Visor de Portafolio e Inmersión -->
         <div class="about-home-heading portfolio-column-wrapper">
           <div class="portfolio-viewer-card">
 
@@ -106,6 +113,7 @@
           </div>
         </div>
 
+        <!-- Columna Derecha: Biografía y Contenido Bilingüe -->
         <div class="about-home-content about-hero-content">
           <p class="section-kicker">Especialista en Documentación del Patrimonio</p>
           <p class="section-kicker-en">Heritage Documentation Specialist</p>
@@ -160,6 +168,9 @@
       </div>
     </section>
 
+    <!-- ============================================================
+       3. SECCIÓN DE FORMACIÓN / BACKGROUND
+       ============================================================ -->
     <section class="about-background-section">
       <div class="section-container about-home-layout">
         <div class="about-home-heading">
@@ -187,6 +198,9 @@
       </div>
     </section>
 
+    <!-- ============================================================
+       4. SECCIÓN DE HERRAMIENTAS Y SOFTWARE (TOOLS)
+       ============================================================ -->
     <section class="tools-section">
       <div class="section-container about-home-layout">
         <div class="about-home-heading">
@@ -250,6 +264,9 @@
     </section>
   </main>
 
+  <!-- ============================================================
+     5. FOOTER GLOBAL
+     ============================================================ -->
   <footer class="main-footer">
     <div class="footer-container">
       <div class="footer-top">
@@ -285,6 +302,9 @@
     </div>
   </footer>
 
+  <!-- ============================================================
+     6. MODAL DE ZOOM Y LIGHTBOX (VISOR DE LÁMINAS)
+     ============================================================ -->
   <div id="portfolio-modal" class="portfolio-modal" aria-hidden="true">
     <button id="portfolio-modal-close" class="portfolio-modal-close" aria-label="Cerrar">&times;</button>
     <button id="portfolio-modal-prev" class="portfolio-modal-nav left" aria-label="Anterior">&larr;</button>
@@ -297,6 +317,7 @@
 
   <script src="./script.js"></script>
 
+  <!-- Script de Control del Portafolio y Motor de Zoom Robusto -->
   <script>
     document.addEventListener("DOMContentLoaded", async () => {
       const PORTFOLIO_FUNCTION = "https://hlyzyeatnbulyfiiwvsq.supabase.co/functions/v1/get-portfolio";
@@ -344,16 +365,18 @@
       modalImgEl.style.zIndex = "1";
 
       /* ------------------------------------------------------
-         ZOOM Y DESPLAZAMIENTO ESTABLE
+         ZOOM Y DESPLAZAMIENTO ESTABLE (PAN & ZOOM)
          ------------------------------------------------------ */
 
       let scale = 1;
       let fitScale = 1;
       let pointX = 0;
       let pointY = 0;
-      let gesture = null;
-      let suppressClick = false;
-      const pointers = new Map();
+      let isPanning = false;
+      let pointerMoved = false;
+      let pointerStartX = 0;
+      let pointerStartY = 0;
+      let suppressClickUntil = 0;
 
       function setTransform() {
         modalImgEl.style.transform =
@@ -411,8 +434,8 @@
         scale = fitScale || 1;
         pointX = 0;
         pointY = 0;
-        gesture = null;
-        pointers.clear();
+        isPanning = false;
+        pointerMoved = false;
         modalImgEl.classList.remove("grabbing");
 
         if (modalImgEl.complete && modalImgEl.naturalWidth) {
@@ -469,9 +492,9 @@
         modalEl.setAttribute("aria-hidden", "true");
         document.body.style.overflow = "";
 
-        pointers.clear();
-        gesture = null;
-        suppressClick = false;
+        isPanning = false;
+        pointerMoved = false;
+        suppressClickUntil = 0;
         modalImgEl.classList.remove("grabbing");
       }
 
@@ -482,15 +505,12 @@
       modalImgEl.addEventListener("load", fitModalImage);
 
       modalEl.addEventListener("click", (event) => {
-        if (
-          event.target === modalEl ||
-          event.target === modalBox
-        ) {
+        if (event.target === modalEl && !pointerMoved) {
           closeZoom();
         }
       });
 
-      // Zoom con rueda, centrado en la posición del puntero.
+      // Zoom con rueda de ratón, centrado en el cursor.
       modalBox.addEventListener("wheel", (event) => {
         if (!modalEl.classList.contains("active")) return;
 
@@ -502,10 +522,10 @@
         );
       }, { passive: false });
 
-      // Un clic/tap amplía; otro clic/tap vuelve al encuadre.
+      // Un clic/tap amplía; otro clic/tap vuelve al encuadre inicial.
       modalImgEl.addEventListener("click", (event) => {
-        if (suppressClick) {
-          suppressClick = false;
+        if (Date.now() < suppressClickUntil || pointerMoved) {
+          pointerMoved = false;
           return;
         }
 
@@ -525,134 +545,45 @@
         }
       });
 
-      // Arrastre con ratón y gestos táctiles con Pointer Events.
+      // Paneo fluido con ratón / touch (Pointer Events)
       modalBox.addEventListener("pointerdown", (event) => {
         if (event.target.closest("button")) return;
+        if (scale <= fitScale + 0.0001) return; // Solo arrastrar si está ampliado
 
         event.preventDefault();
+        isPanning = true;
+        pointerMoved = false;
+        pointerStartX = event.clientX;
+        pointerStartY = event.clientY;
+        startX = event.clientX - pointX;
+        startY = event.clientY - pointY;
 
-        pointers.set(event.pointerId, {
-          x: event.clientX,
-          y: event.clientY
-        });
-
-        try {
-          modalBox.setPointerCapture(event.pointerId);
-        } catch (_) {}
-
-        if (pointers.size === 1) {
-          gesture = {
-            type: "pan",
-            startX: event.clientX,
-            startY: event.clientY,
-            imageX: pointX,
-            imageY: pointY,
-            moved: false
-          };
-        } else if (pointers.size === 2) {
-          const points = Array.from(pointers.values());
-          gesture = {
-            type: "pinch",
-            startDistance: Math.hypot(
-              points[1].x - points[0].x,
-              points[1].y - points[0].y
-            ),
-            startScale: scale
-          };
-        }
+        modalImgEl.classList.add("grabbing");
       });
 
-      modalBox.addEventListener("pointermove", (event) => {
-        if (!pointers.has(event.pointerId) || !gesture) return;
+      window.addEventListener("pointermove", (event) => {
+        if (!isPanning) return;
 
-        event.preventDefault();
-
-        pointers.set(event.pointerId, {
-          x: event.clientX,
-          y: event.clientY
-        });
-
-        if (pointers.size >= 2) {
-          const points = Array.from(pointers.values()).slice(0, 2);
-          const distance = Math.hypot(
-            points[1].x - points[0].x,
-            points[1].y - points[0].y
-          );
-
-          const centerX = (points[0].x + points[1].x) / 2;
-          const centerY = (points[0].y + points[1].y) / 2;
-          const box = modalBox.getBoundingClientRect();
-          const localX = centerX - box.left;
-          const localY = centerY - box.top;
-          const oldScale = scale;
-
-          const nextScale = Math.max(
-            fitScale,
-            Math.min(
-              fitScale * 8,
-              gesture.startScale * distance / Math.max(gesture.startDistance, 1)
-            )
-          );
-
-          const imageX = (localX - pointX) / oldScale;
-          const imageY = (localY - pointY) / oldScale;
-
-          scale = nextScale;
-          pointX = localX - imageX * scale;
-          pointY = localY - imageY * scale;
-
-          suppressClick = true;
-          applyTransform();
-          return;
+        if (
+          Math.abs(event.clientX - pointerStartX) > 3 ||
+          Math.abs(event.clientY - pointerStartY) > 3
+        ) {
+          pointerMoved = true;
         }
 
-        if (pointers.size === 1) {
-          const pointer = pointers.get(event.pointerId);
-          const dx = pointer.x - gesture.startX;
-          const dy = pointer.y - gesture.startY;
+        pointX = event.clientX - startX;
+        pointY = event.clientY - startY;
 
-          if (Math.abs(dx) + Math.abs(dy) > 3) {
-            gesture.moved = true;
-            suppressClick = true;
-          }
-
-          if (gesture.moved && scale > fitScale) {
-            pointX = gesture.imageX + dx;
-            pointY = gesture.imageY + dy;
-            modalImgEl.classList.add("grabbing");
-            applyTransform();
-          }
-        }
+        setTransform();
       });
 
-      function endPointer(event) {
-        pointers.delete(event.pointerId);
-
-        if (pointers.size === 0) {
-          gesture = null;
-          modalImgEl.classList.remove("grabbing");
-
-          if (suppressClick) {
-            setTimeout(() => {
-              suppressClick = false;
-            }, 0);
-          }
-        } else if (pointers.size === 1) {
-          const remaining = Array.from(pointers.values())[0];
-          gesture = {
-            type: "pan",
-            startX: remaining.x,
-            startY: remaining.y,
-            imageX: pointX,
-            imageY: pointY,
-            moved: true
-          };
+      window.addEventListener("pointerup", () => {
+        if (isPanning && pointerMoved) {
+          suppressClickUntil = Date.now() + 250;
         }
-      }
-
-      modalBox.addEventListener("pointerup", endPointer);
-      modalBox.addEventListener("pointercancel", endPointer);
-      modalBox.addEventListener("lostpointercapture", endPointer);
+        isPanning = false;
+        modalImgEl.classList.remove("grabbing");
+      });
 
       window.addEventListener("resize", () => {
         if (modalEl.classList.contains("active")) {
@@ -807,6 +738,9 @@
     });
   </script>
 
+  <!-- ============================================================
+     7. SELECTOR DE IDIOMAS Y TRADUCCIÓN GLOBAL
+     ============================================================ -->
   <div class="baal-language-selector notranslate" id="baalLangSelector" translate="no">
     <button type="button" class="baal-lang-current" id="baalLangToggle" aria-expanded="false" aria-controls="baalLangDropdown" aria-label="Seleccionar idioma">
       <span id="baalLangCurrentText">Español</span>
@@ -901,9 +835,7 @@
             if (targetLanguage === "es") {
               try {
                 localStorage.removeItem("baalSelectedLanguage");
-              } catch (error) {
-                // El idioma original se puede restaurar sin almacenamiento.
-              }
+              } catch (error) {}
 
               currentText.textContent = "Español";
 
@@ -924,9 +856,7 @@
 
             try {
               localStorage.setItem("baalSelectedLanguage", targetLanguage);
-            } catch (error) {
-              // La traducción puede funcionar sin almacenamiento local.
-            }
+            } catch (error) {}
 
             const googleSelect = document.querySelector(".goog-te-combo");
 
