@@ -3,17 +3,17 @@
    ABOUT.CSS — ESTILOS ESPECÍFICOS PARA LA PÁGINA "SOBRE MÍ"
    ============================================================ */
 
-/* ------------------------------------------------------------
-   HEADER ESPECÍFICO (FONDO OSCURO)
-   ------------------------------------------------------------ */
+/* ============================================================
+   1. ENCABEZADO ESPECÍFICO (HEADER)
+   ============================================================ */
 .about-header {
   background-color: #111111 !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* ------------------------------------------------------------
-   HERO DE LA PÁGINA
-   ------------------------------------------------------------ */
+/* ============================================================
+   2. HERO Y PORTAFOLIO PRINCIPAL
+   ============================================================ */
 .about-page-hero {
   background: #111111;
   color: #ffffff;
@@ -21,9 +21,6 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* ------------------------------------------------------------
-   VISOR DE PORTAFOLIO EN HERO (COLUMNA IZQUIERDA CENTRADA)
-   ------------------------------------------------------------ */
 .portfolio-column-wrapper {
   display: flex;
   flex-direction: column;
@@ -76,7 +73,6 @@
   transition: all 0.2s ease;
 }
 
-/* Asegura que el icono de lupa se dibuje también en móviles/tabletas. */
 .portfolio-zoom-btn svg {
   display: block !important;
   width: 15px;
@@ -102,7 +98,6 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  border: 0px solid rgba(255, 255, 255, 0.05);
 }
 
 .portfolio-img {
@@ -113,15 +108,10 @@
   transition: transform 0.25s ease;
 }
 
-.portfolio-img:hover {
-  transform: (1.00);
-}
-
 .portfolio-controls {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-top: 0px solid rgba(255, 255, 255, 0.08);
   padding-top: 8px;
 }
 
@@ -143,7 +133,7 @@
   border-color: #ffffff;
 }
 
-/* SUBTÍTULO Y DESPLEGABLE DE ARTÍCULOS */
+/* Subtítulos y Desplegable de Artículos */
 .portfolio-subtitle-container {
   text-align: center;
   width: 100%;
@@ -171,7 +161,6 @@
   margin-top: 2px;
 }
 
-/* Contenedor del desplegable */
 .articles-dropdown-container {
   margin-top: 6px;
   position: relative;
@@ -254,9 +243,9 @@
   text-decoration: underline;
 }
 
-/* ------------------------------------------------------------
-   MODAL DE AMPLIACIÓN (ZOOM) Y SUS CONTROLES
-   ------------------------------------------------------------ */
+/* ============================================================
+   3. MODAL DE ZOOM Y LIGHTBOX
+   ============================================================ */
 .portfolio-modal {
   display: none;
   position: fixed;
@@ -291,8 +280,6 @@
   object-fit: contain;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  
-  /* Preparación para el Paneo/Zoom por JS */
   transform-origin: 0 0;
   cursor: grab;
   will-change: transform;
@@ -316,55 +303,50 @@
   line-height: 1;
   opacity: 0.7;
   transition: opacity 0.2s ease;
-  z-index: 10011;
 }
 
 .portfolio-modal-close:hover {
   opacity: 1;
 }
 
-/* Flechas Laterales del Modal */
+/* Flechas Laterales del Modal de Zoom */
 .portfolio-modal-nav {
   position: absolute;
   z-index: 10010;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(17, 17, 17, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(17, 17, 17, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   color: #ffffff;
   font-family: var(--font-body);
   font-size: 20px;
-  width: 45px;
-  height: 45px;
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
   cursor: pointer;
-  z-index: 10010;
+  backdrop-filter: blur(4px);
   transition: background 0.2s, border-color 0.2s, transform 0.2s;
 }
 
 .portfolio-modal-nav:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.2);
   border-color: #ffffff;
 }
 
-.portfolio-modal-nav:active {
-  transform: translateY(-50%) scale(0.95);
-}
-
 .portfolio-modal-nav.left {
-  left: 20px;
+  left: 24px;
 }
 
 .portfolio-modal-nav.right {
-  right: 20px;
+  right: 24px;
 }
 
-/* ------------------------------------------------------------
-   TÍTULOS Y CONTENIDO DERECHO
-   ------------------------------------------------------------ */
+/* ============================================================
+   4. CONTENIDO, BIOGRAFÍA Y ESTADÍSTICAS
+   ============================================================ */
 .about-page-hero .section-kicker,
 .about-background-section .section-kicker,
 .tools-section .section-kicker {
@@ -414,7 +396,6 @@
   margin: 20px 0;
 }
 
-/* Etiquetas de Especialidad */
 .expertise-tags {
   display: flex;
   flex-wrap: wrap;
@@ -440,7 +421,6 @@
   font-weight: 400;
 }
 
-/* Stats Grid */
 .about-hero-content .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -477,9 +457,9 @@
   display: block;
 }
 
-/* ------------------------------------------------------------
-   SECCIÓN DE FORMACIÓN / BACKGROUND
-   ------------------------------------------------------------ */
+/* ============================================================
+   5. SECCIÓN DE FORMACIÓN / BACKGROUND
+   ============================================================ */
 .about-background-section {
   background: #ffffff;
   padding: var(--section-space) 0;
@@ -512,9 +492,9 @@
   margin: 24px 0;
 }
 
-/* ------------------------------------------------------------
-   SECCIÓN DE HERRAMIENTAS Y SOFTWARE
-   ------------------------------------------------------------ */
+/* ============================================================
+   6. SECCIÓN DE HERRAMIENTAS Y SOFTWARE (TOOLS)
+   ============================================================ */
 .tools-section {
   background: var(--bg);
   padding: var(--section-space) 0;
@@ -591,34 +571,11 @@
   background: #e9e7e2;
   border: 1px solid var(--light-gray);
   font-weight: 400;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
-}
-
-.tool-group li:hover {
-  background: #e3e0d7;
-  border-color: rgba(0, 0, 0, 0.2);
-}
-
-/* ------------------------------------------------------------
-   RESPONSIVE
-   ------------------------------------------------------------ */
-@media (max-width: 1000px) {
-  .tools-category-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 700px) {
-  .about-hero-content .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 25px 15px;
-  }
 }
 
 /* ============================================================
-   SELECTOR DE IDIOMAS PERSONALIZADO — BAAL STUDIO
+   7. SELECTOR DE IDIOMAS Y TRADUCCIÓN GLOBAL
    ============================================================ */
-
 .baal-language-selector {
   position: fixed;
   bottom: 24px;
@@ -627,7 +584,6 @@
   font-family: var(--font-body, Inter, sans-serif);
 }
 
-/* Mantener el selector por encima del contenido traducido. */
 .baal-language-selector,
 .baal-language-selector * {
   box-sizing: border-box;
@@ -640,16 +596,13 @@
   gap: 12px;
   min-width: 130px;
   padding: 10px 16px;
-
   background: rgba(24, 24, 24, 0.92);
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 3px;
-
   color: #ffffff;
   font-size: 10px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-
   cursor: pointer;
   backdrop-filter: blur(8px);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
@@ -659,12 +612,6 @@
 .baal-lang-current:hover {
   border-color: rgba(255, 255, 255, 0.5);
   background: rgba(24, 24, 24, 0.98);
-}
-
-.baal-lang-current:focus-visible,
-.baal-lang-dropdown a:focus-visible {
-  outline: 2px solid #B08A57;
-  outline-offset: 3px;
 }
 
 .baal-lang-current svg {
@@ -677,29 +624,20 @@
   transform: rotate(180deg);
 }
 
-/* ============================================================
-   DESPLEGABLE DE IDIOMAS
-   ============================================================ */
-
 .baal-lang-dropdown {
   position: absolute;
   bottom: calc(100% + 8px);
   left: 0;
   z-index: 100000;
-
   display: none;
   flex-direction: column;
-
   width: 160px;
   max-height: min(65vh, 420px);
   overflow-y: auto;
-
   padding: 6px 0;
-
   background: rgba(24, 24, 24, 0.97);
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 3px;
-
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
   backdrop-filter: blur(10px);
 }
@@ -711,13 +649,11 @@
 .baal-lang-dropdown a {
   display: block;
   padding: 9px 16px;
-
   color: rgba(255, 255, 255, 0.75);
   font-size: 10px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   text-decoration: none;
-
   transition: background 0.15s ease, color 0.15s ease;
 }
 
@@ -726,170 +662,50 @@
   color: #ffffff;
 }
 
-/* ============================================================
-   PROTEGER LOS NOMBRES DEL SELECTOR FRENTE A LA TRADUCCIÓN
-   ============================================================ */
-
-.baal-language-selector,
-.baal-language-selector * {
-  translate: no;
-}
-
-/* ============================================================
-   GOOGLE TRANSLATE — OCULTAR ELEMENTOS NATIVOS
-   ============================================================ */
-
-#google_translate_element {
-  display: none !important;
-  width: 0 !important;
-  height: 0 !important;
-  overflow: hidden !important;
-}
-
-/* Barra superior de Google Translate. */
+/* Ocultar elementos nativos de Google Translate */
+#google_translate_element,
 .goog-te-banner-frame,
-iframe.goog-te-banner-frame,
-.goog-te-banner-frame.skiptranslate {
-  display: none !important;
-  visibility: hidden !important;
-  height: 0 !important;
-  max-height: 0 !important;
-  pointer-events: none !important;
-}
-
-/* Contenedor superior inyectado por Google. */
-body > .skiptranslate,
-html body > .skiptranslate {
-  display: none !important;
-  visibility: hidden !important;
-  background-color: #181818 !important;
-}
-
-/* Evitar desplazamientos verticales causados por Google. */
-html,
-body {
-  top: 0 !important;
-}
-
-/* Avisos, globos y elementos flotantes. */
-#goog-gt-tt,
 .goog-te-balloon-frame,
-.goog-te-spinner-pos,
-.goog-tooltip,
-.goog-tooltip:hover {
+#goog-gt-tt,
+.goog-te-spinner-pos {
   display: none !important;
   visibility: hidden !important;
 }
 
-/* Evitar fondos añadidos a los textos traducidos. */
-.goog-text-highlight {
-  background-color: transparent !important;
-  box-shadow: none !important;
-}
-
-/* ============================================================
-   INTEGRACIÓN VISUAL DE LOS ELEMENTOS NATIVOS RESTANTES
-   ============================================================ */
-
-.goog-te-gadget,
-.goog-te-gadget span,
-.goog-te-gadget a,
-.goog-te-gadget-simple {
-  background-color: #181818 !important;
-  color: #ffffff !important;
-}
-
-.goog-te-gadget-simple,
-.goog-te-gadget-simple .goog-te-menu-value,
-.goog-te-gadget-simple .goog-te-menu-value span {
-  background: #181818 !important;
-  color: #ffffff !important;
-  border-color: #181818 !important;
-}
-
-
-/* ============================================================
-   BAAL STUDIO — FONDO BAJO EL FOOTER
-   ============================================================ */
-
-/* Evitar que el documento deje una zona beige bajo el footer. */
-html,
-body {
-  background-color: #111111 !important;
-}
-
-/* Mantener el fondo oscuro del footer hasta su borde inferior. */
-footer,
-.site-footer,
-#footer {
-  background-color: #111111 !important;
-}
-
-/* Evitar fondos claros en el contenedor raíz de Google Translate. */
-body > .skiptranslate {
-  background-color: #111111 !important;
-  background-image: none !important;
-}
-
-/* Ocultar el contenedor superior de Google cuando está vacío. */
-body > .skiptranslate:empty {
-  display: none !important;
-}
-
-/* Zoom estable en la página About */
-#portfolio-modal {
-  overflow: hidden !important;
-  touch-action: none;
-}
-
-#portfolio-modal-content-box {
-  position: absolute !important;
-  inset: 60px 70px !important;
-  display: block !important;
-  width: auto !important;
-  height: auto !important;
-  max-width: none !important;
-  max-height: none !important;
-  overflow: hidden !important;
-  touch-action: none !important;
-}
-
-#portfolio-modal-img {
-  position: absolute !important;
+html, body {
   top: 0 !important;
-  left: 0 !important;
-  display: block !important;
-  margin: 0 !important;
-  max-width: none !important;
-  max-height: none !important;
-  object-fit: fill !important;
-  transform-origin: 0 0 !important;
-  transition: none !important;
-  will-change: transform;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  user-select: none;
-  -webkit-user-drag: none;
-  touch-action: none !important;
+  background-color: #111111 !important;
 }
 
-#portfolio-modal-close,
-#portfolio-modal-prev,
-#portfolio-modal-next {
-  z-index: 10011 !important;
-  touch-action: manipulation;
+footer, .site-footer, #footer {
+  background-color: #111111 !important;
+}
+
+/* ============================================================
+   8. ESTILOS RESPONSIVE
+   ============================================================ */
+@media (max-width: 1000px) {
+  .tools-category-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 700px) {
+  .about-hero-content .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px 15px;
+  }
+
+  /* Posicionamiento correcto de las flechas en los márgenes laterales en móvil */
   #portfolio-modal-content-box {
     inset: 58px 8px 70px !important;
   }
 
-  #portfolio-modal-prev {
-    left: calc(50% - 62px);
+  .portfolio-modal-nav.left {
+    left: 12px !important;
   }
 
-  #portfolio-modal-next {
-    right: calc(50% - 62px);
+  .portfolio-modal-nav.right {
+    right: 12px !important;
   }
 }
