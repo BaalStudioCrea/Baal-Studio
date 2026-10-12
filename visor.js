@@ -340,7 +340,7 @@ function renderCarouselBlock(block, index) {
   const carouselId = `project-carousel-${index}`;
 
   return `
-    <section class="project-block project-carousel-block" data-carousel="${carouselId}">
+    <section class="project-block project-carousel-block" data-carousel="${carouselId}" data-current-index="0">
       <div class="portfolio-media-viewer">
         <button
           type="button"
@@ -754,9 +754,8 @@ function initialiseMediaZoom() {
 
       if (mediaBlock.classList.contains("project-carousel-block")) {
         allImages = Array.from(mediaBlock.querySelectorAll(".project-carousel-image"));
-        const carouselContainer = mediaBlock.querySelector("[data-carousel]");
-        activeIndex = carouselContainer ? parseInt(carouselContainer.dataset.currentIndex || "0", 10) : 0;
-        if (activeIndex === -1) activeIndex = 0;
+        activeIndex = parseInt(mediaBlock.dataset.currentIndex || "0", 10);
+        if (isNaN(activeIndex) || activeIndex < 0) activeIndex = 0;
       } else if (mediaBlock.classList.contains("project-comparator-block")) {
         const comparatorImgs = Array.from(mediaBlock.querySelectorAll(".project-comparator-image img"));
         const clickedCompDiv = button.closest(".project-comparator-image");
@@ -866,10 +865,8 @@ function openImageZoomCollection(images, startIndex) {
     if (window.innerWidth <= 700) {
       const vh = window.innerHeight;
       modal.style.height = `${vh}px`;
-      innerEl.style.height = `${vh - 80}px`;
     } else {
       modal.style.height = "";
-      innerEl.style.height = "";
     }
   }
 
