@@ -696,11 +696,12 @@ footer, .site-footer, #footer {
     gap: 25px 15px;
   }
 
-  /* Posicionamiento correcto de las flechas en los márgenes laterales en móvil */
+  /* Ajuste preciso del contenedor modal en móvil para ocupar toda el área sin cortes verticales */
   #portfolio-modal-content-box {
-    inset: 58px 8px 70px !important;
+    inset: 44px 8px 54px !important;
   }
 
+  /* Posicionamiento correcto de las flechas en los márgenes laterales en móvil */
   .portfolio-modal-nav.left {
     left: 12px !important;
   }
