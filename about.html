@@ -378,6 +378,17 @@
       let pointerStartY = 0;
       let suppressClickUntil = 0;
 
+      function updateModalViewportHeight() {
+        if (window.innerWidth <= 700) {
+          const vh = window.innerHeight;
+          modalEl.style.height = `${vh}px`;
+          modalBox.style.height = `${vh - 80}px`;
+        } else {
+          modalEl.style.height = "";
+          modalBox.style.height = "";
+        }
+      }
+
       function setTransform() {
         modalImgEl.style.transform =
           `translate3d(${pointX}px, ${pointY}px, 0) scale(${scale})`;
@@ -409,6 +420,7 @@
       function fitModalImage() {
         if (!modalImgEl.naturalWidth || !modalImgEl.naturalHeight) return;
 
+        updateModalViewportHeight();
         const box = modalBox.getBoundingClientRect();
         if (!box.width || !box.height) return;
 
@@ -427,7 +439,6 @@
         pointX = (box.width - modalImgEl.naturalWidth * scale) / 2;
         pointY = (box.height - modalImgEl.naturalHeight * scale) / 2;
 
-        // Se aplica applyTransform() en lugar de setTransform() para alinear correctamente en móvil y PC
         applyTransform();
       }
 
@@ -575,7 +586,7 @@
         pointX = event.clientX - startX;
         pointY = event.clientY - startY;
 
-        setTransform();
+        applyTransform();
       });
 
       window.addEventListener("pointerup", () => {
