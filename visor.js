@@ -733,7 +733,7 @@ function initialiseCarousels() {
 
 
 /* ============================================================
-   MOTOR DE ZOOM Y LIGHTBOX ROBUSTO (PAN & ZOOM)
+   MOTOR DE ZOOM Y LIGHTBOX ROBUSTO (PAN & ZOOM & PINCH)
    ============================================================ */
 function initialiseMediaZoom() {
   document.querySelectorAll("[data-zoom-current]").forEach((button) => {
@@ -753,22 +753,24 @@ function initialiseMediaZoom() {
         allImages = Array.from(mediaBlock.querySelectorAll(".project-carousel-image"));
         const activeImg = mediaBlock.querySelector(".project-carousel-image.is-active");
         activeIndex = activeImg ? allImages.indexOf(activeImg) : 0;
+        if (activeIndex === -1) activeIndex = 0;
       } else if (mediaBlock.classList.contains("project-comparator-block")) {
         const comparatorImgs = Array.from(mediaBlock.querySelectorAll(".project-comparator-image img"));
-        const clickedCompImgDiv = button.closest(".project-comparator-image");
+        const clickedCompDiv = button.closest(".project-comparator-image");
         allImages = comparatorImgs;
-        activeIndex = clickedCompImgDiv ? comparatorImgs.indexOf(clickedCompImgDiv.querySelector("img")) : 0;
+        activeIndex = clickedCompDiv ? comparatorImgs.indexOf(clickedCompDiv.querySelector("img")) : 0;
+        if (activeIndex === -1) activeIndex = 0;
       } else if (mediaBlock.classList.contains("project-evolution-block")) {
         const evolutionItems = Array.from(mediaBlock.querySelectorAll(".project-evolution-item"));
         const clickedEvolutionItem = button.closest(".project-evolution-item");
         allImages = evolutionItems.map(item => item.querySelector("img")).filter(Boolean);
         activeIndex = clickedEvolutionItem ? evolutionItems.indexOf(clickedEvolutionItem) : 0;
+        if (activeIndex === -1) activeIndex = 0;
       } else {
         allImages = Array.from(mediaBlock.querySelectorAll("img.project-main-image, img.protected-image"));
         activeIndex = 0;
       }
 
-      if (activeIndex < 0) activeIndex = 0;
       const imageUrls = allImages.map(img => ({ src: img.src, alt: img.alt || "" }));
 
       if (imageUrls.length > 0) {
@@ -849,11 +851,14 @@ function openImageZoomCollection(images, startIndex) {
   let pointY = 0;
   let isPanning = false;
   let pointerMoved = false;
-  let pointerStartX = 0;
-  let pointerStartY = 0;
+  let suppressClickUntil = 0;
+
+  // Estado para gestión de gestos multitáctiles (Pinch-to-Zoom y Panning)
+  const activePointers = new Map();
+  let initialDistance = 0;
+  let initialScale = 1;
   let startX = 0;
   let startY = 0;
-  let suppressClickUntil = 0;
 
   function updateModalViewportHeight() {
     if (window.innerWidth <= 700) {
@@ -922,6 +927,7 @@ function openImageZoomCollection(images, startIndex) {
     pointY = 0;
     isPanning = false;
     pointerMoved = false;
+    activePointers.clear();
     imageEl.classList.remove("grabbing");
 
     if (imageEl.complete && imageEl.naturalWidth) {
@@ -962,12 +968,13 @@ function openImageZoomCollection(images, startIndex) {
     imageEl.src = currentItem.src;
     imageEl.alt = currentItem.alt || "";
 
+    // Ocultar flechas si solo hay 1 imagen en total
     if (images.length > 1) {
       prevBtn.style.display = "flex";
       nextBtn.style.display = "flex";
     } else {
       prevBtn.style.display = "none";
-      prevBtn.style.display = "none";
+      nextBtn.style.display = "none";
     }
 
     if (imageEl.complete && imageEl.naturalWidth) {
@@ -1021,42 +1028,82 @@ function openImageZoomCollection(images, startIndex) {
     }
   });
 
-  // Paneo fluido con ratón / táctil (Pointer Events)
+  // Eventos de Puntero y Multitáctil (Pinch-to-Zoom y Panning fluido)
   innerEl.addEventListener("pointerdown", (event) => {
     if (event.target.closest("button")) return;
-    if (scale <= fitScale + 0.0001) return;
+    activePointers.set(event.pointerId, event);
 
-    event.preventDefault();
-    isPanning = true;
-    pointerMoved = false;
-    pointerStartX = event.clientX;
-    pointerStartY = event.clientY;
-    startX = event.clientX - pointX;
-    startY = event.clientY - pointY;
-
-    imageEl.classList.add("grabbing");
+    if (activePointers.size === 2) {
+      isPanning = false;
+      const pts = Array.from(activePointers.values());
+      initialDistance = Math.hypot(pts[0].clientX - pts[1].clientX, pts[0].clientY - pts[1].clientY);
+      initialScale = scale;
+    } else if (activePointers.size === 1 && scale > fitScale + 0.0001) {
+      isPanning = true;
+      pointerMoved = false;
+      startX = event.clientX - pointX;
+      startY = event.clientY - pointY;
+      imageEl.classList.add("grabbing");
+    }
   });
 
   window.addEventListener("pointermove", (event) => {
-    if (!isPanning) return;
+    if (!activePointers.has(event.pointerId)) return;
+    activePointers.set(event.pointerId, event);
 
-    if (
-      Math.abs(event.clientX - pointerStartX) > 3 ||
-      Math.abs(event.clientY - pointerStartY) > 3
-    ) {
-      pointerMoved = true;
+    if (activePointers.size === 2) {
+      event.preventDefault();
+      const pts = Array.from(activePointers.values());
+      const currentDistance = Math.hypot(pts[0].clientX - pts[1].clientX, pts[0].clientY - pts[1].clientY);
+      if (initialDistance > 0) {
+        const factor = currentDistance / initialDistance;
+        const box = innerEl.getBoundingClientRect();
+        const midX = (pts[0].clientX + pts[1].clientX) / 2 - box.left;
+        const midY = (pts[0].clientY + pts[1].clientY) / 2 - box.top;
+
+        const oldScale = scale;
+        const nextScale = Math.max(fitScale, Math.min(fitScale * 8, initialScale * factor));
+
+        const imageX = (midX - pointX) / oldScale;
+        const imageY = (midY - pointY) / oldScale;
+
+        scale = nextScale;
+        pointX = midX - imageX * scale;
+        pointY = midY - imageY * scale;
+
+        applyTransform();
+      }
+    } else if (isPanning && activePointers.size === 1) {
+      const pts = Array.from(activePointers.values())[0];
+      if (
+        Math.abs(pts.clientX - (startX + pointX)) > 3 ||
+        Math.abs(pts.clientY - (startY + pointY)) > 3
+      ) {
+        pointerMoved = true;
+      }
+      pointX = pts.clientX - startX;
+      pointY = pts.clientY - startY;
+      setTransform();
     }
-
-    pointX = event.clientX - startX;
-    pointY = event.clientY - startY;
-
-    setTransform();
   });
 
-  window.addEventListener("pointerup", () => {
+  window.addEventListener("pointerup", (event) => {
+    activePointers.delete(event.pointerId);
+    if (activePointers.size < 2) {
+      initialDistance = 0;
+    }
     if (isPanning && pointerMoved) {
       suppressClickUntil = Date.now() + 250;
     }
+    if (activePointers.size === 0) {
+      isPanning = false;
+      imageEl.classList.remove("grabbing");
+    }
+  });
+
+  window.addEventListener("pointercancel", (event) => {
+    activePointers.delete(event.pointerId);
+    initialDistance = 0;
     isPanning = false;
     imageEl.classList.remove("grabbing");
   });
