@@ -706,11 +706,14 @@ function initialiseCarousels() {
     const counter = carousel.querySelector("[data-carousel-current]");
 
     let current = 0;
+    carousel.dataset.currentIndex = "0";
 
     function update() {
       images.forEach((image, index) => {
         image.classList.toggle("is-active", index === current);
       });
+
+      carousel.dataset.currentIndex = String(current);
 
       if (counter) {
         counter.textContent = String(current + 1).padStart(2, "0");
@@ -742,17 +745,17 @@ function initialiseMediaZoom() {
       event.stopPropagation();
 
       const mediaBlock = button.closest(
-        ".portfolio-media-viewer, .project-single-image, .project-comparator-block, .project-evolution-block, .project-block"
+        ".project-carousel-block, .project-comparator-block, .project-evolution-block, .project-single-image, .project-block"
       );
       if (!mediaBlock) return;
 
       let allImages = [];
       let activeIndex = 0;
 
-      if (mediaBlock.classList.contains("project-carousel-block") || mediaBlock.querySelector(".portfolio-media-viewer")) {
+      if (mediaBlock.classList.contains("project-carousel-block")) {
         allImages = Array.from(mediaBlock.querySelectorAll(".project-carousel-image"));
-        const activeImg = mediaBlock.querySelector(".project-carousel-image.is-active");
-        activeIndex = activeImg ? allImages.indexOf(activeImg) : 0;
+        const carouselContainer = mediaBlock.querySelector("[data-carousel]");
+        activeIndex = carouselContainer ? parseInt(carouselContainer.dataset.currentIndex || "0", 10) : 0;
         if (activeIndex === -1) activeIndex = 0;
       } else if (mediaBlock.classList.contains("project-comparator-block")) {
         const comparatorImgs = Array.from(mediaBlock.querySelectorAll(".project-comparator-image img"));
@@ -853,7 +856,6 @@ function openImageZoomCollection(images, startIndex) {
   let pointerMoved = false;
   let suppressClickUntil = 0;
 
-  // Estado para gestión de gestos multitáctiles (Pinch-to-Zoom y Panning)
   const activePointers = new Map();
   let initialDistance = 0;
   let initialScale = 1;
@@ -968,7 +970,6 @@ function openImageZoomCollection(images, startIndex) {
     imageEl.src = currentItem.src;
     imageEl.alt = currentItem.alt || "";
 
-    // Ocultar flechas si solo hay 1 imagen en total
     if (images.length > 1) {
       prevBtn.style.display = "flex";
       nextBtn.style.display = "flex";
@@ -1004,14 +1005,12 @@ function openImageZoomCollection(images, startIndex) {
 
   imageEl.addEventListener("load", fitModalImage);
 
-  // Zoom con rueda de ratón centrado en el cursor
   innerEl.addEventListener("wheel", (event) => {
     if (!modal.classList.contains("is-open")) return;
     event.preventDefault();
     zoomAt(event.clientX, event.clientY, event.deltaY < 0 ? 1.15 : 1 / 1.15);
   }, { passive: false });
 
-  // Un clic / tap amplía o vuelve a ajustar
   imageEl.addEventListener("click", (event) => {
     if (Date.now() < suppressClickUntil || pointerMoved) {
       pointerMoved = false;
@@ -1028,7 +1027,6 @@ function openImageZoomCollection(images, startIndex) {
     }
   });
 
-  // Eventos de Puntero y Multitáctil (Pinch-to-Zoom y Panning fluido)
   innerEl.addEventListener("pointerdown", (event) => {
     if (event.target.closest("button")) return;
     activePointers.set(event.pointerId, event);
