@@ -152,7 +152,7 @@ function renderProjectIntro(project) {
   const category = joinValue(metadata.categoria);
   const subcategory = joinValue(metadata.subcategoria);
   const location = metadata.localizacion || "";
-  const year = metadata.año || "";
+  const year = metadata.año || metadata.cronologia || metadata.cronología || "";
   const techniques = joinValue(metadata.tecnicas);
   const objectives = joinValue(metadata.objetivo);
   const authorship = metadata.autoria || "";
@@ -171,7 +171,7 @@ function renderProjectIntro(project) {
           ${renderMetadataItem("Localización", "Location", location)}
           ${renderMetadataItem("Categoría", "Category", category)}
           ${renderMetadataItem("Subcategoría", "Subcategory", subcategory)}
-          ${renderMetadataItem("Año", "Year", year)}
+          ${renderMetadataItem("Cronología", "Chronology", year)}
           ${renderMetadataItem("Técnicas", "Techniques", techniques)}
           ${renderMetadataItem("Objetivo", "Purpose", objectives)}
           ${renderMetadataItem("Autoría", "Authorship", authorship)}
@@ -222,12 +222,7 @@ function renderArticles(articles) {
    DESCRIPCIÓN
    ============================================================ */
 function renderProjectDescription(description) {
-  if (!description) return "";
-
-  const paragraphs = String(description)
-    .split(/\n\s*\n/)
-    .map((paragraph) => paragraph.trim())
-    .filter(Boolean);
+  if (!String(description ?? "").trim()) return "";
 
   return `
     <section class="project-viewer-description">
@@ -237,10 +232,111 @@ function renderProjectDescription(description) {
       </div>
 
       <div class="project-viewer-description-text">
-        ${paragraphs.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join("")}
+        ${renderRichText(description)}
       </div>
     </section>
   `;
+}
+
+
+/* ============================================================
+   TEXTO ENRIQUECIDO
+   Conserva párrafos, saltos de línea y listas numeradas/viñetas.
+   El contenido se escapa antes de insertarse en el HTML.
+   ============================================================ */
+function renderRichText(value) {
+  const lines = String(value ?? "").replace(/\r\n?/g, "\n").split("\n");
+  const output = [];
+  let paragraphLines = [];
+  let listItems = [];
+  let listType = "";
+  let listStart = 1;
+
+  function flushParagraph() {
+    if (!paragraphLines.length) return;
+    const content = paragraphLines
+      .map((line) => escapeHtml(line.trim()))
+      .join("<br>");
+    if (content) output.push(`<p>${content}</p>`);
+    paragraphLines = [];
+  }
+
+  function flushList() {
+    if (!listItems.length) {
+      listType = "";
+      listStart = 1;
+      return;
+    }
+
+    const tag = listType === "ol" ? "ol" : "ul";
+    const startAttribute = tag === "ol" && listStart !== 1
+      ? ` start="${listStart}"`
+      : "";
+
+    output.push(
+      `<${tag}${startAttribute}>${listItems.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</${tag}>`
+    );
+
+    listItems = [];
+    listType = "";
+    listStart = 1;
+  }
+
+  function detectListItem(line) {
+    const ordered = line.match(/^\s*(\d+)[.)]\s+(.+)$/);
+    if (ordered) {
+      return {
+        type: "ol",
+        text: ordered[2].trim(),
+        number: Number(ordered[1]) || 1
+      };
+    }
+
+    const unordered = line.match(/^\s*[-*•▪◦]\s+(.+)$/);
+    if (unordered) {
+      return {
+        type: "ul",
+        text: unordered[1].trim(),
+        number: 1
+      };
+    }
+
+    return null;
+  }
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+
+    if (!line) {
+      flushParagraph();
+      flushList();
+      continue;
+    }
+
+    const item = detectListItem(rawLine);
+
+    if (item) {
+      flushParagraph();
+
+      if (listType && listType !== item.type) flushList();
+
+      if (!listType) {
+        listType = item.type;
+        listStart = item.type === "ol" ? item.number : 1;
+      }
+
+      listItems.push(item.text);
+      continue;
+    }
+
+    flushList();
+    paragraphLines.push(line);
+  }
+
+  flushParagraph();
+  flushList();
+
+  return output.join("\n");
 }
 
 
@@ -291,6 +387,8 @@ function renderBlock(block, index) {
       return renderVideoBlock(block, index);
     case "pdf":
       return renderPdfBlock(block, index);
+    case "text":
+      return renderTextBlock(block, index);
     default:
       return "";
   }
@@ -299,6 +397,28 @@ function renderBlock(block, index) {
 function renderCaption(text) {
   if (!text) return "";
   return `<p class="project-block-caption">${escapeHtml(text)}</p>`;
+}
+
+
+/* ============================================================
+   BLOQUE DE TEXTO PERSONALIZADO
+   Los campos definidos en proyecto.txt aparecen en la posición
+   indicada por ORDEN y mantienen párrafos, saltos y listas.
+   ============================================================ */
+function renderTextBlock(block, index) {
+  const text = String(block.text ?? "").trim();
+  if (!text) return "";
+
+  const title = String(block.title ?? "").trim();
+
+  return `
+    <section class="project-block project-text-block" data-block-index="${index}">
+      ${title ? `<h2 class="project-text-block-title">${escapeHtml(title)}</h2>` : ""}
+      <div class="project-text-block-content">
+        ${renderRichText(text)}
+      </div>
+    </section>
+  `;
 }
 
 
@@ -547,8 +667,6 @@ function renderSketchfabItem(item, index) {
     </article>
   `;
 }
-
-
 /* ============================================================
    VÍDEO
    ============================================================ */
@@ -801,7 +919,7 @@ function openImageZoomCollection(images, startIndex) {
     document.body.appendChild(modal);
 
     modal.querySelector(".project-lightbox-close").addEventListener("click", closeImageZoom);
-    
+
     modal.addEventListener("click", (event) => {
       if (event.target === modal && !pointerMoved) {
         closeImageZoom();
@@ -1115,8 +1233,6 @@ function closeImageZoom() {
   modal.classList.remove("is-open");
   document.body.classList.remove("lightbox-open");
 }
-
-
 /* ============================================================
    SKETCHFAB
    ============================================================ */
