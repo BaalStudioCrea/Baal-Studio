@@ -1793,6 +1793,12 @@ body > .skiptranslate:empty {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   touch-action: none;
+  cursor: grab; /* <-- AÑADE ESTA LÍNEA */
+}
+
+/* Y asegúrate de tener esta regla justo debajo */
+.visor-image-modal-image.grabbing {
+  cursor: grabbing !important;
 }
 
 .project-lightbox-close {
@@ -1888,10 +1894,10 @@ body > .skiptranslate:empty {
 .project-text-block-title {
   margin: 0 0 28px;
   font-family: var(--font-heading, "Cormorant Garamond", serif);
-  font-size: clamp(30px, 3.4vw, 46px);
-  line-height: 1.05;
+  font-size: 34px; /* Mismo tamaño fijo que Descripción */
+  line-height: 1;  /* Mismo interlineado que Descripción */
   font-weight: 500;
-  letter-spacing: -.015em;
+  letter-spacing: 0;
   overflow-wrap: anywhere;
 }
 
