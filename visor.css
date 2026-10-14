@@ -565,24 +565,31 @@ body.project-viewer-page {
 
 
 /* ============================================================
-   COMPARADOR (ESTRUCTURADO COMO BLOQUE VISUAL UNIFICADO)
+   COMPARADOR (BLOQUE VISUAL UNIFICADO Y ROBUSTO)
    ============================================================ */
 
 .project-comparator {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 1px minmax(0, 1fr);
   align-items: center;
-  background: var(--visor-dark-2);
-  border-radius: 4px;
-  padding: 28px;
-  gap: 28px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 36px 32px;
+  gap: 32px;
   overflow: hidden;
+}
+
+.stripe-warm .project-comparator {
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--visor-line);
 }
 
 .project-comparator-image {
   position: relative;
   min-width: 0;
-  height: 68vh;
+  height: 62vh;
+  max-height: 650px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -593,6 +600,7 @@ body.project-viewer-page {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
+  object-position: center;
   cursor: default;
   user-select: none;
   -webkit-user-drag: none;
@@ -600,26 +608,28 @@ body.project-viewer-page {
 
 .project-comparator-divider {
   width: 1px;
-  height: 75%;
+  height: 70%;
   background: var(--visor-accent);
+  margin: 0 auto;
 }
 
 
 /* ============================================================
-   EVOLUCIÓN (FLEXIBLE Y CENTRADO AUTOMÁTICO)
+   EVOLUCIÓN (CUADRÍCULA FLEXIBLE Y CENTRADA)
    ============================================================ */
 
 .project-evolution {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 18px;
+  gap: 20px;
 }
 
 .project-evolution-item {
-  flex: 0 1 calc(25% - 14px);
-  max-width: calc(25% - 14px);
+  flex: 0 1 calc(25% - 15px);
+  max-width: calc(25% - 15px);
   margin: 0;
+  min-width: 0;
 }
 
 .project-evolution-image {
@@ -627,10 +637,17 @@ body.project-viewer-page {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 45vh;
-  background: var(--visor-dark-2);
+  height: 38vh;
+  max-height: 420px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 4px;
-  padding: 12px;
+  padding: 16px;
+}
+
+.stripe-warm .project-evolution-image {
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid var(--visor-line);
 }
 
 .project-evolution-image img {
@@ -638,6 +655,7 @@ body.project-viewer-page {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
+  object-position: center;
   cursor: default;
   user-select: none;
   -webkit-user-drag: none;
@@ -1482,27 +1500,22 @@ body.lightbox-open {
   }
 
   .project-evolution-image {
-    height: 50vh;
+    height: 44vh;
   }
 
   .project-comparator {
-
     grid-template-columns: 1fr;
-
     gap: 24px;
-    padding: 20px;
+    padding: 24px 16px;
   }
 
   .project-comparator-image {
-    height: 50vh;
+    height: 48vh;
   }
 
   .project-comparator-divider {
-
     width: 80%;
-
     height: 1px;
-
     margin: 0 auto;
   }
 
