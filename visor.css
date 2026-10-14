@@ -329,7 +329,7 @@ body.project-viewer-page {
 
 
 /* ============================================================
-   IMAGEN INDIVIDUAL (SIN CURSOR LUPA)
+   IMAGEN INDIVIDUAL
    ============================================================ */
 
 .project-single-image {
@@ -565,125 +565,99 @@ body.project-viewer-page {
 
 
 /* ============================================================
-   COMPARADOR
+   COMPARADOR (ESTRUCTURADO COMO BLOQUE VISUAL UNIFICADO)
    ============================================================ */
 
 .project-comparator {
-
   display: grid;
-
-  grid-template-columns:
-    minmax(0, 1fr)
-    1px
-    minmax(0, 1fr);
-
+  grid-template-columns: minmax(0, 1fr) 1px minmax(0, 1fr);
   align-items: center;
-
-  background:
-    transparent;
+  background: var(--visor-dark-2);
+  border-radius: 4px;
+  padding: 28px;
+  gap: 28px;
+  overflow: hidden;
 }
 
 .project-comparator-image {
-
   position: relative;
-
   min-width: 0;
-
+  height: 68vh;
   display: flex;
-
   align-items: center;
   justify-content: center;
 }
 
 .project-comparator-image img {
-
   display: block;
-
-  width: 100%;
-
-  max-height: 76vh;
-
+  max-width: 100%;
+  max-height: 100%;
   object-fit: contain;
-
   cursor: default;
-
   user-select: none;
-
   -webkit-user-drag: none;
 }
 
 .project-comparator-divider {
-
   width: 1px;
-
-  height: 82%;
-
-  background:
-    var(--visor-accent);
+  height: 75%;
+  background: var(--visor-accent);
 }
 
 
 /* ============================================================
-   EVOLUCIÓN
+   EVOLUCIÓN (FLEXIBLE Y CENTRADO AUTOMÁTICO)
    ============================================================ */
 
 .project-evolution {
-
-  display: grid;
-
-  grid-template-columns:
-    repeat(4, minmax(0, 1fr));
-
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 18px;
 }
 
 .project-evolution-item {
+  flex: 0 1 calc(25% - 14px);
+  max-width: calc(25% - 14px);
   margin: 0;
 }
 
 .project-evolution-image {
-
   position: relative;
-
   display: flex;
-
   align-items: center;
   justify-content: center;
+  height: 45vh;
+  background: var(--visor-dark-2);
+  border-radius: 4px;
+  padding: 12px;
 }
 
 .project-evolution-image img {
-
   display: block;
-
-  width: 100%;
-
-  max-height: 62vh;
-
+  max-width: 100%;
+  max-height: 100%;
   object-fit: contain;
-
   cursor: default;
-
   user-select: none;
-
   -webkit-user-drag: none;
 }
 
 
 /* ============================================================
-   SKETCHFAB (CARGA Y ENLACE DIRECTO)
+   SKETCHFAB (CENTRADO PERFECTO PARA NÚMEROS IMPARES EN PC)
    ============================================================ */
 
 .project-sketchfab-grid {
-
-  display: grid;
-
-  grid-template-columns:
-    repeat(2, minmax(0, 1fr));
-
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 32px;
 }
 
 .project-sketchfab-item {
+  flex: 0 1 calc(50% - 16px);
+  max-width: 580px;
   min-width: 0;
   display: flex;
   flex-direction: column;
@@ -929,14 +903,12 @@ body.project-viewer-page {
   transition: opacity 0.3s ease, background 0.3s ease;
 }
 
-/* Durante la reproducción se ocultan los botones para que no estorben */
 .project-video-frame.is-playing .project-youtube-overlay {
   opacity: 0;
   pointer-events: none;
   background: transparent;
 }
 
-/* Al pasar el ratón estando en reproducción, aparecen suavemente */
 .project-video-frame.is-playing:hover .project-youtube-overlay {
   opacity: 1;
   pointer-events: auto;
@@ -965,7 +937,6 @@ body.project-viewer-page {
   border-color: #ffffff;
 }
 
-/* "Ver en YouTube" posicionado en la esquina inferior derecha */
 .project-youtube-topbar {
   position: absolute;
   bottom: 14px;
@@ -1053,7 +1024,7 @@ body.project-viewer-page {
 
 
 /* ============================================================
-   NAVEGACIÓN ENTRE PROYECTOS (CON SUBTÍTULOS EN INGLÉS)
+   NAVEGACIÓN ENTRE PROYECTOS
    ============================================================ */
 
 .project-viewer-navigation {
@@ -1260,7 +1231,7 @@ body.project-viewer-page {
 
 
 /* ============================================================
-   LIGHTBOX / ZOOM MODAL CON AMPLIACIÓN DE TEXTO Y DETALLES
+   LIGHTBOX / ZOOM MODAL
    ============================================================ */
 
 body.lightbox-open {
@@ -1323,19 +1294,15 @@ body.lightbox-open {
 
   -webkit-user-drag: none;
 
-  cursor: zoom-in;
+  cursor: grab;
 
   margin: auto;
 
   transition: transform 0.25s ease, max-width 0.25s ease, max-height 0.25s ease;
 }
 
-/* Estado ampliado al hacer clic/tap en la imagen de la lupa */
-.visor-image-modal-image.is-zoomed {
-  max-width: 250vw;
-  max-height: none;
-  width: 220%;
-  cursor: zoom-out;
+.visor-image-modal-image.grabbing {
+  cursor: grabbing !important;
 }
 
 .project-lightbox-close {
@@ -1345,7 +1312,7 @@ body.lightbox-open {
   top: 18px;
   right: 22px;
 
-  z-index: 2;
+  z-index: 10;
 
   width: 40px;
   height: 40px;
@@ -1433,13 +1400,9 @@ body.lightbox-open {
       calc(100% - 96px);
   }
 
-  .project-evolution {
-
-    grid-template-columns:
-      repeat(
-        2,
-        minmax(0, 1fr)
-      );
+  .project-evolution-item {
+    flex: 0 1 calc(50% - 10px);
+    max-width: calc(50% - 10px);
   }
 }
 
@@ -1512,17 +1475,26 @@ body.lightbox-open {
     width: 44px;
   }
 
-  .project-evolution,
-  .project-sketchfab-grid {
+  .project-evolution-item,
+  .project-sketchfab-item {
+    flex: 0 1 100%;
+    max-width: 100%;
+  }
 
-    grid-template-columns: 1fr;
+  .project-evolution-image {
+    height: 50vh;
   }
 
   .project-comparator {
 
     grid-template-columns: 1fr;
 
-    gap: 18px;
+    gap: 24px;
+    padding: 20px;
+  }
+
+  .project-comparator-image {
+    height: 50vh;
   }
 
   .project-comparator-divider {
@@ -1576,7 +1548,7 @@ body.lightbox-open {
 
 
 /* ============================================================
-   SELECTOR DE IDIOMAS PERSONALIZADO — BAAL STUDIO
+   SELECTOR DE IDIOMAS Y GOOGLE TRANSLATE
    ============================================================ */
 
 .baal-language-selector {
@@ -1617,12 +1589,6 @@ body.lightbox-open {
   background: rgba(24, 24, 24, 0.98);
 }
 
-.baal-lang-current:focus-visible,
-.baal-lang-dropdown a:focus-visible {
-  outline: 2px solid #B08A57;
-  outline-offset: 3px;
-}
-
 .baal-lang-current svg {
   flex-shrink: 0;
   color: rgba(255, 255, 255, 0.7);
@@ -1632,8 +1598,6 @@ body.lightbox-open {
 .baal-language-selector.is-open .baal-lang-current svg {
   transform: rotate(180deg);
 }
-
-/* Desplegable de idiomas */
 
 .baal-lang-dropdown {
   position: absolute;
@@ -1673,16 +1637,10 @@ body.lightbox-open {
   color: #ffffff;
 }
 
-/* Evitar que se traduzcan los nombres de los idiomas. */
-
 .baal-language-selector,
 .baal-language-selector * {
   translate: no;
 }
-
-/* ============================================================
-   GOOGLE TRANSLATE — OCULTAR ELEMENTOS NATIVOS
-   ============================================================ */
 
 #google_translate_element {
   display: none !important;
@@ -1728,8 +1686,6 @@ body {
   box-shadow: none !important;
 }
 
-/* Integración visual de los elementos de Google que permanezcan visibles. */
-
 .goog-te-gadget,
 .goog-te-gadget span,
 .goog-te-gadget a,
@@ -1746,8 +1702,6 @@ body {
   border-color: #181818 !important;
 }
 
-/* Fondo bajo el footer. */
-
 footer,
 .site-footer,
 #footer {
@@ -1763,9 +1717,6 @@ body > .skiptranslate:empty {
   display: none !important;
 }
 
-/* ============================================================
-   CORRECCIONES LIGHTBOX: RESOLUCIÓN, FLECHAS Y GESTOS TÁCTILES
-   ============================================================ */
 .project-lightbox {
   isolation: isolate;
   overflow: hidden;
@@ -1779,30 +1730,6 @@ body > .skiptranslate:empty {
   overflow: hidden;
   touch-action: none;
   overscroll-behavior: contain;
-}
-
-.visor-image-modal-image {
-  position: absolute;
-  left: 0;
-  top: 0;
-  margin: 0;
-  max-width: none;
-  max-height: none;
-  transition: none !important;
-  will-change: transform;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  touch-action: none;
-  cursor: grab; /* <-- AÑADE ESTA LÍNEA */
-}
-
-/* Y asegúrate de tener esta regla justo debajo */
-.visor-image-modal-image.grabbing {
-  cursor: grabbing !important;
-}
-
-.project-lightbox-close {
-  z-index: 10;
 }
 
 .project-lightbox-nav {
@@ -1855,11 +1782,6 @@ body > .skiptranslate:empty {
   .project-lightbox-next { right: calc(50% - 60px); }
 }
 
-/* ============================================================
-   TEXTO EDITORIAL DESDE PROYECTO.TXT
-   Conserva párrafos, saltos de línea y listas numeradas/viñetas.
-   ============================================================ */
-
 .project-viewer-description-text p,
 .project-text-block-body p {
   white-space: normal;
@@ -1894,8 +1816,8 @@ body > .skiptranslate:empty {
 .project-text-block-title {
   margin: 0 0 28px;
   font-family: var(--font-heading, "Cormorant Garamond", serif);
-  font-size: 34px; /* Mismo tamaño fijo que Descripción */
-  line-height: 1;  /* Mismo interlineado que Descripción */
+  font-size: 34px;
+  line-height: 1;
   font-weight: 500;
   letter-spacing: 0;
   overflow-wrap: anywhere;
