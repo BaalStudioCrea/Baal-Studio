@@ -647,41 +647,46 @@ body.project-viewer-page {
   box-shadow: 0 4px 12px rgba(0,0,0,0.5);
 }
 
+.project-comparator-lightbox .project-comparator-lightbox-inner {
+  width: min(1200px, 95vw);
+  height: min(85vh, 800px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+}
+
 
 /* ============================================================
-   EVOLUCIÓN (CAJETÍN UNICO EN UNA SOLA FILA HORIZONTAL)
+   EVOLUCIÓN (FILA HORIZONTAL ÚNICA EN CAJETÍN OSCURO)
    ============================================================ */
 
 .project-evolution-container {
   width: 100%;
-  background: rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--visor-dark-2);
+  border: 1px solid var(--visor-line-dark);
   border-radius: 6px;
   padding: 24px;
   overflow: hidden;
 }
 
 .stripe-warm .project-evolution-container {
-  background: rgba(0, 0, 0, 0.04);
-  border: 1px solid var(--visor-line);
+  background: var(--visor-dark-2);
+  border: 1px solid var(--visor-line-dark);
 }
 
 .project-evolution-row {
   display: flex;
   flex-direction: row;
   gap: 16px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  padding-bottom: 8px;
-  justify-content: flex-start;
+  width: 100%;
   align-items: center;
+  justify-content: center;
 }
 
 .project-evolution-item {
-  flex: 0 0 calc(25% - 12px);
-  min-width: 240px;
-  scroll-snap-align: start;
+  flex: 1 1 0;
+  min-width: 0;
   margin: 0;
 }
 
@@ -690,23 +695,19 @@ body.project-viewer-page {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 38vh;
-  max-height: 400px;
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  height: 55vh;
+  max-height: 550px;
+  background: var(--visor-dark-2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 4px;
   padding: 12px;
-}
-
-.stripe-warm .project-evolution-image {
-  background: rgba(0, 0, 0, 0.03);
-  border: 1px solid var(--visor-line);
+  overflow: hidden;
 }
 
 .project-evolution-image img {
   display: block;
-  max-width: 100%;
-  max-height: 100%;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
   object-position: center;
   cursor: default;
@@ -1470,10 +1471,6 @@ body.lightbox-open {
     width:
       calc(100% - 96px);
   }
-
-  .project-evolution-item {
-    flex: 0 0 calc(50% - 10px);
-  }
 }
 
 
@@ -1545,17 +1542,13 @@ body.lightbox-open {
     width: 44px;
   }
 
-  .project-evolution-item {
-    flex: 0 0 85%;
-    min-width: 260px;
-  }
-
-  .project-evolution-container {
-    padding: 16px 12px;
-  }
-
   .project-evolution-image {
     height: 40vh;
+  }
+
+  .project-sketchfab-item {
+    flex: 0 1 100%;
+    max-width: 100%;
   }
 
   .project-pdf-frame {
