@@ -241,8 +241,6 @@ function renderProjectDescription(description) {
 
 /* ============================================================
    TEXTO ENRIQUECIDO
-   Conserva párrafos, saltos de línea y listas numeradas/viñetas.
-   El contenido se escapa antes de insertarse en el HTML.
    ============================================================ */
 function renderRichText(value) {
   const lines = String(value ?? "").replace(/\r\n?/g, "\n").split("\n");
@@ -317,7 +315,6 @@ function renderRichText(value) {
 
     if (item) {
       flushParagraph();
-
       if (listType && listType !== item.type) flushList();
 
       if (!listType) {
@@ -402,8 +399,6 @@ function renderCaption(text) {
 
 /* ============================================================
    BLOQUE DE TEXTO PERSONALIZADO
-   Los campos definidos en proyecto.txt aparecen en la posición
-   indicada por ORDEN y mantienen párrafos, saltos y listas.
    ============================================================ */
 function renderTextBlock(block, index) {
   const text = String(block.text ?? "").trim();
@@ -667,6 +662,8 @@ function renderSketchfabItem(item, index) {
     </article>
   `;
 }
+
+
 /* ============================================================
    VÍDEO
    ============================================================ */
@@ -851,7 +848,7 @@ function initialiseCarousels() {
 
 
 /* ============================================================
-   MOTOR DE ZOOM Y LIGHTBOX ROBUSTO (PAN & ZOOM & PINCH)
+   MOTOR DE ZOOM Y LIGHTBOX ROBUSTO
    ============================================================ */
 function initialiseMediaZoom() {
   document.querySelectorAll("[data-zoom-current]").forEach((button) => {
@@ -1233,6 +1230,8 @@ function closeImageZoom() {
   modal.classList.remove("is-open");
   document.body.classList.remove("lightbox-open");
 }
+
+
 /* ============================================================
    SKETCHFAB
    ============================================================ */
