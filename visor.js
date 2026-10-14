@@ -135,6 +135,7 @@ function renderProject(project) {
   document.title = `${title} — Baal Studio`;
 
   initialiseCarousels();
+  initialiseComparators();
   initialiseMediaZoom();
   initialiseSketchfab();
   initialiseYoutubeVideos();
@@ -506,7 +507,7 @@ function renderCarouselBlock(block, index) {
 
 
 /* ============================================================
-   COMPARADOR
+   COMPARADOR (INTERACTIVO ANTES / DESPUÉS CON DESLIZADOR)
    ============================================================ */
 function renderComparatorBlock(block, index) {
   const images = Array.isArray(block.images)
@@ -517,26 +518,27 @@ function renderComparatorBlock(block, index) {
 
   return `
     <section class="project-block project-comparator-block" data-block-index="${index}">
-      <div class="project-comparator">
-        <div class="project-comparator-image protected-media">
+      <div class="project-comparator" data-comparator-container>
+        <div class="project-comparator-stage protected-media">
           <img
-            class="protected-image"
-            src="${escapeHtml(images[0].url)}"
-            alt="${escapeHtml(images[0].name || "Imagen 1")}"
-            draggable="false"
-          >
-          ${renderZoomButton("Ampliar imagen", "project-comparator-zoom")}
-        </div>
-
-        <div class="project-comparator-divider" aria-hidden="true"></div>
-
-        <div class="project-comparator-image protected-media">
-          <img
-            class="protected-image"
+            class="project-comparator-img project-comparator-base protected-image"
             src="${escapeHtml(images[1].url)}"
-            alt="${escapeHtml(images[1].name || "Imagen 2")}"
+            alt="${escapeHtml(images[1].name || "Imagen posterior")}"
             draggable="false"
           >
+          <div class="project-comparator-overlay" style="clip-path: inset(0 50% 0 0);">
+            <img
+              class="project-comparator-img project-comparator-top protected-image"
+              src="${escapeHtml(images[0].url)}"
+              alt="${escapeHtml(images[0].name || "Imagen previa")}"
+              draggable="false"
+            >
+          </div>
+          <div class="project-comparator-handle" style="left: 50%;">
+            <div class="project-comparator-handle-button">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 4l-6 8 6 8M16 4l6 8-6 8"/></svg>
+            </div>
+          </div>
           ${renderZoomButton("Ampliar imagen", "project-comparator-zoom")}
         </div>
       </div>
@@ -545,9 +547,52 @@ function renderComparatorBlock(block, index) {
   `;
 }
 
+function initialiseComparators() {
+  document.querySelectorAll("[data-comparator-container]").forEach((container) => {
+    const stage = container.querySelector(".project-comparator-stage");
+    const overlay = container.querySelector(".project-comparator-overlay");
+    const handle = container.querySelector(".project-comparator-handle");
+    if (!stage || !overlay || !handle) return;
+
+    let isDragging = false;
+
+    function moveSlider(clientX) {
+      const rect = stage.getBoundingClientRect();
+      let x = clientX - rect.left;
+      let percentage = (x / rect.width) * 100;
+      percentage = Math.max(0, Math.min(100, percentage));
+
+      overlay.style.clipPath = `inset(0 ${100 - percentage}% 0 0)`;
+      handle.style.left = `${percentage}%`;
+    }
+
+    handle.addEventListener("pointerdown", (e) => {
+      isDragging = true;
+      handle.setPointerCapture(e.pointerId);
+      e.preventDefault();
+    });
+
+    stage.addEventListener("pointerdown", (e) => {
+      if (e.target.closest(".project-media-zoom")) return;
+      isDragging = true;
+      moveSlider(e.clientX);
+      e.preventDefault();
+    });
+
+    window.addEventListener("pointermove", (e) => {
+      if (!isDragging) return;
+      moveSlider(e.clientX);
+    });
+
+    window.addEventListener("pointerup", () => {
+      isDragging = false;
+    });
+  });
+}
+
 
 /* ============================================================
-   EVOLUCIÓN
+   EVOLUCIÓN (FILA HORIZONTAL ÚNICA)
    ============================================================ */
 function renderEvolutionBlock(block, index) {
   const images = Array.isArray(block.images)
@@ -558,21 +603,23 @@ function renderEvolutionBlock(block, index) {
 
   return `
     <section class="project-block project-evolution-block" data-block-index="${index}">
-      <div class="project-evolution">
-        ${images.map((image) => `
-          <figure class="project-evolution-item">
-            <div class="project-evolution-image protected-media">
-              <img
-                class="protected-image"
-                src="${escapeHtml(image.url)}"
-                alt="${escapeHtml(image.name || "Imagen del proceso")}"
-                loading="lazy"
-                draggable="false"
-              >
-              ${renderZoomButton("Ampliar imagen", "project-evolution-zoom")}
-            </div>
-          </figure>
-        `).join("")}
+      <div class="project-evolution-container">
+        <div class="project-evolution-row">
+          ${images.map((image) => `
+            <figure class="project-evolution-item">
+              <div class="project-evolution-image protected-media">
+                <img
+                  class="protected-image"
+                  src="${escapeHtml(image.url)}"
+                  alt="${escapeHtml(image.name || "Imagen del proceso")}"
+                  loading="lazy"
+                  draggable="false"
+                >
+                ${renderZoomButton("Ampliar imagen", "project-evolution-zoom")}
+              </div>
+            </figure>
+          `).join("")}
+        </div>
       </div>
       ${renderCaption(block.text)}
     </section>
@@ -870,11 +917,8 @@ function initialiseMediaZoom() {
         activeIndex = activeImg ? allImages.indexOf(activeImg) : 0;
         if (activeIndex === -1) activeIndex = 0;
       } else if (mediaBlock.classList.contains("project-comparator-block")) {
-        const comparatorImgs = Array.from(mediaBlock.querySelectorAll(".project-comparator-image img"));
-        const clickedCompDiv = button.closest(".project-comparator-image");
-        allImages = comparatorImgs;
-        activeIndex = clickedCompDiv ? comparatorImgs.indexOf(clickedCompDiv.querySelector("img")) : 0;
-        if (activeIndex === -1) activeIndex = 0;
+        allImages = Array.from(mediaBlock.querySelectorAll(".project-comparator-stage img"));
+        activeIndex = 0;
       } else if (mediaBlock.classList.contains("project-evolution-block")) {
         const evolutionItems = Array.from(mediaBlock.querySelectorAll(".project-evolution-item"));
         const clickedEvolutionItem = button.closest(".project-evolution-item");
