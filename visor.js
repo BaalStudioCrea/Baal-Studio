@@ -590,6 +590,108 @@ function initialiseComparators() {
   });
 }
 
+function openComparatorZoom(images) {
+  if (!images || images.length < 2) return;
+  let modal = document.getElementById("visor-comparator-modal");
+
+  if (!modal) {
+    modal = document.createElement("div");
+    modal.id = "visor-comparator-modal";
+    modal.className = "project-lightbox project-comparator-lightbox";
+
+    modal.innerHTML = `
+      <button type="button" class="project-lightbox-close" aria-label="Cerrar">&times;</button>
+      <div class="project-comparator-lightbox-inner">
+        <div class="project-comparator project-comparator-modal-view" data-comparator-modal-container>
+          <div class="project-comparator-stage protected-media">
+            <img class="project-comparator-img project-comparator-base protected-image" src="" alt="" draggable="false">
+            <div class="project-comparator-overlay" style="clip-path: inset(0 50% 0 0);">
+              <img class="project-comparator-img project-comparator-top protected-image" src="" alt="" draggable="false">
+            </div>
+            <div class="project-comparator-handle" style="left: 50%;">
+              <div class="project-comparator-handle-button">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 4l-6 8 6 8M16 4l6 8-6 8"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    modal.querySelector(".project-lightbox-close").addEventListener("click", () => {
+      modal.classList.remove("is-open");
+      document.body.classList.remove("lightbox-open");
+    });
+
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        modal.classList.remove("is-open");
+        document.body.classList.remove("lightbox-open");
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        modal.classList.remove("is-open");
+        document.body.classList.remove("lightbox-open");
+      }
+    });
+
+    const container = modal.querySelector("[data-comparator-modal-container]");
+    const stage = container.querySelector(".project-comparator-stage");
+    const overlay = container.querySelector(".project-comparator-overlay");
+    const handle = container.querySelector(".project-comparator-handle");
+    let isDragging = false;
+
+    function moveSlider(clientX) {
+      const rect = stage.getBoundingClientRect();
+      let x = clientX - rect.left;
+      let percentage = (x / rect.width) * 100;
+      percentage = Math.max(0, Math.min(100, percentage));
+      overlay.style.clipPath = `inset(0 ${100 - percentage}% 0 0)`;
+      handle.style.left = `${percentage}%`;
+    }
+
+    handle.addEventListener("pointerdown", (e) => {
+      isDragging = true;
+      handle.setPointerCapture(e.pointerId);
+      e.preventDefault();
+    });
+
+    stage.addEventListener("pointerdown", (e) => {
+      isDragging = true;
+      moveSlider(e.clientX);
+      e.preventDefault();
+    });
+
+    window.addEventListener("pointermove", (e) => {
+      if (!isDragging) return;
+      moveSlider(e.clientX);
+    });
+
+    window.addEventListener("pointerup", () => {
+      isDragging = false;
+    });
+  }
+
+  const baseImg = modal.querySelector(".project-comparator-base");
+  const topImg = modal.querySelector(".project-comparator-top");
+  const overlay = modal.querySelector(".project-comparator-overlay");
+  const handle = modal.querySelector(".project-comparator-handle");
+
+  baseImg.src = images[1].url;
+  baseImg.alt = images[1].name || "";
+  topImg.src = images[0].url;
+  topImg.alt = images[0].name || "";
+  overlay.style.clipPath = `inset(0 50% 0 0)`;
+  handle.style.left = `50%`;
+
+  modal.classList.add("is-open");
+  document.body.classList.add("lightbox-open");
+}
+
 
 /* ============================================================
    EVOLUCIÓN (FILA HORIZONTAL ÚNICA)
@@ -917,8 +1019,15 @@ function initialiseMediaZoom() {
         activeIndex = activeImg ? allImages.indexOf(activeImg) : 0;
         if (activeIndex === -1) activeIndex = 0;
       } else if (mediaBlock.classList.contains("project-comparator-block")) {
-        allImages = Array.from(mediaBlock.querySelectorAll(".project-comparator-stage img"));
-        activeIndex = 0;
+        const topImg = mediaBlock.querySelector(".project-comparator-top");
+        const baseImg = mediaBlock.querySelector(".project-comparator-base");
+        if (topImg && baseImg) {
+          openComparatorZoom([
+            { url: topImg.src, name: topImg.alt },
+            { url: baseImg.src, name: baseImg.alt }
+          ]);
+        }
+        return;
       } else if (mediaBlock.classList.contains("project-evolution-block")) {
         const evolutionItems = Array.from(mediaBlock.querySelectorAll(".project-evolution-item"));
         const clickedEvolutionItem = button.closest(".project-evolution-item");
