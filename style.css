@@ -871,15 +871,16 @@ select {
 
 
 /* ------------------------------------------------------------
-   TARJETAS DE PROYECTOS (UNIFORMES, TAMAÑO HOMOGÉNEO Y SIN RECORTES)
+   TARJETAS DE PROYECTOS (FLEXBOX CENTRADO Y SIMÉTRICO)
    ------------------------------------------------------------ */
 
 .selected-projects-grid {
 
-  display: grid;
+  display: flex;
 
-  grid-template-columns:
-    repeat(3, 1fr);
+  flex-wrap: wrap;
+
+  justify-content: center;
 
   gap: 24px;
 }
@@ -900,6 +901,10 @@ select {
   height: 380px;
 
   border-radius: 4px;
+
+  flex: 1 1 360px;
+
+  max-width: 410px;
 }
 
 
@@ -1028,7 +1033,7 @@ select {
 
 .project-loading {
 
-  grid-column: 1 / -1;
+  width: 100%;
 
   min-height: 220px;
 
@@ -1561,10 +1566,6 @@ select {
     padding-right: 45px;
   }
 
-  .selected-projects-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
   .capabilities-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -1664,6 +1665,8 @@ select {
 
   .project-card {
     height: 320px;
+    flex: 1 1 100%;
+    max-width: none;
   }
 
   .project-card-content {
