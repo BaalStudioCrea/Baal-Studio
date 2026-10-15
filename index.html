@@ -25,7 +25,7 @@
 <body>
 
   <!-- =====================================================
-       HEADER
+       HEADER PRINCIPAL
        ===================================================== -->
 
   <header class="main-header" id="main-header">
@@ -147,7 +147,7 @@
   <main>
 
     <!-- =====================================================
-         HERO
+         SECCIÓN HERO
          ===================================================== -->
 
     <section
@@ -214,7 +214,7 @@
 
 
     <!-- =====================================================
-         SOBRE EL ESTUDIO
+         SECCIÓN SOBRE EL ESTUDIO
          ===================================================== -->
 
     <section
@@ -303,7 +303,7 @@
 
 
     <!-- =====================================================
-         PROYECTOS SELECCIONADOS
+         SECCIÓN PROYECTOS SELECCIONADOS
          ===================================================== -->
 
     <section
@@ -361,7 +361,7 @@
 
 
     <!-- =====================================================
-         CAPACIDADES
+         SECCIÓN CAPACIDADES
          ===================================================== -->
 
     <section
@@ -550,7 +550,7 @@
 
 
   <!-- =====================================================
-       FOOTER
+       FOOTER PRINCIPAL
        ===================================================== -->
 
   <footer class="main-footer">
@@ -673,7 +673,9 @@
   <script src="./script.js"></script>
 
   
-<!-- SELECTOR DE IDIOMAS PERSONALIZADO — BAAL STUDIO -->
+<!-- =====================================================
+     SELECTOR DE IDIOMAS
+     ===================================================== -->
 <div
   class="baal-language-selector notranslate"
   id="baalLangSelector"
@@ -707,7 +709,6 @@
   </div>
 </div>
 
-<!-- Motor de traducción de Google -->
 <div id="google_translate_element" aria-hidden="true"></div>
 
 <script>
@@ -782,13 +783,10 @@
 
         closeDropdown();
 
-        // Volver al idioma original sin recargar si Google está disponible.
         if (targetLanguage === "es") {
           try {
             localStorage.removeItem("baalSelectedLanguage");
-          } catch (error) {
-            // Continuar sin almacenamiento local.
-          }
+          } catch (error) {}
 
           currentText.textContent = "Español";
 
@@ -811,9 +809,7 @@
 
         try {
           localStorage.setItem("baalSelectedLanguage", targetLanguage);
-        } catch (error) {
-          // La traducción puede funcionar sin almacenamiento local.
-        }
+        } catch (error) {}
 
         const googleSelect = document.querySelector(".goog-te-combo");
 
@@ -921,9 +917,9 @@
 })();
 </script>
 
-<!-- ============================================================
-     COMPARTIR EN REDES SOCIALES (ESTÁTICO)
-     ============================================================ -->
+<!-- =====================================================
+     COMPARTIR EN REDES SOCIALES
+     ===================================================== -->
 <div class="baal-share-selector">
   <button type="button" class="baal-share-btn-current" onclick="
     if (navigator.share) {
