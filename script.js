@@ -285,7 +285,7 @@ function setImageSource(
 
 
 /* ------------------------------------------------------------
-   PROYECTOS SELECCIONADOS
+   PROYECTOS SELECCIONADOS (TODOS LOS AÑADIDOS)
    ------------------------------------------------------------ */
 
 async function loadSelectedProjects() {
@@ -352,14 +352,11 @@ async function loadSelectedProjects() {
     );
 
 
-    const selected =
-      projects.slice(0, 3);
-
-
+    // Se muestran TODOS los proyectos añadidos en lugar de recortar a 3
     container.innerHTML = "";
 
 
-    selected.forEach(
+    projects.forEach(
       (project, index) => {
 
         const card =
@@ -877,7 +874,7 @@ function isImageUrl(
 
 
 /* ------------------------------------------------------------
-   CREAR TARJETA DE PROYECTO
+   CREAR TARJETA DE PROYECTO (HOMOGÉNEA)
    ------------------------------------------------------------ */
 
 function createProjectCard(
@@ -894,36 +891,6 @@ function createProjectCard(
   );
 
 
-  if (index === 0) {
-
-    card.classList.add(
-      "project-card-large"
-    );
-
-  } else {
-
-    card.classList.add(
-      "project-card-medium"
-    );
-
-
-    if (index === 1) {
-
-      card.classList.add(
-        "project-card-left"
-      );
-
-    } else {
-
-      card.classList.add(
-        "project-card-right"
-      );
-
-    }
-
-  }
-
-
   const projectName =
     project.name || "";
 
@@ -933,7 +900,6 @@ function createProjectCard(
     projectName;
 
 
-  // CORREGIDO: Redirige directamente al visor del proyecto individual
   card.href =
     `./visor.html?project=${encodeURIComponent(projectName)}`;
 
