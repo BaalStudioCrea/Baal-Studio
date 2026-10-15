@@ -17,7 +17,6 @@ const FUNCTIONS = {
   siteAssets:
     `${SUPABASE_FUNCTION_BASE}/get-site-assets`,
 
-  // CORREGIDO: Ahora apunta a list-projects
   projects:
     `${SUPABASE_FUNCTION_BASE}/list-projects`
 
@@ -286,7 +285,7 @@ function setImageSource(
 
 
 /* ------------------------------------------------------------
-   PROYECTOS
+   PROYECTOS SELECCIONADOS
    ------------------------------------------------------------ */
 
 async function loadSelectedProjects() {
@@ -496,10 +495,6 @@ function normalizeProject(
   }
 
 
-  /*
-     Buscamos la propiedad de título en la raíz o en metadata.
-  */
-
   const metadataTitle =
     project?.title ||
     metadata?.title ||
@@ -510,10 +505,6 @@ function normalizeProject(
     project?.metadata_title ||
     "";
 
-
-  /*
-     Fallback en caso de que no exista título en el txt.
-  */
 
   const fallbackName =
     String(rawName)
@@ -537,11 +528,6 @@ function normalizeProject(
   const cover =
     extractCover(project);
 
-
-  /*
-     CORREGIDO: Leemos location, year y category tanto de la raíz 
-     como dentro del objeto metadata.
-  */
 
   const location =
     metadata?.location ||
@@ -567,7 +553,6 @@ function normalizeProject(
     project.categoria ||
     "";
 
-  // Si la categoría viene como Array (list-projects la devuelve así), tomamos las primeras
   const category = Array.isArray(rawCategory) 
     ? rawCategory.slice(0, 2).join(", ") 
     : String(rawCategory);
@@ -892,7 +877,7 @@ function isImageUrl(
 
 
 /* ------------------------------------------------------------
-   CREAR TARJETA
+   CREAR TARJETA DE PROYECTO
    ------------------------------------------------------------ */
 
 function createProjectCard(
@@ -948,8 +933,9 @@ function createProjectCard(
     projectName;
 
 
+  // CORREGIDO: Redirige directamente al visor del proyecto individual
   card.href =
-    `./proyectos.html?proyecto=${encodeURIComponent(projectName)}`;
+    `./visor.html?project=${encodeURIComponent(projectName)}`;
 
 
   card.setAttribute(
@@ -959,7 +945,7 @@ function createProjectCard(
 
 
   /*
-     MEDIA
+     MEDIA DE LA TARJETA
   */
 
   const media =
@@ -1019,7 +1005,7 @@ function createProjectCard(
 
 
   /*
-     CONTENIDO
+     CONTENIDO DE LA TARJETA
   */
 
   const content =
@@ -1065,7 +1051,7 @@ function createProjectCard(
 
 
   /*
-     METADATA
+     METADATA DE LA TARJETA
   */
 
   const meta =
@@ -1164,7 +1150,7 @@ function showProjectsMessage(
 
 
 /* ------------------------------------------------------------
-   PROTECCIÓN
+   PROTECCIÓN DE MEDIOS
    ------------------------------------------------------------ */
 
 function initProtection() {
