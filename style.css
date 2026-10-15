@@ -649,7 +649,7 @@ select {
 
 
 /* ------------------------------------------------------------
-   SOBRE EL ESTUDIO (IGUALADO CON ABOUT.CSS)
+   SOBRE EL ESTUDIO
    ------------------------------------------------------------ */
 
 .about-home-section {
@@ -797,7 +797,7 @@ select {
 
 
 /* ------------------------------------------------------------
-   PROYECTOS
+   PROYECTOS SELECCIONADOS
    ------------------------------------------------------------ */
 
 .projects-section {
@@ -871,7 +871,7 @@ select {
 
 
 /* ------------------------------------------------------------
-   TARJETAS DE PROYECTOS
+   TARJETAS DE PROYECTOS (NORMALIZADAS)
    ------------------------------------------------------------ */
 
 .selected-projects-grid {
@@ -941,20 +941,18 @@ select {
 
 .project-card-media img {
 
-  width: 85%;
-  height: 85%;
+  width: 100%;
+  height: 100%;
 
   object-fit: cover;
+  object-position: center;
+
   opacity: 0.50;
 
   transition:
     transform 0.8s cubic-bezier(.2,.65,.2,1);
 }
 
-
-.project-card-large .project-card-media img {
-  object-fit: contain;
-}
 
 .project-card:hover
 .project-card-media img {
@@ -1208,7 +1206,7 @@ select {
 
 .capability-item {
 
-  background: #e5e3db; /* Cambia #ffffff por el color que prefieras */
+  background: #e5e3db;
 
   min-height: 285px;
 
@@ -1551,7 +1549,7 @@ select {
 
 
 /* ------------------------------------------------------------
-   TABLET
+   RESPONSIVE — TABLET Y MÓVIL
    ------------------------------------------------------------ */
 
 @media (max-width: 1000px) {
@@ -1560,290 +1558,170 @@ select {
     --page-padding: 48px;
   }
 
-
   .desktop-nav {
     gap: 25px;
   }
-
 
   .hero-content {
     padding-bottom: 100px;
   }
 
-
   .about-home-layout,
   .section-heading-row,
   .capabilities-heading {
-
-    grid-template-columns:
-      1fr 2fr;
-
+    grid-template-columns: 1fr 2fr;
   }
-
 
   .about-home-heading,
   .section-heading {
-
     padding-right: 45px;
-
   }
-
 
   .capabilities-grid {
-
-    grid-template-columns:
-      repeat(2, 1fr);
-
+    grid-template-columns: repeat(2, 1fr);
   }
 
-
   .footer-services p {
-
     white-space: normal;
-
   }
 
 }
 
 
-/* ------------------------------------------------------------
-   MÓVIL
-   ------------------------------------------------------------ */
-
 @media (max-width: 700px) {
 
   :root {
-
     --page-padding: 24px;
-
     --section-space: 95px;
-
   }
-
 
   .header-inner {
-
     padding: 0 24px;
-
   }
-
 
   .desktop-nav {
     display: none;
   }
 
-
   .mobile-menu-button {
     display: block;
   }
 
-
   .header-logo {
-
     height: 26px;
-
     max-width: 135px;
-
   }
-
 
   .hero-section {
-
     min-height: 650px;
-
   }
-
 
   .hero-background {
-
     object-position: center center;
-
     transform: scale(1.12);
-
     opacity: 0.60;
-
   }
-
 
   .hero-content {
-
-    padding:
-      0
-      24px
-      90px;
-
+    padding: 0 24px 90px;
   }
-
 
   .hero-specialties-es,
   .hero-specialties-en {
-
     white-space: nowrap;
-
     font-size: 6.2px;
-
     letter-spacing: 0.06em;
-
   }
-
 
   .hero-content h1 {
-
-    font-size:
-      clamp(42px, 14vw, 68px);
-
+    font-size: clamp(42px, 14vw, 68px);
   }
-
 
   .hero-description {
-
     margin-top: 18px;
-
   }
-
 
   .hero-description p {
-
     font-size: 10px;
-
   }
-
 
   .hero-description p + p {
-
     font-size: 7.5px;
-
   }
-
 
   .about-home-layout,
   .section-heading-row,
   .capabilities-heading {
-
     display: flex;
-
     flex-direction: column;
-
     gap: 35px;
-
   }
-
 
   .about-home-heading,
   .section-heading {
-
     padding-right: 0;
-
   }
-
 
   .stats-grid {
-
-    grid-template-columns:
-      repeat(2, 1fr);
-
+    grid-template-columns: repeat(2, 1fr);
     gap: 35px 20px;
-
     margin-top: 45px;
-
   }
-
 
   .selected-projects-grid {
-
     display: flex;
-
     flex-direction: column;
-
     gap: 16px;
-
   }
-
 
   .project-card-large,
   .project-card-medium {
-
     width: 100%;
-
     height: 420px;
-
   }
 
-
   .project-card-content {
-
     left: 24px;
     right: 24px;
     bottom: 24px;
-
   }
-
 
   .project-card-title {
-
     font-size: 32px;
-
   }
-
 
   .capabilities-grid {
-
     grid-template-columns: 1fr;
-
   }
-
 
   .capability-item {
-
     min-height: 245px;
-
     padding: 27px;
-
   }
-
 
   .footer-top {
-
     display: flex;
-
     flex-direction: column;
-
     gap: 40px;
-
   }
-
 
   .footer-nav-column {
-
     align-items: flex-start;
-
     text-align: left;
-
   }
-
 
   .footer-logos {
-
     gap: 30px;
-
   }
-
 
   .footer-secondary-logo {
-
     max-width: 160px;
-
     max-height: 45px;
-
   }
 
-
   .footer-qr {
-
     width: 90px;
-
     height: 90px;
-
   }
 
 }
@@ -1859,24 +1737,19 @@ select {
     scroll-behavior: auto;
   }
 
-
   *,
   *::before,
   *::after {
-
     animation-duration: 0.01ms !important;
-
     animation-iteration-count: 1 !important;
-
     transition-duration: 0.01ms !important;
-
   }
 
 }
 
 
 /* ============================================================
-   SELECTOR DE IDIOMAS PERSONALIZADO — BAAL STUDIO
+   SELECTOR DE IDIOMAS
    ============================================================ */
 
 .baal-language-selector {
@@ -1933,8 +1806,6 @@ select {
   transform: rotate(180deg);
 }
 
-/* Desplegable de idiomas */
-
 .baal-lang-dropdown {
   position: absolute;
   bottom: calc(100% + 8px);
@@ -1973,15 +1844,14 @@ select {
   color: #ffffff;
 }
 
-/* Evitar que se traduzcan los nombres de los idiomas. */
-
 .baal-language-selector,
 .baal-language-selector * {
   translate: no;
 }
 
+
 /* ============================================================
-   GOOGLE TRANSLATE — OCULTAR ELEMENTOS NATIVOS
+   GOOGLE TRANSLATE
    ============================================================ */
 
 #google_translate_element {
@@ -2028,8 +1898,6 @@ body {
   box-shadow: none !important;
 }
 
-/* Integración visual de los elementos de Google que permanezcan visibles. */
-
 .goog-te-gadget,
 .goog-te-gadget span,
 .goog-te-gadget a,
@@ -2046,8 +1914,6 @@ body {
   border-color: #181818 !important;
 }
 
-/* Fondo bajo el footer. */
-
 footer,
 .site-footer,
 #footer {
@@ -2062,6 +1928,7 @@ body > .skiptranslate {
 body > .skiptranslate:empty {
   display: none !important;
 }
+
 
 /* ============================================================
    COMPARTIR EN REDES SOCIALES
