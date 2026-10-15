@@ -352,7 +352,6 @@ async function loadSelectedProjects() {
     );
 
 
-    // Se muestran TODOS los proyectos añadidos en lugar de recortar a 3
     container.innerHTML = "";
 
 
@@ -874,7 +873,7 @@ function isImageUrl(
 
 
 /* ------------------------------------------------------------
-   CREAR TARJETA DE PROYECTO (HOMOGÉNEA)
+   CREAR TARJETA DE PROYECTO (HOMOGÉNEA Y FLEXIBLE)
    ------------------------------------------------------------ */
 
 function createProjectCard(
