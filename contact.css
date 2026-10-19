@@ -595,3 +595,45 @@ body > .skiptranslate:empty {
   outline: 1px solid currentColor;
   outline-offset: 4px;
 }
+
+/* ------------------------------------------------------------
+   ESTILOS CASILLA DE PRIVACIDAD (RGPD) EN FORMULARIO
+   ------------------------------------------------------------ */
+.form-privacy-checkbox {
+  margin-top: 10px;
+}
+
+.checkbox-label {
+  display: flex !important;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  font-weight: 400 !important;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: auto !important;
+  margin-top: 3px;
+  accent-color: var(--accent, #a28b6d);
+  cursor: pointer;
+}
+
+.checkbox-text {
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--black, #111111);
+}
+
+.checkbox-text a {
+  color: var(--black, #111111);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.3s ease;
+}
+
+.checkbox-text a:hover {
+  color: var(--accent, #a28b6d);
+}
