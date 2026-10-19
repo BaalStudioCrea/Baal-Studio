@@ -306,6 +306,31 @@
 }
 
 
+.form-privacy-notice {
+  margin: 12px 0 18px;
+  color: #777;
+  font-size: 10px;
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+.form-privacy-notice a {
+  color: var(--black, #111111);
+  text-decoration: underline;
+  text-decoration-color: var(--accent, #b08a57);
+  text-underline-offset: 3px;
+}
+
+.form-privacy-notice a:hover {
+  color: var(--accent, #b08a57);
+}
+
+.form-privacy-notice a:focus-visible {
+  outline: 1px solid var(--accent, #b08a57);
+  outline-offset: 3px;
+}
+
+
 /* ============================================================
    SELECTOR DE IDIOMAS PERSONALIZADO — BAAL STUDIO
    ============================================================ */
