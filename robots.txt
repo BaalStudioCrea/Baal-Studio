@@ -1,0 +1,5 @@
+
+User-agent: *
+Allow: /
+
+Sitemap: https://baalstudiocrea.github.io/Baal-Studio/sitemap.xml
