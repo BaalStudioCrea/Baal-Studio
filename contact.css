@@ -542,3 +542,31 @@ body > .skiptranslate:empty {
   flex-shrink: 0;
   color: rgba(255, 255, 255, 0.7);
 }
+
+/* ------------------------------------------------------------
+   ENLACE A AVISOS LEGALES
+   ------------------------------------------------------------ */
+
+.footer-avisos {
+  display: inline-block;
+  margin-top: 7px;
+
+  color: rgba(255, 255, 255, 0.42);
+  font-family: var(--font-body, "Inter", sans-serif);
+  font-size: 10px;
+  line-height: 1.5;
+  letter-spacing: 0.06em;
+
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-avisos:hover {
+  color: var(--accent, #b08a57);
+}
+
+.footer-avisos:focus-visible {
+  color: var(--accent, #b08a57);
+  outline: 1px solid currentColor;
+  outline-offset: 4px;
+}
