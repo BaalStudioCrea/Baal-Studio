@@ -315,7 +315,7 @@
 }
 
 .form-privacy-notice a {
-  color: var(--black, #111111);
+  color: var(--accent, #b08a57);
   text-decoration: underline;
   text-decoration-color: var(--accent, #b08a57);
   text-underline-offset: 3px;
