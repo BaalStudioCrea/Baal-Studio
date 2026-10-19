@@ -171,11 +171,11 @@
   box-sizing: border-box;
 }
 
-/* EFECTO AL HACER CLIC EN UN CAMPO (FOCUS - TONO CREMA SUAVE) */
+/* EFECTO FOCUS */
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
-  background: #dcd9ce; /* Tono lino suave en lugar de blanco puro */
+  background: #dcd9ce;
   border-color: #2b2823;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 }
@@ -191,20 +191,10 @@
   padding-right: 40px;
 }
 
-/* ESTILOS Y CORRECCIÓN DE COLOR WINDOWS PARA LAS OPCIONES DEL SELECT */
 .form-group select option {
   background-color: #faf9f6;
   color: #111111;
   padding: 12px;
-}
-
-.form-group select option:hover,
-.form-group select option:focus,
-.form-group select option:active,
-.form-group select option:checked {
-  background: #e2ded4 linear-gradient(0deg, #e2ded4 0%, #e2ded4 100%) !important;
-  color: #111111 !important;
-  box-shadow: 0 0 10px 100px #e2ded4 inset !important;
 }
 
 .form-group textarea {
@@ -212,7 +202,7 @@
   min-height: 120px;
 }
 
-/* SOBREESCRITURA DEL AUTOCOMPLETADO */
+/* AUTOCOMPLETADO */
 .form-group input:-webkit-autofill,
 .form-group input:-webkit-autofill:hover,
 .form-group input:-webkit-autofill:focus,
@@ -232,6 +222,46 @@
   font-family: var(--font-body, 'Inter', sans-serif);
   font-size: 10px;
   color: var(--gray, #777777);
+}
+
+/* CASILLA DE PRIVACIDAD (RGPD) */
+.form-privacy-checkbox {
+  margin-top: 5px;
+}
+
+.checkbox-label {
+  display: flex !important;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  font-weight: 400 !important;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: auto !important;
+  margin-top: 3px;
+  accent-color: var(--accent, #a28b6d);
+  cursor: pointer;
+}
+
+.checkbox-text {
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--black, #111111);
+}
+
+.checkbox-text a {
+  color: var(--black, #111111);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.3s ease;
+}
+
+.checkbox-text a:hover {
+  color: var(--accent, #a28b6d);
 }
 
 /* PIE DEL FORMULARIO */
@@ -305,7 +335,6 @@
   }
 }
 
-
 .form-privacy-notice {
   margin: 12px 0 18px;
   color: #777;
@@ -325,16 +354,7 @@
   color: var(--accent, #b08a57);
 }
 
-.form-privacy-notice a:focus-visible {
-  outline: 1px solid var(--accent, #b08a57);
-  outline-offset: 3px;
-}
-
-
-/* ============================================================
-   SELECTOR DE IDIOMAS PERSONALIZADO — BAAL STUDIO
-   ============================================================ */
-
+/* SELECTOR DE IDIOMAS */
 .baal-language-selector {
   position: fixed;
   bottom: 24px;
@@ -373,12 +393,6 @@
   background: rgba(24, 24, 24, 0.98);
 }
 
-.baal-lang-current:focus-visible,
-.baal-lang-dropdown a:focus-visible {
-  outline: 2px solid #B08A57;
-  outline-offset: 3px;
-}
-
 .baal-lang-current svg {
   flex-shrink: 0;
   color: rgba(255, 255, 255, 0.7);
@@ -388,8 +402,6 @@
 .baal-language-selector.is-open .baal-lang-current svg {
   transform: rotate(180deg);
 }
-
-/* Desplegable de idiomas */
 
 .baal-lang-dropdown {
   position: absolute;
@@ -429,17 +441,12 @@
   color: #ffffff;
 }
 
-/* Evitar que se traduzcan los nombres de los idiomas. */
-
 .baal-language-selector,
 .baal-language-selector * {
   translate: no;
 }
 
-/* ============================================================
-   GOOGLE TRANSLATE — OCULTAR ELEMENTOS NATIVOS
-   ============================================================ */
-
+/* GOOGLE TRANSLATE OCULTO */
 #google_translate_element {
   display: none !important;
   width: 0 !important;
@@ -464,8 +471,7 @@ html body > .skiptranslate {
   background-color: #111111 !important;
 }
 
-html,
-body {
+html, body {
   top: 0 !important;
   background-color: #111111 !important;
 }
@@ -484,45 +490,11 @@ body {
   box-shadow: none !important;
 }
 
-/* Integración visual de los elementos de Google que permanezcan visibles. */
-
-.goog-te-gadget,
-.goog-te-gadget span,
-.goog-te-gadget a,
-.goog-te-gadget-simple {
-  background-color: #181818 !important;
-  color: #ffffff !important;
-}
-
-.goog-te-gadget-simple,
-.goog-te-gadget-simple .goog-te-menu-value,
-.goog-te-gadget-simple .goog-te-menu-value span {
-  background: #181818 !important;
-  color: #ffffff !important;
-  border-color: #181818 !important;
-}
-
-/* Fondo bajo el footer. */
-
-footer,
-.site-footer,
-#footer {
+footer, .site-footer, #footer {
   background-color: #111111 !important;
 }
 
-body > .skiptranslate {
-  background-color: #111111 !important;
-  background-image: none !important;
-}
-
-body > .skiptranslate:empty {
-  display: none !important;
-}
-
-/* ============================================================
-   COMPARTIR EN REDES SOCIALES
-   ============================================================ */
-
+/* COMPARTIR */
 .baal-share-selector {
   position: fixed;
   bottom: 24px;
@@ -568,72 +540,18 @@ body > .skiptranslate:empty {
   color: rgba(255, 255, 255, 0.7);
 }
 
-/* ------------------------------------------------------------
-   ENLACE A AVISOS LEGALES
-   ------------------------------------------------------------ */
-
 .footer-avisos {
   display: inline-block;
   margin-top: 7px;
-
   color: rgba(255, 255, 255, 0.42);
   font-family: var(--font-body, "Inter", sans-serif);
   font-size: 10px;
   line-height: 1.5;
   letter-spacing: 0.06em;
-
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 .footer-avisos:hover {
   color: var(--accent, #b08a57);
-}
-
-.footer-avisos:focus-visible {
-  color: var(--accent, #b08a57);
-  outline: 1px solid currentColor;
-  outline-offset: 4px;
-}
-
-/* ------------------------------------------------------------
-   ESTILOS CASILLA DE PRIVACIDAD (RGPD) EN FORMULARIO
-   ------------------------------------------------------------ */
-.form-privacy-checkbox {
-  margin-top: 10px;
-}
-
-.checkbox-label {
-  display: flex !important;
-  align-items: flex-start;
-  gap: 12px;
-  cursor: pointer;
-  text-transform: none !important;
-  letter-spacing: normal !important;
-  font-weight: 400 !important;
-}
-
-.checkbox-label input[type="checkbox"] {
-  width: auto !important;
-  margin-top: 3px;
-  accent-color: var(--accent, #a28b6d);
-  cursor: pointer;
-}
-
-.checkbox-text {
-  font-family: var(--font-body, 'Inter', sans-serif);
-  font-size: 12px;
-  line-height: 1.5;
-  color: var(--black, #111111);
-}
-
-.checkbox-text a {
-  color: var(--black, #111111);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  transition: color 0.3s ease;
-}
-
-.checkbox-text a:hover {
-  color: var(--accent, #a28b6d);
 }
