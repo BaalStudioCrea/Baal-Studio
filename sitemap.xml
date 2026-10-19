@@ -1,24 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
   <url>
     <loc>https://baalstudiocrea.github.io/Baal-Studio/</loc>
   </url>
-
   <url>
     <loc>https://baalstudiocrea.github.io/Baal-Studio/proyectos.html</loc>
   </url>
-
   <url>
     <loc>https://baalstudiocrea.github.io/Baal-Studio/about.html</loc>
   </url>
-
   <url>
     <loc>https://baalstudiocrea.github.io/Baal-Studio/contact.html</loc>
   </url>
-
   <url>
     <loc>https://baalstudiocrea.github.io/Baal-Studio/avisos.html</loc>
   </url>
-
 </urlset>
